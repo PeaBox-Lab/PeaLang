@@ -1,0 +1,3 @@
+# Welcome to PeaLang
+let name = "Rajesh"
+print "Hello, " + name + "!"
