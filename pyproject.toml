@@ -1,0 +1,17 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+[project]
+name = "pealang"
+version = "0.1.0"
+description = "A small, readable interpreted programming language"
+readme = "README.md"
+requires-python = ">=3.9"
+license = {text = "MIT"}
+authors = [{name = "Rajesh Kumar"}]
+keywords = ["programming-language", "interpreter", "education"]
+classifiers = ["Programming Language :: Python :: 3", "License :: OSI Approved :: MIT License"]
+[project.scripts]
+pealang = "pealang.cli:main"
+[tool.setuptools.packages.find]
+include = ["pealang*"]

@@ -1,0 +1,16 @@
+const tax_rate = 18
+let prices = [100, 250, 500]
+let total = 0
+for price in prices {
+    total += price
+}
+function add_tax(amount, rate) {
+    return amount + amount * rate / 100
+}
+print "Subtotal: " + str(total)
+print "With tax: " + str(add_tax(total, tax_rate))
+if total > 500 {
+    print "High-value basket"
+} else {
+    print "Standard basket"
+}
