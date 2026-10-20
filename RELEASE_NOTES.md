@@ -1,11 +1,17 @@
-# PeaLang v0.3.0 Release Notes
-v0.3.0 is the Automation Standard Library release. It adds namespaced file/path, JSON, CSV, environment, date/time, regex, HTTP, and guarded process APIs without adding new grammar.
+# PeaLang v0.4.0 Release Notes
 
-## Safety
-Process launching is off by default, uses no shell, and requires explicit opt-in. HTTP defaults to a 15-second timeout. The runtime remains experimental and unsandboxed.
+v0.4.0 makes PeaLang easier to learn, maintain and use in real projects. The release adds a coherent developer workflow: write, format, check, test, document and run.
+
+## Major additions
+- `pea fmt` for stable formatting and CI verification
+- `pea check` for early diagnostics
+- `pea test` for executable language-level scenarios
+- `pea docs` for Markdown function references
+- richer persistent REPL commands
+- dedicated basics and foundations learning material
 
 ## Compatibility
-All 18 v0.2 tests are retained. Existing v0.1 built-ins remain available for compatibility, although namespaced APIs are preferred for new programs.
+The complete v0.1-v0.3 behavior remains covered by regression tests. Direct execution remains supported. No language grammar feature was intentionally removed.
 
-## Validation
-See `TEST_REPORT.md` for commands, environment and actual results.
+## Validation and boundaries
+See `TEST_REPORT.md`. The formatter's comment preservation, cross-file checker resolution, native assertion syntax and doc-comment extraction remain planned enhancements rather than completed features.

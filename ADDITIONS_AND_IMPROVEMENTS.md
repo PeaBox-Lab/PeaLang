@@ -1,2 +1,2 @@
-# Additions and Improvements in v0.3.0
-PeaLang now supports useful automation without exposing a large set of unrelated flat functions. Each domain is grouped under a readable namespace. JSON and CSV support business-data workflows; environment helpers support secret-safe configuration; HTTP enables APIs; date/time and regex support transformation; file/path modules improve portability. Process execution is guarded, argument-based, shell-free and off by default.
+# Additions and Improvements in v0.4.0
+This release adds a complete first developer loop around the interpreter: formatter, static checks, executable language tests, API documentation and REPL inspection. It also establishes permanent documentation expectations for PeaLang releases: detailed README, cumulative changelog, release notes, help files, user guide, language basics and language foundations.

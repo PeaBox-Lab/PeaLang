@@ -1,0 +1,3 @@
+function greet(name){print "Hello {name}"}
+let user="Rajesh"
+greet(user)

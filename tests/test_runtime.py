@@ -1,6 +1,7 @@
 import tempfile,unittest
 from pathlib import Path
 from pealang import execute,PeaError
+from pealang.tooling import format_source,check_source,generate_docs
 class RuntimeTests(unittest.TestCase):
     def runpea(self,s,**kw):out=[];execute(s,output=out.append,**kw);return out
     def test_math(self):self.assertEqual(self.runpea('print 2 + 3 * 4'),['14'])
@@ -75,6 +76,18 @@ class StandardLibraryTests(unittest.TestCase):
         try:
             url=f'http://127.0.0.1:{server.server_port}/';self.assertEqual(self.runpea(f'let r=http.get("{url}")\nprint r.status\nprint http.json(r).service'),['200','pea'])
         finally:server.shutdown();server.server_close()
+
+
+class DeveloperToolingTests(unittest.TestCase):
+    def test_formatter_idempotent(self):
+        source='let x=1\nif x==1{print "yes"}'
+        once=format_source(source);self.assertEqual(once,format_source(once));self.assertIn('if x == 1 {',once)
+    def test_checker_undefined(self):
+        ds=check_source('print missng');self.assertTrue(any(d.code=='P101' and d.severity=='error' for d in ds))
+    def test_checker_unused(self):
+        ds=check_source('let unused=1');self.assertTrue(any(d.code=='P104' for d in ds))
+    def test_docs_generator(self):
+        doc=generate_docs('function add(a,b){return a+b}','math.pea');self.assertIn('add(a, b)',doc)
 
 if __name__=='__main__':unittest.main()
 
