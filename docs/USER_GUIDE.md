@@ -1,0 +1,2 @@
+# User Guide
+Use `let` for variables and `const` for immutable bindings. Put reusable logic in functions. Store structured data in lists and dictionaries. Use property syntax for readable dictionary fields and brackets for dynamic keys. Use imports to split programs into local files. Imports currently expose declarations globally, so avoid duplicate names. Use `break` to leave a loop and `continue` to skip to its next iteration. Errors include file, line and column whenever the originating node is known.

@@ -1,0 +1,5 @@
+let employee = {"name": "Rajesh", "city": "Gurgaon"}
+employee.city = "Delhi"
+let scores = [10, 20]
+scores[1] += 5
+print "{employee.name}: {scores[1]}"

@@ -1,59 +1,52 @@
-# PeaLang
+# PeaLang v0.2.0
 
-PeaLang is a compact, readable programming language implemented in Python. Version 0.1 includes variables, constants, expressions, conditions, loops, functions, recursion, lists, dictionaries, file operations, a REPL, and a CLI.
+**A small language for big ideas.** PeaLang is a readable Python-hosted language for learning, scripting, business automation, and future AI workflows.
+
+## What is new
+
+v0.2.0 replaces the brittle tuple AST with typed dataclasses, splits the runtime into focused modules, adds source-aware diagnostics, `break`, `continue`, string interpolation, dictionary property access, indexed/property assignment, and quoted-file imports.
 
 ## Quick start
 
-### Windows
-
-```bat
-install.bat
-.venv\Scripts\pealang examples\features.pea
-```
-
-### Linux or macOS
-
 ```bash
-chmod +x install.sh
-./install.sh
-.venv/bin/pealang examples/features.pea
+python -m pip install -e .
+pea examples/hello.pea
+python -m unittest discover -s tests -v
 ```
 
-### Without installation
-
-```bash
-python -m pealang examples/hello.pea
-```
-
-## Language example
-
-```text
-const tax = 18
-let values = [100, 250, 500]
-let total = 0
-
-for value in values {
-    total += value
-}
-
-function add_tax(amount) {
-    return amount + amount * tax / 100
-}
-
-print add_tax(total)
+```pea
+let employee = {"name": "Rajesh", "skills": ["HR", "AI"]}
+employee.skills[1] = "PeaLang"
+print "Hello {employee.name}. Skill: {employee.skills[1]}"
 ```
 
 ## Commands
 
-```bash
-pealang program.pea
-pealang
-pealang --version
-python -m unittest discover -s tests
-```
+- `pea file.pea` runs a program.
+- `pea` opens the persistent REPL.
+- `pea --version` prints the installed version.
+- `pealang` remains an alias for compatibility.
 
-## Built-ins
+## Project map
 
-`range`, `len`, `str`, `number`, `int`, `type`, `upper`, `lower`, `split`, `join`, `append`, `keys`, `values`, `json`, `read`, `write`, `exists`, `sqrt`, `round`, and `sleep`.
+- `pealang/lexer.py` tokenization
+- `pealang/parser.py` recursive-descent parser
+- `pealang/ast_nodes.py` typed AST
+- `pealang/interpreter.py` execution
+- `pealang/environment.py` lexical scope
+- `pealang/runtime.py` compatibility facade
+- `docs/` language, architecture, guides and help
+- `examples/` runnable `.pea` programs
+- `tests/` regression and feature tests
 
-See `docs/LANGUAGE.md` for the language reference.
+## Current boundaries
+
+Imports execute a local `.pea` file once in the same global environment. They are foundations, not yet namespaces or packages. File and import access are not sandboxed. PeaLang has no exceptions, concurrency, HTTP, package manager, static typing, or AI provider layer yet.
+
+## Documentation
+
+Start with `docs/GETTING_STARTED.md`, then read `LANGUAGE.md`, `docs/USER_GUIDE.md`, `docs/ARCHITECTURE.md`, and `ROADMAP.md`.
+
+## License
+
+MIT. See `LICENSE`.

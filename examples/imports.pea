@@ -1,0 +1,2 @@
+import "math.pea"
+print twice(21)
