@@ -14,11 +14,11 @@ def repl():
         except PeaError as e:print(f'Error: {e}',file=sys.stderr)
         buf=''
 def main(argv=None):
-    p=argparse.ArgumentParser(prog='pea',description='PeaLang interpreter');p.add_argument('file',nargs='?');p.add_argument('--version',action='version',version=f'PeaLang {__version__}')
+    p=argparse.ArgumentParser(prog='pea',description='PeaLang interpreter');p.add_argument('file',nargs='?');p.add_argument('--allow-process',action='store_true',help='allow trusted programs to launch local processes');p.add_argument('--version',action='version',version=f'PeaLang {__version__}')
     a=p.parse_args(argv)
     if not a.file:return repl()
     path=Path(a.file)
-    try:execute(path.read_text(encoding='utf-8'),source_name=str(path),base_dir=path.parent)
+    try:execute(path.read_text(encoding='utf-8'),source_name=str(path),base_dir=path.parent,allow_process=a.allow_process)
     except (PeaError,OSError) as e:print(f'Error: {e}',file=sys.stderr);return 1
     return 0
 if __name__=='__main__':raise SystemExit(main())

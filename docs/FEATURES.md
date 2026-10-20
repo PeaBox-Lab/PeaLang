@@ -1,7 +1,9 @@
-# Feature Guide
-## Stable in v0.2.0
-Literals, variables/constants, arithmetic/comparison/logic, conditions, loops, functions/closures/recursion, lists, dictionaries, indexing, property access, assignment to variables/indexes/properties, interpolation, local file imports, built-ins, file I/O, CLI and REPL.
-## Experimental
-Import semantics and host-backed built-ins.
+# Feature Guide v0.3.0
+## Language
+Variables/constants, values, operators, conditions, loops, functions/closures/recursion, collections, property/index access and mutation, interpolation, local imports, CLI and REPL.
+## Automation
+UTF-8 files, paths, JSON, CSV, environment variables, ISO date/time, regular expressions, HTTP and opt-in process execution.
+## Experimental boundaries
+Import semantics, host-backed standard-library behavior and unsandboxed I/O.
 ## Not implemented
-Exceptions, namespaces, packages, classes, static types, concurrency, HTTP, database and AI provider APIs.
+Exceptions, namespace imports, package manager, static types, concurrency, formatter, checker, LSP, database modules or AI provider APIs.

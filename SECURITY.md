@@ -1,2 +1,2 @@
 # Security
-PeaLang v0.2.0 is experimental and not sandboxed. `read`, `write`, `exists`, imports and host-backed built-ins use the current process permissions. Do not execute untrusted `.pea` files. Report vulnerabilities privately to the repository maintainers and avoid publishing exploit details before a fix is available.
+PeaLang v0.3.0 is experimental and not sandboxed. Files, imports, environment variables and HTTP use host permissions. Process execution is disabled by default and must be explicitly enabled. Never execute untrusted `.pea` files, store secrets in source, or enable process access for downloaded programs. Report vulnerabilities privately to repository maintainers.

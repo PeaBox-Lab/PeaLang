@@ -1,19 +1,18 @@
-# PeaLang v0.2.0 Test Report
+# PeaLang v0.3.0 Test Report
 
 - **Validation date:** 2026-10-20
 - **Environment:** Linux container, Python 3.12.15
-- **Command:** `PYTHONPATH=. python -m unittest discover -s tests -v`
-- **Result:** 18 tests passed, 0 failures, 0 errors
-- **Compilation check:** `python -m compileall -q pealang tests` passed
-- **CLI check:** `python -m pealang --version` returned `PeaLang 0.2.0`
-- **Examples run:** hello, control flow, collections, and imports all completed successfully
+- **Unit command:** `PYTHONPATH=. python -m unittest discover -s tests -v`
+- **Result:** 27 tests passed, 0 failures, 0 errors
+- **Compilation:** `python -m compileall -q pealang tests` passed
+- **CLI:** `python -m pealang --version` returned `PeaLang 0.3.0`
+- **Wheel:** `python -m pip wheel . --no-deps --no-build-isolation` passed
+- **Examples:** automation, CSV report, and opt-in process examples passed
 
-## Coverage areas
+## Tested areas
 
-The suite validates the five documented v0.1 regression behaviors and v0.2 behavior for loop control, typed-AST execution, interpolation, escaped braces, property access, indexed/property mutation, compound indexed assignment, imports, import idempotency, missing imports, missing properties, and source-position diagnostics.
+The complete 18-test v0.2 regression suite remains. Nine v0.3 tests validate JSON, paths, regex, environment variables, file/JSON/CSV integration, date/time, default-denied processes, opt-in processes, and HTTP against an isolated local HTTP server.
 
-## Validation boundary
+## Validation boundaries
 
-Only the environment above was executed in this packaging session. The included GitHub Actions matrix is configured for Python 3.9 through 3.13, but those remote jobs have not yet been run here.
-
-- **Packaging check:** wheel build passed with `python -m pip wheel . --no-deps --no-build-isolation`.
+The HTTP test used a local loopback server, so no external web service was required. The GitHub Actions matrix is configured for Python 3.9 through 3.13 but has not been run remotely in this packaging session. PeaLang remains unsandboxed.

@@ -1,0 +1,6 @@
+let employee = {"name": "Rajesh", "skills": ["HR Systems", "AI"]}
+json.write("employee.json", employee)
+let loaded = json.read("employee.json")
+print "Loaded {loaded.name}"
+print regex.replace("[^A-Za-z]+", "-", lower(loaded.name))
+print datetime.today()

@@ -6,6 +6,7 @@ from .ast_nodes import *
 from .environment import Env
 from .errors import PeaError
 from .parser import parse_source
+from .stdlib import build_standard_library
 class ReturnSignal(Exception):
     def __init__(self,v):self.value=v
 class BreakSignal(Exception):pass
@@ -13,10 +14,11 @@ class ContinueSignal(Exception):pass
 @dataclass
 class UserFunction:params:list[str];body:list[Stmt];closure:Env
 class Interpreter:
-    def __init__(self,output=None,base_dir=None):
+    def __init__(self,output=None,base_dir=None,allow_process=False):
         self.output=output or print;self.global_env=Env();self.env=self.global_env;self.base_dir=Path(base_dir or '.').resolve();self.source_name='<input>';self.imported=set()
-        builtins={'range':lambda *a:list(range(*map(int,a))),'len':len,'str':lambda x:self.stringify(x),'number':lambda x:float(x),'int':lambda x:int(float(x)),'type':lambda x:type(x).__name__,'upper':lambda x:str(x).upper(),'lower':lambda x:str(x).lower(),'split':lambda x,s=None:str(x).split(s),'join':lambda s,x:str(s).join(map(str,x)),'append':self._append,'keys':lambda d:list(d.keys()),'values':lambda d:list(d.values()),'json':lambda x:json.dumps(x,indent=2),'read':lambda p:Path(p).read_text(encoding='utf-8'),'write':self._write,'exists':os.path.exists,'sqrt':math.sqrt,'round':round,'sleep':time.sleep}
+        builtins={'range':lambda *a:list(range(*map(int,a))),'len':len,'str':lambda x:self.stringify(x),'number':lambda x:float(x),'int':lambda x:int(float(x)),'type':lambda x:type(x).__name__,'upper':lambda x:str(x).upper(),'lower':lambda x:str(x).lower(),'split':lambda x,s=None:str(x).split(s),'join':lambda s,x:str(s).join(map(str,x)),'append':self._append,'keys':lambda d:list(d.keys()),'values':lambda d:list(d.values()),'read':lambda p:Path(p).read_text(encoding='utf-8'),'write':self._write,'exists':os.path.exists,'sqrt':math.sqrt,'round':round,'sleep':time.sleep}
         for k,v in builtins.items():self.global_env.define(k,v,True)
+        for k,v in build_standard_library(allow_process=allow_process).items():self.global_env.define(k,v,True)
     def _append(self,a,v):a.append(v);return a
     def _write(self,p,c):Path(p).write_text(str(c),encoding='utf-8');return p
     def stringify(self,v):

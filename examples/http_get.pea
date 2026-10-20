@@ -1,0 +1,4 @@
+# Requires network access. Replace with your trusted HTTPS endpoint.
+let response = http.get("https://example.com")
+print response.status
+print response.ok

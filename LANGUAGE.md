@@ -58,3 +58,6 @@ Imports are relative to the running file, execute once, and currently share the 
 
 ## Built-ins
 `range`, `len`, `str`, `number`, `int`, `type`, `upper`, `lower`, `split`, `join`, `append`, `keys`, `values`, `json`, `read`, `write`, `exists`, `sqrt`, `round`, and `sleep`.
+
+## Automation namespaces added in v0.3.0
+The global namespaces `file`, `path`, `json`, `csv`, `env`, `datetime`, `regex`, `http`, and `process` expose automation functions through property calls. See `docs/STANDARD_LIBRARY.md` for signatures and return contracts.

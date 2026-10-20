@@ -1,52 +1,53 @@
-# PeaLang v0.2.0
+# PeaLang v0.3.0
 
-**A small language for big ideas.** PeaLang is a readable Python-hosted language for learning, scripting, business automation, and future AI workflows.
+**A small language for big ideas.** v0.3.0 turns PeaLang into a practical automation language while preserving the v0.1 and v0.2 language foundation.
 
-## What is new
+## Highlights
 
-v0.2.0 replaces the brittle tuple AST with typed dataclasses, splits the runtime into focused modules, adds source-aware diagnostics, `break`, `continue`, string interpolation, dictionary property access, indexed/property assignment, and quoted-file imports.
+- Structured namespaces: `file`, `path`, `json`, `csv`, `env`, `datetime`, `regex`, `http`, and `process`
+- UTF-8 file operations and parent-directory creation
+- JSON and CSV read/write workflows
+- Environment-variable access without embedding secrets
+- ISO-oriented date/time helpers
+- Regular-expression search, replace, find and split
+- HTTP GET/POST/request with structured responses and timeouts
+- Process execution disabled by default and enabled only with `--allow-process`
 
 ## Quick start
 
 ```bash
 python -m pip install -e .
-pea examples/hello.pea
+pea examples/automation.pea
 python -m unittest discover -s tests -v
 ```
 
 ```pea
-let employee = {"name": "Rajesh", "skills": ["HR", "AI"]}
-employee.skills[1] = "PeaLang"
-print "Hello {employee.name}. Skill: {employee.skills[1]}"
+let employees = csv.read("employees.csv")
+for employee in employees {
+    print "{employee.name}: {employee.department}"
+}
 ```
+
+## Standard-library example
+
+```pea
+let response = http.get("https://example.com", {}, 10)
+print response.status
+
+let data = json.parse("{\"name\":\"PeaLang\"}")
+file.write(path.join("output", "name.txt"), data.name)
+```
+
+## Security defaults
+
+`process.run` is blocked unless the CLI receives `--allow-process` or the Python API uses `allow_process=True`. PeaLang is still not a sandbox: files, imports, environment variables and network calls use the host process permissions. Run only trusted `.pea` programs.
 
 ## Commands
 
-- `pea file.pea` runs a program.
-- `pea` opens the persistent REPL.
-- `pea --version` prints the installed version.
-- `pealang` remains an alias for compatibility.
+- `pea program.pea`
+- `pea --allow-process trusted.pea`
+- `pea` for the REPL
+- `pea --version`
+- `pealang` remains a compatible alias
 
-## Project map
-
-- `pealang/lexer.py` tokenization
-- `pealang/parser.py` recursive-descent parser
-- `pealang/ast_nodes.py` typed AST
-- `pealang/interpreter.py` execution
-- `pealang/environment.py` lexical scope
-- `pealang/runtime.py` compatibility facade
-- `docs/` language, architecture, guides and help
-- `examples/` runnable `.pea` programs
-- `tests/` regression and feature tests
-
-## Current boundaries
-
-Imports execute a local `.pea` file once in the same global environment. They are foundations, not yet namespaces or packages. File and import access are not sandboxed. PeaLang has no exceptions, concurrency, HTTP, package manager, static typing, or AI provider layer yet.
-
-## Documentation
-
-Start with `docs/GETTING_STARTED.md`, then read `LANGUAGE.md`, `docs/USER_GUIDE.md`, `docs/ARCHITECTURE.md`, and `ROADMAP.md`.
-
-## License
-
-MIT. See `LICENSE`.
+See `LANGUAGE.md`, `docs/STANDARD_LIBRARY.md`, `docs/SECURITY_MODEL.md`, and `ROADMAP.md`.

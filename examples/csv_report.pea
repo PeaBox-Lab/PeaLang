@@ -1,0 +1,4 @@
+let rows = [{"name": "Asha", "score": 9}, {"name": "Vikram", "score": 8}]
+csv.write("scores.csv", rows)
+let loaded = csv.read("scores.csv")
+for row in loaded { print "{row.name}: {row.score}" }

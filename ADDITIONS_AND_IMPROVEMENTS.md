@@ -1,2 +1,2 @@
-# Additions and Improvements in v0.2.0
-This release transforms the compact v0.1 interpreter into a maintainable platform. Language additions are loop control, interpolation, natural property access, mutable collection targets, and file imports. Engineering improvements are typed AST nodes, source spans, modular boundaries, public API compatibility, clearer diagnostics, formal grammar, packaging, CI and an expanded regression suite.
+# Additions and Improvements in v0.3.0
+PeaLang now supports useful automation without exposing a large set of unrelated flat functions. Each domain is grouped under a readable namespace. JSON and CSV support business-data workflows; environment helpers support secret-safe configuration; HTTP enables APIs; date/time and regex support transformation; file/path modules improve portability. Process execution is guarded, argument-based, shell-free and off by default.

@@ -1,0 +1,4 @@
+# Run with: pea --allow-process examples/process_opt_in.pea
+let result = process.run("python", ["--version"])
+print result.ok
+print result.stdout
