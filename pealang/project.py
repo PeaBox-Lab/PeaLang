@@ -1,8 +1,8 @@
 from __future__ import annotations
 import json, re
 from pathlib import Path
-from .errors import PeaError
-DEFAULT_MANIFEST={'project':{'name':'my-pea-project','version':'0.1.0','entry':'main.pea'},'dependencies':{}}
+from .errors import PeaError, PeaProjectError
+DEFAULT_MANIFEST={'manifest_version':1,'project':{'name':'my-pea-project','version':'0.1.0','entry':'main.pea'},'dependencies':{}}
 def load_manifest(start='.'):
     p=Path(start).resolve()
     if p.is_file():p=p.parent
@@ -14,6 +14,12 @@ def load_manifest(start='.'):
             project=data.get('project',{})
             for key in ('name','version','entry'):
                 if key not in project:raise PeaError(f"pea.json project requires '{key}'")
+            
+            if data.get('manifest_version',1) != 1: raise PeaProjectError('Unsupported manifest_version')
+            if not isinstance(project,dict): raise PeaProjectError('pea.json project must be a dictionary')
+            if not isinstance(project.get('name'),str) or not project.get('name','').strip(): raise PeaProjectError('pea.json project name must be a non-empty string')
+            entry=project.get('entry')
+            if entry is not None and (not isinstance(entry,str) or not entry.endswith('.pea')): raise PeaProjectError("pea.json project entry must be a .pea path")
             deps=data.get('dependencies',{})
             if not isinstance(deps,dict):raise PeaError('pea.json dependencies must be a dictionary')
             return f,data

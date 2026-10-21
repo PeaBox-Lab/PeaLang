@@ -1,5 +1,0 @@
-{
-  "name": "summarise",
-  "description": "Create a concise summary of supplied text.",
-  "prompt": "Summarise the following clearly and concisely:\n{text}"
-}

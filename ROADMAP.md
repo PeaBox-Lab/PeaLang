@@ -1,13 +1,7 @@
-# PeaLang Language-First Roadmap
-- **v0.9.0 Language maturity I:** completed.
-- **v0.10.0 Modules & namespaces:** completed.
-- **v0.11.0 Optional typing:** variable, parameter and return annotations plus checker enforcement.
-- **v0.12.0 Standard library maturity:** stable documented contracts.
-- **v0.13.0 Standalone runtime:** package the interpreter so users do not need Python knowledge.
-- **v0.14.0 Cross-platform distribution:** Windows/Linux/macOS.
-- **v0.15.0 VS Code + LSP.**
-- **v0.16.0 Debugger.**
-- **v0.17.0 Package management.**
-- **v0.18.0 Runtime optimisation.**
-- **v0.19.0 Bytecode/VM prototype.**
-- **v1.0.0 Stable PeaLang.**
+# Roadmap
+
+- **0.12:** local package lockfile and dependency integrity.
+- **0.13:** language server and debugger protocol.
+- **0.14:** bytecode experiment and benchmarks.
+- **0.15:** stable agent/tool SDK with explicit capability policies.
+- **1.0:** frozen grammar, compatibility specification, signed releases.

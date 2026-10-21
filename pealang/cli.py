@@ -23,7 +23,7 @@ def run_file(path,allow_process=False):
     kwargs={}
     if mf:kwargs={'project_root':mf.parent,'dependencies':data.get('dependencies',{})}
     try:execute(p.read_text(encoding='utf-8'),source_name=str(p),base_dir=p.parent,allow_process=allow_process,**kwargs)
-    except (PeaError,OSError) as e:print(f'Error: {e}',file=sys.stderr);return 1
+    except (PeaError,OSError) as e:print(e.render() if hasattr(e,'render') else f'Error: {e}',file=sys.stderr);return 1
     return 0
 def main(argv=None):
     argv=list(sys.argv[1:] if argv is None else argv)
@@ -77,5 +77,5 @@ def main(argv=None):
         if allow:argv.remove('--allow-process')
         if len(argv)!=1:print('Usage: pea [init|project|add|remove|start|run|fmt|check|test|docs|repl] ...',file=sys.stderr);return 2
         return run_file(argv[0],allow)
-    except (PeaError,OSError) as e:print(f'Error: {e}',file=sys.stderr);return 1
+    except (PeaError,OSError) as e:print(e.render() if hasattr(e,'render') else f'Error: {e}',file=sys.stderr);return 1
 if __name__=='__main__':raise SystemExit(main())

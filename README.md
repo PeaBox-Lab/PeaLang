@@ -1,53 +1,49 @@
-# PeaLang v0.10.0
+# PeaLang 0.11.0
 
-**A small language for big ideas.** PeaLang is an interpreted programming language. Write `.pea` files and execute them with `pea file.pea` or `pea run file.pea`.
+PeaLang is a compact, readable language for automation, workflows, local tools, and AI-oriented applications. Version 0.11.0 is the **Language Hardening** release. It preserves the 0.10 syntax while improving diagnostics, imports, project validation, packaging, tests, and release discipline.
 
-v0.10.0 is the **Modules & Namespaces** release. It introduces explicit module exports and aliased namespace imports while preserving legacy shared-scope imports for compatibility.
+## Install
 
-## Install and run
 ```bash
+python -m venv .venv
+# Windows: .venv\Scripts\activate
+# Linux/macOS: source .venv/bin/activate
 python -m pip install -e .
 pea --version
-pea examples/namespaces.pea
 ```
 
-## Namespace imports
-Module:
+Requires Python 3.9 or newer.
+
+## First program
+
 ```pea
-# math.pea
-function square(x) { return x * x }
-function internal() { return 999 }
-export square
-```
-Application:
-```pea
-import "math.pea" as math
-print math.square(9)
-```
-Only exported names appear in `math`. `internal` remains private to the module environment.
-
-## Legacy compatibility
-The earlier form remains valid:
-```pea
-import "helpers.pea"
-```
-It executes once and places declarations in shared scope. New code should prefer `import "..." as namespace` plus explicit `export` statements because that prevents accidental global-name collisions.
-
-## Projects
-Bare project modules continue resolving through `modules/` and local dependencies. They can now be imported into namespaces:
-```pea
-import "math" as math
-print math.square(10)
+let name = "PeaLang"
+function greet(who = "world") { return "Hello {who}" }
+print greet(name)
 ```
 
-## Execution model
-PeaLang still uses source -> lexer -> parser -> typed AST -> interpreter. A compiler is not required. The project remains interpreter-first while the language stabilises.
+Save as `hello.pea`, then run `pea run hello.pea`.
 
-## Core language
-Variables/constants, operators, conditions, loops, closures/recursion, collections, interpolation, assertions, exceptions, default arguments, modules/namespaces and bounded parallel expressions are supported. Earlier automation/AI/agent features remain compatible but are not the roadmap focus.
+## Commands
+
+- `pea run FILE` executes a program.
+- `pea repl` opens the interactive shell.
+- `pea fmt PATH...` formats source.
+- `pea check PATH...` performs static checks.
+- `pea test [PATH...]` runs `.pea` tests.
+- `pea docs FILE` generates API notes.
+- `pea init PATH` creates a project.
+- `pea start` runs the project entry point.
+- `pea add NAME PATH` and `pea remove NAME` manage local dependencies.
+
+## Included language features
+
+Variables and constants, lists and dictionaries, functions with defaults and closures, conditions and loops, imports and exports, exceptions, assertions, interpolation, parallel expressions, project manifests, standard namespaces, AI-provider adapters, tools, agents, and reusable skills.
+
+## Security
+
+PeaLang is not a sandbox. Process execution is disabled unless `--allow-process` is explicitly supplied. Run untrusted programs only in an OS-level container or restricted account. See `docs/SECURITY.md`.
 
 ## Documentation
-Read `docs/LANGUAGE_BASICS.md`, `docs/FOUNDATIONS.md`, `docs/MODULES_AND_NAMESPACES.md`, `docs/EXECUTION_MODEL.md`, `docs/USER_GUIDE.md`, and `docs/help/`.
 
-## License
-MIT.
+Start with `docs/BASICS.md`, `docs/USER_GUIDE.md`, `LANGUAGE.md`, `docs/PROJECTS.md`, and `docs/TROUBLESHOOTING.md`.

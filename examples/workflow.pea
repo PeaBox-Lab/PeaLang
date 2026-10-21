@@ -1,5 +1,0 @@
-let loaded = workflow.step("load", [100, 250, 500])
-let calculated = workflow.step("total", loaded.value[0] + loaded.value[1] + loaded.value[2])
-let result = workflow.result("invoice", [loaded, calculated])
-assert result.ok, "workflow failed"
-print "Workflow {result.name}: {result.steps[1].value}"

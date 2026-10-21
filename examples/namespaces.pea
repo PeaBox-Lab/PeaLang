@@ -1,2 +1,0 @@
-import "modules/math.pea" as math
-print math.square(9)

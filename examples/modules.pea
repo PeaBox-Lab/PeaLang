@@ -1,0 +1,2 @@
+import "math_utils" as math
+print math.double(21)

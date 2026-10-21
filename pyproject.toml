@@ -1,17 +1,16 @@
 [build-system]
-requires=["setuptools>=68"]
-build-backend="setuptools.build_meta"
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
 [project]
-name="pealang"
-version="0.10.0"
-description="A small language for big ideas"
-readme="README.md"
-requires-python=">=3.9"
-license={text="MIT"}
-authors=[{name="PeaBox Lab"}]
-keywords=["language","interpreter","automation","education"]
+name = "pealang"
+version = "0.11.0"
+description = "A small readable automation and AI workflow language"
+readme = "README.md"
+requires-python = ">=3.9"
+license = {text = "MIT"}
+authors = [{name = "PeaBox Labs"}]
 [project.scripts]
-pea="pealang.cli:main"
-pealang="pealang.cli:main"
-[tool.setuptools.packages.find]
-include=["pealang*"]
+pea = "pealang.cli:main"
+pealang = "pealang.cli:main"
+[tool.pytest.ini_options]
+testpaths = ["tests"]

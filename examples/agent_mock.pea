@@ -1,6 +1,0 @@
-ai.configure({"provider":"mock","model":"demo"})
-let researcher = agent.define("researcher", "Summarise the input clearly.", [], "demo")
-let result = agent.run(researcher, "PeaLang supports readable automation.")
-print result.agent
-print result.provider
-print result.text

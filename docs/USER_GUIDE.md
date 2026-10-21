@@ -1,13 +1,12 @@
-# PeaLang User Guide v0.10.0
+# User Guide
 
-## Run programs
-Use `pea file.pea`, `pea run file.pea`, `pea repl`, or `pea start` for a project.
+## Workflow
+1. `pea init my-project`
+2. Edit `main.pea`.
+3. Run `pea check .`.
+4. Run `pea start`.
+5. Put reusable modules in `modules/`.
+6. Put executable language tests in `pea_tests/` with optional matching `.out` files.
 
-## Structure programs
-Move related reusable functions/constants into modules, explicitly export their public API, then import with an alias. Prefer `math.square()` over placing `square()` directly into global scope.
-
-## Preserve compatibility
-Existing unaliased imports still work. Convert them gradually when namespace boundaries are useful.
-
-## Develop safely
-Use `pea check` to catch undefined exported symbols and ordinary source errors, then run tests. Module visibility prevents name collisions but does not isolate filesystem/network/process permissions.
+## Automation
+Use `file`, `json`, `csv`, `http`, and `datetime`. Enable `process.run` only for trusted code with `--allow-process`.

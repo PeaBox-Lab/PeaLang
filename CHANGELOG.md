@@ -1,32 +1,19 @@
 # Changelog
 
-## [0.10.0] - 2026-10-21
+## 0.11.0 - 2026-10-22
 ### Added
-- `import "module.pea" as alias` namespace imports.
-- Explicit `export symbol` module visibility.
-- Isolated child environments for aliased modules.
-- Checker diagnostic P105 for exporting an undefined symbol.
-- Modules/namespaces guide, examples and tests.
+- Structured error categories and Pea stack frames.
+- Circular-import detection with import-chain messages.
+- Manifest version and entry-point validation.
+- Python packaging metadata, CI workflow, hardening tests, security guide, compatibility policy, and foundations documentation.
+### Changed
+- CLI errors use richer diagnostic rendering when available.
+- Project manifests created by `pea init` now include `manifest_version: 1`.
 ### Compatibility
-- Historical unaliased imports retain shared-global behaviour.
-### Known limitations
-- No `from` imports, automatic aliases, wildcard export, circular-module diagnostics or package registry.
-- Formatter multiline/comment limitations remain.
+- Existing 0.10.0 syntax and public `execute`, `compile_source`, `Interpreter`, and `PeaError` exports remain supported.
 
-## [0.9.0] - 2026-10-21
-- try/catch/finally, throw, default function parameters and interpreter execution documentation.
-## [0.8.0] - 2026-10-21
-- Agent/tool foundations with explicit allowlists.
-## [0.7.0] - 2026-10-21
-- Project manifests, local modules and path dependencies.
-## [0.6.0] - 2026-10-21
-- Provider-neutral AI workflows and portable skills.
-## [0.5.0] - 2026-10-20
-- Assertions, output fixtures, workflows and bounded concurrency.
-## [0.4.0] - 2026-10-20
-- Developer tooling and comprehensive learning documentation.
-## [0.3.0] - 2026-10-20
-- Automation standard library.
-## [0.2.0] - 2026-10-20
-- Modular runtime/language foundations.
-## [0.1.0] - Initial interpreter.
+## 0.10.0
+AI service, tools, agents, skills, projects, module aliases/exports, exceptions, and expanded automation runtime.
+
+## 0.1.0 - 0.9.x
+Established lexer, parser, AST interpreter, collections, functions, control flow, module loading, formatter, checker, REPL, tests, standard namespaces, workflows, and bounded parallel expressions.

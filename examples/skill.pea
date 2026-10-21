@@ -1,4 +1,0 @@
-skill.load("summarise.skill.json")
-let prompt = skill.render("summarise", {"text":"PeaLang is a small language for automation and AI workflows."})
-let response = ai.ask(prompt, {"provider":"mock"})
-print response.text

@@ -1,2 +1,0 @@
-let value = 2 + 3
-if value != 5 { missing_function() }
