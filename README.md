@@ -1,6 +1,6 @@
-# PeaLang 0.11.0
+# PeaLang 0.12.0
 
-PeaLang is a compact, readable language for automation, workflows, local tools, and AI-oriented applications. Version 0.11.0 is the **Language Hardening** release. It preserves the 0.10 syntax while improving diagnostics, imports, project validation, packaging, tests, and release discipline.
+PeaLang is a compact, readable language for automation, workflows, local tools, and AI-oriented applications. Version 0.12.0 is the **Dependency Integrity** release, building on the 0.11 hardening baseline. It preserves the 0.10 syntax while improving diagnostics, imports, project validation, packaging, tests, and release discipline.
 
 ## Install
 
@@ -47,3 +47,7 @@ PeaLang is not a sandbox. Process execution is disabled unless `--allow-process`
 ## Documentation
 
 Start with `docs/BASICS.md`, `docs/USER_GUIDE.md`, `LANGUAGE.md`, `docs/PROJECTS.md`, and `docs/TROUBLESHOOTING.md`.
+
+## Dependency integrity
+
+After `pea add NAME PATH`, run `pea lock` to create `pea.lock`. Commit the lockfile. Use `pea verify` in CI or before deployment; exit code 1 indicates missing, removed, or hash-mismatched dependencies.

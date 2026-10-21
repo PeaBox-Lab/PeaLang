@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.12.0 - 2026-10-22
+### Added
+- Deterministic `pea.lock` generation.
+- SHA-256 integrity capture for local dependency entry files.
+- `pea lock` and `pea verify` commands.
+- Lockfile tamper/change detection and tests.
+### Compatibility
+- `pea.json` format remains compatible with 0.11.0. Lockfiles are opt-in.
+
 ## 0.11.0 - 2026-10-22
 ### Added
 - Structured error categories and Pea stack frames.

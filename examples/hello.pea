@@ -1,2 +1,2 @@
 let name = "PeaLang"
-print "Hello {name} 0.11.0"
+print "Hello {name} 0.12.0"

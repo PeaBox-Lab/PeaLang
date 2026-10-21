@@ -2,7 +2,7 @@ import argparse,sys,json
 from pathlib import Path
 from .runtime import execute,Interpreter,PeaError
 from .tooling import format_file,check_source,discover_pea,generate_docs
-from .project import load_manifest,init_project,add_dependency,remove_dependency,project_info
+from .project import load_manifest,init_project,add_dependency,remove_dependency,project_info,write_lock,verify_lock
 from . import __version__
 def repl():
     print(f'PeaLang {__version__} - type :help for help or exit to quit');vm=Interpreter();buf=''
@@ -39,6 +39,10 @@ def main(argv=None):
             p=argparse.ArgumentParser(prog='pea add');p.add_argument('name');p.add_argument('path');p.add_argument('--project',default='.');a=p.parse_args(argv[1:]);print(json.dumps(add_dependency(a.name,a.path,a.project),indent=2));return 0
         if c=='remove':
             p=argparse.ArgumentParser(prog='pea remove');p.add_argument('name');p.add_argument('--project',default='.');a=p.parse_args(argv[1:]);remove_dependency(a.name,a.project);return 0
+        if c=='lock':
+            target=argv[1] if len(argv)>1 else '.';path,lock=write_lock(target);print(path);return 0
+        if c=='verify':
+            target=argv[1] if len(argv)>1 else '.';result=verify_lock(target);print(json.dumps(result,indent=2));return 0 if result['ok'] else 1
         if c=='start':
             mf,data=load_manifest(argv[1] if len(argv)>1 else '.')
             if not mf:raise PeaError('No pea.json found')
@@ -75,7 +79,7 @@ def main(argv=None):
             return 0
         allow='--allow-process' in argv
         if allow:argv.remove('--allow-process')
-        if len(argv)!=1:print('Usage: pea [init|project|add|remove|start|run|fmt|check|test|docs|repl] ...',file=sys.stderr);return 2
+        if len(argv)!=1:print('Usage: pea [init|project|add|remove|lock|verify|start|run|fmt|check|test|docs|repl] ...',file=sys.stderr);return 2
         return run_file(argv[0],allow)
     except (PeaError,OSError) as e:print(e.render() if hasattr(e,'render') else f'Error: {e}',file=sys.stderr);return 1
 if __name__=='__main__':raise SystemExit(main())
