@@ -44,6 +44,19 @@ class Parser:
             return ContinueStmt(span=x.span)
         if self.match('IMPORT'):
             p=self.need('STRING','Expected a quoted .pea path after import');return ImportStmt(p.value,span=x.span)
+        if self.match('ASSERT'):
+            condition=self.expression();message=None
+            if self.match(','):message=self.expression()
+            return AssertStmt(condition,message,span=x.span)
+        if self.match('THROW'):return ThrowStmt(self.expression(),span=x.span)
+        if self.match('TRY'):
+            body=self.block();self.skip();name=None;catch_body=None;finally_body=None
+            if self.match('CATCH'):
+                if self.cur().kind=='IDENT':name=self.advance().value
+                catch_body=self.block();self.skip()
+            if self.match('FINALLY'):finally_body=self.block()
+            if catch_body is None and finally_body is None:raise PeaError('try requires catch or finally',x.span,self.source_name)
+            return TryStmt(body,name,catch_body,finally_body,span=x.span)
         expr=self.expression()
         if self.cur().kind in ('=','+=','-=','*=','/='):
             if not isinstance(expr,(Variable,Index,Property)):raise PeaError('Invalid assignment target',expr.span,self.source_name)
@@ -64,10 +77,13 @@ class Parser:
             else:no=self.block()
         return IfStmt(c,yes,no,span=span)
     def function(self,span):
-        n=self.need('IDENT').value;self.need('(');p=[]
+        n=self.need('IDENT').value;self.need('(');p=[];saw_default=False
         if self.cur().kind!=')':
             while True:
-                p.append(self.need('IDENT').value)
+                pt=self.need('IDENT');default=None
+                if self.match('='):default=self.expression();saw_default=True
+                elif saw_default:raise PeaError('Required parameter cannot follow a default parameter',pt.span,self.source_name)
+                p.append(Param(pt.value,default,span=pt.span))
                 if not self.match(','):break
         self.need(')');return FunctionStmt(n,p,self.block(),span=span)
     def expression(self):return self.or_expr()
@@ -111,6 +127,11 @@ class Parser:
         if self.match('FALSE'):return Literal(False,span=x.span)
         if self.match('NULL'):return Literal(None,span=x.span)
         if self.match('IDENT'):return Variable(x.value,span=x.span)
+        if self.match('PARALLEL'):
+            self.skip();self.need('{');items=[];self.skip()
+            while self.cur().kind!='}':
+                items.append(self.expression());self.skip()
+            self.need('}');return ParallelExpr(items,span=x.span)
         if self.match('('):e=self.expression();self.need(')');return e
         if self.match('['):
             a=[]

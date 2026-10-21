@@ -8,6 +8,7 @@ import subprocess
 import urllib.error
 import urllib.parse
 import urllib.request
+import time
 from pathlib import Path
 from typing import Any
 from .errors import PeaError
@@ -108,6 +109,20 @@ def _process_runner(enabled):
         return {'exit_code':result.returncode,'stdout':result.stdout,'stderr':result.stderr,'ok':result.returncode==0}
     return run
 
+
+def _task_sleep(seconds): time.sleep(float(seconds));return None
+def _task_retry(callable_value, attempts=3, delay=0):
+    attempts=max(1,int(attempts));last=None
+    for i in range(attempts):
+        try:return callable_value()
+        except Exception as ex:
+            last=ex
+            if i+1<attempts and float(delay)>0:time.sleep(float(delay))
+    raise last
+
+def _workflow_step(name, value): return {'name':str(name),'value':value,'ok':True}
+def _workflow_result(name, steps): return {'name':str(name),'steps':list(steps),'ok':all(bool(x.get('ok',False)) for x in steps)}
+
 def build_standard_library(allow_process=False):
     import shutil
     globals()['shutil']=shutil
@@ -121,4 +136,6 @@ def build_standard_library(allow_process=False):
       'regex':_ns(match=_regex_match,find=_regex_find,replace=_regex_replace,split=_regex_split),
       'http':_ns(request=_http_request,get=lambda url,headers=None,timeout=15:_http_request('GET',url,None,headers,timeout),post=lambda url,body=None,headers=None,timeout=15:_http_request('POST',url,body,headers,timeout),json=_http_json,urlencode=_http_urlencode),
       'process':_ns(run=_process_runner(allow_process)),
+      'task':_ns(sleep=_task_sleep,retry=_task_retry),
+      'workflow':_ns(step=_workflow_step,result=_workflow_result),
     }

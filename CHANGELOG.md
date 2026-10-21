@@ -1,36 +1,34 @@
 # Changelog
 
-## [0.4.0] - 2026-10-20
+## [0.9.0] - 2026-10-21
 ### Added
-- Canonical `pea fmt` formatter with recursive discovery and CI check mode.
-- `pea check` static checker with P100, P101, P102 and P104 diagnostics.
-- `pea test` language-level smoke/integration runner.
-- `pea docs` Markdown API generator for public functions.
-- Consolidated `run`, `repl`, `fmt`, `check`, `test`, and `docs` CLI commands.
-- REPL `:help`, `:vars`, and `:clear` commands.
-- Dedicated language basics, foundations, tooling, CLI, formatter, checker and test help documentation.
-- Developer-tooling tests and a PeaLang smoke-test directory.
+- `try / catch / finally` language-level exception handling.
+- `throw` statement.
+- Catch error objects with message/source/line/column fields.
+- Default function parameters with required-before-default validation.
+- Dedicated execution-model and running-program documentation.
 ### Changed
-- Version updated to 0.4.0.
-- Direct `pea file.pea` execution remains compatible while `pea run file.pea` is now explicit.
-- README and guides reorganized around a learn-build-check-test workflow.
+- Roadmap focus moved from AI/agent expansion to core language maturity and runtime usability.
+- Function parameter AST now uses explicit parameter nodes supporting defaults.
+### Compatibility
+- v0.1-v0.8 capabilities remain available.
 ### Known limitations
-- Formatter does not preserve comments in v0.4.
-- Checker is not a type checker and does not resolve imported declarations.
-- Pea test runner treats successful execution as pass and has no native assertion syntax yet.
-- API docs do not extract doc comments yet.
+- No named arguments, variadic arguments, multiline strings, optional/static types, namespace-isolated imports or stack-frame traceback yet.
+- Formatter multiline/comment limitations remain.
 
+## [0.8.0] - 2026-10-21
+- Explicit agent/tool registry and per-agent tool-name allowlists.
+## [0.7.0] - 2026-10-21
+- Project manifests, local modules and path dependencies.
+## [0.6.0] - 2026-10-21
+- Provider-neutral AI workflows, structured outputs and portable skills.
+## [0.5.0] - 2026-10-20
+- Assertions, output fixtures, workflows, task helpers and bounded concurrency.
+## [0.4.0] - 2026-10-20
+- Formatter, checker, test runner, docs generator, richer REPL and comprehensive learning documentation.
 ## [0.3.0] - 2026-10-20
-### Added
-- Namespaced `file`, `path`, `json`, `csv`, `env`, `datetime`, `regex`, `http`, and guarded `process` automation APIs.
-- Structured HTTP responses and process opt-in through `--allow-process`.
-### Changed
-- Namespaced APIs became preferred while compatible flat built-ins remained.
-
+- Automation standard library and guarded processes.
 ## [0.2.0] - 2026-10-20
-### Added
-- Typed AST and source spans, modular runtime, diagnostics, break/continue, interpolation, property access, indexed/property assignment, local imports, formal grammar and CI.
-
+- Modular runtime, typed AST/spans, diagnostics, loop control, interpolation, mutation, imports, grammar and CI.
 ## [0.1.0] - Initial baseline
-### Added
-- Variables/constants, expressions, conditions, loops, functions/recursion, lists/dictionaries, file operations, built-ins, REPL and CLI.
+- Core interpreted language and CLI.

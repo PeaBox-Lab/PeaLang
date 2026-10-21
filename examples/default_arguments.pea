@@ -1,0 +1,5 @@
+function greet(name, greeting="Hello") {
+    return "{greeting} {name}!"
+}
+print greet("Rajesh")
+print greet("Rajesh", "Welcome")

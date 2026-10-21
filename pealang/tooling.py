@@ -12,7 +12,7 @@ class Diagnostic:
     severity:str; code:str; message:str; line:int=1; col:int=1
     def render(self,path='<input>'): return f'{path}:{self.line}:{self.col}: {self.severity} {self.code}: {self.message}'
 
-KEYWORD_TEXT={'LET':'let','CONST':'const','PRINT':'print','IF':'if','ELSE':'else','WHILE':'while','FOR':'for','IN':'in','FUNCTION':'function','RETURN':'return','TRUE':'true','FALSE':'false','NULL':'null','AND':'and','OR':'or','NOT':'not','BREAK':'break','CONTINUE':'continue','IMPORT':'import'}
+KEYWORD_TEXT={'LET':'let','CONST':'const','PRINT':'print','IF':'if','ELSE':'else','WHILE':'while','FOR':'for','IN':'in','FUNCTION':'function','RETURN':'return','TRUE':'true','FALSE':'false','NULL':'null','AND':'and','OR':'or','NOT':'not','BREAK':'break','CONTINUE':'continue','IMPORT':'import','ASSERT':'assert','PARALLEL':'parallel','TRY':'try','CATCH':'catch','FINALLY':'finally','THROW':'throw'}
 
 def format_source(source:str)->str:
     tokens=Lexer(source).tokens();out=[];line='';indent=0
@@ -54,7 +54,7 @@ def format_file(path,check=False):
     p.write_text(formatted,encoding='utf-8');return True
 
 class Checker:
-    BUILTINS={'range','len','str','number','int','type','upper','lower','split','join','append','keys','values','json','read','write','exists','sqrt','round','sleep','file','path','csv','env','datetime','regex','http','process'}
+    BUILTINS={'range','len','str','number','int','type','upper','lower','split','join','append','keys','values','json','read','write','exists','sqrt','round','sleep','file','path','csv','env','datetime','regex','http','process','task','workflow','ai','skill','agent','tool'}
     def __init__(self):self.diags=[];self.scopes=[set(self.BUILTINS)];self.used=set();self.declared={}
     def add(self,code,msg,node,severity='warning'):
         span=getattr(node,'span',None);self.diags.append(Diagnostic(severity,code,msg,span.line if span else 1,span.col if span else 1))
@@ -76,8 +76,12 @@ class Checker:
         elif isinstance(s,WhileStmt):self.expr(s.condition);self.block(s.body)
         elif isinstance(s,ForStmt):self.expr(s.iterable);self.scopes.append({s.name});self.block(s.body,new_scope=False);self.scopes.pop()
         elif isinstance(s,FunctionStmt):
-            self.declare(s.name,s);self.scopes.append(set(s.params));self.block(s.body,new_scope=False);self.scopes.pop()
+            self.declare(s.name,s);self.scopes.append(set(p.name for p in s.params));[self.expr(p.default) for p in s.params if p.default is not None];self.block(s.body,new_scope=False);self.scopes.pop()
         elif isinstance(s,ReturnStmt) and s.value:self.expr(s.value)
+        elif isinstance(s,AssertStmt):self.expr(s.condition);self.expr(s.message)
+        elif isinstance(s,ThrowStmt):self.expr(s.value)
+        elif isinstance(s,TryStmt):
+            self.block(s.try_body);self.scopes.append({s.catch_name} if s.catch_name else set());self.block(s.catch_body or [],new_scope=False);self.scopes.pop();self.block(s.finally_body or [])
     def block(self,body,new_scope=True):
         if new_scope:self.scopes.append(set())
         for s in body:self.stmt(s)
@@ -95,6 +99,7 @@ class Checker:
         elif isinstance(e,ListExpr):[self.expr(x) for x in e.items]
         elif isinstance(e,DictExpr):[(self.expr(k),self.expr(v)) for k,v in e.pairs]
         elif isinstance(e,InterpolatedString):[self.expr(x) for x in e.parts if not isinstance(x,str)]
+        elif isinstance(e,ParallelExpr):[self.expr(x) for x in e.expressions]
 
 def check_source(source,source_name='<input>'):
     try:return Checker().check(parse_source(source,source_name))
@@ -115,5 +120,5 @@ def generate_docs(source,path='<input>'):
     if not funcs:lines.append('No public functions found.')
     for f in funcs:
         if f.name.startswith('_'):continue
-        lines += [f'## `{f.name}({", ".join(f.params)})`','',f'Defined at line {f.span.line if f.span else "?"}.','']
+        lines += [f'## `{f.name}({", ".join(p.name + ("=?" if p.default is not None else "") for p in f.params)})`','',f'Defined at line {f.span.line if f.span else "?"}.','']
     return '\n'.join(lines).rstrip()+'\n'

@@ -1,2 +1,2 @@
-# Additions and Improvements in v0.4.0
-This release adds a complete first developer loop around the interpreter: formatter, static checks, executable language tests, API documentation and REPL inspection. It also establishes permanent documentation expectations for PeaLang releases: detailed README, cumulative changelog, release notes, help files, user guide, language basics and language foundations.
+# Additions and Improvements in v0.9.0
+PeaLang's roadmap is now language-first. v0.9 adds fundamental exception handling and practical default function arguments while documenting exactly how programs execute through the interpreter. AI/agent features remain available but no longer drive the release sequence.

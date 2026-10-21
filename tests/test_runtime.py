@@ -2,6 +2,7 @@ import tempfile,unittest
 from pathlib import Path
 from pealang import execute,PeaError
 from pealang.tooling import format_source,check_source,generate_docs
+from pealang.project import init_project,load_manifest,add_dependency,resolve_module
 class RuntimeTests(unittest.TestCase):
     def runpea(self,s,**kw):out=[];execute(s,output=out.append,**kw);return out
     def test_math(self):self.assertEqual(self.runpea('print 2 + 3 * 4'),['14'])
@@ -88,6 +89,80 @@ class DeveloperToolingTests(unittest.TestCase):
         ds=check_source('let unused=1');self.assertTrue(any(d.code=='P104' for d in ds))
     def test_docs_generator(self):
         doc=generate_docs('function add(a,b){return a+b}','math.pea');self.assertIn('add(a, b)',doc)
+
+
+class WorkflowConcurrencyTests(unittest.TestCase):
+    def runpea(self,source):
+        out=[];execute(source,output=out.append);return out
+    def test_assert_pass(self):execute('assert 2 + 2 == 4')
+    def test_assert_fail_message(self):
+        with self.assertRaisesRegex(PeaError,'math failed'):execute('assert false, "math failed"')
+    def test_parallel_expressions(self):
+        self.assertEqual(self.runpea('let r=parallel { 2+3 4*5 }\nprint r[0]\nprint r[1]'),['5','20'])
+    def test_parallel_empty(self):self.assertEqual(self.runpea('let r=parallel {}\nprint len(r)'),['0'])
+    def test_workflow_helpers(self):
+        self.assertEqual(self.runpea('let a=workflow.step("load", 5)\nlet r=workflow.result("demo",[a])\nprint r.ok\nprint r.steps[0].value'),['true','5'])
+
+
+class AIWorkflowTests(unittest.TestCase):
+    def runpea(self,source,**kwargs):out=[];execute(source,output=out.append,**kwargs);return out
+    def test_ai_mock_ask(self):self.assertEqual(self.runpea('ai.configure({"provider":"mock","model":"demo"})\nlet r=ai.ask("hello")\nprint r.provider\nprint r.text'),['mock','hello'])
+    def test_ai_extract_mock(self):self.assertEqual(self.runpea('let r=ai.extract({"name":"Pea","n":3},{"name":"string","n":"number"})\nprint r.name+str(r.n)'),['Pea3'])
+    def test_ai_validate_failure(self):
+        with self.assertRaisesRegex(PeaError,"must be number"):execute('ai.validate({"n":"x"},{"n":"number"})')
+    def test_ai_unknown_provider(self):
+        with self.assertRaisesRegex(PeaError,'Unknown AI provider'):execute('ai.configure({"provider":"unknown"})\nai.ask("x")')
+    def test_ai_credential_external(self):
+        with self.assertRaisesRegex(PeaError,'credential environment variable'):execute('ai.configure({"provider":"openai-compatible","base_url":"http://127.0.0.1:1/v1","api_key_env":"PEALANG_TEST_MISSING_KEY"})\nai.ask("x")')
+    def test_skill_registry(self):
+        import tempfile,json
+        with tempfile.TemporaryDirectory() as d:
+            Path(d,'s.json').write_text(json.dumps({'name':'hello','prompt':'Hello {name}'}),encoding='utf-8')
+            self.assertEqual(self.runpea('skill.load("s.json")\nprint skill.render("hello",{"name":"Rajesh"})',base_dir=d),['Hello Rajesh'])
+
+
+class ProjectModelTests(unittest.TestCase):
+    def test_init_manifest(self):
+        import tempfile
+        with tempfile.TemporaryDirectory() as d:
+            init_project(d,'demo');mf,data=load_manifest(d);self.assertEqual(data['project']['name'],'demo');self.assertTrue(Path(d,'main.pea').is_file())
+    def test_local_module_resolution(self):
+        import tempfile
+        with tempfile.TemporaryDirectory() as d:
+            init_project(d,'demo');Path(d,'modules','math.pea').write_text('function double(x){return x*2}',encoding='utf-8');mf,data=load_manifest(d);out=[];execute('import "math"\nprint double(5)',output=out.append,base_dir=d,project_root=d,dependencies=data['dependencies']);self.assertEqual(out,['10'])
+    def test_path_dependency(self):
+        import tempfile
+        with tempfile.TemporaryDirectory() as d:
+            app=Path(d,'app');lib=Path(d,'lib');init_project(app,'app');init_project(lib,'lib');Path(lib,'main.pea').write_text('function triple(x){return x*3}',encoding='utf-8');add_dependency('mylib',str(lib),app);mf,data=load_manifest(app);out=[];execute('import "mylib"\nprint triple(4)',output=out.append,base_dir=app,project_root=app,dependencies=data['dependencies']);self.assertEqual(out,['12'])
+    def test_manifest_validation(self):
+        import tempfile
+        with tempfile.TemporaryDirectory() as d:
+            Path(d,'pea.json').write_text('{"project":{"name":"x"}}',encoding='utf-8')
+            with self.assertRaises(PeaError):load_manifest(d)
+
+
+class AgentToolTests(unittest.TestCase):
+    def runpea(self,source):out=[];execute(source,output=out.append);return out
+    def test_agent_mock_run(self):
+        self.assertEqual(self.runpea('ai.configure({"provider":"mock"})\nlet a=agent.define("helper","Help",[])\nlet r=agent.run(a,"hello")\nprint r.agent\nprint r.provider'),['helper','mock'])
+    def test_registered_tool_call(self):
+        self.assertEqual(self.runpea('function double(x){return x*2}\ntool.register("double",double)\nlet a=agent.define("calc","",["double"])\nprint agent.tool(a,"double",[6])'),['12'])
+    def test_tool_denied(self):
+        with self.assertRaisesRegex(PeaError,'not permitted'):execute('function double(x){return x*2}\ntool.register("double",double)\nlet a=agent.define("calc","",[])\nagent.tool(a,"double",[6])')
+    def test_tool_unknown(self):
+        with self.assertRaisesRegex(PeaError,'not registered'):execute('let a=agent.define("x","",["missing"])\nagent.tool(a,"missing",[])')
+    def test_tool_metadata(self):
+        self.assertEqual(self.runpea('function ping(){return "pong"}\ntool.register("ping",ping,"Health check","safe")\nlet d=tool.describe("ping")\nprint d.permission'),['safe'])
+
+
+class LanguageMaturityTests(unittest.TestCase):
+    def runpea(self,source):out=[];execute(source,output=out.append);return out
+    def test_default_arguments(self):self.assertEqual(self.runpea('function greet(name,word="Hello"){return word+" "+name}\nprint greet("Rajesh")\nprint greet("Rajesh","Hi")'),['Hello Rajesh','Hi Rajesh'])
+    def test_try_catch(self):self.assertEqual(self.runpea('try { throw "boom" } catch err { print err.message }'),['boom'])
+    def test_try_finally(self):self.assertEqual(self.runpea('try { print "work" } finally { print "done" }'),['work','done'])
+    def test_catch_runtime_error(self):self.assertEqual(self.runpea('try { print missing } catch err { print "caught" }'),['caught'])
+    def test_throw_uncaught(self):
+        with self.assertRaisesRegex(PeaError,'stop'):execute('throw "stop"')
 
 if __name__=='__main__':unittest.main()
 

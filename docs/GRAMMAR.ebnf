@@ -23,3 +23,13 @@ call = "(" , [ expression , { "," , expression } ] , ")" ;
 index = "[" , expression , "]" ; property = "." , IDENT ;
 assignmentOp = "=" | "+=" | "-=" | "*=" | "/=" ;
 separator = NEWLINE | ";" ;
+
+(* v0.5 additions *)
+assertStmt = "assert" , expression , [ "," , expression ] ;
+parallelExpr = "parallel" , "{" , { separator | expression } , "}" ;
+
+
+(* v0.9 additions *)
+tryStmt = "try" , block , [ "catch" , [ IDENT ] , block ] , [ "finally" , block ] ;
+throwStmt = "throw" , expression ;
+parameter = IDENT , [ "=" , expression ] ;

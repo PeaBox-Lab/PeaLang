@@ -1,29 +1,15 @@
-# PeaLang Foundations
+# PeaLang Foundations v0.9.0
 
-## Design goals
-PeaLang favors readability, a small grammar, predictable automation and beginner-friendly diagnostics. It is a tree-walk interpreted language hosted by Python 3.9+.
+PeaLang is an interpreted language. Lexer -> recursive-descent Parser -> typed AST -> tree-walk Interpreter is the authoritative v0.9 execution pipeline.
 
-## Execution pipeline
-1. The lexer converts characters into tokens and records source positions.
-2. The recursive-descent parser converts tokens into typed AST dataclasses.
-3. The checker can inspect the AST without executing it.
-4. The interpreter evaluates statements and expressions using chained lexical environments.
-5. The standard library exposes host capabilities through named dictionaries such as `json`, `csv`, and `http`.
+## Scope
+Chained environments implement lexical scope and closures. Blocks use child environments; functions capture their declaration environment.
 
-## Scope and closures
-Each function captures the environment where it is declared. Blocks and function calls create child scopes. Variables are resolved from the nearest scope outward.
+## Errors
+`PeaError` is the language runtime error boundary. `throw` creates one; `try/catch/finally` handles it at language level. Catch objects expose message and source-location data.
 
-## Truth and control flow
-Conditions use host-style truthiness in v0.4. `and` and `or` short-circuit. Internal control-flow signals implement return, break and continue.
+## Function defaults
+Parser `Param` nodes carry optional default expressions. Required parameters must precede defaults. Missing optional arguments evaluate their default expression at call time in the function call environment.
 
-## Mutability
-`const` prevents rebinding of a name. It does not deeply freeze a list or dictionary stored under that name. Lists and dictionaries remain mutable through index/property assignment.
-
-## Data boundary
-Automation APIs convert between PeaLang values and standard formats. JSON preserves compatible nested values. CSV reads cells as strings. HTTP responses are dictionaries. Date/time helpers use ISO text to remain portable.
-
-## Compatibility principle
-Existing valid programs should continue to run unless a breaking change is explicitly approved, versioned and documented. New developer tooling is additive and the `runtime.py` facade preserves the public Python API.
-
-## Safety boundary
-The interpreter is not a security sandbox. Language simplicity does not limit operating-system permissions. Use restricted accounts, filesystem controls and network egress policies for sensitive execution.
+## Runtime direction
+PeaLang will remain interpreter-first until grammar, module semantics and standard-library contracts are stable. Bytecode/VM work is a later optimisation and distribution project, not a prerequisite for usability.

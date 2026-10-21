@@ -11,3 +11,6 @@ let name = "PeaLang"
 print "Welcome to {name}!"
 ```
 Run it with `pea welcome.pea`.
+
+## Project quick start (v0.7)
+Run `pea init my-app`, enter the directory, then `pea start`. Use `modules/` for reusable project code and `pea add name path` for local dependencies.

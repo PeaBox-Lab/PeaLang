@@ -26,3 +26,21 @@
 
 ## process
 `process.run(command, args?, timeout?, cwd?)` uses an argument list and never invokes a shell. It returns `exit_code`, `stdout`, `stderr`, and `ok`. It is disabled unless explicitly enabled.
+
+## task (v0.5)
+`task.sleep(seconds)` and `task.retry(callable, attempts?, delay?)`.
+
+## workflow (v0.5)
+`workflow.step(name, value)` returns a named successful step dictionary. `workflow.result(name, steps)` aggregates steps and an overall `ok` flag.
+
+## ai (v0.6)
+`configure`, `info`, `ask`, `validate`, and `extract`. Providers: deterministic `mock` and configurable `openai-compatible`.
+
+## skill (v0.6)
+`load`, `list`, `get`, and `render` for portable JSON prompt skills.
+
+## tool (v0.8)
+`register`, `list`, `describe`, `call`. `agent.tool` should be preferred because it automatically supplies the agent allowlist.
+
+## agent (v0.8)
+`define`, `run`, `tool`. Runs are synchronous and tool execution is explicit.

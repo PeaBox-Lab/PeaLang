@@ -1,0 +1,6 @@
+ai.configure({"provider":"mock","model":"demo"})
+let result = ai.ask("Hello from PeaLang")
+print result.provider
+print result.text
+let person = ai.extract({"name":"Rajesh","score":9}, {"name":"string","score":"number"})
+print "{person.name}: {person.score}"

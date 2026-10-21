@@ -1,0 +1,4 @@
+function double(x) { return x * 2 }
+tool.register("double", double, "Double a number", "safe")
+let calculator = agent.define("calculator", "Use approved tools only.", ["double"])
+print agent.tool(calculator, "double", [21])

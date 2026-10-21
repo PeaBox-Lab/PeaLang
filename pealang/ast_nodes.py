@@ -24,7 +24,7 @@ class WhileStmt(Stmt): condition:Optional[Expr]=None; body:list[Stmt]=field(defa
 @dataclass
 class ForStmt(Stmt): name:str=''; iterable:Optional[Expr]=None; body:list[Stmt]=field(default_factory=list)
 @dataclass
-class FunctionStmt(Stmt): name:str=''; params:list[str]=field(default_factory=list); body:list[Stmt]=field(default_factory=list)
+class FunctionStmt(Stmt): name:str=''; params:list[Any]=field(default_factory=list); body:list[Stmt]=field(default_factory=list)
 @dataclass
 class ReturnStmt(Stmt): value:Optional[Expr]=None
 @dataclass
@@ -53,3 +53,16 @@ class Property(Expr): target:Optional[Expr]=None; name:str=''
 class Call(Expr): callee:Optional[Expr]=None; args:list[Expr]=field(default_factory=list)
 @dataclass
 class InterpolatedString(Expr): parts:list[Any]=field(default_factory=list)
+
+@dataclass
+class AssertStmt(Stmt): condition:Optional[Expr]=None; message:Optional[Expr]=None
+@dataclass
+class ParallelExpr(Expr): expressions:list[Expr]=field(default_factory=list)
+
+@dataclass
+class TryStmt(Stmt):
+    try_body:list[Stmt]=field(default_factory=list); catch_name:Optional[str]=None; catch_body:Optional[list[Stmt]]=None; finally_body:Optional[list[Stmt]]=None
+@dataclass
+class ThrowStmt(Stmt): value:Optional[Expr]=None
+@dataclass
+class Param(Node): name:str=''; default:Optional[Expr]=None

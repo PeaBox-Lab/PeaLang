@@ -1,21 +1,17 @@
-# PeaLang v0.4.0 Test Report
+# PeaLang v0.9.0 Test Report
 
-- **Validation date:** 2026-10-20
-- **Environment:** Linux container, Python 3.12.15
-- **Unit tests:** 31 passed, 0 failures, 0 errors
-- **Compilation:** `python -m compileall -q pealang tests` passed
-- **CLI version:** returned `PeaLang 0.4.0`
-- **Direct/run command:** passed with the bundled hello example
-- **Pea test command:** 1 language smoke test passed
-- **Formatter:** rewrite and subsequent `--check` passed
-- **Checker:** checked the formatted tooling demo without an error
-- **Docs generator:** generated a Markdown API reference successfully
-- **Wheel:** `pealang-0.4.0-py3-none-any.whl` built successfully
+- Validation date: 2026-10-21
+- Environment: Linux container, Python 3.12.15
+- Python unit tests: 56 passed, 0 failures, 0 errors
+- PeaLang language tests: 2 passed, 0 failed
+- Compilation check: passed
+- CLI version: `PeaLang 0.9.0`
+- Error-handling example: passed, including catch and finally
+- Default-argument example: passed
+- Wheel: `pealang-0.9.0-py3-none-any.whl` built successfully
 
-## Regression coverage
+## v0.9 coverage
+Five new tests cover default arguments, try/catch, try/finally, catching ordinary runtime errors, and uncaught throw behavior. All 51 v0.8 tests remain.
 
-The 27 v0.3 tests remain and cover the v0.1-v0.3 interpreter, diagnostics, collection mutation, imports and automation standard library. Four v0.4 unit tests cover formatter idempotence, undefined-variable checking, unused-variable warnings and API documentation generation.
-
-## Validation boundaries
-
-The GitHub Actions Python 3.9-3.13 matrix has not yet run remotely. The checker is not a type checker and does not resolve imported symbols. The formatter does not preserve comments in v0.4. The language-level test runner validates successful execution but does not yet supply native assertions or expected-output fixtures.
+## Boundaries
+No compiler or bytecode VM is included; v0.9 is intentionally interpreter-first. No named/variadic arguments, type annotations, namespace imports or full stack traces yet. GitHub Actions' multi-Python matrix has not run remotely here. Known formatter multiline/comment limitations remain.

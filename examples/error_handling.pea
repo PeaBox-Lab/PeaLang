@@ -1,0 +1,7 @@
+try {
+    throw "example failure"
+} catch err {
+    print "Caught: {err.message}"
+} finally {
+    print "Cleanup complete"
+}

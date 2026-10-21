@@ -9,7 +9,7 @@ class Token:
     @property
     def span(self): return SourceSpan(self.line,self.col)
 
-KEYWORDS={"let","const","print","if","else","while","for","in","function","return","true","false","null","and","or","not","break","continue","import"}
+KEYWORDS={"let","const","print","if","else","while","for","in","function","return","true","false","null","and","or","not","break","continue","import","assert","parallel","try","catch","finally","throw"}
 
 class Lexer:
     def __init__(self,text:str,source_name='<input>'):

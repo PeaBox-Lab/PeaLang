@@ -1,0 +1,2 @@
+assert 2 + 3 == 5, "math should work"
+print "assertions ok"

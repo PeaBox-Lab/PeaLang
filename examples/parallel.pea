@@ -1,0 +1,8 @@
+let results = parallel {
+    sqrt(81)
+    upper("pealang")
+    len([1, 2, 3, 4])
+}
+print results[0]
+print results[1]
+print results[2]
