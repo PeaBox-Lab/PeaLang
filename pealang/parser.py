@@ -43,7 +43,11 @@ class Parser:
             if not self.loop_depth:raise PeaError("'continue' is only valid inside a loop",x.span,self.source_name)
             return ContinueStmt(span=x.span)
         if self.match('IMPORT'):
-            p=self.need('STRING','Expected a quoted .pea path after import');return ImportStmt(p.value,span=x.span)
+            p=self.need('STRING','Expected a quoted module path after import');alias=None
+            if self.match('AS'):alias=self.need('IDENT','Expected alias after as').value
+            return ImportStmt(p.value,alias,span=x.span)
+        if self.match('EXPORT'):
+            name=self.need('IDENT','Expected symbol name after export');return ExportStmt(name.value,span=x.span)
         if self.match('ASSERT'):
             condition=self.expression();message=None
             if self.match(','):message=self.expression()

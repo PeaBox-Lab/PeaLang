@@ -1,10 +1,11 @@
 # Version History
-- **v0.1.0:** Initial interpreter.
-- **v0.2.0:** Runtime/language foundations.
-- **v0.3.0:** Automation library.
-- **v0.4.0:** Developer tooling and learning docs.
-- **v0.5.0:** Assertions/workflows/concurrency.
-- **v0.6.0:** AI workflow APIs.
-- **v0.7.0:** Projects/modules/local dependencies.
-- **v0.8.0:** Agent/tool foundations.
-- **v0.9.0:** Language-first maturity: exceptions, throw, default arguments, execution-model documentation.
+- v0.1 Initial interpreter
+- v0.2 runtime/language foundations
+- v0.3 automation library
+- v0.4 developer tooling/docs
+- v0.5 workflows/concurrency
+- v0.6 AI workflows
+- v0.7 projects/local dependencies
+- v0.8 agent/tool foundations
+- v0.9 exceptions/default arguments
+- **v0.10 modules, namespaces and explicit exports**

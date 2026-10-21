@@ -164,5 +164,26 @@ class LanguageMaturityTests(unittest.TestCase):
     def test_throw_uncaught(self):
         with self.assertRaisesRegex(PeaError,'stop'):execute('throw "stop"')
 
+
+class ModuleNamespaceTests(unittest.TestCase):
+    def runpea(self,source,**kwargs):out=[];execute(source,output=out.append,**kwargs);return out
+    def test_alias_namespace_export(self):
+        import tempfile
+        with tempfile.TemporaryDirectory() as d:
+            Path(d,'math.pea').write_text('function square(x){return x*x}\nfunction hidden(){return 9}\nexport square',encoding='utf-8')
+            self.assertEqual(self.runpea('import "math.pea" as math\nprint math.square(6)',base_dir=d),['36'])
+    def test_unexported_hidden(self):
+        import tempfile
+        with tempfile.TemporaryDirectory() as d:
+            Path(d,'m.pea').write_text('function hidden(){return 9}',encoding='utf-8')
+            with self.assertRaisesRegex(PeaError,"Property 'hidden' not found"):execute('import "m.pea" as m\nprint m.hidden()',base_dir=d)
+    def test_legacy_import_compat(self):
+        import tempfile
+        with tempfile.TemporaryDirectory() as d:
+            Path(d,'m.pea').write_text('function old(){return 7}',encoding='utf-8')
+            self.assertEqual(self.runpea('import "m.pea"\nprint old()',base_dir=d),['7'])
+    def test_export_outside_module(self):
+        with self.assertRaisesRegex(PeaError,'only valid inside'):execute('let x=1\nexport x')
+
 if __name__=='__main__':unittest.main()
 

@@ -1,13 +1,13 @@
-# PeaLang User Guide v0.9.0
+# PeaLang User Guide v0.10.0
 
-## Run code
-Install the runtime, create a `.pea` file and run `pea file.pea`. For a project, use `pea init` then `pea start`. Use `pea repl` for experiments.
+## Run programs
+Use `pea file.pea`, `pea run file.pea`, `pea repl`, or `pea start` for a project.
 
-## Write robust programs
-Use `try/catch/finally` around operations that can fail and `throw` for domain validation failures. Catch errors close to where you can handle them meaningfully; allow unexpected errors to surface during development.
+## Structure programs
+Move related reusable functions/constants into modules, explicitly export their public API, then import with an alias. Prefer `math.square()` over placing `square()` directly into global scope.
 
-## Design functions
-Put mandatory arguments first and optional arguments last. Defaults make common calls concise without requiring overloads.
+## Preserve compatibility
+Existing unaliased imports still work. Convert them gradually when namespace boundaries are useful.
 
-## Develop
-Format, check and test before running. Project/module, automation, workflow, AI and agent capabilities from earlier releases remain available, but language maturity is now the primary roadmap.
+## Develop safely
+Use `pea check` to catch undefined exported symbols and ordinary source errors, then run tests. Module visibility prevents name collisions but does not isolate filesystem/network/process permissions.

@@ -20,7 +20,7 @@ class ContinueSignal(Exception):pass
 class UserFunction:params:list;body:list[Stmt];closure:Env
 class Interpreter:
     def __init__(self,output=None,base_dir=None,allow_process=False,project_root=None,dependencies=None):
-        self.output=output or print;self.global_env=Env();self.env=self.global_env;self.base_dir=Path(base_dir or '.').resolve();self.source_name='<input>';self.imported=set();self.project_root=Path(project_root).resolve() if project_root else self.base_dir;self.dependencies=dependencies or {}
+        self.output=output or print;self.global_env=Env();self.env=self.global_env;self.module_exports=None;self.base_dir=Path(base_dir or '.').resolve();self.source_name='<input>';self.imported=set();self.project_root=Path(project_root).resolve() if project_root else self.base_dir;self.dependencies=dependencies or {}
         builtins={'range':lambda *a:list(range(*map(int,a))),'len':len,'str':lambda x:self.stringify(x),'number':lambda x:float(x),'int':lambda x:int(float(x)),'type':lambda x:type(x).__name__,'upper':lambda x:str(x).upper(),'lower':lambda x:str(x).lower(),'split':lambda x,s=None:str(x).split(s),'join':lambda s,x:str(s).join(map(str,x)),'append':self._append,'keys':lambda d:list(d.keys()),'values':lambda d:list(d.values()),'read':lambda p:Path(p).read_text(encoding='utf-8'),'write':self._write,'exists':os.path.exists,'sqrt':math.sqrt,'round':round,'sleep':time.sleep}
         for k,v in builtins.items():self.global_env.define(k,v,True)
         for k,v in build_standard_library(allow_process=allow_process).items():self.global_env.define(k,v,True)
@@ -77,7 +77,10 @@ class Interpreter:
             if isinstance(s,ReturnStmt):raise ReturnSignal(self.eval(s.value) if s.value else None)
             if isinstance(s,BreakStmt):raise BreakSignal()
             if isinstance(s,ContinueStmt):raise ContinueSignal()
-            if isinstance(s,ImportStmt):return self.import_file(s.path,s)
+            if isinstance(s,ImportStmt):return self.import_file(s.path,s,s.alias)
+            if isinstance(s,ExportStmt):
+                if self.module_exports is None:raise PeaError('export is only valid inside an imported module',s.span,self.source_name)
+                self.module_exports.add(s.name);return None
             if isinstance(s,AssertStmt):
                 if not self.truth(self.eval(s.condition)):
                     message=self.stringify(self.eval(s.message)) if s.message else 'Assertion failed'
@@ -96,13 +99,20 @@ class Interpreter:
             raise PeaError(f'Unknown statement {type(s).__name__}',s.span,self.source_name)
         except (PeaError,ReturnSignal,BreakSignal,ContinueSignal):raise
         except Exception as ex:raise PeaError(str(ex),s.span,self.source_name) from ex
-    def import_file(self,name,node):
+    def import_file(self,name,node,alias=None):
         path=resolve_module(name,self.base_dir,self.project_root,self.dependencies)
-        if path in self.imported:return None
         if not path.is_file():raise PeaError(f"Module not found: {name}",node.span,self.source_name)
-        self.imported.add(path);src=path.read_text(encoding='utf-8');oldbase=self.base_dir;oldskill=self.skill_registry.base_dir;self.base_dir=path.parent;self.skill_registry.base_dir=path.parent
-        try:return self.run(parse_source(src,str(path)),str(path))
-        finally:self.base_dir=oldbase;self.skill_registry.base_dir=oldskill
+        if alias is None:
+            if path in self.imported:return None
+            self.imported.add(path);src=path.read_text(encoding='utf-8');oldbase=self.base_dir;oldskill=self.skill_registry.base_dir;self.base_dir=path.parent;self.skill_registry.base_dir=path.parent
+            try:return self.run(parse_source(src,str(path)),str(path))
+            finally:self.base_dir=oldbase;self.skill_registry.base_dir=oldskill
+        src=path.read_text(encoding='utf-8');module_env=Env(self.global_env);oldenv=self.env;oldbase=self.base_dir;oldskill=self.skill_registry.base_dir;oldexports=self.module_exports
+        self.env=module_env;self.base_dir=path.parent;self.skill_registry.base_dir=path.parent;self.module_exports=set()
+        try:
+            self.run(parse_source(src,str(path)),str(path));names=self.module_exports;values={n:module_env.values[n] for n in names if n in module_env.values};self.global_env.define(alias,values,True);return values
+        finally:self.env=oldenv;self.base_dir=oldbase;self.skill_registry.base_dir=oldskill;self.module_exports=oldexports
+
     def invoke_user_function(self, f, args):
         required=sum(1 for p in f.params if getattr(p,'default',None) is None)
         if len(args)<required or len(args)>len(f.params):raise PeaError(f'Expected {required} to {len(f.params)} arguments, got {len(args)}')

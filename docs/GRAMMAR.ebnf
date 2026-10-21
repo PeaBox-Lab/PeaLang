@@ -33,3 +33,7 @@ parallelExpr = "parallel" , "{" , { separator | expression } , "}" ;
 tryStmt = "try" , block , [ "catch" , [ IDENT ] , block ] , [ "finally" , block ] ;
 throwStmt = "throw" , expression ;
 parameter = IDENT , [ "=" , expression ] ;
+
+(* v0.10 additions *)
+importStmtV10 = "import" , STRING , [ "as" , IDENT ] ;
+exportStmt = "export" , IDENT ;

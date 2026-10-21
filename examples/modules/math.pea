@@ -1,0 +1,3 @@
+function square(x) { return x * x }
+function private_helper() { return 999 }
+export square

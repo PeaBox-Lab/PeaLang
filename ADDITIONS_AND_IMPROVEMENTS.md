@@ -1,2 +1,2 @@
-# Additions and Improvements in v0.9.0
-PeaLang's roadmap is now language-first. v0.9 adds fundamental exception handling and practical default function arguments while documenting exactly how programs execute through the interpreter. AI/agent features remain available but no longer drive the release sequence.
+# Additions and Improvements in v0.10.0
+PeaLang now supports clean module namespaces and explicit public exports. This removes the need for new code to dump every imported declaration into global scope while preserving old programs. The release continues the language-first roadmap.

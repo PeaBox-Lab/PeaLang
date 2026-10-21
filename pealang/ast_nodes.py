@@ -32,7 +32,7 @@ class BreakStmt(Stmt): pass
 @dataclass
 class ContinueStmt(Stmt): pass
 @dataclass
-class ImportStmt(Stmt): path:str=''
+class ImportStmt(Stmt): path:str=''; alias:Optional[str]=None
 @dataclass
 class Literal(Expr): value:Any=None
 @dataclass
@@ -66,3 +66,6 @@ class TryStmt(Stmt):
 class ThrowStmt(Stmt): value:Optional[Expr]=None
 @dataclass
 class Param(Node): name:str=''; default:Optional[Expr]=None
+
+@dataclass
+class ExportStmt(Stmt): name:str=''

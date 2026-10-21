@@ -1,12 +1,10 @@
-# PeaLang v0.9.0 Release Notes
-v0.9.0 is the first release after explicitly refocusing the roadmap on PeaLang as a programming language.
+# PeaLang v0.10.0 Release Notes
+v0.10.0 makes multi-file PeaLang code substantially cleaner by introducing explicit module APIs and namespaces.
 
 ## Highlights
-- Real language-level error handling with try/catch/finally and throw.
-- Default function arguments.
-- Clear interpreter/execution documentation for people who want to write and run PeaLang programs.
+- Namespace import aliases.
+- Explicit exports.
+- Private module declarations stay out of imported namespaces.
+- Legacy imports remain supported.
 
-## Direction
-PeaLang stays interpreter-first. The next milestones prioritise proper module namespaces, optional typing, standard-library maturity, standalone runtime distribution, VS Code/LSP and debugging before any bytecode/compiler work.
-
-See `TEST_REPORT.md` for actual validation.
+This is a language-focused release. No compiler is needed; execution remains interpreter-based. See `TEST_REPORT.md` for validation.

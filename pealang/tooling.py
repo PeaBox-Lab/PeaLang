@@ -12,7 +12,7 @@ class Diagnostic:
     severity:str; code:str; message:str; line:int=1; col:int=1
     def render(self,path='<input>'): return f'{path}:{self.line}:{self.col}: {self.severity} {self.code}: {self.message}'
 
-KEYWORD_TEXT={'LET':'let','CONST':'const','PRINT':'print','IF':'if','ELSE':'else','WHILE':'while','FOR':'for','IN':'in','FUNCTION':'function','RETURN':'return','TRUE':'true','FALSE':'false','NULL':'null','AND':'and','OR':'or','NOT':'not','BREAK':'break','CONTINUE':'continue','IMPORT':'import','ASSERT':'assert','PARALLEL':'parallel','TRY':'try','CATCH':'catch','FINALLY':'finally','THROW':'throw'}
+KEYWORD_TEXT={'LET':'let','CONST':'const','PRINT':'print','IF':'if','ELSE':'else','WHILE':'while','FOR':'for','IN':'in','FUNCTION':'function','RETURN':'return','TRUE':'true','FALSE':'false','NULL':'null','AND':'and','OR':'or','NOT':'not','BREAK':'break','CONTINUE':'continue','IMPORT':'import','ASSERT':'assert','PARALLEL':'parallel','TRY':'try','CATCH':'catch','FINALLY':'finally','THROW':'throw','EXPORT':'export','AS':'as'}
 
 def format_source(source:str)->str:
     tokens=Lexer(source).tokens();out=[];line='';indent=0
@@ -78,6 +78,10 @@ class Checker:
         elif isinstance(s,FunctionStmt):
             self.declare(s.name,s);self.scopes.append(set(p.name for p in s.params));[self.expr(p.default) for p in s.params if p.default is not None];self.block(s.body,new_scope=False);self.scopes.pop()
         elif isinstance(s,ReturnStmt) and s.value:self.expr(s.value)
+        elif isinstance(s,ImportStmt):
+            if s.alias:self.declare(s.alias,s)
+        elif isinstance(s,ExportStmt):
+            if not self.defined(s.name):self.add('P105',f"Cannot export undefined symbol '{s.name}'",s,'error')
         elif isinstance(s,AssertStmt):self.expr(s.condition);self.expr(s.message)
         elif isinstance(s,ThrowStmt):self.expr(s.value)
         elif isinstance(s,TryStmt):

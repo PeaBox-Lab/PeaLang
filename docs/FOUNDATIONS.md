@@ -1,15 +1,15 @@
-# PeaLang Foundations v0.9.0
+# PeaLang Foundations v0.10.0
 
-PeaLang is an interpreted language. Lexer -> recursive-descent Parser -> typed AST -> tree-walk Interpreter is the authoritative v0.9 execution pipeline.
+PeaLang remains an interpreted language built around Lexer -> Parser -> typed AST -> Interpreter.
 
-## Scope
-Chained environments implement lexical scope and closures. Blocks use child environments; functions capture their declaration environment.
+## Module environments
+An aliased module executes in an `Env` whose parent is the interpreter global environment. Module-local declarations therefore do not pollute the caller. Explicitly exported local values are copied into a namespace dictionary bound to the alias.
 
-## Errors
-`PeaError` is the language runtime error boundary. `throw` creates one; `try/catch/finally` handles it at language level. Catch objects expose message and source-location data.
+## Visibility
+`export` controls namespace visibility. It is not an access-control or sandbox mechanism. Module code still executes with ordinary PeaLang runtime privileges.
 
-## Function defaults
-Parser `Param` nodes carry optional default expressions. Required parameters must precede defaults. Missing optional arguments evaluate their default expression at call time in the function call environment.
+## Compatibility
+Unaliased imports keep the v0.2-v0.9 shared-scope semantics. This allows old programs to run while new code adopts namespaces.
 
-## Runtime direction
-PeaLang will remain interpreter-first until grammar, module semantics and standard-library contracts are stable. Bytecode/VM work is a later optimisation and distribution project, not a prerequisite for usability.
+## Direction
+The next language milestone is optional typing and checker enforcement. Runtime compilation remains deferred until semantics are stable.

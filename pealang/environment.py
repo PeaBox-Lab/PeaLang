@@ -19,3 +19,5 @@ class Env:
             self.values[n]=v;return v
         if self.parent:return self.parent.set(n,v,span,source_name)
         raise PeaError(f"Undefined variable '{n}'",span,source_name)
+
+    def snapshot(self):return dict(self.values)

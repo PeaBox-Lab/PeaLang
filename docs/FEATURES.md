@@ -22,3 +22,6 @@ Explicit tool registration, tool metadata, per-agent name allowlists, one-shot A
 
 ## v0.9 language maturity
 Language-level try/catch/finally, throw and trailing default function arguments are implemented. PeaLang remains interpreter-first.
+
+## v0.10 modules/namespaces
+Aliased namespace imports and explicit exports are implemented while legacy imports remain compatible.

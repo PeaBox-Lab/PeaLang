@@ -1,47 +1,32 @@
-# PeaLang Language Basics v0.9.0
+# PeaLang Language Basics v0.10.0
 
-## First program
-```pea
-let name = "World"
-print "Hello {name}!"
-```
-Run it with `pea hello.pea`.
+Run a file with `pea file.pea`. PeaLang is interpreted, so compilation is not required.
 
-## Values
-Numbers, strings, booleans, `null`, lists and dictionaries.
+## Values and bindings
+Numbers, strings, booleans, `null`, lists and dictionaries. `let` can be rebound; `const` cannot.
 
-## Bindings
-`let` is reassignable. `const` prevents rebinding.
-
-## Decisions and loops
-Use `if/else`, `for`, `while`, `break`, and `continue`.
+## Control flow
+`if/else`, `for`, `while`, `break`, and `continue`.
 
 ## Functions
-```pea
-function add(a, b=1) { return a + b }
-```
-Functions use lexical closures, support recursion and now support trailing default arguments.
+Functions use lexical scope, support recursion and trailing default parameters.
 
-## Collections
-Use `items[0]`, `person["name"]` and `person.name`; indexes/properties can be assigned.
+## Collections and strings
+Lists/dictionaries support index/property access and mutation. Strings support `{expression}` interpolation.
 
 ## Errors
+Use `try/catch/finally` and `throw`.
+
+## Modules
+Prefer namespace imports:
 ```pea
-try {
-    throw "bad input"
-} catch err {
-    print err.message
-} finally {
-    print "finished"
-}
+import "math.pea" as math
+print math.square(4)
 ```
-`throw` raises a PeaLang error. `catch` handles it or other `PeaError` runtime failures. `finally` always runs.
+The module must explicitly `export square`.
 
-## Assertions
-`assert total > 0, "total must be positive"`.
+## Projects
+Use `pea init`, `pea start`, project `modules/`, and local path dependencies.
 
-## Modules/projects
-Local file imports, project modules and local path dependencies remain supported.
-
-## Quality workflow
-`pea fmt`, `pea check`, `pea test`, then `pea run`/`pea start`.
+## Quality
+Use `pea fmt`, `pea check`, `pea test`, and `pea docs`.

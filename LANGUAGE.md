@@ -82,3 +82,6 @@ Agents and tools are runtime namespaces; no new syntax is introduced. Agents hav
 
 ## Default parameters (v0.9)
 Functions may define trailing defaults, e.g. `function greet(name, greeting="Hello")`.
+
+## Namespace modules (v0.10)
+Use `export name` in modules and `import "module.pea" as alias` in callers. Exported values are available as `alias.name`.
