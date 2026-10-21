@@ -5,7 +5,7 @@ from pealang import execute, compile_source, __version__
 from pealang.errors import PeaError
 from pealang.project import load_manifest
 
-def test_version(): assert __version__ == "0.12.0"
+def test_version(): assert __version__ == "0.13.0"
 def test_compat_execute():
     out=[]; execute('let x = 2\nprint x * 3', output=out.append); assert out == ['6']
 def test_default_parameter():

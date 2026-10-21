@@ -1,0 +1,1 @@
+{"scopeName":"source.pea","patterns":[{"match":"\\b(let|const|function|return|if|else|while|for|in|import|export|try|catch|finally|throw|parallel|assert)\\b","name":"keyword.control.pea"},{"begin":"\"","end":"\"","name":"string.quoted.double.pea"}],"repository":{}}

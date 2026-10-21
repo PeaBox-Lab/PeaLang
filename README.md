@@ -1,6 +1,6 @@
-# PeaLang 0.12.0
+# PeaLang 0.13.0
 
-PeaLang is a compact, readable language for automation, workflows, local tools, and AI-oriented applications. Version 0.12.0 is the **Dependency Integrity** release, building on the 0.11 hardening baseline. It preserves the 0.10 syntax while improving diagnostics, imports, project validation, packaging, tests, and release discipline.
+PeaLang is a compact, readable language for automation, workflows, local tools, and AI-oriented applications. Version 0.13.0 is the **Editor Intelligence** release, adding an experimental language server and VS Code integration foundation. It preserves the 0.10 syntax while improving diagnostics, imports, project validation, packaging, tests, and release discipline.
 
 ## Install
 
@@ -51,3 +51,7 @@ Start with `docs/BASICS.md`, `docs/USER_GUIDE.md`, `LANGUAGE.md`, `docs/PROJECTS
 ## Dependency integrity
 
 After `pea add NAME PATH`, run `pea lock` to create `pea.lock`. Commit the lockfile. Use `pea verify` in CI or before deployment; exit code 1 indicates missing, removed, or hash-mismatched dependencies.
+
+## Editor tooling
+
+Run `pea lsp` to start the stdio language server. It currently supports parse diagnostics, completion candidates, hover, and same-document definition lookup. A starter VS Code client lives in `editors/vscode`.

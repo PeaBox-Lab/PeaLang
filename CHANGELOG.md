@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.13.0 - 2026-10-22
+### Added
+- Editor intelligence API for diagnostics, symbols, definitions, hover and completions.
+- Experimental stdio JSON-RPC language server via `pea lsp`.
+- VS Code extension starter for `.pea` files.
+- Editor/LSP regression tests and documentation.
+### Compatibility
+- Runtime semantics and 0.12 lockfiles remain compatible.
+
 ## 0.12.0 - 2026-10-22
 ### Added
 - Deterministic `pea.lock` generation.
