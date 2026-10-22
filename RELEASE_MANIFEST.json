@@ -1,16 +1,16 @@
 {
-  "version": "0.31.0",
-  "previous_version": "0.30.0",
-  "previous_context_files": 123,
-  "current_clean_files": 122,
-  "baseline_missing": [],
+  "version": "0.32.0",
+  "previous_version": "0.31.0",
+  "previous_clean_files": 122,
+  "current_clean_files": 127,
   "files_added": [
-    "PEALANG_AI_DEVELOPMENT_HANDOVER 0.31.md",
-    "docs/SIGNED_PACKAGES.md",
-    "pealang/signing.py",
-    "pealang/secure_packages.py",
-    "tests/test_signed_packages_v031.py"
+    "PEALANG_AI_DEVELOPMENT_HANDOVER 0.32.md",
+    "docs/ED25519_REGISTRY.md",
+    "pealang/ed25519_signing.py",
+    "pealang/registry.py",
+    "tests/test_ed25519_registry_v032.py"
   ],
-  "tests_passed": 118,
+  "files_removed": [],
+  "tests_passed": 128,
   "status": "PASS"
 }

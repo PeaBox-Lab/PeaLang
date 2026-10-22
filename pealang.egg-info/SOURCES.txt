@@ -14,6 +14,7 @@ pealang/compiler.py
 pealang/dap.py
 pealang/debugger.py
 pealang/disassembler.py
+pealang/ed25519_signing.py
 pealang/embedding.py
 pealang/environment.py
 pealang/errors.py
@@ -24,6 +25,7 @@ pealang/observability.py
 pealang/package_manager.py
 pealang/parser.py
 pealang/project.py
+pealang/registry.py
 pealang/release_integrity.py
 pealang/runtime.py
 pealang/runtime_http.py
@@ -47,6 +49,7 @@ tests/test_async_vm_v026.py
 tests/test_bytecode_v020.py
 tests/test_dap.py
 tests/test_debugger.py
+tests/test_ed25519_registry_v032.py
 tests/test_embedding_v018.py
 tests/test_fastapi_v025.py
 tests/test_hardening_v030.py

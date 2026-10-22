@@ -1,20 +1,22 @@
-# PeaLang 0.31.0 Release Notes
+# PeaLang 0.32.0 Release Notes
 
-PeaLang 0.31 secures the package ecosystem with signed-package foundations and hardened extraction.
+PeaLang 0.32 upgrades the package supply-chain foundation to public-key Ed25519 signatures and verified registry installation primitives.
 
 ## Added
 
-- HMAC-SHA256 `.peapkg` signatures with package SHA-256 binding.
-- Random 256-bit signing-key generation and deterministic key IDs.
-- Signature verification with constant-time comparison.
-- JSON trust store for publisher keys and named registries.
-- HTTPS-only registry configuration policy.
-- Safe archive extraction with path-traversal and link rejection.
-- Installation receipts with provenance data.
-- Dependency-confusion guard foundation.
-- `pea keygen`, `pea sign`, `pea verify`, and `pea trust` commands.
-- Ten signed-package security tests.
+- Ed25519 private/public publisher key generation.
+- Public-key fingerprints and signature envelopes.
+- Ed25519 signing and verification over package SHA-256.
+- Public-key-only trust store.
+- Signing-key revocation records and registry rejection of revoked keys.
+- HTTPS registry fetch using the system CA trust store.
+- Content-addressed package cache.
+- Verified install and offline-cache install primitives.
+- Optional lockfile SHA-256 verification during download.
+- `pea keygen-ed25519`, `pea sign-ed25519`, and `pea verify-ed25519`.
+- `cryptography>=42` runtime dependency.
+- Ten Ed25519/registry security tests.
 
-## Security note
+## Compatibility
 
-This release deliberately uses shared-secret HMAC signing rather than claiming a mature public package-signing PKI. A public registry should not be enabled until Ed25519 signatures, key rotation/revocation, authenticated registry transport, and publisher identity policies are implemented.
+The v0.31 HMAC commands remain for controlled internal workflows. Ed25519 is the recommended signing mode from v0.32 onward.

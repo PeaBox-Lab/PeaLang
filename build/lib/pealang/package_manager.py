@@ -41,7 +41,7 @@ def load_pea_toml(root='.'):
 def init_manifest(root='.',name=None):
  root=Path(root).resolve();root.mkdir(parents=True,exist_ok=True);p=root/'pea.toml'
  if p.exists():raise PeaError('pea.toml already exists')
- n=name or root.name;p.write_text(f'[project]\nname = "{n}"\nversion = "0.1.0"\nentry = "src/main.pea"\npealang = ">=0.31.0"\n\n[dependencies]\n\n[permissions]\nallow = []\n',encoding='utf-8');(root/'src').mkdir(exist_ok=True);(root/'src/main.pea').write_text(f'print "Hello from {n}"\n');return p
+ n=name or root.name;p.write_text(f'[project]\nname = "{n}"\nversion = "0.1.0"\nentry = "src/main.pea"\npealang = ">=0.32.0"\n\n[dependencies]\n\n[permissions]\nallow = []\n',encoding='utf-8');(root/'src').mkdir(exist_ok=True);(root/'src/main.pea').write_text(f'print "Hello from {n}"\n');return p
 def dependency_entries(data):return data.get('dependencies',{})
 def resolve(root='.'):
  mf,data=load_pea_toml(root);resolved=[]
@@ -56,7 +56,7 @@ def resolve(root='.'):
   elif 'registry' in spec:
    resolved.append({'name':name,'version':spec.get('version','0.0.0'),'source':'registry','registry':spec['registry'],'permissions':spec.get('permissions',[])})
   else:raise PeaError(f"Dependency '{name}' needs path, git, or registry")
- return {'lock_version':1,'pealang':'0.31.0','package':data['project'],'dependencies':resolved}
+ return {'lock_version':1,'pealang':'0.32.0','package':data['project'],'dependencies':resolved}
 def write_lock(root='.'):
  mf,_=load_pea_toml(root);lock=resolve(mf.parent);p=mf.parent/'pea.lock';p.write_text(json.dumps(lock,indent=2,sort_keys=True)+'\n');return p,lock
 def audit(root='.'):
