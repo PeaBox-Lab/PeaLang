@@ -1,9 +1,8 @@
-# PeaLang 0.13.0
+# PeaLang 0.14.0
 
-PeaLang is a compact, readable language for automation, workflows, local tools, and AI-oriented applications. Version 0.13.0 is the **Editor Intelligence** release, adding an experimental language server and VS Code integration foundation. It preserves the 0.10 syntax while improving diagnostics, imports, project validation, packaging, tests, and release discipline.
+PeaLang is a compact language for readable automation, workflows and AI-oriented tools. Version 0.14 adds debugger and cross-file workspace foundations while preserving the established interpreter, standard library, AI, skills, agents and project tooling.
 
 ## Install
-
 ```bash
 python -m venv .venv
 # Windows: .venv\Scripts\activate
@@ -12,46 +11,15 @@ python -m pip install -e .
 pea --version
 ```
 
-Requires Python 3.9 or newer.
-
-## First program
-
-```pea
-let name = "PeaLang"
-function greet(who = "world") { return "Hello {who}" }
-print greet(name)
+## Run
+```bash
+pea run examples/hello.pea
+pea debug examples/hello.pea --break=2
+pea index .
 ```
 
-Save as `hello.pea`, then run `pea run hello.pea`.
-
-## Commands
-
-- `pea run FILE` executes a program.
-- `pea repl` opens the interactive shell.
-- `pea fmt PATH...` formats source.
-- `pea check PATH...` performs static checks.
-- `pea test [PATH...]` runs `.pea` tests.
-- `pea docs FILE` generates API notes.
-- `pea init PATH` creates a project.
-- `pea start` runs the project entry point.
-- `pea add NAME PATH` and `pea remove NAME` manage local dependencies.
-
-## Included language features
-
-Variables and constants, lists and dictionaries, functions with defaults and closures, conditions and loops, imports and exports, exceptions, assertions, interpolation, parallel expressions, project manifests, standard namespaces, AI-provider adapters, tools, agents, and reusable skills.
+## Debugger
+`DebugSession` supports top-level breakpoints, step, continue, variable snapshots and a module stack frame. The command-line debugger emits JSON suitable for editor integration. Function-level stepping and a full Debug Adapter Protocol are planned next.
 
 ## Security
-
-PeaLang is not a sandbox. Process execution is disabled unless `--allow-process` is explicitly supplied. Run untrusted programs only in an OS-level container or restricted account. See `docs/SECURITY.md`.
-
-## Documentation
-
-Start with `docs/BASICS.md`, `docs/USER_GUIDE.md`, `LANGUAGE.md`, `docs/PROJECTS.md`, and `docs/TROUBLESHOOTING.md`.
-
-## Dependency integrity
-
-After `pea add NAME PATH`, run `pea lock` to create `pea.lock`. Commit the lockfile. Use `pea verify` in CI or before deployment; exit code 1 indicates missing, removed, or hash-mismatched dependencies.
-
-## Editor tooling
-
-Run `pea lsp` to start the stdio language server. It currently supports parse diagnostics, completion candidates, hover, and same-document definition lookup. A starter VS Code client lives in `editors/vscode`.
+PeaLang is not a sandbox. Keep process execution disabled for untrusted programs.

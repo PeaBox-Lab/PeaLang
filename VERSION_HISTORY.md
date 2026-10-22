@@ -2,10 +2,8 @@
 
 | Version | Theme |
 |---|---|
-| 0.1 | Working interpreter foundation |
-| 0.2-0.4 | Language, automation library, CLI and tooling |
-| 0.5-0.7 | Assertions, workflows, parallelism, exceptions |
-| 0.8-0.10 | Projects, modules, AI, skills, tools and agents |
+| 0.1-0.10 | Interpreter through AI/agent foundations |
 | 0.11 | Language hardening |
-| 0.12 | Dependency lockfile and integrity verification |
-| 0.13 | Editor intelligence, LSP and VS Code foundation |
+| 0.12 | Dependency integrity |
+| 0.13 | Editor intelligence and LSP foundation |
+| 0.14 | Debugger and cross-file workspace foundation |

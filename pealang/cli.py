@@ -2,7 +2,7 @@ import argparse,sys,json
 from pathlib import Path
 from .runtime import execute,Interpreter,PeaError
 from .tooling import format_file,check_source,discover_pea,generate_docs
-from .project import load_manifest,init_project,add_dependency,remove_dependency,project_info,write_lock,verify_lock
+from .project import load_manifest,init_project,add_dependency,remove_dependency,project_info
 from . import __version__
 def repl():
     print(f'PeaLang {__version__} - type :help for help or exit to quit');vm=Interpreter();buf=''
@@ -23,7 +23,7 @@ def run_file(path,allow_process=False):
     kwargs={}
     if mf:kwargs={'project_root':mf.parent,'dependencies':data.get('dependencies',{})}
     try:execute(p.read_text(encoding='utf-8'),source_name=str(p),base_dir=p.parent,allow_process=allow_process,**kwargs)
-    except (PeaError,OSError) as e:print(e.render() if hasattr(e,'render') else f'Error: {e}',file=sys.stderr);return 1
+    except (PeaError,OSError) as e:print(f'Error: {e}',file=sys.stderr);return 1
     return 0
 def main(argv=None):
     argv=list(sys.argv[1:] if argv is None else argv)
@@ -39,16 +39,19 @@ def main(argv=None):
             p=argparse.ArgumentParser(prog='pea add');p.add_argument('name');p.add_argument('path');p.add_argument('--project',default='.');a=p.parse_args(argv[1:]);print(json.dumps(add_dependency(a.name,a.path,a.project),indent=2));return 0
         if c=='remove':
             p=argparse.ArgumentParser(prog='pea remove');p.add_argument('name');p.add_argument('--project',default='.');a=p.parse_args(argv[1:]);remove_dependency(a.name,a.project);return 0
-        if c=='lsp':
-            from .lsp import serve; return serve()
-        if c=='lock':
-            target=argv[1] if len(argv)>1 else '.';path,lock=write_lock(target);print(path);return 0
-        if c=='verify':
-            target=argv[1] if len(argv)>1 else '.';result=verify_lock(target);print(json.dumps(result,indent=2));return 0 if result['ok'] else 1
         if c=='start':
             mf,data=load_manifest(argv[1] if len(argv)>1 else '.')
             if not mf:raise PeaError('No pea.json found')
             return run_file(mf.parent/data['project']['entry'])
+        if c=='debug':
+            from .debugger import DebugSession
+            path=Path(argv[1]);session=DebugSession(path.read_text(encoding='utf-8'),str(path),output=print,base_dir=path.parent)
+            for value in argv[2:]:
+                if value.startswith('--break='):session.add_breakpoint(int(value.split('=',1)[1]))
+            print(json.dumps(session.continue_run(),indent=2,default=str));return 0
+        if c=='index':
+            from .workspace import WorkspaceIndex
+            idx=WorkspaceIndex(argv[1] if len(argv)>1 else '.').build();print(json.dumps({'symbols':idx.symbols,'errors':idx.errors},indent=2));return 0
         if c=='run':
             p=argparse.ArgumentParser(prog='pea run');p.add_argument('file');p.add_argument('--allow-process',action='store_true');a=p.parse_args(argv[1:]);return run_file(a.file,a.allow_process)
         if c=='fmt':
@@ -81,7 +84,7 @@ def main(argv=None):
             return 0
         allow='--allow-process' in argv
         if allow:argv.remove('--allow-process')
-        if len(argv)!=1:print('Usage: pea [init|project|add|remove|lock|verify|lsp|start|run|fmt|check|test|docs|repl] ...',file=sys.stderr);return 2
+        if len(argv)!=1:print('Usage: pea [init|project|add|remove|start|run|debug|index|fmt|check|test|docs|repl] ...',file=sys.stderr);return 2
         return run_file(argv[0],allow)
-    except (PeaError,OSError) as e:print(e.render() if hasattr(e,'render') else f'Error: {e}',file=sys.stderr);return 1
+    except (PeaError,OSError) as e:print(f'Error: {e}',file=sys.stderr);return 1
 if __name__=='__main__':raise SystemExit(main())

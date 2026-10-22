@@ -20,7 +20,7 @@ class ContinueSignal(Exception):pass
 class UserFunction:params:list;body:list[Stmt];closure:Env
 class Interpreter:
     def __init__(self,output=None,base_dir=None,allow_process=False,project_root=None,dependencies=None):
-        self.output=output or print;self.global_env=Env();self.env=self.global_env;self.module_exports=None;self.base_dir=Path(base_dir or '.').resolve();self.source_name='<input>';self.imported=set();self.import_stack=[];self.project_root=Path(project_root).resolve() if project_root else self.base_dir;self.dependencies=dependencies or {}
+        self.output=output or print;self.global_env=Env();self.env=self.global_env;self.module_exports=None;self.base_dir=Path(base_dir or '.').resolve();self.source_name='<input>';self.imported=set();self.project_root=Path(project_root).resolve() if project_root else self.base_dir;self.dependencies=dependencies or {}
         builtins={'range':lambda *a:list(range(*map(int,a))),'len':len,'str':lambda x:self.stringify(x),'number':lambda x:float(x),'int':lambda x:int(float(x)),'type':lambda x:type(x).__name__,'upper':lambda x:str(x).upper(),'lower':lambda x:str(x).lower(),'split':lambda x,s=None:str(x).split(s),'join':lambda s,x:str(s).join(map(str,x)),'append':self._append,'keys':lambda d:list(d.keys()),'values':lambda d:list(d.values()),'read':lambda p:Path(p).read_text(encoding='utf-8'),'write':self._write,'exists':os.path.exists,'sqrt':math.sqrt,'round':round,'sleep':time.sleep}
         for k,v in builtins.items():self.global_env.define(k,v,True)
         for k,v in build_standard_library(allow_process=allow_process).items():self.global_env.define(k,v,True)
@@ -101,16 +101,12 @@ class Interpreter:
         except Exception as ex:raise PeaError(str(ex),s.span,self.source_name) from ex
     def import_file(self,name,node,alias=None):
         path=resolve_module(name,self.base_dir,self.project_root,self.dependencies)
-        if not path.is_file():raise PeaError(f"Module not found: {name}",node.span,self.source_name,category='import')
-        if path in self.import_stack:
-            chain=' -> '.join([p.name for p in self.import_stack]+[path.name])
-            raise PeaError(f'Circular import detected: {chain}',node.span,self.source_name,category='import')
+        if not path.is_file():raise PeaError(f"Module not found: {name}",node.span,self.source_name)
         if alias is None:
             if path in self.imported:return None
-            self.imported.add(path);self.import_stack.append(path);src=path.read_text(encoding='utf-8');oldbase=self.base_dir;oldskill=self.skill_registry.base_dir;self.base_dir=path.parent;self.skill_registry.base_dir=path.parent
+            self.imported.add(path);src=path.read_text(encoding='utf-8');oldbase=self.base_dir;oldskill=self.skill_registry.base_dir;self.base_dir=path.parent;self.skill_registry.base_dir=path.parent
             try:return self.run(parse_source(src,str(path)),str(path))
-            except PeaError as ex: raise ex.add_frame(self.source_name,node.span,'import')
-            finally:self.import_stack.pop();self.base_dir=oldbase;self.skill_registry.base_dir=oldskill
+            finally:self.base_dir=oldbase;self.skill_registry.base_dir=oldskill
         src=path.read_text(encoding='utf-8');module_env=Env(self.global_env);oldenv=self.env;oldbase=self.base_dir;oldskill=self.skill_registry.base_dir;oldexports=self.module_exports
         self.env=module_env;self.base_dir=path.parent;self.skill_registry.base_dir=path.parent;self.module_exports=set()
         try:
