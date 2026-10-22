@@ -1,12 +1,10 @@
 # Release Integrity
 
-Previous version: 0.28.0
-Current version: 0.29.0
-Previous files: 98
-Current files before manifest: 107
-Files added: 9
+Previous version: 0.29.0
+Current version: 0.30.0
+Previous files: 109
+Current files: 117
+Files added: 8
 Files removed: 0
-Intentional removals: None
-
+Tests passed: 108
 Status: PASS
-Tests passed: 102

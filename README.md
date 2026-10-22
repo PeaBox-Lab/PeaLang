@@ -1,28 +1,32 @@
-# PeaLang 0.29.0
+# PeaLang 0.30.0
 
-PeaLang is an embeddable extension language designed to extend Python, FastAPI, Java, Spring Boot, TypeScript, React, API services, workflows, and business applications.
+PeaLang is an embeddable extension language for Python, FastAPI, Java, Spring Boot, TypeScript, React, APIs, workflows, and business applications.
 
-## TypeScript
+## Production hardening
 
-The source release includes `typescript-sdk` with `@pealang/client`.
+Profile a program:
 
-```ts
-const pea = new PeaLangClient("http://127.0.0.1:8787");
-const result = await pea.invoke({module:"bonus",function:"calculate",args:[100000,0.15]});
+```bash
+pea profile app.pea
 ```
 
-## React
+Benchmark it:
 
-The `react-sdk` contains `PeaLangProvider`, `usePeaLang`, `usePeaFunction`, and the safe `PeaUi` schema renderer.
+```bash
+pea benchmark app.pea
+```
 
-## Runtime integration coverage
+The VM now exposes opt-in profiling, line coverage, instruction/opcode/function statistics, and transport-neutral observability events.
 
-- Python and FastAPI
-- Java and Spring Boot through the runtime sidecar
-- TypeScript and React through the service client
-- Sync and native async VM embedding
+## Integration coverage
+
+- Python / FastAPI
+- Java / Spring Boot runtime sidecar
+- TypeScript / React clients
+- Sync and native async VM
 - Optional static typing and semantic analysis
-- PEAC compiler/VM and DAP
-- Package manifests, locks, audit, and reproducible packages
+- DAP debugging
+- Package manifests, locks, auditing, reproducible packages
+- Release integrity and conformance gates
 
-See `docs/TYPESCRIPT_REACT.md`, `docs/JAVA_RUNTIME.md`, `docs/PACKAGES.md`, and `docs/ASYNC_VM.md`.
+See `docs/PROFILING_COVERAGE.md`, `docs/RELEASE_INTEGRITY.md`, `docs/TYPESCRIPT_REACT.md`, and `docs/JAVA_RUNTIME.md`.

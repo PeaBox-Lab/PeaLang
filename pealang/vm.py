@@ -20,8 +20,8 @@ class Handler:catch:int|None;finally_ip:int|None;end:int;name:str|None;stack_siz
 @dataclass
 class Frame:code:object;env:dict;ip:int=0;name:str='<module>';stack_base:int=0;handlers:list[Handler]=field(default_factory=list)
 class VirtualMachine:
- def __init__(self,output=None,max_instructions=100000,debug_hook=None,module_loader=None):
-  self.output=output or print;self.max_instructions=max_instructions;self.debug_hook=debug_hook;self.module_loader=module_loader;self.reset()
+ def __init__(self,output=None,max_instructions=100000,debug_hook=None,module_loader=None,instrumentation=None):
+  self.output=output or print;self.max_instructions=max_instructions;self.debug_hook=debug_hook;self.module_loader=module_loader;self.instrumentation=instrumentation;self.reset()
  def reset(self):self.instructions=0;self.stack=[];self.frames=[];self.exports={};self.paused=False;self.breakpoints=set();self.last_event=None;self.module_cache={}
  def run(self,module,globals=None):
   self.module=module;env=dict(globals or {});env.update({'len':len,'str':str,'int':int,'number':float,'upper':lambda x:str(x).upper(),'lower':lambda x:str(x).lower(),'append':lambda a,x:(a.append(x) or a)})
@@ -75,6 +75,7 @@ class VirtualMachine:
    f=self.frames[-1]
    if f.ip>=len(f.code.instructions):self.frames.pop();continue
    ins=f.code.instructions[f.ip]
+   if self.instrumentation:self.instrumentation.hook(self,f,ins)
    if self.debug_hook:self.debug_hook(self,f,ins)
    if (f.code.source_name,ins.line) in self.breakpoints and self.last_event!=(f.code.source_name,ins.line,f.ip):self.paused=True;self.last_event=(f.code.source_name,ins.line,f.ip);return {'reason':'breakpoint','source':f.code.source_name,'line':ins.line,'frame':f.name}
    f.ip+=1;self.instructions+=1

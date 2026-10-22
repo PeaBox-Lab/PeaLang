@@ -1,8 +1,8 @@
 # Roadmap
 
-- **0.29:** TypeScript SDK, React hooks, schema-driven UI profile, and browser capability model, delivered.
-- **0.30:** profiler, coverage, benchmarks, parser fuzzing, observability, release integrity gates, and production conformance suite.
-- **0.31:** package registry transport, signatures, trust store, safe remote install, and dependency-confusion defenses.
+- **0.30:** production hardening, profiling, coverage, benchmarks, observability, conformance, and release integrity, delivered.
+- **0.31:** signed remote package registry transport, trust store, safe extraction, Git verification, and dependency-confusion defenses.
 - **0.32:** WebAssembly VM prototype and cross-runtime differential conformance.
-- **0.33-0.34:** language specification completion, standard-library stabilization, host ABI freeze, and migration tooling.
-- **1.0:** stable grammar, type system, PEAC policy, embedding ABI, signed packages, security review, and LTS compatibility policy.
+- **0.33:** normative language specification, grammar tests, standard-library specification, and migration tooling.
+- **0.34:** stable host ABI and PEAC compatibility policy, performance optimization, and release-candidate hardening.
+- **1.0:** stable specification, security review, signed packages, cross-platform distribution, and LTS compatibility policy.

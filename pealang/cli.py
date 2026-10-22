@@ -31,6 +31,14 @@ def main(argv=None):
     if argv[0] in ('--version','-V'):print(f'PeaLang {__version__}');return 0
     c=argv[0]
     try:
+        if c=='profile':
+            from .compiler import compile_source_to_bytecode
+            from .vm import VirtualMachine
+            from .observability import Profiler,Coverage,Instrumentation
+            path=Path(argv[1]);prof=Profiler().start();cov=Coverage();vm=VirtualMachine(instrumentation=Instrumentation(prof,cov));vm.run(compile_source_to_bytecode(path.read_text(encoding='utf-8'),str(path)));prof.stop();print(json.dumps({'profile':prof.report(),'coverage':cov.report()},indent=2));return 0
+        if c=='benchmark':
+            from .benchmark import benchmark_source
+            path=Path(argv[1]);print(json.dumps(benchmark_source(path.read_text(encoding='utf-8'),20,str(path)),indent=2));return 0
         if c=='serve':
             from .runtime_http import serve
             host='127.0.0.1';port=8787

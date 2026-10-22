@@ -6,6 +6,7 @@ pealang/agents.py
 pealang/ai.py
 pealang/ast_nodes.py
 pealang/async_vm.py
+pealang/benchmark.py
 pealang/browser_profile.py
 pealang/bytecode.py
 pealang/cli.py
@@ -19,9 +20,11 @@ pealang/errors.py
 pealang/fastapi.py
 pealang/interpreter.py
 pealang/lexer.py
+pealang/observability.py
 pealang/package_manager.py
 pealang/parser.py
 pealang/project.py
+pealang/release_integrity.py
 pealang/runtime.py
 pealang/runtime_http.py
 pealang/runtime_service.py
@@ -44,6 +47,7 @@ tests/test_dap.py
 tests/test_debugger.py
 tests/test_embedding_v018.py
 tests/test_fastapi_v025.py
+tests/test_hardening_v030.py
 tests/test_java_service_v028.py
 tests/test_packages_v027.py
 tests/test_semantics_v024.py

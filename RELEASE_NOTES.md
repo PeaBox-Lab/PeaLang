@@ -1,19 +1,22 @@
-# PeaLang 0.29.0 Release Notes
+# PeaLang 0.30.0 Release Notes
 
-PeaLang 0.29 adds TypeScript and React integration around the 0.28 runtime-service contract.
+PeaLang 0.30 is a production-hardening release focused on observability, profiling, benchmarking, conformance, and release integrity.
 
 ## Added
 
-- `@pealang/client` TypeScript SDK.
-- Portable recursive `PeaValue` type contract.
-- Typed health, readiness, compile, load, and invoke client methods.
-- `@pealang/react` integration.
-- `PeaLangProvider`, `usePeaLang`, and `usePeaFunction`.
-- Safe schema-driven `PeaUi` renderer foundation.
-- Browser-safe capability profile.
-- UI schema validation rejecting arbitrary HTML nodes and unknown fields.
-- Web SDK regression tests.
+- VM `Profiler` with instruction, opcode, function, and elapsed-time statistics.
+- Source-line `Coverage` collection.
+- Transport-neutral `Observer` and `TraceEvent` observability API.
+- `MemoryObserver` reference implementation.
+- VM instrumentation hook independent from debugger hooks.
+- `pea profile` command.
+- `pea benchmark` command with min/median/mean/max statistics.
+- Benchmark corpus foundation under `benchmarks/`.
+- Interpreter-versus-VM differential conformance test.
+- Source inventory/hash comparison utilities.
+- Mandatory no-unintentional-removal release gate.
+- Release manifest and integrity report.
 
-## Browser strategy
+## Compatibility
 
-0.29 keeps execution on the PeaLang sidecar by default. The browser receives portable values and safe UI schemas. A WebAssembly VM remains experimental until it can pass the same conformance suite as the Python VM.
+Instrumentation is opt-in and does not alter ordinary VM execution. Existing Python, FastAPI, Java, TypeScript, React, package-manager, sync VM, and async VM interfaces remain available.
