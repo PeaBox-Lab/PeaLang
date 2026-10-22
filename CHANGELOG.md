@@ -1,20 +1,18 @@
 # Changelog
 
-## 0.19.0 - 2026-10-22
-- Added optional typed declarations and function signatures.
-- Added records, unions, nullable types, and generic type references.
-- Added static diagnostics and the `pea typecheck` command.
-- Added runtime type-annotation erasure for backward compatibility.
-- Added public type-system APIs, examples, tests, and documentation.
+## 0.20.0 - 2026-10-22
+- Added PEAC bytecode format version 1.
+- Added AST-to-bytecode compiler and constant pool.
+- Added stack VM with resumable instruction pointers and call frames.
+- Added source maps, exports, instruction budgets, and disassembly.
+- Added `pea compile`, `pea dis`, `pea vm`, and direct `.peac` execution.
+- Added bytecode and VM tests and documentation.
 
 ## 0.19.0 - 2026-10-22
-- Added the first stable-shaped Python embedding API.
-- Added exported module loading and host-to-PeaLang invocation.
-- Added capability-based host function registration.
-- Added safe host value conversion including dataclasses and Pydantic models.
-- Added execution time, instruction, and call-depth budgets.
-- Added FastAPI, Java, and React integration guidance and examples.
-- Added embedding regression tests and package API exports.
+- Added optional typed declarations, records, unions, nullable types, generics, and `pea typecheck`.
+
+## 0.18.0 - 2026-10-22
+- Added Python embedding, controlled host functions, capabilities, host conversion, and execution budgets.
 
 ## 0.17.0 - 2026-10-22
 - Added built-in CLI and REPL help foundations.
@@ -26,4 +24,4 @@
 - Added the stdio Debug Adapter Protocol server and debugger hooks.
 
 ## 0.1.0 - 0.14.0
-- Established the language, automation, workflow, AI, editor, LSP, and debugger foundations.
+- Established language, automation, workflow, AI, editor, LSP, and debugger foundations.

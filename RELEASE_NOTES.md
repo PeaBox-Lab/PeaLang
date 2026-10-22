@@ -1,22 +1,21 @@
-# PeaLang 0.19.0 Release Notes
+# PeaLang 0.20.0 Release Notes
 
-PeaLang 0.19 adds the first optional static type layer for embed-friendly extension contracts.
+PeaLang 0.20 introduces the first bytecode compiler and stack virtual machine.
 
 ## Added
 
-- Primitive types: `Any`, `Never`, `Null`, `Bool`, `Int`, `Float`, `Number`, and `String`.
-- Generic type references such as `List<String>` and `Map<String, Employee>`.
-- Nullable types using `?`.
-- Union types using `|`.
-- Typed `let` and `const` declarations.
-- Typed function parameters and return annotations.
-- Named record declarations using `type Name = { ... }`.
-- Type diagnostic codes and source locations.
-- `TypeChecker`, `TypeRef`, `Diagnostic`, and `TypeCheckResult` public APIs.
-- `pea typecheck` for files and folders.
-- Runtime annotation erasure, preserving compatibility with untyped execution.
-- Typed employee-rules example and typed embedding guide.
+- Versioned `PEAC` bytecode artifact and JSON serialization.
+- Constant pool, instructions, top-level code, and function code objects.
+- AST-to-bytecode compiler.
+- Stack VM with explicit instruction pointer and call frames.
+- Arithmetic, comparisons, variables, collections, control flow, functions, calls, returns, property access, and exports.
+- Source-line metadata on every instruction.
+- VM instruction-budget enforcement.
+- Bytecode disassembler.
+- `pea compile`, `pea dis`, and `pea vm` commands.
+- Direct execution of `.peac` files.
+- Compiler, VM, round-trip, disassembly, export, and budget tests.
 
 ## Compatibility
 
-Untyped PeaLang programs continue to run. Types are optional and erased before the 0.19 tree-walking runtime executes a program.
+The tree-walking interpreter remains available and is still the compatibility runtime for language constructs outside the initial compiler subset. The bytecode format is preview in 0.20.

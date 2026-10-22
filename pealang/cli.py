@@ -31,6 +31,19 @@ def main(argv=None):
     if argv[0] in ('--version','-V'):print(f'PeaLang {__version__}');return 0
     c=argv[0]
     try:
+        if c=='compile':
+            from .compiler import compile_source_to_bytecode
+            p=argparse.ArgumentParser(prog='pea compile');p.add_argument('file');p.add_argument('-o','--output');a=p.parse_args(argv[1:])
+            src=Path(a.file);out=Path(a.output) if a.output else src.with_suffix('.peac');compile_source_to_bytecode(src.read_text(encoding='utf-8'),str(src)).save(out);print(out);return 0
+        if c=='dis':
+            from .bytecode import BytecodeModule
+            from .disassembler import disassemble
+            p=argparse.ArgumentParser(prog='pea dis');p.add_argument('file');a=p.parse_args(argv[1:]);print(disassemble(BytecodeModule.load(a.file)),end='');return 0
+        if c=='vm':
+            from .bytecode import BytecodeModule
+            from .compiler import compile_source_to_bytecode
+            from .vm import VirtualMachine
+            p=argparse.ArgumentParser(prog='pea vm');p.add_argument('file');p.add_argument('--max-instructions',type=int,default=100000);a=p.parse_args(argv[1:]);path=Path(a.file);m=BytecodeModule.load(path) if path.suffix=='.peac' else compile_source_to_bytecode(path.read_text(encoding='utf-8'),str(path));VirtualMachine(print,a.max_instructions).run(m);return 0
         if c=='typecheck':
             from .type_system import TypeChecker
             files=discover_pea(argv[1:] or ['.']);errors=0
@@ -90,9 +103,13 @@ def main(argv=None):
             if a.output:Path(a.output).write_text(doc,encoding='utf-8');print(a.output)
             else:print(doc,end='')
             return 0
+        if len(argv)==1 and argv[0].endswith('.peac'):
+            from .bytecode import BytecodeModule
+            from .vm import VirtualMachine
+            VirtualMachine(print).run(BytecodeModule.load(argv[0]));return 0
         allow='--allow-process' in argv
         if allow:argv.remove('--allow-process')
-        if len(argv)!=1:print('Usage: pea [init|project|add|remove|start|run|fmt|check|test|docs|repl] ...',file=sys.stderr);return 2
+        if len(argv)!=1:print('Usage: pea [compile|dis|vm|typecheck|init|project|add|remove|start|run|fmt|check|test|docs|repl] ...',file=sys.stderr);return 2
         return run_file(argv[0],allow)
     except (PeaError,OSError) as e:print(f'Error: {e}',file=sys.stderr);return 1
 if __name__=='__main__':raise SystemExit(main())

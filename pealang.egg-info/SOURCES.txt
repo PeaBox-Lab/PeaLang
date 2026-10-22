@@ -5,9 +5,12 @@ pealang/__main__.py
 pealang/agents.py
 pealang/ai.py
 pealang/ast_nodes.py
+pealang/bytecode.py
 pealang/cli.py
+pealang/compiler.py
 pealang/dap.py
 pealang/debugger.py
+pealang/disassembler.py
 pealang/embedding.py
 pealang/environment.py
 pealang/errors.py
@@ -20,11 +23,13 @@ pealang/skills.py
 pealang/stdlib.py
 pealang/tooling.py
 pealang/type_system.py
+pealang/vm.py
 pealang.egg-info/PKG-INFO
 pealang.egg-info/SOURCES.txt
 pealang.egg-info/dependency_links.txt
 pealang.egg-info/entry_points.txt
 pealang.egg-info/top_level.txt
+tests/test_bytecode_v020.py
 tests/test_dap.py
 tests/test_debugger.py
 tests/test_embedding_v018.py

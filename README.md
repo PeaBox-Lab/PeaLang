@@ -1,63 +1,49 @@
-# PeaLang 0.19.0
+# PeaLang 0.20.0
 
 PeaLang is a readable, embeddable extension language for business rules, workflows, automation, integrations, and controlled application customization.
 
 ## Install
 
 ```bash
-python -m pip install pealang-0.19.0-py3-none-any.whl
+python -m pip install pealang-0.20.0-py3-none-any.whl
 pea --version
 ```
 
-## Typed extension
-
-```pea
-type Employee = {
-    name: String,
-    rating: Int,
-    salary: Number
-}
-
-function calculate_bonus(employee: Employee, rate: Number = 0.10) -> Number {
-    return employee.salary * rate
-}
-
-export calculate_bonus
-```
-
-Validate it:
+## Compile and run bytecode
 
 ```bash
-pea typecheck employee_rules.pea
+pea compile app.pea
+pea dis app.peac
+pea vm app.peac
+pea app.peac
 ```
 
-Embed it:
+## Python compiler and VM API
+
+```python
+from pealang import compile_source_to_bytecode, VirtualMachine
+
+module = compile_source_to_bytecode('print 2 + 3', 'demo.pea')
+VirtualMachine().run(module)
+```
+
+## Existing embedding API
 
 ```python
 from pealang import PeaRuntime, RuntimeOptions
-
 runtime = PeaRuntime(RuntimeOptions(max_execution_ms=500))
-module = runtime.load_file("employee_rules.pea")
-bonus = module.call("calculate_bonus", {
-    "name": "Rajesh",
-    "rating": 4,
-    "salary": 100000,
-}, 0.15)
+module = runtime.load_file('rules.pea')
+result = module.call('evaluate', {'employee_id': 'E1001'})
 ```
 
-## Main APIs
+The embedding API remains interpreter-backed in 0.20. VM-backed modules will follow once parity and capability integration are complete.
 
-- `PeaRuntime` and `PeaModule`
-- `RuntimeOptions`
-- `TypeChecker` and `TypeCheckResult`
-- `to_pea` and `from_pea`
-- Capability-protected host functions
-- Execution time, instruction, and call-depth budgets
+## Type checking
 
-## Security
-
-Process execution is disabled by default in embedded runtimes. Host capabilities must be explicitly registered. Resource controls are cooperative in-process limits, not a hardened hostile-code sandbox. Use process or container isolation for untrusted scripts.
+```bash
+pea typecheck rules.pea
+```
 
 ## Documentation
 
-See `docs/TYPE_SYSTEM.md`, `docs/TYPED_EMBEDDING.md`, `docs/EMBEDDING.md`, and `docs/FASTAPI_INTEGRATION.md`.
+See `docs/BYTECODE_AND_VM.md`, `docs/PEAC_FORMAT.md`, `docs/TYPE_SYSTEM.md`, and `docs/EMBEDDING.md`.
