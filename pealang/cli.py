@@ -31,6 +31,21 @@ def main(argv=None):
     if argv[0] in ('--version','-V'):print(f'PeaLang {__version__}');return 0
     c=argv[0]
     try:
+        if c=='pkg-init':
+            from .package_manager import init_manifest
+            print(init_manifest(argv[1] if len(argv)>1 else '.'));return 0
+        if c in ('lock','install','audit','build'):
+            from .package_manager import write_lock,install,audit,build_package
+            root=argv[1] if len(argv)>1 else '.'
+            if c=='lock':p,_=write_lock(root);print(p);return 0
+            if c=='install':print('Installed: '+', '.join(install(root)));return 0
+            if c=='audit':
+                issues=audit(root)
+                if issues:
+                    for x in issues:print('AUDIT '+x)
+                    return 1
+                print('Audit: clean');return 0
+            if c=='build':p,h=build_package(root);print(f'{p}\nsha256 {h}');return 0
         if c=='compile':
             from .compiler import compile_source_to_bytecode
             p=argparse.ArgumentParser(prog='pea compile');p.add_argument('file');p.add_argument('-o','--output');a=p.parse_args(argv[1:])

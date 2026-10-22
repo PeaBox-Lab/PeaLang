@@ -18,6 +18,7 @@ pealang/errors.py
 pealang/fastapi.py
 pealang/interpreter.py
 pealang/lexer.py
+pealang/package_manager.py
 pealang/parser.py
 pealang/project.py
 pealang/runtime.py
@@ -40,6 +41,7 @@ tests/test_dap.py
 tests/test_debugger.py
 tests/test_embedding_v018.py
 tests/test_fastapi_v025.py
+tests/test_packages_v027.py
 tests/test_semantics_v024.py
 tests/test_types_v019.py
 tests/test_vm_modules_exceptions_v022.py

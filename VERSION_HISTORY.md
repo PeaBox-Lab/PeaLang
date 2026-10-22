@@ -24,3 +24,5 @@
 | 0.25 | First-class FastAPI extension integration |
 
 | 0.26 | Native async VM, awaitable hosts, cancellation, and deadlines |
+
+| 0.27 | Package manifests, lock files, semver, audit, and reproducible .peapkg |

@@ -1,42 +1,36 @@
-# PeaLang 0.26.0
+# PeaLang 0.27.0
 
-PeaLang is an embeddable extension language for rules, workflows, automation, API orchestration, and controlled application customization.
+PeaLang is an embeddable extension language for rules, workflows, automation, APIs, and controlled application customization.
 
 ## Install
 
 ```bash
-python -m pip install pealang-0.26.0-py3-none-any.whl
+python -m pip install pealang-0.27.0-py3-none-any.whl
 pea --version
 ```
 
-## Native asynchronous extension
+## Package workflow
 
-```pea
-async function load_employee(id) {
-    return await hr.get(id)
-}
-export load_employee
+```bash
+pea pkg-init my-extension
+cd my-extension
+pea lock
+pea install
+pea audit
+pea build
 ```
 
-```python
-from pealang import AsyncVMRuntime, RuntimeOptions
+A package uses `pea.toml`, locks deterministic dependency metadata in `pea.lock`, installs local dependencies under `.pea_modules`, and builds a reproducible `.peapkg` archive.
 
-runtime = AsyncVMRuntime(RuntimeOptions(
-    permissions=frozenset({"hr.get"}),
-    max_execution_ms=500,
-))
-runtime.register_async_function("hr.get", get_employee, "hr.get")
-module = await runtime.load_async(source, "rules.pea")
-employee = await module.call_async("load_employee", "E1001")
-```
-
-## Main capabilities
+## Mature runtime foundations
 
 - Optional static types and semantic analysis
 - PEAC bytecode compiler and VM
-- Capability-safe synchronous and asynchronous embedding
+- Synchronous and native async embedding
+- Capability-based host APIs
 - FastAPI integration
-- VM debugging through DAP
-- Structured exceptions, closures, defaults, and module imports
+- DAP debugging
+- Structured exceptions, closures, imports, defaults
+- Package manifests, locks, auditing, and reproducible builds
 
-See `docs/ASYNC_VM.md`, `docs/FASTAPI_PACKAGE.md`, `docs/SEMANTIC_ANALYSIS.md`, and `docs/VM_CAPABILITIES.md`.
+See `docs/PACKAGES.md`, `docs/ASYNC_VM.md`, `docs/FASTAPI_PACKAGE.md`, and `docs/SEMANTIC_ANALYSIS.md`.
