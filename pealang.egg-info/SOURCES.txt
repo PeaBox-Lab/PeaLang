@@ -26,6 +26,8 @@ pealang/package_manager.py
 pealang/parser.py
 pealang/project.py
 pealang/registry.py
+pealang/registry_auth.py
+pealang/registry_index.py
 pealang/release_integrity.py
 pealang/runtime.py
 pealang/runtime_http.py
@@ -55,6 +57,7 @@ tests/test_fastapi_v025.py
 tests/test_hardening_v030.py
 tests/test_java_service_v028.py
 tests/test_packages_v027.py
+tests/test_registry_index_v033.py
 tests/test_semantics_v024.py
 tests/test_signed_packages_v031.py
 tests/test_types_v019.py

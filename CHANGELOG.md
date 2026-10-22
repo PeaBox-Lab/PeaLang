@@ -1,12 +1,15 @@
 # Changelog
 
-## 0.32.0 - 2026-10-23
+## 0.33.0 - 2026-10-23
+- Added canonical registry indexes, sequence/replay protection, immutable version policy, package expiration, publisher namespaces, persistent registry state, and environment-based Bearer credentials.
+
+## 0.33.0 - 2026-10-23
 - Added Ed25519 public-key package signatures, public trust store, revocation, HTTPS registry transport, verified install, offline cache, and lockfile hash enforcement.
 
-## 0.32.0 - 2026-10-23
+## 0.33.0 - 2026-10-23
 - Added signed .peapkg support, trusted publisher keys, verification, safe extraction, HTTPS registry policy, installation receipts, and dependency-confusion defenses.
 
-## 0.32.0 - 2026-10-23
+## 0.33.0 - 2026-10-23
 - Added VM profiling, line coverage, benchmark tooling, and observer hooks.
 - Added interpreter-versus-VM differential conformance coverage.
 - Added source inventory/hash comparison and strengthened release integrity gates.

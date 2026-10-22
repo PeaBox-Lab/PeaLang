@@ -36,3 +36,5 @@
 | 0.31 | Signed packages, trust store, hardened extraction, package provenance |
 
 | 0.32 | Ed25519 signatures, public trust, revocation, and verified registry installs |
+
+| 0.33 | Canonical registry indexes, namespaces, replay protection, immutable versions |
