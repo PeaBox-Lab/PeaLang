@@ -8,9 +8,9 @@ pealang/ast_nodes.py
 pealang/cli.py
 pealang/dap.py
 pealang/debugger.py
+pealang/embedding.py
 pealang/environment.py
 pealang/errors.py
-pealang/help_system.py
 pealang/interpreter.py
 pealang/lexer.py
 pealang/parser.py
@@ -25,7 +25,5 @@ pealang.egg-info/dependency_links.txt
 pealang.egg-info/entry_points.txt
 pealang.egg-info/top_level.txt
 tests/test_dap.py
-tests/test_dap_v016.py
 tests/test_debugger.py
-tests/test_debugger_v016.py
-tests/test_help_v017.py
+tests/test_embedding_v018.py

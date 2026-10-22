@@ -4,23 +4,15 @@ from .runtime import execute,Interpreter,PeaError
 from .tooling import format_file,check_source,discover_pea,generate_docs
 from .project import load_manifest,init_project,add_dependency,remove_dependency,project_info
 from . import __version__
-from .help_system import render_help, EXAMPLES
 def repl():
-    print(f'PeaLang {__version__} - type help or :help; exit to quit')
-    vm=Interpreter();buf=''
+    print(f'PeaLang {__version__} - type :help for help or exit to quit');vm=Interpreter();buf=''
     while True:
         try:line=input('... ' if buf else 'pea> ')
         except (EOFError,KeyboardInterrupt):print();break
-        stripped=line.strip()
-        if stripped in ('exit','quit',':exit',':quit') and not buf:break
-        if not buf and (stripped in ('help',':help','?') or stripped.startswith('help ') or stripped.startswith(':help ') or stripped.startswith('? ')):
-            parts=stripped.lstrip(':?').split(maxsplit=1);print(render_help(parts[1] if len(parts)>1 else None),end='');continue
-        if not buf and stripped in (':topics','topics'):print(render_help('topics'),end='');continue
-        if not buf and stripped in (':commands','commands'):print(render_help('commands'),end='');continue
-        if not buf and stripped in (':examples','examples'):print(EXAMPLES,end='');continue
-        if not buf and stripped in (':version','version'):print(f'PeaLang {__version__}');continue
-        if stripped==':clear' and not buf:vm=Interpreter();print('State cleared.');continue
-        if stripped==':vars' and not buf:print(', '.join(sorted(k for k in vm.global_env.values if not k.startswith('_'))));continue
+        if line.strip() in ('exit','quit') and not buf:break
+        if line.strip()==':help' and not buf:print(':help  :vars  :clear  exit');continue
+        if line.strip()==':clear' and not buf:vm=Interpreter();print('State cleared.');continue
+        if line.strip()==':vars' and not buf:print(', '.join(sorted(k for k in vm.global_env.values if not k.startswith('_'))));continue
         buf+=line+'\n'
         if buf.count('{')>buf.count('}'):continue
         try:execute(buf,interpreter=vm,source_name='<repl>')
@@ -38,8 +30,6 @@ def main(argv=None):
     if not argv:return repl()
     if argv[0] in ('--version','-V'):print(f'PeaLang {__version__}');return 0
     c=argv[0]
-    if c in ('help','--help','-h'):
-        print(render_help(argv[1] if len(argv)>1 else None),end='');return 0
     try:
         if c=='repl':return repl()
         if c=='init':
@@ -93,7 +83,7 @@ def main(argv=None):
             return 0
         allow='--allow-process' in argv
         if allow:argv.remove('--allow-process')
-        if len(argv)!=1:print('Usage: pea [help|init|project|add|remove|start|run|fmt|check|test|docs|debug|dap|repl] ...',file=sys.stderr);return 2
+        if len(argv)!=1:print('Usage: pea [init|project|add|remove|start|run|fmt|check|test|docs|repl] ...',file=sys.stderr);return 2
         return run_file(argv[0],allow)
     except (PeaError,OSError) as e:print(f'Error: {e}',file=sys.stderr);return 1
 if __name__=='__main__':raise SystemExit(main())

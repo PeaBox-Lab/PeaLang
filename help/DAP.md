@@ -1,5 +1,3 @@
 # DAP Help
 
-Start the adapter with `pea dap`. Configure an editor to launch it over stdin/stdout.
-
-Breakpoints may include `condition`, `hitCondition`, or `logMessage`. Supported hit conditions are `N`, `>=N`, and `%N`. Enable the `all` exception filter to stop on uncaught PeaLang errors.
+`pea dap` starts the debugger server. Editors should launch it as a stdio child process and then issue standard DAP requests.

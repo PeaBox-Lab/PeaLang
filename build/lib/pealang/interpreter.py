@@ -17,7 +17,7 @@ class ReturnSignal(Exception):
 class BreakSignal(Exception):pass
 class ContinueSignal(Exception):pass
 @dataclass
-class UserFunction:params:list;body:list[Stmt];closure:Env;name:str='<function>';source:str='<input>';line:int=1
+class UserFunction:params:list;body:list[Stmt];closure:Env
 class Interpreter:
     def __init__(self,output=None,base_dir=None,allow_process=False,project_root=None,dependencies=None,debug_hook=None):
         self.output=output or print;self.debug_hook=debug_hook;self.call_stack=[];self.global_env=Env();self.env=self.global_env;self.module_exports=None;self.base_dir=Path(base_dir or '.').resolve();self.source_name='<input>';self.imported=set();self.project_root=Path(project_root).resolve() if project_root else self.base_dir;self.dependencies=dependencies or {}
@@ -74,7 +74,7 @@ class Interpreter:
                     except ContinueSignal:continue
                     except BreakSignal:break
                 return None
-            if isinstance(s,FunctionStmt):self.env.define(s.name,UserFunction(s.params,s.body,self.env,s.name,self.source_name,s.span.line if s.span else 1),True);return None
+            if isinstance(s,FunctionStmt):self.env.define(s.name,UserFunction(s.params,s.body,self.env),True);return None
             if isinstance(s,ReturnStmt):raise ReturnSignal(self.eval(s.value) if s.value else None)
             if isinstance(s,BreakStmt):raise BreakSignal()
             if isinstance(s,ContinueStmt):raise ContinueSignal()
@@ -118,17 +118,13 @@ class Interpreter:
         required=sum(1 for p in f.params if getattr(p,'default',None) is None)
         if len(args)<required or len(args)>len(f.params):raise PeaError(f'Expected {required} to {len(f.params)} arguments, got {len(args)}')
         env=Env(f.closure);old=self.env;self.env=env
-        frame={'name':getattr(f,'name','<function>'),'source':getattr(f,'source',self.source_name),'line':getattr(f,'line',1),'locals':env.values}
-        self.call_stack.append(frame)
         try:
             for i,p in enumerate(f.params):
                 value=args[i] if i<len(args) else self.eval(p.default)
                 env.define(p.name,value)
             try:return self.exec_block(f.body,env)
             except ReturnSignal as result:return result.value
-        finally:
-            self.call_stack.pop()
-            self.env=old
+        finally:self.env=old
 
     def run_parallel(self, expressions, node):
         # Parallel blocks are intentionally limited to expressions. Shared PeaLang
@@ -185,6 +181,7 @@ class Interpreter:
             if isinstance(f,UserFunction):return self.invoke_user_function(f,args)
             if callable(f):
                 try:return f(*args)
+                except PeaError:raise
                 except Exception as ex:raise PeaError(str(ex),e.span,self.source_name) from ex
             raise PeaError('Value is not callable',e.span,self.source_name)
         raise PeaError(f'Unknown expression {type(e).__name__}',getattr(e,'span',None),self.source_name)

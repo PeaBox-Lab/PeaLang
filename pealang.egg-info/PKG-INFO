@@ -1,55 +1,48 @@
 Metadata-Version: 2.4
 Name: pealang
-Version: 0.17.0
+Version: 0.18.0
 Summary: Readable automation and AI workflow language
 License: MIT
 Requires-Python: >=3.10
 Description-Content-Type: text/markdown
 
-# PeaLang 0.17.0
+# PeaLang 0.18.0
 
-PeaLang is a readable, Python-hosted language for automation, workflows, AI integrations, agents, and practical scripting. Version 0.16 strengthens editor debugging with function-aware frames, frame-local scopes, conditional and hit-count breakpoints, exception stops, source-aware breakpoints, and proper DAP lifecycle events.
-
-## Built-in help
-
-From CMD or PowerShell:
-
-```cmd
-pea help
-pea help topics
-pea help getting-started
-pea help functions
-pea help debugging
-```
-
-Inside `pea repl`:
-
-```text
-pea> help
-pea> help syntax
-pea> :topics
-pea> :examples
-pea> :version
-```
-
-Unlike 0.16, plain `help` now works inside the REPL. Run Python, pip, pytest, and other operating-system commands only after `exit` returns you to CMD or PowerShell.
-
-## Requirements
-
-- Python 3.10 or newer
-- Windows, Linux, or macOS
+PeaLang is a readable, embeddable extension language for business rules, workflows, automation, integrations, and controlled application customization.
 
 ## Install
 
 ```bash
-python -m venv .venv
-# Windows: .venv\Scripts\activate
-# Linux/macOS: source .venv/bin/activate
-python -m pip install -e .
+python -m pip install pealang-0.18.0-py3-none-any.whl
 pea --version
 ```
 
-## Run
+## Embed in Python
+
+```python
+from pealang import PeaRuntime, RuntimeOptions
+
+runtime = PeaRuntime(RuntimeOptions(
+    permissions=frozenset({"employee.read"}),
+    max_execution_ms=500,
+    max_instructions=50_000,
+))
+runtime.register_function("employee.get", find_employee, "employee.read")
+module = runtime.load_file("rules.pea")
+result = module.call("evaluate", {"employee_id": "E1001"})
+```
+
+## Extension script
+
+```pea
+function evaluate(input) {
+    let employee = employee.get(input.employee_id)
+    return {"eligible": employee.active}
+}
+export evaluate
+```
+
+## CLI
 
 ```bash
 pea run examples/hello.pea
@@ -57,27 +50,17 @@ pea repl
 pea check examples
 pea fmt examples
 pea test
-```
-
-## Debugging
-
-```bash
-pea debug examples/hello.pea --break=2
 pea dap
 ```
 
-The DAP adapter supports initialize, launch, source breakpoints, conditional breakpoints, hit conditions, log points, exception breakpoints, continue, next, step-in, step-out, threads, stack traces, frame scopes, variables, evaluate, disconnect, and terminate.
+## Security defaults
 
-### Hit conditions
+Embedded process execution is disabled. Host functions must be explicitly registered and can require permissions. Set time, instruction, and call-depth budgets. Use a separate process or container for hostile code because 0.18 is a cooperative in-process sandbox, not yet a hardened security boundary.
 
-- `3`: stop on the third hit
-- `>=3`: stop on the third and later hits
-- `%2`: stop on every second hit
+## Integration examples
 
-## Safety
-
-Process execution remains disabled by default. Use `--allow-process` only for trusted PeaLang programs.
-
-## Documentation
-
-Start with `docs/FOUNDATIONS.md`, `docs/BASICS.md`, `docs/USER_GUIDE.md`, and `docs/DEBUG_ADAPTER.md`. See `LANGUAGE.md` for the language summary and `ROADMAP.md` for planned releases.
+- `examples/embedding/python_host.py`
+- `examples/embedding/fastapi_app.py`
+- `docs/EMBEDDING.md`
+- `docs/FASTAPI_INTEGRATION.md`
+- `docs/JAVA_REACT_INTEROP.md`
