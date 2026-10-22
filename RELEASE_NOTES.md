@@ -1,16 +1,21 @@
-# PeaLang 0.25.0 Release Notes
+# PeaLang 0.26.0 Release Notes
 
-PeaLang 0.25 adds the first production-oriented FastAPI integration layer.
+PeaLang 0.26 introduces native cooperative asynchronous execution in the bytecode VM.
 
 ## Added
 
-- Optional `pealang[fastapi]` dependency group.
-- `PeaExtensionRegistry` for semantic validation, startup loading, invocation, status, and development hot reload.
-- `PeaRouter` for exposing PeaLang exports as FastAPI routes.
-- OpenAPI metadata identifying the PeaLang extension and function behind each generated endpoint.
-- Validation dependency factory.
-- Controlled 400/403/429/500 error mapping.
-- FastAPI exception handlers for permission and resource-limit failures.
-- Extension status endpoint support.
-- Complete FastAPI example application.
-- Six dedicated FastAPI integration tests.
+- `async function` syntax.
+- `await` expressions and `AwaitExpr` AST node.
+- `AWAIT` PEAC opcode.
+- VM suspension records preserving source and line information.
+- `AsyncVirtualMachine`, `AsyncVMRuntime`, and `AsyncVMModule`.
+- Permission-protected Python async host functions.
+- Async exported-function invocation through `call_async`.
+- Cooperative `CancellationToken`.
+- Wall-clock deadlines through `asyncio.wait_for`.
+- Async host-value conversion and typed output conversion.
+- Async syntax, permission, timeout, and execution tests.
+
+## Compatibility
+
+Synchronous PeaLang programs and APIs remain available. Async extensions require `AsyncVMRuntime` and must await asynchronous exports from Python.

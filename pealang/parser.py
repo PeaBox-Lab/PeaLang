@@ -34,6 +34,8 @@ class Parser:
             try:b=self.block()
             finally:self.loop_depth-=1
             return ForStmt(n,seq,b,span=x.span)
+        if self.match('ASYNC'):
+            self.need('FUNCTION');return self.function(x.span)
         if self.match('FUNCTION'):return self.function(x.span)
         if self.match('RETURN'):return ReturnStmt(None if self.cur().kind in ('NEWLINE',';','}') else self.expression(),span=x.span)
         if self.match('BREAK'):
@@ -103,6 +105,8 @@ class Parser:
             op=self.advance();e=Binary(op.value,e,sub(),span=op.span)
         return e
     def unary(self):
+        if self.match('AWAIT'):
+            return AwaitExpr(self.unary(),span=self.t[self.i-1].span)
         if self.cur().kind in ('-','NOT'):
             op=self.advance();return Unary(op.value,self.unary(),span=op.span)
         return self.postfix()

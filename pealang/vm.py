@@ -4,6 +4,11 @@ from dataclasses import dataclass,field
 from pathlib import Path
 from .bytecode import BytecodeModule,Op
 class VMError(Exception):pass
+@dataclass
+class AsyncSuspension:
+ awaitable:object
+ source:str
+ line:int
 class VMThrown(Exception):
  def __init__(self,value):self.value=value;super().__init__(str(value))
 class _StepPause(Exception):
@@ -111,6 +116,10 @@ class VirtualMachine:
     elif op==Op.FUNCTION.value:self.stack.append(VMFunction(ins.arg,self.module,f.env))
     elif op==Op.CALL.value:
      callee,args=self.pop_args(ins.arg);self._invoke(callee,args)
+    elif op==Op.AWAIT.value:
+     value=self.pop()
+     if hasattr(value,'__await__'):return AsyncSuspension(value,f.code.source_name,ins.line)
+     self.stack.append(value)
     elif op==Op.RETURN.value:
      value=self.pop();self.frames.pop();self.stack.append(value) if self.frames else None;ret=value
     elif op==Op.PUSH_HANDLER.value:f.handlers.append(Handler(ins.arg.get('catch'),ins.arg.get('finally'),ins.arg['end'],ins.arg.get('name'),len(self.stack)))

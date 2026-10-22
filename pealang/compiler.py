@@ -83,6 +83,7 @@ class Compiler:
   elif isinstance(e,Binary):self.expr(e.left);self.expr(e.right);self.emit({'+':Op.ADD,'-':Op.SUB,'*':Op.MUL,'/':Op.DIV,'%':Op.MOD,'==':Op.EQ,'!=':Op.NE,'<':Op.LT,'<=':Op.LE,'>':Op.GT,'>=':Op.GE}[e.op],node=e)
   elif isinstance(e,Index):self.expr(e.target);self.expr(e.index);self.emit(Op.GET_INDEX,node=e)
   elif isinstance(e,Property):self.expr(e.target);self.emit(Op.GET_PROPERTY,e.name,e)
+  elif isinstance(e,AwaitExpr):self.expr(e.value);self.emit(Op.AWAIT,node=e)
   elif isinstance(e,Call):
    self.expr(e.callee)
    for a in e.args:self.expr(a)

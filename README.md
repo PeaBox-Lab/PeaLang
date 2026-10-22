@@ -1,42 +1,42 @@
-# PeaLang 0.25.0
+# PeaLang 0.26.0
 
-PeaLang is an embeddable extension language for rules, workflows, automation, integrations, and controlled application customization.
+PeaLang is an embeddable extension language for rules, workflows, automation, API orchestration, and controlled application customization.
 
 ## Install
 
-Core runtime:
-
 ```bash
-python -m pip install pealang-0.25.0-py3-none-any.whl
+python -m pip install pealang-0.26.0-py3-none-any.whl
+pea --version
 ```
 
-With FastAPI integration:
+## Native asynchronous extension
 
-```bash
-python -m pip install "pealang[fastapi]"
+```pea
+async function load_employee(id) {
+    return await hr.get(id)
+}
+export load_employee
 ```
-
-## FastAPI extension
 
 ```python
-from fastapi import FastAPI
-from pealang import RuntimeOptions, VMRuntime
-from pealang.fastapi import PeaExtensionRegistry, PeaRouter
+from pealang import AsyncVMRuntime, RuntimeOptions
 
-runtime = VMRuntime(RuntimeOptions(max_execution_ms=500, max_instructions=50000))
-registry = PeaExtensionRegistry(runtime)
-registry.load("hr", "rules.pea")
-pea = PeaRouter(registry, prefix="/api").add("/bonus", "hr", "bonus").include_status()
-app = FastAPI()
-app.include_router(pea.router)
+runtime = AsyncVMRuntime(RuntimeOptions(
+    permissions=frozenset({"hr.get"}),
+    max_execution_ms=500,
+))
+runtime.register_async_function("hr.get", get_employee, "hr.get")
+module = await runtime.load_async(source, "rules.pea")
+employee = await module.call_async("load_employee", "E1001")
 ```
 
-Run with:
+## Main capabilities
 
-```bash
-uvicorn app:app --reload
-```
+- Optional static types and semantic analysis
+- PEAC bytecode compiler and VM
+- Capability-safe synchronous and asynchronous embedding
+- FastAPI integration
+- VM debugging through DAP
+- Structured exceptions, closures, defaults, and module imports
 
-## Documentation
-
-See `docs/FASTAPI_PACKAGE.md`, `docs/SEMANTIC_ANALYSIS.md`, `docs/VM_CAPABILITIES.md`, and `docs/BYTECODE_AND_VM.md`.
+See `docs/ASYNC_VM.md`, `docs/FASTAPI_PACKAGE.md`, `docs/SEMANTIC_ANALYSIS.md`, and `docs/VM_CAPABILITIES.md`.

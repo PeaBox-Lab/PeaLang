@@ -22,3 +22,5 @@
 | 0.24 | Flow-aware semantic analysis and contract diagnostics |
 
 | 0.25 | First-class FastAPI extension integration |
+
+| 0.26 | Native async VM, awaitable hosts, cancellation, and deadlines |

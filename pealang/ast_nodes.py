@@ -69,3 +69,6 @@ class Param(Node): name:str=''; default:Optional[Expr]=None
 
 @dataclass
 class ExportStmt(Stmt): name:str=''
+
+@dataclass
+class AwaitExpr(Expr): value:Optional[Expr]=None
