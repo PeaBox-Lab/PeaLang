@@ -1,6 +1,9 @@
 # Changelog
 
-## 0.30.0 - 2026-10-23
+## 0.31.0 - 2026-10-23
+- Added signed .peapkg support, trusted publisher keys, verification, safe extraction, HTTPS registry policy, installation receipts, and dependency-confusion defenses.
+
+## 0.31.0 - 2026-10-23
 - Added VM profiling, line coverage, benchmark tooling, and observer hooks.
 - Added interpreter-versus-VM differential conformance coverage.
 - Added source inventory/hash comparison and strengthened release integrity gates.

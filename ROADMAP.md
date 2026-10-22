@@ -1,8 +1,7 @@
 # Roadmap
 
-- **0.30:** production hardening, profiling, coverage, benchmarks, observability, conformance, and release integrity, delivered.
-- **0.31:** signed remote package registry transport, trust store, safe extraction, Git verification, and dependency-confusion defenses.
-- **0.32:** WebAssembly VM prototype and cross-runtime differential conformance.
-- **0.33:** normative language specification, grammar tests, standard-library specification, and migration tooling.
-- **0.34:** stable host ABI and PEAC compatibility policy, performance optimization, and release-candidate hardening.
-- **1.0:** stable specification, security review, signed packages, cross-platform distribution, and LTS compatibility policy.
+- **0.31:** signed package foundation, trust store, hardened extraction, HTTPS registry policy, and receipts, delivered.
+- **0.32:** Ed25519 public-key signatures, signed registry indexes, revocation/key rotation, authenticated remote install, and offline cache.
+- **0.33:** WebAssembly VM prototype and cross-runtime differential conformance.
+- **0.34:** normative language/stdlib specification, stable host ABI, PEAC compatibility policy, and migration tooling.
+- **1.0:** stable specification, independent security review, signed-package PKI, cross-platform distribution, and LTS policy.

@@ -32,3 +32,5 @@
 | 0.29 | TypeScript SDK, React hooks, browser-safe schema integration |
 
 | 0.30 | Production hardening, profiling, coverage, observability, conformance |
+
+| 0.31 | Signed packages, trust store, hardened extraction, package provenance |

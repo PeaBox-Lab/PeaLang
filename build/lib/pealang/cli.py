@@ -31,6 +31,18 @@ def main(argv=None):
     if argv[0] in ('--version','-V'):print(f'PeaLang {__version__}');return 0
     c=argv[0]
     try:
+        if c=='keygen':
+            from .signing import generate_key
+            path=argv[1] if len(argv)>1 else 'pea-signing.key';print(generate_key(path));return 0
+        if c=='sign':
+            from .signing import sign_package
+            p,_=sign_package(argv[1],argv[2]);print(p);return 0
+        if c=='verify':
+            from .signing import verify_package
+            verify_package(argv[1],argv[2],argv[3]);print('Signature: valid');return 0
+        if c=='trust':
+            from .signing import TrustStore
+            store=TrustStore(argv[1]);kid=store.trust_key(argv[2],argv[3] if len(argv)>3 else None);print(kid);return 0
         if c=='profile':
             from .compiler import compile_source_to_bytecode
             from .vm import VirtualMachine

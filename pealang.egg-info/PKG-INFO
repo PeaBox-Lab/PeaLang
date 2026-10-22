@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: pealang
-Version: 0.30.0
+Version: 0.31.0
 Summary: Readable automation and AI workflow language
 License: MIT
 Requires-Python: >=3.10
@@ -10,35 +10,25 @@ Requires-Dist: fastapi>=0.110; extra == "fastapi"
 Requires-Dist: pydantic>=2.0; extra == "fastapi"
 Requires-Dist: uvicorn>=0.27; extra == "fastapi"
 
-# PeaLang 0.30.0
+# PeaLang 0.31.0
 
-PeaLang is an embeddable extension language for Python, FastAPI, Java, Spring Boot, TypeScript, React, APIs, workflows, and business applications.
+PeaLang is an embeddable extension language with optional types, semantic analysis, PEAC bytecode/VM execution, sync and async embedding, FastAPI/Java/TypeScript/React integration, package management, observability, and signed package foundations.
 
-## Production hardening
-
-Profile a program:
+## Signed package workflow
 
 ```bash
-pea profile app.pea
+pea keygen publisher.key
+pea build
+pea sign my-package-1.0.0.peapkg publisher.key
+pea verify my-package-1.0.0.peapkg my-package-1.0.0.peapkg.sig publisher.key
 ```
 
-Benchmark it:
+Version 0.31 adds SHA-256-bound HMAC signatures, trusted key storage, HTTPS registry policy, secure archive extraction, dependency-confusion safeguards, and installation receipts.
 
-```bash
-pea benchmark app.pea
-```
+## Important security boundary
 
-The VM now exposes opt-in profiling, line coverage, instruction/opcode/function statistics, and transport-neutral observability events.
+HMAC-SHA256 uses a shared signing secret. It is appropriate for controlled/internal distribution but not the final public-registry PKI. Public-key Ed25519 signing is the next package-security milestone.
 
-## Integration coverage
+## Documentation
 
-- Python / FastAPI
-- Java / Spring Boot runtime sidecar
-- TypeScript / React clients
-- Sync and native async VM
-- Optional static typing and semantic analysis
-- DAP debugging
-- Package manifests, locks, auditing, reproducible packages
-- Release integrity and conformance gates
-
-See `docs/PROFILING_COVERAGE.md`, `docs/RELEASE_INTEGRITY.md`, `docs/TYPESCRIPT_REACT.md`, and `docs/JAVA_RUNTIME.md`.
+See `docs/SIGNED_PACKAGES.md`, `docs/PACKAGES.md`, `docs/RELEASE_INTEGRITY.md`, `docs/PROFILING_COVERAGE.md`, and `docs/USER_GUIDE.md`.

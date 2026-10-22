@@ -28,6 +28,8 @@ pealang/release_integrity.py
 pealang/runtime.py
 pealang/runtime_http.py
 pealang/runtime_service.py
+pealang/secure_packages.py
+pealang/signing.py
 pealang/skills.py
 pealang/stdlib.py
 pealang/tooling.py
@@ -51,6 +53,7 @@ tests/test_hardening_v030.py
 tests/test_java_service_v028.py
 tests/test_packages_v027.py
 tests/test_semantics_v024.py
+tests/test_signed_packages_v031.py
 tests/test_types_v019.py
 tests/test_vm_modules_exceptions_v022.py
 tests/test_vm_parity_v021.py

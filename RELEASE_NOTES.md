@@ -1,22 +1,20 @@
-# PeaLang 0.30.0 Release Notes
+# PeaLang 0.31.0 Release Notes
 
-PeaLang 0.30 is a production-hardening release focused on observability, profiling, benchmarking, conformance, and release integrity.
+PeaLang 0.31 secures the package ecosystem with signed-package foundations and hardened extraction.
 
 ## Added
 
-- VM `Profiler` with instruction, opcode, function, and elapsed-time statistics.
-- Source-line `Coverage` collection.
-- Transport-neutral `Observer` and `TraceEvent` observability API.
-- `MemoryObserver` reference implementation.
-- VM instrumentation hook independent from debugger hooks.
-- `pea profile` command.
-- `pea benchmark` command with min/median/mean/max statistics.
-- Benchmark corpus foundation under `benchmarks/`.
-- Interpreter-versus-VM differential conformance test.
-- Source inventory/hash comparison utilities.
-- Mandatory no-unintentional-removal release gate.
-- Release manifest and integrity report.
+- HMAC-SHA256 `.peapkg` signatures with package SHA-256 binding.
+- Random 256-bit signing-key generation and deterministic key IDs.
+- Signature verification with constant-time comparison.
+- JSON trust store for publisher keys and named registries.
+- HTTPS-only registry configuration policy.
+- Safe archive extraction with path-traversal and link rejection.
+- Installation receipts with provenance data.
+- Dependency-confusion guard foundation.
+- `pea keygen`, `pea sign`, `pea verify`, and `pea trust` commands.
+- Ten signed-package security tests.
 
-## Compatibility
+## Security note
 
-Instrumentation is opt-in and does not alter ordinary VM execution. Existing Python, FastAPI, Java, TypeScript, React, package-manager, sync VM, and async VM interfaces remain available.
+This release deliberately uses shared-secret HMAC signing rather than claiming a mature public package-signing PKI. A public registry should not be enabled until Ed25519 signatures, key rotation/revocation, authenticated registry transport, and publisher identity policies are implemented.

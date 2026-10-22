@@ -1,10 +1,9 @@
 # Release Integrity
 
-Previous version: 0.29.0
-Current version: 0.30.0
-Previous files: 109
-Current files: 117
-Files added: 8
-Files removed: 0
-Tests passed: 108
+Previous version: 0.30.0
+Current version: 0.31.0
+Previous context files: 123
+Baseline non-generated files missing: 0
+New release feature files: 5
+Tests passed: 118
 Status: PASS
