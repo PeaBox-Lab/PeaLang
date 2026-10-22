@@ -6,6 +6,7 @@ pealang/agents.py
 pealang/ai.py
 pealang/ast_nodes.py
 pealang/async_vm.py
+pealang/browser_profile.py
 pealang/bytecode.py
 pealang/cli.py
 pealang/compiler.py
@@ -50,3 +51,4 @@ tests/test_types_v019.py
 tests/test_vm_modules_exceptions_v022.py
 tests/test_vm_parity_v021.py
 tests/test_vm_security_dap_v023.py
+tests/test_web_sdk_v029.py

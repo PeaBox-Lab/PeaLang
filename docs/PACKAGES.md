@@ -15,7 +15,7 @@ pea pkg-init my-extension
 name = "bonus-rules"
 version = "1.0.0"
 entry = "src/main.pea"
-pealang = ">=0.28.0"
+pealang = ">=0.29.0"
 
 [dependencies]
 validation = { path = "../validation", version = "^1.2.0" }

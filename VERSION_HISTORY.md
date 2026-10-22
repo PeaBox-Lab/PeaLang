@@ -28,3 +28,5 @@
 | 0.27 | Package manifests, lock files, semver, audit, and reproducible .peapkg |
 
 | 0.28 | Java runtime sidecar, Java SDK, service API, and Spring Boot integration |
+
+| 0.29 | TypeScript SDK, React hooks, browser-safe schema integration |

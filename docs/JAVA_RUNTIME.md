@@ -40,4 +40,4 @@ The service performs semantic checks before compilation and caches bytecode by S
 
 ## Java 17 client
 
-The bundled `java-sdk` contains `io.pealang:pealang-java-client:0.28.0`. It uses the JDK `HttpClient`, so it can be wrapped as a Spring Boot bean without requiring Spring inside the core SDK.
+The bundled `java-sdk` contains `io.pealang:pealang-java-client:0.29.0`. It uses the JDK `HttpClient`, so it can be wrapped as a Spring Boot bean without requiring Spring inside the core SDK.

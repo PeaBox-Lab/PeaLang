@@ -1,43 +1,28 @@
-# PeaLang 0.28.0
+# PeaLang 0.29.0
 
-PeaLang is an embeddable extension language designed to extend Python, FastAPI, Java, Spring Boot, API services, workflows, and business applications without replacing their core technology stack.
+PeaLang is an embeddable extension language designed to extend Python, FastAPI, Java, Spring Boot, TypeScript, React, API services, workflows, and business applications.
 
-## Install
+## TypeScript
 
-```bash
-python -m pip install pealang-0.28.0-py3-none-any.whl
-pea --version
+The source release includes `typescript-sdk` with `@pealang/client`.
+
+```ts
+const pea = new PeaLangClient("http://127.0.0.1:8787");
+const result = await pea.invoke({module:"bonus",function:"calculate",args:[100000,0.15]});
 ```
 
-## Java runtime service
+## React
 
-```bash
-pea serve --host=127.0.0.1 --port=8787
-```
+The `react-sdk` contains `PeaLangProvider`, `usePeaLang`, `usePeaFunction`, and the safe `PeaUi` schema renderer.
 
-The sidecar provides health/readiness, compile, load-module, and invoke endpoints.
+## Runtime integration coverage
 
-## Java SDK
+- Python and FastAPI
+- Java and Spring Boot through the runtime sidecar
+- TypeScript and React through the service client
+- Sync and native async VM embedding
+- Optional static typing and semantic analysis
+- PEAC compiler/VM and DAP
+- Package manifests, locks, audit, and reproducible packages
 
-The source distribution contains:
-
-```text
-java-sdk/
-  pom.xml
-  src/main/java/io/pealang/client/
-```
-
-The client targets Java 17 and uses the JDK HTTP client. This keeps it usable from Spring Boot without coupling the core SDK to Spring.
-
-## Runtime foundations
-
-- Optional static types and semantic analysis
-- PEAC compiler and VM
-- Sync and native async embedding
-- Capability-controlled host functions
-- FastAPI integration
-- Java sidecar integration
-- DAP debugging
-- Package manifests, locks, auditing, and reproducible packages
-
-See `docs/JAVA_RUNTIME.md`, `docs/PACKAGES.md`, `docs/ASYNC_VM.md`, and `docs/FASTAPI_PACKAGE.md`.
+See `docs/TYPESCRIPT_REACT.md`, `docs/JAVA_RUNTIME.md`, `docs/PACKAGES.md`, and `docs/ASYNC_VM.md`.
