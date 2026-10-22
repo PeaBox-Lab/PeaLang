@@ -9,3 +9,4 @@
 | 0.14 | Debugger foundation |
 | 0.15 | Debug Adapter Protocol |
 | 0.16 | Advanced debugging, frames, conditions, source awareness |
+| 0.17 | Built-in CLI and REPL help system |

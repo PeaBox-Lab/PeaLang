@@ -1,6 +1,14 @@
 # Changelog
 
-## 0.16.0 - 2026-10-22
+## 0.17.0 - 2026-10-22
+- Added `pea help` and topic-based command-line help.
+- Added friendly `help`, `help TOPIC`, and `? TOPIC` REPL aliases.
+- Added `:topics`, `:commands`, `:examples`, and `:version` commands.
+- Added structured help topics and partial-match suggestions.
+- Added REPL guidance distinguishing PeaLang from operating-system commands.
+- Added dedicated help documentation and automated regression tests.
+
+## 0.17.0 - 2026-10-22
 - Added captured function call-stack frames and per-frame local scopes.
 - Added conditional breakpoints, hit-count conditions, and log points.
 - Added exception breakpoint support for uncaught PeaLang errors.

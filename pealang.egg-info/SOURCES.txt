@@ -10,6 +10,7 @@ pealang/dap.py
 pealang/debugger.py
 pealang/environment.py
 pealang/errors.py
+pealang/help_system.py
 pealang/interpreter.py
 pealang/lexer.py
 pealang/parser.py
@@ -27,3 +28,4 @@ tests/test_dap.py
 tests/test_dap_v016.py
 tests/test_debugger.py
 tests/test_debugger_v016.py
+tests/test_help_v017.py

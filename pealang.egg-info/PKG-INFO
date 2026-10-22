@@ -1,14 +1,38 @@
 Metadata-Version: 2.4
 Name: pealang
-Version: 0.16.0
+Version: 0.17.0
 Summary: Readable automation and AI workflow language
 License: MIT
 Requires-Python: >=3.10
 Description-Content-Type: text/markdown
 
-# PeaLang 0.16.0
+# PeaLang 0.17.0
 
 PeaLang is a readable, Python-hosted language for automation, workflows, AI integrations, agents, and practical scripting. Version 0.16 strengthens editor debugging with function-aware frames, frame-local scopes, conditional and hit-count breakpoints, exception stops, source-aware breakpoints, and proper DAP lifecycle events.
+
+## Built-in help
+
+From CMD or PowerShell:
+
+```cmd
+pea help
+pea help topics
+pea help getting-started
+pea help functions
+pea help debugging
+```
+
+Inside `pea repl`:
+
+```text
+pea> help
+pea> help syntax
+pea> :topics
+pea> :examples
+pea> :version
+```
+
+Unlike 0.16, plain `help` now works inside the REPL. Run Python, pip, pytest, and other operating-system commands only after `exit` returns you to CMD or PowerShell.
 
 ## Requirements
 

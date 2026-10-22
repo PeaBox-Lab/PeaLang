@@ -1,6 +1,6 @@
 # PeaLang AI Development Handover 0.16
 
-Baseline: 0.16.0 reconstructed from the complete 0.15 source context.
+Baseline: 0.17.0 reconstructed from the complete 0.15 source context.
 
 ## Delivered
 
