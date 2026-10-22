@@ -20,3 +20,5 @@
 | 0.23 | Capability-safe VM embedding and VM-backed DAP |
 
 | 0.24 | Flow-aware semantic analysis and contract diagnostics |
+
+| 0.25 | First-class FastAPI extension integration |

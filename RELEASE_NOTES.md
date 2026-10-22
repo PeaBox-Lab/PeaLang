@@ -1,20 +1,16 @@
-# PeaLang 0.24.0 Release Notes
+# PeaLang 0.25.0 Release Notes
 
-PeaLang 0.24 substantially strengthens semantic analysis for typed extension contracts.
+PeaLang 0.25 adds the first production-oriented FastAPI integration layer.
 
 ## Added
 
-- `SemanticAnalyzer`, `SemanticResult`, and `FunctionContract` APIs.
-- Flow-aware function body analysis.
-- Return-type validation and missing-return diagnostics.
-- Unreachable-code warnings.
-- Function call arity and literal argument validation.
-- Record field completeness, unknown-field, and field-type validation.
-- Basic arithmetic and string expression inference.
-- Nullable member-access diagnostics and null-narrowing foundation.
-- `pea semantic` for files and folders.
-- Fifteen new semantic regression tests.
-
-## Compatibility
-
-Typing remains optional. Existing untyped programs, compiled PEAC modules, VM embedding, capability boundaries, and the VM debugger remain available.
+- Optional `pealang[fastapi]` dependency group.
+- `PeaExtensionRegistry` for semantic validation, startup loading, invocation, status, and development hot reload.
+- `PeaRouter` for exposing PeaLang exports as FastAPI routes.
+- OpenAPI metadata identifying the PeaLang extension and function behind each generated endpoint.
+- Validation dependency factory.
+- Controlled 400/403/429/500 error mapping.
+- FastAPI exception handlers for permission and resource-limit failures.
+- Extension status endpoint support.
+- Complete FastAPI example application.
+- Six dedicated FastAPI integration tests.

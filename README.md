@@ -1,46 +1,42 @@
-# PeaLang 0.24.0
+# PeaLang 0.25.0
 
 PeaLang is an embeddable extension language for rules, workflows, automation, integrations, and controlled application customization.
 
 ## Install
 
-```bash
-python -m pip install pealang-0.24.0-py3-none-any.whl
-pea --version
-```
-
-## Semantic analysis
+Core runtime:
 
 ```bash
-pea semantic src tests
+python -m pip install pealang-0.25.0-py3-none-any.whl
 ```
 
-Typed example:
+With FastAPI integration:
 
-```pea
-type Employee = {
-    name: String,
-    rating: Int,
-    salary: Number
-}
-
-function calculate_bonus(employee: Employee) -> Number {
-    return employee.salary * 0.15
-}
+```bash
+python -m pip install "pealang[fastapi]"
 ```
 
-The analyzer checks typed returns, call arguments, record fields, unreachable code, nullability foundations, and expression compatibility.
-
-## VM embedding
+## FastAPI extension
 
 ```python
-from pealang import VMRuntime, RuntimeOptions
-runtime = VMRuntime(RuntimeOptions(permissions=frozenset({"hr.get"})))
-runtime.register_function("hr.get", find_employee, "hr.get")
-module = runtime.load_file("rules.pea")
-result = module.call("evaluate", "E1001")
+from fastapi import FastAPI
+from pealang import RuntimeOptions, VMRuntime
+from pealang.fastapi import PeaExtensionRegistry, PeaRouter
+
+runtime = VMRuntime(RuntimeOptions(max_execution_ms=500, max_instructions=50000))
+registry = PeaExtensionRegistry(runtime)
+registry.load("hr", "rules.pea")
+pea = PeaRouter(registry, prefix="/api").add("/bonus", "hr", "bonus").include_status()
+app = FastAPI()
+app.include_router(pea.router)
+```
+
+Run with:
+
+```bash
+uvicorn app:app --reload
 ```
 
 ## Documentation
 
-See `docs/SEMANTIC_ANALYSIS.md`, `docs/TYPE_SYSTEM.md`, `docs/VM_CAPABILITIES.md`, `docs/VM_DAP.md`, and `docs/EMBEDDING.md`.
+See `docs/FASTAPI_PACKAGE.md`, `docs/SEMANTIC_ANALYSIS.md`, `docs/VM_CAPABILITIES.md`, and `docs/BYTECODE_AND_VM.md`.
