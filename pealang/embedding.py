@@ -105,7 +105,7 @@ class PeaRuntime:
 
     def _new_interpreter(self,source_name='<embedded>'):
         base=Path(source_name).parent if source_name not in ('<embedded>','<input>') else Path('.')
-        vm=Interpreter(output=self.output,base_dir=base,allow_process=self.options.allow_process,debug_hook=self._budget_hook)
+        vm=Interpreter(output=self.output,base_dir=base,allow_process=self.options.allow_process,debug_hook=self._budget_hook,permissions=self.options.permissions)
         for name,value in self._host_namespace().items():vm.global_env.define(name,value,True)
         return vm
 

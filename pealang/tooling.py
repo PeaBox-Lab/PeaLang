@@ -54,7 +54,7 @@ def format_file(path,check=False):
     p.write_text(formatted,encoding='utf-8');return True
 
 class Checker:
-    BUILTINS={'range','len','str','number','int','type','upper','lower','split','join','append','keys','values','json','read','write','exists','sqrt','round','sleep','file','path','csv','env','datetime','regex','http','process','task','workflow','ai','skill','agent','tool'}
+    BUILTINS={'range','len','str','number','int','type','upper','lower','split','join','append','keys','values','json','read','write','exists','sqrt','round','sleep','file','path','csv','env','datetime','regex','http','process','task','workflow','ai','skill','agent','tool','std'}
     def __init__(self):self.diags=[];self.scopes=[set(self.BUILTINS)];self.used=set();self.declared={}
     def add(self,code,msg,node,severity='warning'):
         span=getattr(node,'span',None);self.diags.append(Diagnostic(severity,code,msg,span.line if span else 1,span.col if span else 1))

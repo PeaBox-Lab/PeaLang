@@ -1,18 +1,20 @@
 # Changelog
+## 0.35.0 - 2026-10-23
+- Stabilized the 14-module `std.*` standard library, capability gates, manifest, CLI inspection and compatibility tests.
 
-## 0.34.0 - 2026-10-23
+## 0.35.0 - 2026-10-23
 - Added implementation-independent language specification, EBNF grammar, feature stability registry, compatibility/deprecation contract, spec CLI, and revised foundational roadmap.
 
-## 0.34.0 - 2026-10-23
+## 0.35.0 - 2026-10-23
 - Added canonical registry indexes, sequence/replay protection, immutable version policy, package expiration, publisher namespaces, persistent registry state, and environment-based Bearer credentials.
 
-## 0.34.0 - 2026-10-23
+## 0.35.0 - 2026-10-23
 - Added Ed25519 public-key package signatures, public trust store, revocation, HTTPS registry transport, verified install, offline cache, and lockfile hash enforcement.
 
-## 0.34.0 - 2026-10-23
+## 0.35.0 - 2026-10-23
 - Added signed .peapkg support, trusted publisher keys, verification, safe extraction, HTTPS registry policy, installation receipts, and dependency-confusion defenses.
 
-## 0.34.0 - 2026-10-23
+## 0.35.0 - 2026-10-23
 - Added VM profiling, line coverage, benchmark tooling, and observer hooks.
 - Added interpreter-versus-VM differential conformance coverage.
 - Added source inventory/hash comparison and strengthened release integrity gates.

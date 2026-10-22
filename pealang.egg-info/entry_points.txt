@@ -1,3 +1,0 @@
-[console_scripts]
-pea = pealang.cli:main
-pealang = pealang.cli:main

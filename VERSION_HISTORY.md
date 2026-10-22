@@ -40,3 +40,4 @@
 | 0.33 | Canonical registry indexes, namespaces, replay protection, immutable versions |
 
 | 0.34 | Normative specification foundation and compatibility contract |
+| 0.35 | Standard library stabilization and permission model |

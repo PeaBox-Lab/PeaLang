@@ -24,8 +24,3 @@ Once `acme/demo` version `1.0.0` is observed with a SHA-256 digest, the same reg
 
 Registry access tokens are read from environment variables such as:
 
-```text
-PEALANG_REGISTRY_INTERNAL_TOKEN
-```
-
-Tokens are not written into `pea.lock` or registry metadata. The helper produces standard Bearer authorization headers.

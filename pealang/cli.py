@@ -31,6 +31,9 @@ def main(argv=None):
     if argv[0] in ('--version','-V'):print(f'PeaLang {__version__}');return 0
     c=argv[0]
     try:
+        if c=='stdlib':
+            from .stdlib import stdlib_manifest
+            print(json.dumps(stdlib_manifest(),indent=2));return 0
         if c=='spec':
             from .specification import verify_spec
             report=verify_spec();print(json.dumps(report,indent=2));return 0 if report['ok'] else 1
