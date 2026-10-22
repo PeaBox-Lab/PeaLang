@@ -4,7 +4,7 @@ from .parser import parse_source
 from .bytecode import BytecodeModule,CodeObject,Instruction,Op
 class CompileError(Exception):pass
 class Compiler:
- def __init__(self,source_name='<input>'):self.module=BytecodeModule(source_name=source_name);self.code=self.module.code;self.code.source_name=source_name
+ def __init__(self,source_name='<input>'):self.module=BytecodeModule(source_name=source_name);self.code=self.module.code;self.code.source_name=source_name;self.loops=[]
  def emit(self,op,arg=None,node=None):self.code.instructions.append(Instruction(op.value if hasattr(op,'value') else op,arg,getattr(getattr(node,'span',None),'line',1)));return len(self.code.instructions)-1
  def patch(self,i,arg):self.code.instructions[i].arg=arg
  def const(self,v):
@@ -17,16 +17,34 @@ class Compiler:
   for s in items:self.stmt(s)
  def stmt(self,s):
   if isinstance(s,VarDecl):self.expr(s.value) if s.value else self.emit(Op.NULL,node=s);self.emit(Op.STORE,s.name,s);return
-  if isinstance(s,Assign) and isinstance(s.target,Variable):self.expr(s.value);self.emit(Op.STORE,s.target.name,s);return
+  if isinstance(s,Assign):
+   if isinstance(s.target,Variable):
+    if s.op!='=':self.expr(s.target);self.expr(s.value);self.emit({'+=':Op.ADD,'-=':Op.SUB,'*=':Op.MUL,'/=':Op.DIV,'%=':Op.MOD}[s.op],node=s)
+    else:self.expr(s.value)
+    self.emit(Op.STORE,s.target.name,s);return
+   if isinstance(s.target,Property):self.expr(s.target.target);self.expr(s.value);self.emit(Op.SET_PROPERTY,s.target.name,s);return
+   if isinstance(s.target,Index):self.expr(s.target.target);self.expr(s.target.index);self.expr(s.value);self.emit(Op.SET_INDEX,node=s);return
+   raise CompileError('Unsupported assignment target')
   if isinstance(s,PrintStmt):self.expr(s.value);self.emit(Op.PRINT,node=s);return
   if isinstance(s,ExprStmt):self.expr(s.value);self.emit(Op.POP,node=s);return
   if isinstance(s,ReturnStmt):self.expr(s.value) if s.value else self.emit(Op.NULL,node=s);self.emit(Op.RETURN,node=s);return
   if isinstance(s,IfStmt):
    self.expr(s.condition);jf=self.emit(Op.JUMP_IF_FALSE,None,s);self.block(s.then_body);j=self.emit(Op.JUMP,None,s);self.patch(jf,len(self.code.instructions));self.block(s.else_body or []);self.patch(j,len(self.code.instructions));return
   if isinstance(s,WhileStmt):
-   start=len(self.code.instructions);self.expr(s.condition);end=self.emit(Op.JUMP_IF_FALSE,None,s);self.block(s.body);self.emit(Op.JUMP,start,s);self.patch(end,len(self.code.instructions));return
+   start=len(self.code.instructions);self.expr(s.condition);end=self.emit(Op.JUMP_IF_FALSE,None,s);ctx={'continue':start,'breaks':[]};self.loops.append(ctx);self.block(s.body);self.loops.pop();self.emit(Op.JUMP,start,s);target=len(self.code.instructions);self.patch(end,target)
+   for i in ctx['breaks']:self.patch(i,target)
+   return
   if isinstance(s,ForStmt):
-   self.expr(s.iterable);self.emit(Op.ITER,node=s);start=len(self.code.instructions);end=self.emit(Op.ITER_NEXT,{'name':s.name,'end':None},s);self.block(s.body);self.emit(Op.JUMP,start,s);self.code.instructions[end].arg['end']=len(self.code.instructions);return
+   self.expr(s.iterable);self.emit(Op.ITER,node=s);start=len(self.code.instructions);end=self.emit(Op.ITER_NEXT,{'name':s.name,'end':None},s);ctx={'continue':start,'breaks':[]};self.loops.append(ctx);self.block(s.body);self.loops.pop();self.emit(Op.JUMP,start,s);target=len(self.code.instructions);self.code.instructions[end].arg['end']=target
+   for i in ctx['breaks']:self.patch(i,target)
+   return
+  if isinstance(s,BreakStmt):
+   if not self.loops:raise CompileError('break outside loop')
+   self.loops[-1]['breaks'].append(self.emit(Op.JUMP,None,s));return
+  if isinstance(s,ContinueStmt):
+   if not self.loops:raise CompileError('continue outside loop')
+   self.emit(Op.JUMP,self.loops[-1]['continue'],s);return
+  if isinstance(s,ThrowStmt):self.expr(s.value);self.emit(Op.RAISE,node=s);return
   if isinstance(s,FunctionStmt):
    old=self.code;params=[getattr(p,'name',str(p)) for p in s.params];fn=CodeObject(s.name,params,source_name=self.module.source_name);self.code=fn;self.block(s.body);self.emit(Op.NULL);self.emit(Op.RETURN);self.module.functions[s.name]=fn;self.code=old;self.emit(Op.FUNCTION,s.name,s);self.emit(Op.STORE,s.name,s);return
   if isinstance(s,ExportStmt):self.emit(Op.EXPORT,s.name,s);return

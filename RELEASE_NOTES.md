@@ -1,21 +1,18 @@
-# PeaLang 0.20.0 Release Notes
+# PeaLang 0.21.0 Release Notes
 
-PeaLang 0.20 introduces the first bytecode compiler and stack virtual machine.
+PeaLang 0.21 expands VM parity and makes compiled extensions usable through a VM-backed embedding API.
 
 ## Added
 
-- Versioned `PEAC` bytecode artifact and JSON serialization.
-- Constant pool, instructions, top-level code, and function code objects.
-- AST-to-bytecode compiler.
-- Stack VM with explicit instruction pointer and call frames.
-- Arithmetic, comparisons, variables, collections, control flow, functions, calls, returns, property access, and exports.
-- Source-line metadata on every instruction.
-- VM instruction-budget enforcement.
-- Bytecode disassembler.
-- `pea compile`, `pea dis`, and `pea vm` commands.
-- Direct execution of `.peac` files.
-- Compiler, VM, round-trip, disassembly, export, and budget tests.
+- Bytecode compilation for `break` and `continue` with loop patch stacks.
+- Compound assignment for variables: `+=`, `-=`, `*=`, `/=`, and `%=`.
+- Property and index assignment opcodes.
+- `throw` lowering through the `RAISE` opcode.
+- VM breakpoints, continuation, single-instruction stepping, stack traces, locals, source names, and line events.
+- `VMRuntime` and `VMModule` for loading compiled extensions and calling exports.
+- Interpreter-versus-VM differential tests.
+- Expanded PEAC opcode set and VM parity documentation.
 
 ## Compatibility
 
-The tree-walking interpreter remains available and is still the compatibility runtime for language constructs outside the initial compiler subset. The bytecode format is preview in 0.20.
+PEAC remains preview. Existing 0.20 source and bytecode format structure remains readable, while 0.21 adds opcodes. The interpreter remains the broadest compatibility runtime.

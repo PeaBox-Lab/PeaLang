@@ -1,42 +1,49 @@
-# PeaLang 0.20.0
+# PeaLang 0.21.0
 
-PeaLang is a readable, embeddable extension language for business rules, workflows, automation, integrations, and controlled application customization.
+PeaLang is an embeddable extension language for rules, workflows, automation, and controlled application customization.
 
 ## Install
 
 ```bash
-python -m pip install pealang-0.20.0-py3-none-any.whl
+python -m pip install pealang-0.21.0-py3-none-any.whl
 pea --version
 ```
 
-## Compile and run bytecode
+## Compile and run
 
 ```bash
 pea compile app.pea
 pea dis app.peac
 pea vm app.peac
-pea app.peac
 ```
 
-## Python compiler and VM API
+## VM-backed extension
 
 ```python
-from pealang import compile_source_to_bytecode, VirtualMachine
+from pealang import VMRuntime
 
-module = compile_source_to_bytecode('print 2 + 3', 'demo.pea')
-VirtualMachine().run(module)
+runtime = VMRuntime(max_instructions=50_000)
+module = runtime.load('''
+function add(a, b) {
+    return a + b
+}
+export add
+''')
+
+print(module.call("add", 10, 20))
 ```
 
-## Existing embedding API
+## VM parity added in 0.21
 
-```python
-from pealang import PeaRuntime, RuntimeOptions
-runtime = PeaRuntime(RuntimeOptions(max_execution_ms=500))
-module = runtime.load_file('rules.pea')
-result = module.call('evaluate', {'employee_id': 'E1001'})
-```
-
-The embedding API remains interpreter-backed in 0.20. VM-backed modules will follow once parity and capability integration are complete.
+- `break` and `continue`
+- compound variable assignment
+- property and index assignment
+- `throw`
+- breakpoints and continuation
+- instruction stepping
+- stack frames and locals
+- compiled export invocation
+- differential tests against the interpreter
 
 ## Type checking
 
@@ -46,4 +53,4 @@ pea typecheck rules.pea
 
 ## Documentation
 
-See `docs/BYTECODE_AND_VM.md`, `docs/PEAC_FORMAT.md`, `docs/TYPE_SYSTEM.md`, and `docs/EMBEDDING.md`.
+See `docs/BYTECODE_AND_VM.md`, `docs/VM_DEBUGGING.md`, `docs/VM_EMBEDDING.md`, `docs/TYPE_SYSTEM.md`, and `docs/EMBEDDING.md`.

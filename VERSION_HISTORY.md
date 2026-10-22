@@ -12,3 +12,5 @@
 | 0.19 | Optional static types and typed extension contracts |
 
 | 0.20 | Bytecode compiler, PEAC artifacts, and stack VM |
+
+| 0.21 | VM parity, debugging state, and VM-backed embedding |
