@@ -31,6 +31,15 @@ def main(argv=None):
     if argv[0] in ('--version','-V'):print(f'PeaLang {__version__}');return 0
     c=argv[0]
     try:
+        if c=='typecheck':
+            from .type_system import TypeChecker
+            files=discover_pea(argv[1:] or ['.']);errors=0
+            for f in files:
+                result=TypeChecker().check(Path(f).read_text(encoding='utf-8'),str(f))
+                for d in result.diagnostics:print(f'{f}:{d}')
+                errors+=sum(x.severity=='error' for x in result.diagnostics)
+            print(f'Typecheck: {len(files)} file(s), {errors} error(s)')
+            return 1 if errors else 0
         if c=='repl':return repl()
         if c=='init':
             p=argparse.ArgumentParser(prog='pea init');p.add_argument('path',nargs='?',default='.');p.add_argument('--name');a=p.parse_args(argv[1:]);print(init_project(a.path,a.name));return 0

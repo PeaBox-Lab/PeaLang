@@ -1,12 +1,12 @@
 # Roadmap
 
-- **0.18:** Python embedding foundation, capability boundaries, host conversion, FastAPI example, delivered.
-- **0.19:** optional static types, records, unions, nullability, semantic analysis, and `pea typecheck`.
-- **0.20:** bytecode compiler and resumable VM.
-- **0.21:** dedicated `pealang-fastapi` package, middleware, validation, and Pydantic contracts.
-- **0.22:** async functions, await, cancellation, task groups, and asynchronous host functions.
-- **0.23:** package manifest, lock file, dependency resolver, checksums, and private feeds.
-- **0.24:** gRPC runtime service, Java client, and Spring Boot starter.
-- **0.25:** TypeScript client, React hooks, schema renderer, and browser-safe runtime profile.
-- **0.26:** WebAssembly runtime experiment.
-- **1.0:** stable grammar, embedding ABI, package format, specification, and compatibility policy.
+- **0.18:** embeddable Python runtime and capability boundaries, delivered.
+- **0.19:** optional types, records, unions, nullable types, diagnostics, and `pea typecheck`, delivered.
+- **0.20:** bytecode compiler, instruction format, disassembler, and resumable VM.
+- **0.21:** full semantic analysis, flow inference, exhaustive return checking, and cross-module contracts.
+- **0.22:** dedicated FastAPI integration package and Pydantic schema generation.
+- **0.23:** async functions, await, cancellation, and structured concurrency.
+- **0.24:** package manifest, lock file, dependency resolver, signing, and private feeds.
+- **0.25:** Java runtime service, Java client, and Spring Boot starter.
+- **0.26:** TypeScript SDK, React hooks, schema renderer, and WebAssembly experiment.
+- **1.0:** stable grammar, type contracts, embedding ABI, package format, and compatibility policy.

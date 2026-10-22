@@ -19,6 +19,7 @@ pealang/runtime.py
 pealang/skills.py
 pealang/stdlib.py
 pealang/tooling.py
+pealang/type_system.py
 pealang.egg-info/PKG-INFO
 pealang.egg-info/SOURCES.txt
 pealang.egg-info/dependency_links.txt
@@ -27,3 +28,4 @@ pealang.egg-info/top_level.txt
 tests/test_dap.py
 tests/test_debugger.py
 tests/test_embedding_v018.py
+tests/test_types_v019.py

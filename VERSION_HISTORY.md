@@ -8,3 +8,5 @@
 | 0.13 | LSP foundation |
 | 0.14 | Debugger foundation |
 | 0.15 | Debug Adapter Protocol |
+
+| 0.19 | Optional static types and typed extension contracts |

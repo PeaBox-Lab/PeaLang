@@ -170,4 +170,6 @@ class Parser:
         if buf:parts.append(buf)
         return InterpolatedString(parts,span=tok.span)
 
-def parse_source(source,source_name='<input>'):return Parser(Lexer(source,source_name).tokens(),source_name).parse()
+def parse_source(source,source_name='<input>'):
+    from .type_system import erase_types
+    return Parser(Lexer(erase_types(source),source_name).tokens(),source_name).parse()

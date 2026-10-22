@@ -1,6 +1,13 @@
 # Changelog
 
-## 0.18.0 - 2026-10-22
+## 0.19.0 - 2026-10-22
+- Added optional typed declarations and function signatures.
+- Added records, unions, nullable types, and generic type references.
+- Added static diagnostics and the `pea typecheck` command.
+- Added runtime type-annotation erasure for backward compatibility.
+- Added public type-system APIs, examples, tests, and documentation.
+
+## 0.19.0 - 2026-10-22
 - Added the first stable-shaped Python embedding API.
 - Added exported module loading and host-to-PeaLang invocation.
 - Added capability-based host function registration.
