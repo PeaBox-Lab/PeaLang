@@ -43,15 +43,14 @@ def main(argv=None):
             mf,data=load_manifest(argv[1] if len(argv)>1 else '.')
             if not mf:raise PeaError('No pea.json found')
             return run_file(mf.parent/data['project']['entry'])
+        if c=='dap':
+            from .dap import serve;return serve()
         if c=='debug':
             from .debugger import DebugSession
-            path=Path(argv[1]);session=DebugSession(path.read_text(encoding='utf-8'),str(path),output=print,base_dir=path.parent)
-            for value in argv[2:]:
-                if value.startswith('--break='):session.add_breakpoint(int(value.split('=',1)[1]))
-            print(json.dumps(session.continue_run(),indent=2,default=str));return 0
-        if c=='index':
-            from .workspace import WorkspaceIndex
-            idx=WorkspaceIndex(argv[1] if len(argv)>1 else '.').build();print(json.dumps({'symbols':idx.symbols,'errors':idx.errors},indent=2));return 0
+            path=Path(argv[1]);d=DebugSession(path.read_text(encoding='utf-8'),str(path),output=print,base_dir=path.parent)
+            for x in argv[2:]:
+                if x.startswith('--break='):d.add_breakpoint(int(x.split('=',1)[1]))
+            print(json.dumps(d.start(),indent=2,default=str));return 0
         if c=='run':
             p=argparse.ArgumentParser(prog='pea run');p.add_argument('file');p.add_argument('--allow-process',action='store_true');a=p.parse_args(argv[1:]);return run_file(a.file,a.allow_process)
         if c=='fmt':
@@ -84,7 +83,7 @@ def main(argv=None):
             return 0
         allow='--allow-process' in argv
         if allow:argv.remove('--allow-process')
-        if len(argv)!=1:print('Usage: pea [init|project|add|remove|start|run|debug|index|fmt|check|test|docs|repl] ...',file=sys.stderr);return 2
+        if len(argv)!=1:print('Usage: pea [init|project|add|remove|start|run|fmt|check|test|docs|repl] ...',file=sys.stderr);return 2
         return run_file(argv[0],allow)
     except (PeaError,OSError) as e:print(f'Error: {e}',file=sys.stderr);return 1
 if __name__=='__main__':raise SystemExit(main())

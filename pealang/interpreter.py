@@ -19,8 +19,8 @@ class ContinueSignal(Exception):pass
 @dataclass
 class UserFunction:params:list;body:list[Stmt];closure:Env
 class Interpreter:
-    def __init__(self,output=None,base_dir=None,allow_process=False,project_root=None,dependencies=None):
-        self.output=output or print;self.global_env=Env();self.env=self.global_env;self.module_exports=None;self.base_dir=Path(base_dir or '.').resolve();self.source_name='<input>';self.imported=set();self.project_root=Path(project_root).resolve() if project_root else self.base_dir;self.dependencies=dependencies or {}
+    def __init__(self,output=None,base_dir=None,allow_process=False,project_root=None,dependencies=None,debug_hook=None):
+        self.output=output or print;self.debug_hook=debug_hook;self.call_stack=[];self.global_env=Env();self.env=self.global_env;self.module_exports=None;self.base_dir=Path(base_dir or '.').resolve();self.source_name='<input>';self.imported=set();self.project_root=Path(project_root).resolve() if project_root else self.base_dir;self.dependencies=dependencies or {}
         builtins={'range':lambda *a:list(range(*map(int,a))),'len':len,'str':lambda x:self.stringify(x),'number':lambda x:float(x),'int':lambda x:int(float(x)),'type':lambda x:type(x).__name__,'upper':lambda x:str(x).upper(),'lower':lambda x:str(x).lower(),'split':lambda x,s=None:str(x).split(s),'join':lambda s,x:str(s).join(map(str,x)),'append':self._append,'keys':lambda d:list(d.keys()),'values':lambda d:list(d.values()),'read':lambda p:Path(p).read_text(encoding='utf-8'),'write':self._write,'exists':os.path.exists,'sqrt':math.sqrt,'round':round,'sleep':time.sleep}
         for k,v in builtins.items():self.global_env.define(k,v,True)
         for k,v in build_standard_library(allow_process=allow_process).items():self.global_env.define(k,v,True)
@@ -51,6 +51,7 @@ class Interpreter:
             return r
         finally:self.env=old
     def exec_stmt(self,s):
+        if self.debug_hook:self.debug_hook(self,s)
         try:
             if isinstance(s,VarDecl):self.env.define(s.name,self.eval(s.value),s.constant);return None
             if isinstance(s,Assign):

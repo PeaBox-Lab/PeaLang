@@ -1,3 +1,3 @@
-# PeaLang 0.14.0 Release Notes
+# PeaLang 0.15.0 Release Notes
 
-This release adds a tested statement-debugging API and cross-file workspace symbol index. Debugging currently targets top-level statements and provides breakpoints, stepping, continue, variable snapshots and a module frame. It is a debugger foundation, not yet a complete DAP implementation.
+This release moves debugging toward editor interoperability with a tested DAP server. It provides the core request surface and statement hooks. Step semantics are intentionally conservative; advanced asynchronous and multithreaded debugging remain future work.

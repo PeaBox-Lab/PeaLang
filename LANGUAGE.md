@@ -1,3 +1,3 @@
-# PeaLang Language Reference
+# Language Reference
 
-PeaLang supports values, variables/constants, expressions, lists, dictionaries, control flow, functions/defaults/closures, imports/exports, exceptions, assertions, parallel expressions, automation namespaces, AI, tools, agents and skills.
+PeaLang supports variables/constants, collections, functions/defaults/closures, control flow, modules/exports, exceptions, assertions, parallel expressions, automation namespaces, AI, tools, agents and skills.

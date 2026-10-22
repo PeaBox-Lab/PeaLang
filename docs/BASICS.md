@@ -1,3 +1,3 @@
 # Basics
 
-Create a `.pea` file, use `let` or `const`, print with `print`, group logic with `function`, validate with `pea check`, and execute with `pea run`.
+Write `.pea` files with `let`, `const`, `function`, `if`, `while`, `for`, and `print`. Run with `pea run FILE`; inspect with `pea debug FILE`.

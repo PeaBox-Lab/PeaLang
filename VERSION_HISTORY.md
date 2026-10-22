@@ -2,8 +2,9 @@
 
 | Version | Theme |
 |---|---|
-| 0.1-0.10 | Interpreter through AI/agent foundations |
-| 0.11 | Language hardening |
+| 0.1-0.10 | Language, automation, workflows, AI and agents |
+| 0.11 | Hardening |
 | 0.12 | Dependency integrity |
-| 0.13 | Editor intelligence and LSP foundation |
-| 0.14 | Debugger and cross-file workspace foundation |
+| 0.13 | LSP foundation |
+| 0.14 | Debugger foundation |
+| 0.15 | Debug Adapter Protocol |

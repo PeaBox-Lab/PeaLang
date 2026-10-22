@@ -1,60 +1,50 @@
 
 from __future__ import annotations
-from dataclasses import dataclass, asdict
+from dataclasses import dataclass,asdict
 from .parser import parse_source
 from .interpreter import Interpreter
-from .errors import PeaError
-
+from .environment import Env
+class DebugPause(Exception): pass
 @dataclass
-class Breakpoint:
-    line:int
-    enabled:bool=True
-    condition:str|None=None
-
-@dataclass
-class DebugEvent:
-    reason:str
-    source:str
-    line:int
-    col:int
-    variables:dict
-    statement:str
-    def to_dict(self): return asdict(self)
-
+class Breakpoint: line:int; condition:str|None=None; enabled:bool=True; hit_count:int=0
 class DebugSession:
-    """Deterministic statement debugger for top-level PeaLang programs."""
-    def __init__(self, source, source_name='<debug>', output=None, base_dir=None):
-        self.source=source; self.source_name=source_name
-        self.program=parse_source(source,source_name)
-        self.vm=Interpreter(output=output,base_dir=base_dir)
-        self.breakpoints={}; self.index=0; self.events=[]; self.finished=False
-    def add_breakpoint(self,line,condition=None):
-        bp=Breakpoint(int(line),True,condition); self.breakpoints[bp.line]=bp; return asdict(bp)
-    def remove_breakpoint(self,line): return self.breakpoints.pop(int(line),None) is not None
-    def variables(self): return self.vm.global_env.snapshot()
-    def stack(self): return [{'name':'<module>','source':self.source_name,'line':self.current_line()}]
-    def current_line(self):
-        if self.index>=len(self.program.statements): return None
-        sp=self.program.statements[self.index].span; return sp.line if sp else 1
-    def _statement_name(self,node): return type(node).__name__
-    def _event(self,reason,node):
-        sp=node.span; e=DebugEvent(reason,self.source_name,sp.line if sp else 1,sp.col if sp else 1,self.variables(),self._statement_name(node)); self.events.append(e); return e.to_dict()
-    def step(self):
-        if self.finished:return {'reason':'end','variables':self.variables()}
-        if self.index>=len(self.program.statements): self.finished=True; return {'reason':'end','variables':self.variables()}
-        node=self.program.statements[self.index]
-        self.vm.exec_stmt(node); self.index+=1
-        if self.index>=len(self.program.statements): self.finished=True
-        return self._event('step',node)
-    def continue_run(self):
-        while not self.finished and self.index<len(self.program.statements):
-            node=self.program.statements[self.index]; line=node.span.line if node.span else 1
-            bp=self.breakpoints.get(line)
-            if bp and bp.enabled:
-                bp.enabled=False
-                return self._event('breakpoint',node)
-            self.step()
-        return {'reason':'end','variables':self.variables()}
-    def run(self):
-        for bp in self.breakpoints.values(): bp.enabled=True
-        return self.continue_run()
+ def __init__(self,source,source_name='<debug>',output=None,base_dir=None):
+  self.source=source;self.source_name=source_name;self.program=parse_source(source,source_name);self.breakpoints={};self.mode='pause';self.events=[];self._paused=None
+  self.vm=Interpreter(output=output,base_dir=base_dir,debug_hook=self._hook)
+ def add_breakpoint(self,line,condition=None):
+  b=Breakpoint(int(line),condition);self.breakpoints[b.line]=b;return asdict(b)
+ def remove_breakpoint(self,line):return self.breakpoints.pop(int(line),None) is not None
+ def _user_vars(self):
+  hidden={'range','len','str','number','int','type','upper','lower','split','join','append','keys','values','read','write','exists','sqrt','round','sleep','file','path','json','csv','env','datetime','regex','http','process','task','workflow','ai','tool','agent','skill'}
+  return {k:v for k,v in self.vm.env.snapshot().items() if k not in hidden}
+ def variables(self,scope='locals'):return self._user_vars() if scope=='locals' else self.vm.global_env.snapshot()
+ def stack(self):return [{'id':1,'name':'<module>','source':self.source_name,'line':self._paused.span.line if self._paused and self._paused.span else 1}]
+ def evaluate(self,expression):return self.vm.eval(parse_source('print '+expression,self.source_name).statements[0].value)
+ def _hook(self,vm,node):
+  line=node.span.line if node.span else 1;bp=self.breakpoints.get(line);stop=self.mode in ('step_in','step_over') or bool(bp and bp.enabled)
+  if stop:
+   if bp:bp.hit_count+=1;bp.enabled=False
+   self._paused=node;self.events.append({'reason':'breakpoint' if bp else 'step','line':line,'source':self.source_name,'statement':type(node).__name__,'variables':self._user_vars()});raise DebugPause()
+ def _execute(self):
+  try:self.vm.run(self.program,self.source_name);return {'reason':'end','variables':self._user_vars()}
+  except DebugPause:return self.events[-1]
+ def start(self):self.mode='continue';return self._execute()
+ def continue_run(self):
+  if self._paused:
+   node=self._paused;self._paused=None;self.vm.debug_hook=None;self.vm.exec_stmt(node);self.vm.debug_hook=self._hook
+  self.mode='continue';return self._execute_remaining()
+ def step_in(self):return self._resume_step('step_in')
+ def step_over(self):return self._resume_step('step_over')
+ def step_out(self):return self.continue_run()
+ def _resume_step(self,mode):
+  if self._paused:
+   node=self._paused;self._paused=None;self.vm.debug_hook=None;self.vm.exec_stmt(node);self.vm.debug_hook=self._hook
+  self.mode=mode;return self._execute_remaining()
+ def _execute_remaining(self):
+  # Resume from nearest top-level statement after the paused line. Nested statements are hook-visible during execution.
+  line=self.events[-1]['line'] if self.events else 0
+  pending=[x for x in self.program.statements if (x.span.line if x.span else 1)>line]
+  try:
+   for node in pending:self.vm.exec_stmt(node)
+   return {'reason':'end','variables':self._user_vars()}
+  except DebugPause:return self.events[-1]
