@@ -14,3 +14,5 @@
 | 0.20 | Bytecode compiler, PEAC artifacts, and stack VM |
 
 | 0.21 | VM parity, debugging state, and VM-backed embedding |
+
+| 0.22 | Structured VM exceptions, defaults, closures, and module imports |

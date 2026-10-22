@@ -1,18 +1,21 @@
-# PeaLang 0.21.0 Release Notes
+# PeaLang 0.22.0 Release Notes
 
-PeaLang 0.21 expands VM parity and makes compiled extensions usable through a VM-backed embedding API.
+PeaLang 0.22 adds structured VM exceptions, literal default arguments, shared closures, and compiled module imports.
 
 ## Added
 
-- Bytecode compilation for `break` and `continue` with loop patch stacks.
-- Compound assignment for variables: `+=`, `-=`, `*=`, `/=`, and `%=`.
-- Property and index assignment opcodes.
-- `throw` lowering through the `RAISE` opcode.
-- VM breakpoints, continuation, single-instruction stepping, stack traces, locals, source names, and line events.
-- `VMRuntime` and `VMModule` for loading compiled extensions and calling exports.
-- Interpreter-versus-VM differential tests.
-- Expanded PEAC opcode set and VM parity documentation.
+- `PUSH_HANDLER`, `POP_HANDLER`, and `IMPORT` bytecode operations.
+- VM handling for `try`, `catch`, `finally`, and `throw`.
+- Exception propagation and handler lookup across VM frames.
+- Operand-stack restoration when a handler is entered.
+- Literal function-default serialization in PEAC code objects.
+- Default-argument arity validation in compiled functions.
+- Shared lexical closure environments.
+- Relative source-module imports.
+- Imported export namespaces and per-VM module caching.
+- PEAC round-trip testing for default parameters.
+- New exception, closure, default, and module conformance tests.
 
 ## Compatibility
 
-PEAC remains preview. Existing 0.20 source and bytecode format structure remains readable, while 0.21 adds opcodes. The interpreter remains the broadest compatibility runtime.
+The PEAC format remains preview and now stores function defaults. Existing source programs remain compatible. Non-literal default expressions and some advanced interpreter constructs remain outside the VM subset.

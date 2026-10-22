@@ -45,8 +45,25 @@ class Compiler:
    if not self.loops:raise CompileError('continue outside loop')
    self.emit(Op.JUMP,self.loops[-1]['continue'],s);return
   if isinstance(s,ThrowStmt):self.expr(s.value);self.emit(Op.RAISE,node=s);return
+  if isinstance(s,TryStmt):
+   push=self.emit(Op.PUSH_HANDLER,{'catch':None,'finally':None,'end':None,'name':s.catch_name},s);self.block(s.try_body);self.emit(Op.POP_HANDLER,node=s)
+   normal_finally=len(self.code.instructions)
+   if s.finally_body:self.block(s.finally_body)
+   jump_end=self.emit(Op.JUMP,None,s);catch_target=None
+   if s.catch_body is not None:
+    catch_target=len(self.code.instructions);self.block(s.catch_body)
+    if s.finally_body:self.block(s.finally_body)
+   end=len(self.code.instructions);self.patch(jump_end,end)
+   self.code.instructions[push].arg.update({'catch':catch_target,'finally':None,'end':end})
+   return
+  if isinstance(s,ImportStmt):self.emit(Op.IMPORT,{'path':s.path,'alias':s.alias},s);return
   if isinstance(s,FunctionStmt):
-   old=self.code;params=[getattr(p,'name',str(p)) for p in s.params];fn=CodeObject(s.name,params,source_name=self.module.source_name);self.code=fn;self.block(s.body);self.emit(Op.NULL);self.emit(Op.RETURN);self.module.functions[s.name]=fn;self.code=old;self.emit(Op.FUNCTION,s.name,s);self.emit(Op.STORE,s.name,s);return
+   old=self.code;params=[getattr(p,'name',str(p)) for p in s.params];defaults={};
+   for p in s.params:
+    if getattr(p,'default',None) is not None:
+     if isinstance(p.default,Literal):defaults[p.name]=p.default.value
+     else:raise CompileError('VM default parameters must be literals in 0.22')
+   fn=CodeObject(s.name,params,source_name=self.module.source_name,defaults=defaults);self.code=fn;self.block(s.body);self.emit(Op.NULL);self.emit(Op.RETURN);self.module.functions[s.name]=fn;self.code=old;self.emit(Op.FUNCTION,s.name,s);self.emit(Op.STORE,s.name,s);return
   if isinstance(s,ExportStmt):self.emit(Op.EXPORT,s.name,s);return
   raise CompileError(f'Unsupported statement: {type(s).__name__}')
  def expr(self,e):
