@@ -41,3 +41,4 @@
 
 | 0.34 | Normative specification foundation and compatibility contract |
 | 0.35 | Standard library stabilization and permission model |
+| 0.36 | Type-system completion: generics, protocols and cross-module contracts |

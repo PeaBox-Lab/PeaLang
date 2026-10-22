@@ -1,0 +1,32 @@
+{
+  "previous_version": "0.35.0",
+  "current_version": "0.36.0",
+  "previous_files": 154,
+  "current_files": 158,
+  "retained_paths": 154,
+  "missing_paths": [],
+  "unchanged_sha256": 141,
+  "intentionally_modified_retained_files": [
+    "CHANGELOG.md",
+    "README.md",
+    "RELEASE_NOTES.md",
+    "VERSION_HISTORY.md",
+    "java-sdk/pom.xml",
+    "pealang/__init__.py",
+    "pealang/cli.py",
+    "pealang/registry_auth.py",
+    "pealang/runtime_service.py",
+    "pealang/type_system.py",
+    "pyproject.toml",
+    "react-sdk/package.json",
+    "typescript-sdk/package.json"
+  ],
+  "added_files": [
+    "PEALANG_AI_DEVELOPMENT_HANDOVER 0.36.md",
+    "docs/TYPE_SYSTEM_036.md",
+    "help/TYPES.md",
+    "tests/test_types_v036.py"
+  ],
+  "tests_passed": 175,
+  "status": "PASS"
+}

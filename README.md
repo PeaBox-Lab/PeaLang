@@ -1,10 +1,10 @@
-# PeaLang 0.35.0
+# PeaLang 0.36.0
 
-PeaLang is an embeddable extension language for controlled rules, workflows, automation and host integration. Version 0.35 stabilizes its standard-library layer.
+PeaLang is an embeddable extension language for controlled rules, workflows, automation and host integration. Version 0.36 advances the foundational type system while retaining the stabilized v0.35 standard library.
 
 ## Install
 ```bash
-python -m pip install pealang-0.35.0-py3-none-any.whl
+python -m pip install pealang-0.36.0-py3-none-any.whl
 pea --version
 ```
 
@@ -22,3 +22,6 @@ Use `std.collections`, `std.string`, `std.math`, `std.datetime`, `std.json`, `st
 
 ## Platform
 PeaLang retains PEAC bytecode/VM, optional typing, semantic analysis, Python embedding, async VM, FastAPI integration, Java sidecar/client, TypeScript/React SDKs, DAP, package/signing/registry security and observability. See `docs/USER_GUIDE.md`, `docs/BASICS.md`, `FOUNDATIONAL_ROADMAP.md`, and `RELEASE_NOTES.md`.
+
+## Type system 0.36
+Generics, structural protocol contracts, project-wide contract analysis and Result/Option/Future semantics are now part of the foundation. See `docs/TYPE_SYSTEM_036.md`.

@@ -111,6 +111,9 @@ class TypeChecker:
         for x in t.args:self._validate_type(x,known,r,line)
 
 def erase_types(source:str)->str:
+    # Remove protocol declarations and generic parameter lists before runtime parsing.
+    source=re.sub(r'(?ms)^\s*protocol\s+\w+\s*=*\s*\{.*?\}\s*','',source)
+    source=re.sub(r'(function\s+\w+)\s*<[^>]+>',r'\1',source)
     # Remove record declarations before runtime parsing.
     source=re.sub(r'(?ms)^\s*type\s+\w+\s*=\s*\{.*?\}\s*','',source)
     # Function return annotations.
@@ -233,3 +236,78 @@ class SemanticAnalyzer:
                 for arg,(_,expected) in zip(args,fn.params):
                     actual=infer_literal(arg)
                     if actual.name!='Any' and not compatible(expected,actual):r.diagnostics.append(Diagnostic('C202',f"Argument expects {expected}, got {actual}",source[:m.start()].count('\n')+1))
+
+
+# PeaLang 0.36 foundational type-system completion layer
+@dataclass(frozen=True)
+class GenericFunctionContract:
+    name:str
+    type_params:tuple[str,...]
+    params:tuple[tuple[str,TypeRef],...]
+    return_type:TypeRef
+
+@dataclass(frozen=True)
+class ProtocolContract:
+    name:str
+    methods:tuple[tuple[str,tuple[tuple[str,TypeRef],...],TypeRef],...]
+
+def substitute_type(t:TypeRef, bindings:dict[str,TypeRef])->TypeRef:
+    if t.name in bindings and not t.args:return bindings[t.name]
+    return TypeRef(t.name,tuple(substitute_type(x,bindings) for x in t.args),t.nullable)
+
+def infer_generic_bindings(expected:TypeRef, actual:TypeRef, type_params:set[str], bindings=None):
+    bindings=dict(bindings or {})
+    if expected.name in type_params and not expected.args:
+        prior=bindings.get(expected.name)
+        if prior and prior!=actual:raise ValueError(f"Conflicting inference for {expected.name}: {prior} vs {actual}")
+        bindings[expected.name]=actual;return bindings
+    if expected.name==actual.name and len(expected.args)==len(actual.args):
+        for a,b in zip(expected.args,actual.args):bindings=infer_generic_bindings(a,b,type_params,bindings)
+    return bindings
+
+def parse_generic_functions(source:str):
+    out={}
+    pattern=r'function\s+(\w+)\s*<([^>]+)>\s*\((.*?)\)\s*(?:->\s*([^\{]+))?\s*\{'
+    for m in re.finditer(pattern,source,re.S):
+        name,tps,raw_params,raw_ret=m.groups(); type_params=tuple(x.strip() for x in tps.split(',') if x.strip());params=[]
+        for item in split_top(raw_params,','):
+            if ':' in item:
+                n,t=item.split(':',1);params.append((n.strip(),parse_type(t.split('=',1)[0].strip())))
+            else:params.append((item.strip(),TypeRef('Any')))
+        out[name]=GenericFunctionContract(name,type_params,tuple(params),parse_type(raw_ret.strip()) if raw_ret else TypeRef('Any'))
+    return out
+
+def parse_protocols(source:str):
+    out={}
+    for m in re.finditer(r'protocol\s+(\w+)\s*\{(.*?)\}',source,re.S):
+        methods=[]
+        for fn in re.finditer(r'function\s+(\w+)\s*\((.*?)\)\s*(?:->\s*([^\n\{]+))?',m.group(2)):
+            params=[]
+            for item in split_top(fn.group(2),','):
+                if not item.strip():continue
+                if ':' in item:
+                    n,t=item.split(':',1);params.append((n.strip(),parse_type(t.strip())))
+                else:params.append((item.strip(),TypeRef('Any')))
+            methods.append((fn.group(1),tuple(params),parse_type(fn.group(3).strip()) if fn.group(3) else TypeRef('Any')))
+        out[m.group(1)]=ProtocolContract(m.group(1),tuple(methods))
+    return out
+
+def protocol_conforms(record_fields:dict[str,TypeRef], protocol:ProtocolContract)->bool:
+    # 0.36 structural protocol surface: method-shaped fields must be Function.
+    return all(name in record_fields and record_fields[name].name=='Function' for name,_,_ in protocol.methods)
+
+def option_type(t):return TypeRef('Option',(t,))
+def result_type(ok,err):return TypeRef('Result',(ok,err))
+def future_type(t):return TypeRef('Future',(t,))
+
+def analyze_project(paths):
+    """Cross-module contract collector/checker for .pea source files."""
+    from pathlib import Path
+    result={'files':{},'functions':{},'records':{},'diagnostics':[]}
+    for raw in paths:
+        p=Path(raw); src=p.read_text(encoding='utf-8'); checked=SemanticAnalyzer().analyze(src,str(p))
+        result['files'][str(p)]={'ok':checked.ok,'diagnostics':[str(x) for x in checked.diagnostics]}
+        result['diagnostics'].extend((str(p),x) for x in checked.diagnostics)
+        for n,c in checked.functions.items():result['functions'][f'{p.stem}.{n}']=c
+        for n,c in checked.records.items():result['records'][f'{p.stem}.{n}']=c
+    return result

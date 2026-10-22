@@ -1,4 +1,6 @@
 # Changelog
+## 0.36.0 - 2026-10-23
+- Added generic contracts/substitution/inference, protocols, project-wide contract analysis, and Result/Option/Future semantics foundation.
 ## 0.35.0 - 2026-10-23
 - Stabilized the 14-module `std.*` standard library, capability gates, manifest, CLI inspection and compatibility tests.
 

@@ -114,6 +114,9 @@ def main(argv=None):
                 errors+=sum(x.severity=='error' for x in result.diagnostics);warnings+=sum(x.severity=='warning' for x in result.diagnostics)
             print(f'Semantic analysis: {len(files)} file(s), {errors} error(s), {warnings} warning(s)')
             return 1 if errors else 0
+        if c=='typecheck-project':
+            from .type_system import analyze_project
+            files=discover_pea(argv[1:] or ['.']);report=analyze_project(files);print(json.dumps({'files':report['files'],'function_contracts':len(report['functions']),'record_contracts':len(report['records']),'diagnostics':len(report['diagnostics'])},indent=2));return 1 if report['diagnostics'] else 0
         if c=='typecheck':
             from .type_system import TypeChecker
             files=discover_pea(argv[1:] or ['.']);errors=0

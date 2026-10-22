@@ -1,10 +1,14 @@
-# Release Integrity
-Previous version: 0.34.0
-Current version: 0.35.0
-Previous clean files: 150
-Current clean files: 154
-Files added: 4
-Files removed: 0
-Tests passed: 163
-Stable stdlib modules: 14
+# Release Integrity and Retention Audit
+
+Previous: 0.35.0
+Current: 0.36.0
+Previous clean files: 154
+Retained previous paths: 154
+Missing previous paths: 0
+Unchanged SHA-256 files: 141
+Intentionally modified retained files: 13
+New files before audit report: 4
+Tests passed: 175
 Status: PASS
+
+No previous clean file was removed. Modified files are version/code/documentation changes for 0.36; all other retained files match the 0.35 SHA-256 baseline.
