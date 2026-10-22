@@ -1,20 +1,16 @@
-# PeaLang 0.33.0 Release Notes
+# PeaLang 0.34.0 Release Notes
 
-PeaLang 0.33 completes another layer of package-registry supply-chain policy around the Ed25519 foundation delivered in 0.32.
+PeaLang 0.34 returns focus to unfinished language foundations. It introduces the first implementation-independent language specification and explicit feature compatibility contract.
 
 ## Added
+- `spec/` normative specification tree covering introduction, lexical grammar, types, expressions, statements, functions, modules, errors, async, host interop, security and compatibility.
+- `spec/grammar.ebnf` grammar foundation.
+- Feature stability states: Experimental, Preview, Stable, Deprecated, Removed.
+- Programmatic feature registry and deprecation-window validation.
+- `pea spec` specification completeness verification.
+- `pea features` feature stability listing.
+- Revised foundational roadmap through the 1.0 gate.
+- Specification/compatibility regression tests.
 
-- Canonical deterministic registry-index representation.
-- Registry sequence numbers and stale/replay rejection.
-- Immutable package-version SHA-256 policy.
-- Duplicate index-record rejection.
-- Package metadata expiration checks.
-- HTTPS-only package and signature URLs in indexes.
-- Publisher-key-to-namespace authorization policy.
-- Persistent registry state for accepted sequence/version history.
-- Environment-based Bearer authentication helpers without lockfile secret storage.
-- Twelve registry metadata and authentication tests.
-
-## Compatibility
-
-Ed25519 package signatures, HMAC compatibility, package cache, offline installation, package manager, VM/runtime, integrations, and existing language features remain available.
+## Why this release
+The original roadmap explicitly requires an implementation-independent specification and compatibility policy before maturity. PeaLang had built many runtime/integration layers ahead of those gates; 0.34 starts closing that debt.

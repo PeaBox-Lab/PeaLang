@@ -1,10 +1,11 @@
 # Release Integrity
 
-Previous version: 0.32.0
-Current version: 0.33.0
-Previous clean files: 127
-Current clean files: 132
-Files added: 5
+Previous version: 0.33.0
+Current version: 0.34.0
+Previous clean files: 132
+Current clean files: 150
+Files added: 18
 Files removed: 0
-Tests passed: 140
+Tests passed: 147
+Specification sections: 13
 Status: PASS

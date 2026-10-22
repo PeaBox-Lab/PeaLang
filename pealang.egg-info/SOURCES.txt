@@ -10,6 +10,7 @@ pealang/benchmark.py
 pealang/browser_profile.py
 pealang/bytecode.py
 pealang/cli.py
+pealang/compatibility.py
 pealang/compiler.py
 pealang/dap.py
 pealang/debugger.py
@@ -35,6 +36,7 @@ pealang/runtime_service.py
 pealang/secure_packages.py
 pealang/signing.py
 pealang/skills.py
+pealang/specification.py
 pealang/stdlib.py
 pealang/tooling.py
 pealang/type_system.py
@@ -60,6 +62,7 @@ tests/test_packages_v027.py
 tests/test_registry_index_v033.py
 tests/test_semantics_v024.py
 tests/test_signed_packages_v031.py
+tests/test_spec_compat_v034.py
 tests/test_types_v019.py
 tests/test_vm_modules_exceptions_v022.py
 tests/test_vm_parity_v021.py

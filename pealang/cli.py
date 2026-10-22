@@ -31,6 +31,13 @@ def main(argv=None):
     if argv[0] in ('--version','-V'):print(f'PeaLang {__version__}');return 0
     c=argv[0]
     try:
+        if c=='spec':
+            from .specification import verify_spec
+            report=verify_spec();print(json.dumps(report,indent=2));return 0 if report['ok'] else 1
+        if c=='features':
+            from .compatibility import FEATURES
+            for name,f in sorted(FEATURES.items()):print(f'{name}: {f.stability.value} (since {f.since})')
+            return 0
         if c=='keygen-ed25519':
             from .ed25519_signing import generate_ed25519_keypair
             private=argv[1] if len(argv)>1 else 'pea-ed25519.key';public=argv[2] if len(argv)>2 else private+'.pub';kid,_,_=generate_ed25519_keypair(private,public);print(kid);return 0

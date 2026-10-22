@@ -1,11 +1,14 @@
-# PeaLang 0.33.0
+# PeaLang 0.34.0
 
-PeaLang is an embeddable extension language spanning bytecode/VM execution, optional typing, semantic analysis, native async, Python/FastAPI/Java/TypeScript/React integration, package management, observability, and signed supply-chain controls.
+PeaLang is an embeddable extension language. Version 0.34 begins the formal foundation-completion phase with an implementation-independent specification and compatibility contract.
 
-## Registry security additions
+## Specification
+```bash
+pea spec
+pea features
+```
 
-Version 0.33 adds canonical registry indexes, anti-replay sequence tracking, immutable version hashes, publisher namespace authorization, metadata expiration, HTTPS-only package URLs, and environment-based Bearer credentials.
+The `spec/` directory now defines the language contract separately from the Python implementation. See `FOUNDATIONAL_ROADMAP.md` for the revised path to 1.0.
 
-Ed25519 remains the recommended publisher signature mechanism introduced in 0.32. Secrets are not stored in package locks.
-
-See `docs/SIGNED_REGISTRY_INDEX.md`, `docs/ED25519_REGISTRY.md`, `docs/SIGNED_PACKAGES.md`, and `docs/PACKAGES.md`.
+## Existing platform
+PeaLang retains the PEAC compiler/VM, optional typing and semantic analysis, sync/async embedding, FastAPI, Java sidecar, TypeScript/React clients, DAP, package ecosystem, signed registry controls, profiling and observability.

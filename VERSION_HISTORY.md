@@ -38,3 +38,5 @@
 | 0.32 | Ed25519 signatures, public trust, revocation, and verified registry installs |
 
 | 0.33 | Canonical registry indexes, namespaces, replay protection, immutable versions |
+
+| 0.34 | Normative specification foundation and compatibility contract |
