@@ -3,7 +3,7 @@ requires=["setuptools>=68","wheel"]
 build-backend="setuptools.build_meta"
 [project]
 name="pealang"
-version="0.15.0"
+version="0.16.0"
 description="Readable automation and AI workflow language"
 readme="README.md"
 requires-python=">=3.10"
@@ -13,3 +13,6 @@ pea="pealang.cli:main"
 pealang="pealang.cli:main"
 [tool.pytest.ini_options]
 testpaths=["tests"]
+
+[tool.setuptools]
+packages = ["pealang"]
