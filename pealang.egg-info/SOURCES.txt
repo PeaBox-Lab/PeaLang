@@ -35,6 +35,7 @@ tests/test_bytecode_v020.py
 tests/test_dap.py
 tests/test_debugger.py
 tests/test_embedding_v018.py
+tests/test_semantics_v024.py
 tests/test_types_v019.py
 tests/test_vm_modules_exceptions_v022.py
 tests/test_vm_parity_v021.py

@@ -1,19 +1,20 @@
-# PeaLang 0.23.0 Release Notes
+# PeaLang 0.24.0 Release Notes
 
-PeaLang 0.23 unifies VM embedding with the capability-based host boundary and introduces a VM-powered Debug Adapter Protocol server.
+PeaLang 0.24 substantially strengthens semantic analysis for typed extension contracts.
 
 ## Added
 
-- Permission-protected host functions in `VMRuntime`.
-- Registered host namespaces through `register_module`.
-- `RuntimeOptions` support in compiled VM embedding.
-- Host-value conversion through `to_pea` and `from_pea`.
-- VM execution time and instruction budgets.
-- VM-backed DAP server through `pea vm-dap`.
-- DAP initialization, launch, source breakpoints, continue, stepping, stack traces, scopes, variables, evaluation, output, exception information, and termination.
-- Debugging support for source and PEAC programs.
-- Security and DAP regression tests.
+- `SemanticAnalyzer`, `SemanticResult`, and `FunctionContract` APIs.
+- Flow-aware function body analysis.
+- Return-type validation and missing-return diagnostics.
+- Unreachable-code warnings.
+- Function call arity and literal argument validation.
+- Record field completeness, unknown-field, and field-type validation.
+- Basic arithmetic and string expression inference.
+- Nullable member-access diagnostics and null-narrowing foundation.
+- `pea semantic` for files and folders.
+- Fifteen new semantic regression tests.
 
 ## Compatibility
 
-`PeaRuntime` remains available for interpreter-backed extensions. `VMRuntime` now follows the same permission vocabulary and value-conversion model, but advanced hostile-code isolation still requires a separate process or container.
+Typing remains optional. Existing untyped programs, compiled PEAC modules, VM embedding, capability boundaries, and the VM debugger remain available.

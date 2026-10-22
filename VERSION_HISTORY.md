@@ -18,3 +18,5 @@
 | 0.22 | Structured VM exceptions, defaults, closures, and module imports |
 
 | 0.23 | Capability-safe VM embedding and VM-backed DAP |
+
+| 0.24 | Flow-aware semantic analysis and contract diagnostics |

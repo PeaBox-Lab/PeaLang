@@ -123,3 +123,113 @@ def erase_types(source:str)->str:
     # Variable annotations.
     source=re.sub(r'\b(let|const)\s+(\w+)\s*:\s*[A-Za-z_]\w*(?:\s*<[^=\n]+>)?\??\s*=',r'\1 \2 =',source)
     return source
+
+@dataclass
+class FunctionContract:
+    name:str
+    params:list[tuple[str,TypeRef]]
+    return_type:TypeRef
+    line:int
+
+@dataclass
+class SemanticResult(TypeCheckResult):
+    functions:dict[str,FunctionContract]=field(default_factory=dict)
+
+class SemanticAnalyzer:
+    """Flow-aware semantic checks layered over the optional type surface."""
+    def analyze(self,source:str,source_name='<input>')->SemanticResult:
+        base=TypeChecker().check(source,source_name)
+        result=SemanticResult(base.diagnostics,base.symbols,base.records,{})
+        known=set(BUILTINS)|set(result.records)
+        lines=source.splitlines()
+        # Collect function contracts and bodies using brace depth.
+        i=0
+        while i<len(lines):
+            line=lines[i];m=re.search(r'function\s+(\w+)\s*\((.*?)\)\s*(?:->\s*([^\{]+))?\s*\{',line)
+            if not m:i+=1;continue
+            name,raw_params,raw_ret=m.groups();params=[]
+            for item in split_top(raw_params,','):
+                item=item.strip()
+                if not item:continue
+                pname=item.split(':',1)[0].split('=',1)[0].strip();ptype=TypeRef('Any')
+                if ':' in item:
+                    ptype=parse_type(item.split(':',1)[1].split('=',1)[0].strip())
+                params.append((pname,ptype))
+            ret=parse_type(raw_ret.strip()) if raw_ret else TypeRef('Any')
+            result.functions[name]=FunctionContract(name,params,ret,i+1)
+            depth=line.count('{')-line.count('}');body=[];j=i+1
+            while j<len(lines) and depth>0:
+                depth+=lines[j].count('{')-lines[j].count('}')
+                if depth>0:body.append((j+1,lines[j]))
+                j+=1
+            self._check_function(name,params,ret,body,result,known)
+            i=j
+        self._check_records(source,result)
+        self._check_calls(source,result)
+        return result
+
+    def _check_function(self,name,params,ret,body,r,known):
+        env=dict(r.symbols);env.update(params);has_return=False;terminated=False
+        for line,text in body:
+            clean=text.strip()
+            if terminated and clean and clean!='}':r.diagnostics.append(Diagnostic('F401','Unreachable code',line,severity='warning'))
+            if clean.startswith('return'):
+                has_return=True;expr=clean[6:].strip();actual=self.infer_expr(expr,env,r)
+                if ret.name!='Any' and not compatible(ret,actual):r.diagnostics.append(Diagnostic('F201',f"Function '{name}' returns {actual}, expected {ret}",line))
+                terminated=True;continue
+            if clean.startswith('throw '):terminated=True;continue
+            m=re.match(r'(?:let|const)\s+(\w+)(?:\s*:\s*([^=]+))?\s*=\s*(.+)',clean)
+            if m:
+                n,t,e=m.groups();actual=self.infer_expr(e,env,r);env[n]=parse_type(t.strip()) if t else actual
+            m=re.match(r'if\s+(\w+)\s*!=\s*null',clean)
+            if m and m.group(1) in env:
+                t=env[m.group(1)];env[m.group(1)]=TypeRef(t.name,t.args,False)
+        if ret.name not in ('Any','Null') and not ret.nullable and not has_return:r.diagnostics.append(Diagnostic('F202',f"Function '{name}' may not return {ret} on every path",r.functions[name].line))
+
+    def infer_expr(self,expr,env,r):
+        expr=expr.strip().rstrip('}')
+        lit=infer_literal(expr)
+        if lit.name!='Any':return lit
+        if expr in env:return env[expr]
+        m=re.fullmatch(r'(\w+)\.(\w+)',expr)
+        if m and m.group(1) in env:
+            owner=env[m.group(1)];fields=r.records.get(owner.name,{})
+            if m.group(2) not in fields:r.diagnostics.append(Diagnostic('R203',f"Record '{owner.name}' has no field '{m.group(2)}'",1));return TypeRef('Any')
+            if owner.nullable:r.diagnostics.append(Diagnostic('N201',f"'{m.group(1)}' may be null",1))
+            return fields[m.group(2)]
+        m=re.fullmatch(r'(\w+)\((.*)\)',expr)
+        if m and m.group(1) in r.functions:return r.functions[m.group(1)].return_type
+        for op in ('+','-','*','/','%'):
+            if op in expr:
+                parts=expr.split(op,1);a=self.infer_expr(parts[0],env,r);b=self.infer_expr(parts[1],env,r)
+                if a.name=='String' and b.name=='String' and op=='+':return TypeRef('String')
+                if a.name in ('Int','Float','Number') and b.name in ('Int','Float','Number'):return TypeRef('Float' if 'Float' in (a.name,b.name) or op=='/' else 'Int')
+        return TypeRef('Any')
+
+    def _check_records(self,source,r):
+        for m in re.finditer(r'(?:let|const)\s+(\w+)\s*:\s*(\w+)\s*=\s*\{([^}]*)\}',source,re.S):
+            var,record,body=m.groups()
+            if record not in r.records:continue
+            fields={}
+            for pair in split_top(body,','):
+                if ':' in pair:
+                    k,v=pair.split(':',1);fields[k.strip().strip('"\'')]=infer_literal(v.strip())
+            expected=r.records[record]
+            for name,t in expected.items():
+                if name not in fields:r.diagnostics.append(Diagnostic('R201',f"Missing field '{name}' for record '{record}'",source[:m.start()].count('\n')+1))
+                elif not compatible(t,fields[name]):r.diagnostics.append(Diagnostic('R202',f"Field '{name}' expects {t}, got {fields[name]}",source[:m.start()].count('\n')+1))
+            for name in fields:
+                if name not in expected:r.diagnostics.append(Diagnostic('R203',f"Unknown field '{name}' for record '{record}'",source[:m.start()].count('\n')+1))
+
+    def _check_calls(self,source,r):
+        function_ranges=[m.span() for m in re.finditer(r'function\s+\w+\s*\(',source)]
+        for name,fn in r.functions.items():
+            for m in re.finditer(r'\b'+re.escape(name)+r'\s*\(([^()]*)\)',source):
+                # skip declaration
+                prefix=source[max(0,m.start()-12):m.start()]
+                if 'function' in prefix:continue
+                args=split_top(m.group(1),',') if m.group(1).strip() else []
+                if len(args)!=len(fn.params):r.diagnostics.append(Diagnostic('C201',f"Function '{name}' expects {len(fn.params)} arguments, got {len(args)}",source[:m.start()].count('\n')+1));continue
+                for arg,(_,expected) in zip(args,fn.params):
+                    actual=infer_literal(arg)
+                    if actual.name!='Any' and not compatible(expected,actual):r.diagnostics.append(Diagnostic('C202',f"Argument expects {expected}, got {actual}",source[:m.start()].count('\n')+1))

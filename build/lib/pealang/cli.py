@@ -44,6 +44,15 @@ def main(argv=None):
             from .compiler import compile_source_to_bytecode
             from .vm import VirtualMachine
             p=argparse.ArgumentParser(prog='pea vm');p.add_argument('file');p.add_argument('--max-instructions',type=int,default=100000);a=p.parse_args(argv[1:]);path=Path(a.file);m=BytecodeModule.load(path) if path.suffix=='.peac' else compile_source_to_bytecode(path.read_text(encoding='utf-8'),str(path));VirtualMachine(print,a.max_instructions).run(m);return 0
+        if c=='semantic':
+            from .type_system import SemanticAnalyzer
+            files=discover_pea(argv[1:] or ['.']);errors=warnings=0
+            for f in files:
+                result=SemanticAnalyzer().analyze(Path(f).read_text(encoding='utf-8'),str(f))
+                for d in result.diagnostics:print(f'{f}:{d}')
+                errors+=sum(x.severity=='error' for x in result.diagnostics);warnings+=sum(x.severity=='warning' for x in result.diagnostics)
+            print(f'Semantic analysis: {len(files)} file(s), {errors} error(s), {warnings} warning(s)')
+            return 1 if errors else 0
         if c=='typecheck':
             from .type_system import TypeChecker
             files=discover_pea(argv[1:] or ['.']);errors=0
