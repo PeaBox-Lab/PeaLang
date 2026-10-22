@@ -1,20 +1,21 @@
-# PeaLang 0.27.0 Release Notes
+# PeaLang 0.28.0 Release Notes
 
-PeaLang 0.27 establishes the package ecosystem foundation.
+PeaLang 0.28 begins first-class Java interoperability through a runtime sidecar and Java SDK.
 
 ## Added
 
-- `pea.toml` project/package manifest.
-- Deterministic JSON `pea.lock` format version 1.
-- Semantic version parsing and `^`, `~`, comparison, exact, and wildcard constraints.
-- Local path dependency resolution and installation into `.pea_modules`.
-- Git and registry dependency metadata in lock files.
-- Dependency permission declarations and auditing.
-- SHA-256 local-manifest integrity checks.
-- Reproducible `.peapkg` tar.gz archives with normalized metadata.
-- `pea pkg-init`, `pea lock`, `pea install`, `pea audit`, and `pea build` commands.
-- Package-manager API and regression tests.
+- Transport-neutral `RuntimeService` API.
+- HTTP runtime sidecar through `pea serve`.
+- Health and readiness endpoints.
+- Compile, module-load, and exported-function invocation endpoints.
+- Semantic validation before remote compilation.
+- SHA-256 compilation cache with configurable capacity.
+- Structured request IDs, service error codes, and elapsed timing.
+- Java 17 SDK using `java.net.http.HttpClient`.
+- Java exception mapping foundation.
+- Spring Boot integration example guidance.
+- Seven runtime-service regression tests.
 
-## Security scope
+## Security
 
-0.27 records Git and registry sources but does not download them. This avoids introducing unauthenticated network installation before package signatures, registry trust roots, transport verification, and policy controls are complete.
+The service binds to `127.0.0.1` by default. Authentication, TLS termination, multi-tenant isolation, and remote exposure policy are deployment responsibilities in 0.28. Do not expose the development sidecar directly to untrusted networks.

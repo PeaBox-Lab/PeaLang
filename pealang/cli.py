@@ -31,6 +31,13 @@ def main(argv=None):
     if argv[0] in ('--version','-V'):print(f'PeaLang {__version__}');return 0
     c=argv[0]
     try:
+        if c=='serve':
+            from .runtime_http import serve
+            host='127.0.0.1';port=8787
+            for x in argv[1:]:
+                if x.startswith('--host='):host=x.split('=',1)[1]
+                if x.startswith('--port='):port=int(x.split('=',1)[1])
+            print(f'PeaLang runtime service on http://{host}:{port}');return serve(host,port)
         if c=='pkg-init':
             from .package_manager import init_manifest
             print(init_manifest(argv[1] if len(argv)>1 else '.'));return 0

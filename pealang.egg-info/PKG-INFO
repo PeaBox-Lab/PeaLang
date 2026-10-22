@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: pealang
-Version: 0.27.0
+Version: 0.28.0
 Summary: Readable automation and AI workflow language
 License: MIT
 Requires-Python: >=3.10
@@ -10,39 +10,46 @@ Requires-Dist: fastapi>=0.110; extra == "fastapi"
 Requires-Dist: pydantic>=2.0; extra == "fastapi"
 Requires-Dist: uvicorn>=0.27; extra == "fastapi"
 
-# PeaLang 0.27.0
+# PeaLang 0.28.0
 
-PeaLang is an embeddable extension language for rules, workflows, automation, APIs, and controlled application customization.
+PeaLang is an embeddable extension language designed to extend Python, FastAPI, Java, Spring Boot, API services, workflows, and business applications without replacing their core technology stack.
 
 ## Install
 
 ```bash
-python -m pip install pealang-0.27.0-py3-none-any.whl
+python -m pip install pealang-0.28.0-py3-none-any.whl
 pea --version
 ```
 
-## Package workflow
+## Java runtime service
 
 ```bash
-pea pkg-init my-extension
-cd my-extension
-pea lock
-pea install
-pea audit
-pea build
+pea serve --host=127.0.0.1 --port=8787
 ```
 
-A package uses `pea.toml`, locks deterministic dependency metadata in `pea.lock`, installs local dependencies under `.pea_modules`, and builds a reproducible `.peapkg` archive.
+The sidecar provides health/readiness, compile, load-module, and invoke endpoints.
 
-## Mature runtime foundations
+## Java SDK
+
+The source distribution contains:
+
+```text
+java-sdk/
+  pom.xml
+  src/main/java/io/pealang/client/
+```
+
+The client targets Java 17 and uses the JDK HTTP client. This keeps it usable from Spring Boot without coupling the core SDK to Spring.
+
+## Runtime foundations
 
 - Optional static types and semantic analysis
-- PEAC bytecode compiler and VM
-- Synchronous and native async embedding
-- Capability-based host APIs
+- PEAC compiler and VM
+- Sync and native async embedding
+- Capability-controlled host functions
 - FastAPI integration
+- Java sidecar integration
 - DAP debugging
-- Structured exceptions, closures, imports, defaults
-- Package manifests, locks, auditing, and reproducible builds
+- Package manifests, locks, auditing, and reproducible packages
 
-See `docs/PACKAGES.md`, `docs/ASYNC_VM.md`, `docs/FASTAPI_PACKAGE.md`, and `docs/SEMANTIC_ANALYSIS.md`.
+See `docs/JAVA_RUNTIME.md`, `docs/PACKAGES.md`, `docs/ASYNC_VM.md`, and `docs/FASTAPI_PACKAGE.md`.
