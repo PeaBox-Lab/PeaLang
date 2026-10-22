@@ -16,3 +16,5 @@
 | 0.21 | VM parity, debugging state, and VM-backed embedding |
 
 | 0.22 | Structured VM exceptions, defaults, closures, and module imports |
+
+| 0.23 | Capability-safe VM embedding and VM-backed DAP |

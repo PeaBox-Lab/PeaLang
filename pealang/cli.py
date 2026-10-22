@@ -65,6 +65,8 @@ def main(argv=None):
             mf,data=load_manifest(argv[1] if len(argv)>1 else '.')
             if not mf:raise PeaError('No pea.json found')
             return run_file(mf.parent/data['project']['entry'])
+        if c=='vm-dap':
+            from .vm_dap import serve;return serve()
         if c=='dap':
             from .dap import serve;return serve()
         if c=='debug':

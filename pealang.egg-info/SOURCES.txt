@@ -24,6 +24,7 @@ pealang/stdlib.py
 pealang/tooling.py
 pealang/type_system.py
 pealang/vm.py
+pealang/vm_dap.py
 pealang/vm_embedding.py
 pealang.egg-info/PKG-INFO
 pealang.egg-info/SOURCES.txt
@@ -37,3 +38,4 @@ tests/test_embedding_v018.py
 tests/test_types_v019.py
 tests/test_vm_modules_exceptions_v022.py
 tests/test_vm_parity_v021.py
+tests/test_vm_security_dap_v023.py

@@ -1,12 +1,28 @@
-# PeaLang 0.22.0
+# PeaLang 0.23.0
 
-PeaLang is an embeddable extension language for rules, workflows, automation, and controlled application customization.
+PeaLang is an embeddable extension language for rules, workflows, automation, integrations, and controlled application customization.
 
 ## Install
 
 ```bash
-python -m pip install pealang-0.22.0-py3-none-any.whl
+python -m pip install pealang-0.23.0-py3-none-any.whl
 pea --version
+```
+
+## Capability-safe VM embedding
+
+```python
+from pealang import VMRuntime, RuntimeOptions
+
+runtime = VMRuntime(RuntimeOptions(
+    permissions=frozenset({"hr.get"}),
+    max_execution_ms=500,
+    max_instructions=50_000,
+))
+
+runtime.register_function("hr.get", find_employee, "hr.get")
+module = runtime.load_file("rules.pea")
+result = module.call("evaluate", "E1001")
 ```
 
 ## Compile and run
@@ -17,42 +33,14 @@ pea dis app.peac
 pea vm app.peac
 ```
 
-## Structured exceptions
+## VM debugger
 
-```pea
-try {
-    throw "Something failed"
-} catch error {
-    print error
-} finally {
-    print "cleanup"
-}
+```bash
+pea vm-dap
 ```
 
-## Module imports
-
-```pea
-import "bonus.pea" as bonus
-print bonus.calculate(100000)
-```
-
-## Default parameters
-
-```pea
-function calculate(amount, rate=0.10) {
-    return amount * rate
-}
-```
-
-## VM embedding
-
-```python
-from pealang import VMRuntime
-runtime = VMRuntime(max_instructions=50_000)
-module = runtime.load_file("rules.pea")
-result = module.call("evaluate", {"employee_id": "E1001"})
-```
+The VM DAP supports source breakpoints, continue, stepping, stack traces, scopes, locals, output events, variable lookup, and lifecycle events.
 
 ## Documentation
 
-See `docs/VM_EXCEPTIONS_MODULES.md`, `docs/BYTECODE_AND_VM.md`, `docs/VM_DEBUGGING.md`, `docs/VM_EMBEDDING.md`, and `docs/TYPE_SYSTEM.md`.
+See `docs/VM_CAPABILITIES.md`, `docs/VM_DAP.md`, `docs/VM_EXCEPTIONS_MODULES.md`, `docs/BYTECODE_AND_VM.md`, and `docs/TYPE_SYSTEM.md`.

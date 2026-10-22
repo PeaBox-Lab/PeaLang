@@ -1,21 +1,19 @@
-# PeaLang 0.22.0 Release Notes
+# PeaLang 0.23.0 Release Notes
 
-PeaLang 0.22 adds structured VM exceptions, literal default arguments, shared closures, and compiled module imports.
+PeaLang 0.23 unifies VM embedding with the capability-based host boundary and introduces a VM-powered Debug Adapter Protocol server.
 
 ## Added
 
-- `PUSH_HANDLER`, `POP_HANDLER`, and `IMPORT` bytecode operations.
-- VM handling for `try`, `catch`, `finally`, and `throw`.
-- Exception propagation and handler lookup across VM frames.
-- Operand-stack restoration when a handler is entered.
-- Literal function-default serialization in PEAC code objects.
-- Default-argument arity validation in compiled functions.
-- Shared lexical closure environments.
-- Relative source-module imports.
-- Imported export namespaces and per-VM module caching.
-- PEAC round-trip testing for default parameters.
-- New exception, closure, default, and module conformance tests.
+- Permission-protected host functions in `VMRuntime`.
+- Registered host namespaces through `register_module`.
+- `RuntimeOptions` support in compiled VM embedding.
+- Host-value conversion through `to_pea` and `from_pea`.
+- VM execution time and instruction budgets.
+- VM-backed DAP server through `pea vm-dap`.
+- DAP initialization, launch, source breakpoints, continue, stepping, stack traces, scopes, variables, evaluation, output, exception information, and termination.
+- Debugging support for source and PEAC programs.
+- Security and DAP regression tests.
 
 ## Compatibility
 
-The PEAC format remains preview and now stores function defaults. Existing source programs remain compatible. Non-literal default expressions and some advanced interpreter constructs remain outside the VM subset.
+`PeaRuntime` remains available for interpreter-backed extensions. `VMRuntime` now follows the same permission vocabulary and value-conversion model, but advanced hostile-code isolation still requires a separate process or container.
