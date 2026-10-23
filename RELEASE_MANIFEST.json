@@ -1,16 +1,16 @@
 {
-  "version": "0.60.0",
-  "previous_version": "0.59.0",
+  "version": "0.61.0",
+  "previous_version": "0.60.0",
   "missing_paths": [],
   "files_added": [
-    "PEALANG_AI_DEVELOPMENT_HANDOVER 0.60.md",
-    "docs/DISTRIBUTED_SERVING_060.md",
-    "help/DISTRIBUTED_SERVING.md",
-    "examples/kubernetes_generate.py",
-    "pealang/distributed_serving.py",
-    "tests/test_distributed_serving_v060.py"
+    "PEALANG_AI_DEVELOPMENT_HANDOVER 0.61.md",
+    "docs/KUBERNETES_SECURITY_061.md",
+    "help/KUBERNETES_SECURITY.md",
+    "examples/kubernetes_secure.py",
+    "pealang/kubernetes_security.py",
+    "tests/test_kubernetes_security_v061.py"
   ],
-  "pytest_tests_passed": 403,
+  "pytest_tests_passed": 411,
   "conformance_cases_passed": 500,
   "fuzz_iterations": 250,
   "tests_failed": 0,

@@ -1,4 +1,6 @@
 # Changelog
+## 0.61.0 - 2026-10-24
+- Added secure Kubernetes YAML, security contexts, NetworkPolicy/PDB/topology controls, drain handling and RC stabilization checks.
 ## 0.60.0 - 2026-10-23
 - Added distributed serving backends, load/performance gates, OpenTelemetry hooks and Kubernetes operations.
 ## 0.59.0 - 2026-10-23

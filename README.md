@@ -95,3 +95,6 @@ Rate and concurrency controls, timeouts, structured logs, trace hooks, live relo
 
 ## Distributed Serving and Kubernetes 0.60
 Shared Redis-compatible state, distributed rate limiting, latency/load gates, OpenTelemetry hooks and Kubernetes resources extend resilient serving. See `docs/DISTRIBUTED_SERVING_060.md`.
+
+## Kubernetes Security and RC Stabilization 0.61
+Secure YAML manifests, non-root/read-only containers, NetworkPolicy, PDB, spread/anti-affinity, graceful draining, validation and soak tests harden distributed serving. See `docs/KUBERNETES_SECURITY_061.md`.

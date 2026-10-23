@@ -8,7 +8,7 @@ from .runtime import execute, compile_source, Interpreter, PeaError
 from .type_system import TypeChecker,TypeRef,Diagnostic,TypeCheckResult,SemanticAnalyzer,SemanticResult,FunctionContract,parse_type,erase_types
 from .embedding import (PeaRuntime,PeaModule,RuntimeOptions,ExecutionResult,
     PeaRuntimeError,PeaPermissionError,PeaResourceLimitError,to_pea,from_pea)
-__version__='0.60.0'
+__version__='0.61.0'
 __all__=['BytecodeModule','CodeObject','Instruction','Op','Compiler','CompileError','compile_source_to_bytecode','VirtualMachine','VMError','AsyncSuspension','AsyncVirtualMachine','AsyncVMRuntime','AsyncVMModule','CancellationToken','VMRuntime','VMModule','disassemble','execute','compile_source','Interpreter','PeaError','PeaRuntime','PeaModule',
 'SemanticAnalyzer','SemanticResult','FunctionContract','TypeChecker','TypeRef','Diagnostic','TypeCheckResult','parse_type','erase_types','RuntimeOptions','ExecutionResult','PeaRuntimeError','PeaPermissionError',
 'PeaResourceLimitError','to_pea','from_pea','__version__']
@@ -87,3 +87,5 @@ from .serving import ServingConfig,PipelineRuntime,SQLiteAuditStore,create_servi
 from .serving_resilience import ResilienceConfig,SlidingWindowRateLimiter,StructuredLogger,ResilientRuntime,RateLimitExceeded,ConcurrencyLimitExceeded,ServingTimeout,verify_signed_pipeline,load_encrypted_pipeline,prune_audits,TraceHooks
 
 from .distributed_serving import DistributedBackend,MemoryBackend,RedisBackend,DistributedRateLimiter,SharedDeploymentState,LatencySummary,latency_summary,load_test,KubernetesConfig,kubernetes_manifests,write_kubernetes_manifests,OpenTelemetryHooks
+
+from .kubernetes_security import SecureKubernetesConfig,secure_kubernetes_manifests,to_yaml,write_secure_manifests,validate_manifests,DrainController,CompatibilityCase,rc_compatibility_matrix,soak_test

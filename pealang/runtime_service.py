@@ -18,7 +18,7 @@ class RuntimeService:
  def __init__(self,options=None,cache_size=128):self.options=options or RuntimeOptions();self.cache_size=cache_size;self.cache={};self.modules={};self.started=time.time()
  def _id(self):return uuid.uuid4().hex
  def _key(self,source):return hashlib.sha256(source.encode()).hexdigest()
- def health(self):return {'status':'UP','service':'pealang-runtime','version':'0.60.0','uptime_seconds':round(time.time()-self.started,3),'cached_scripts':len(self.cache),'loaded_modules':len(self.modules)}
+ def health(self):return {'status':'UP','service':'pealang-runtime','version':'0.61.0','uptime_seconds':round(time.time()-self.started,3),'cached_scripts':len(self.cache),'loaded_modules':len(self.modules)}
  def readiness(self):return {'status':'READY','vm':True,'compiler':True,'semantic_analyzer':True}
  def compile(self,source,source_name='<remote>'):
   rid=self._id();start=time.perf_counter()

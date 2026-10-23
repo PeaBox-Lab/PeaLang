@@ -1,3 +1,3 @@
-# PeaLang 0.60.0 Release Notes
+# PeaLang 0.61.0 Release Notes
 
-0.60 adds distributed model-serving operations: Redis-compatible rate limits and shared deployment state, consistent cross-replica routing, P50/P95/P99 latency summaries, concurrent load tests with error/latency gates, optional OpenTelemetry hooks, and generated Kubernetes Deployment, Service, HPA and Prometheus ServiceMonitor resources.
+0.61 hardens Kubernetes operations and introduces release-candidate stabilization controls. It generates YAML or JSON with non-root security contexts, read-only filesystems, dropped Linux capabilities, seccomp, NetworkPolicy, PodDisruptionBudget, topology spread and anti-affinity. It also adds graceful draining, manifest validation, compatibility declarations and lightweight soak tests.
