@@ -1,10 +1,10 @@
-# PeaLang 0.46.0
+# PeaLang 0.47.0
 
 PeaLang is an embeddable extension language for controlled rules, workflows, automation and host integration. Version 0.37 completes runtime resource accounting and structured concurrency while retaining the v0.35 standard library and v0.36 type-system foundation.
 
 ## Install
 ```bash
-python -m pip install pealang-0.46.0-py3-none-any.whl
+python -m pip install pealang-0.47.0-py3-none-any.whl
 pea --version
 ```
 
@@ -56,3 +56,6 @@ Use the built-in REST and GraphQL connectors with runtime authentication headers
 
 ## Cloud Connectors 0.46
 OData and SFTP now extend the Connector SDK. See `docs/CLOUD_CONNECTORS_046.md`.
+
+## Cloud Object Storage 0.47
+Amazon S3, Azure Blob Storage, ADLS Gen2 and Google Cloud Storage now share a normalized object-storage API. See `docs/OBJECT_STORAGE_047.md`.

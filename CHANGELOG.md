@@ -1,4 +1,6 @@
 # Changelog
+## 0.47.0 - 2026-10-23
+- Added S3, Azure Blob, ADLS Gen2 and GCS object storage connectors with common file and DataFrame operations.
 ## 0.46.0 - 2026-10-23
 - Added OData and SFTP cloud connectors with pagination, query options, secure transfers and DataFrame ingestion.
 ## 0.45.0 - 2026-10-23

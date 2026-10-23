@@ -8,7 +8,7 @@ from .runtime import execute, compile_source, Interpreter, PeaError
 from .type_system import TypeChecker,TypeRef,Diagnostic,TypeCheckResult,SemanticAnalyzer,SemanticResult,FunctionContract,parse_type,erase_types
 from .embedding import (PeaRuntime,PeaModule,RuntimeOptions,ExecutionResult,
     PeaRuntimeError,PeaPermissionError,PeaResourceLimitError,to_pea,from_pea)
-__version__='0.46.0'
+__version__='0.47.0'
 __all__=['BytecodeModule','CodeObject','Instruction','Op','Compiler','CompileError','compile_source_to_bytecode','VirtualMachine','VMError','AsyncSuspension','AsyncVirtualMachine','AsyncVMRuntime','AsyncVMModule','CancellationToken','VMRuntime','VMModule','disassemble','execute','compile_source','Interpreter','PeaError','PeaRuntime','PeaModule',
 'SemanticAnalyzer','SemanticResult','FunctionContract','TypeChecker','TypeRef','Diagnostic','TypeCheckResult','parse_type','erase_types','RuntimeOptions','ExecutionResult','PeaRuntimeError','PeaPermissionError',
 'PeaResourceLimitError','to_pea','from_pea','__version__']
@@ -59,3 +59,5 @@ from .sql import DatabaseSpec,Database,DATABASES,connect as data_connect,read_sq
 from .connectors import ConnectorConfig,ConnectorResponse,ConnectorRegistry,RESTConnector,GraphQLConnector,REGISTRY as CONNECTORS,connector,bearer,api_key
 
 from .cloud_connectors import ODataQuery,ODataConnector,SFTPConfig,SFTPConnector,odata,sftp
+
+from .object_storage import ObjectStorageConnector,S3Connector,AzureBlobConnector,ADLSConnector,GCSConnector,s3,azure_blob,adls,gcs

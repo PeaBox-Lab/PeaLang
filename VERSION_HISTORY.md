@@ -52,4 +52,5 @@
 | 0.44 | SQL and databases: adapters, discovery, parameters, transactions, batching and upsert foundation |
 | 0.45 | Connector SDK: REST and GraphQL connectors, registry, auth, retries, pagination and DataFrame conversion |
 | 0.46 | Cloud connectors: OData query/pagination and secure SFTP file/DataFrame operations |
+| 0.47 | Cloud object storage: S3, Azure Blob, ADLS Gen2 and GCS adapters with DataFrame ingestion |
 
