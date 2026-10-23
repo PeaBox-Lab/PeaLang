@@ -1,2 +1,2 @@
-{"name":"@pealang/client","version":"0.62.0","type":"module","main":"dist/index.js","types":"dist/index.d.ts","scripts":{"build":"tsc"},"devDependencies":{"typescript":"^5.6.0"}}
+{"name":"@pealang/client","version":"0.63.0rc1","type":"module","main":"dist/index.js","types":"dist/index.d.ts","scripts":{"build":"tsc"},"devDependencies":{"typescript":"^5.6.0"}}
 

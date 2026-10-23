@@ -1,3 +1,3 @@
-# PeaLang 0.62.0 Release Notes
+# PeaLang 0.63.0 RC1 Release Notes
 
-0.62 introduces release-candidate packaging and supply-chain controls: CycloneDX-compatible SBOM generation, SHA-256 checksums, SLSA/in-toto style provenance, wheel/source verification, dependency and license inventory, reproducible-build metadata, upgrade checks, a non-root Containerfile, a Windows/Linux/macOS Python 3.10-3.13 CI matrix, an RC checklist and a v1 readiness assessment.
+RC1 does not expand product scope. It stabilizes the platform with public API snapshots and compatibility comparisons, a formal deprecation policy, integration-probe reporting, upgrade compatibility mapping, a documented threat model, migration guidance and release-candidate gates. GA remains blocked by manual license review, live provider testing, independent security review, extended soak/load testing and signed external publication.

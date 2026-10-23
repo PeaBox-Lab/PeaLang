@@ -1,18 +1,18 @@
 {
-  "version": "0.61.0",
-  "previous_version": "0.60.0",
+  "version": "0.63.0rc1",
+  "previous_version": "0.62.0",
   "missing_paths": [],
-  "files_added": [
-    "PEALANG_AI_DEVELOPMENT_HANDOVER 0.61.md",
-    "docs/KUBERNETES_SECURITY_061.md",
-    "help/KUBERNETES_SECURITY.md",
-    "examples/kubernetes_secure.py",
-    "pealang/kubernetes_security.py",
-    "tests/test_kubernetes_security_v061.py"
-  ],
-  "pytest_tests_passed": 411,
+  "pytest_tests_passed": 430,
   "conformance_cases_passed": 500,
   "fuzz_iterations": 250,
   "tests_failed": 0,
-  "status": "PASS"
+  "automated_status": "PASS",
+  "ga_status": "BLOCKED",
+  "external_gates": [
+    "manual third-party license review",
+    "live provider integration tests",
+    "independent security review",
+    "multi-hour soak/load tests",
+    "signed external publication"
+  ]
 }

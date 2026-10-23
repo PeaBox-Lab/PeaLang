@@ -101,3 +101,6 @@ Secure YAML manifests, non-root/read-only containers, NetworkPolicy, PDB, spread
 
 ## Release Candidate Packaging 0.62
 SBOM, provenance, checksums, artifact verification, non-root container packaging, CI matrix and v1 readiness gates establish the release-candidate supply chain. See `docs/SUPPLY_CHAIN_062.md`.
+
+## Release Candidate 1 Stabilization
+0.63 RC1 freezes feature scope and adds public API snapshots, compatibility/deprecation policy, integration gate reporting, threat modelling and upgrade guidance. See `docs/API_STABILITY_POLICY.md` and `RC1_GATE_STATUS.md`.

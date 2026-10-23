@@ -1,4 +1,6 @@
 # Changelog
+## 0.63.0rc1 - 2026-10-24
+- Froze feature scope for RC1 and added API compatibility, deprecation policy, integration gates, threat model and migration guidance.
 ## 0.62.0 - 2026-10-24
 - Added release-candidate packaging, SBOM/provenance, checksums, artifact verification, Containerfile, CI matrix and v1 readiness assessment.
 ## 0.61.0 - 2026-10-24

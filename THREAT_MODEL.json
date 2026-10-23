@@ -1,0 +1,43 @@
+{
+  "assets": [
+    "source packages",
+    "model bundles",
+    "credentials",
+    "prediction data",
+    "registry state"
+  ],
+  "boundaries": [
+    "CLI",
+    "HTTP serving",
+    "connectors",
+    "package registry",
+    "Kubernetes cluster"
+  ],
+  "threats": [
+    {
+      "id": "T01",
+      "threat": "artifact tampering",
+      "control": "SHA-256, provenance and Ed25519 verification"
+    },
+    {
+      "id": "T02",
+      "threat": "credential disclosure",
+      "control": "runtime secret providers and no embedded credentials"
+    },
+    {
+      "id": "T03",
+      "threat": "inference abuse",
+      "control": "authentication, request limits and rate limiting"
+    },
+    {
+      "id": "T04",
+      "threat": "supply-chain substitution",
+      "control": "SBOM, checksums, signed release manifest"
+    },
+    {
+      "id": "T05",
+      "threat": "lateral movement",
+      "control": "non-root runtime and Kubernetes NetworkPolicy"
+    }
+  ]
+}
