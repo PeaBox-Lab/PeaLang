@@ -57,4 +57,5 @@
 | 0.49 | Connector hardening: token providers, profiles, health diagnostics, certification matrix and Graph paging |
 | 0.50 | Data analytics: descriptive statistics, correlation, distributions, windows, outliers and profiling |
 | 0.51 | Time-series and grouped analytics: resampling, shifts, changes, expanding/EWM and interpolation |
+| 0.52 | Forecasting: baseline models, evaluation, decomposition, grouped forecasts and optional acceleration |
 

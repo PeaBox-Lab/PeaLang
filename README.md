@@ -1,10 +1,10 @@
-# PeaLang 0.51.0
+# PeaLang 0.52.0
 
 PeaLang is an embeddable extension language for controlled rules, workflows, automation and host integration. Version 0.37 completes runtime resource accounting and structured concurrency while retaining the v0.35 standard library and v0.36 type-system foundation.
 
 ## Install
 ```bash
-python -m pip install pealang-0.51.0-py3-none-any.whl
+python -m pip install pealang-0.52.0-py3-none-any.whl
 pea --version
 ```
 
@@ -71,3 +71,6 @@ PeaLang DataFrames now provide descriptive statistics, distributions, correlatio
 
 ## Time-Series and Grouped Analytics 0.51
 Date/time resampling, shifts, period changes, expanding/EWM windows, interpolation and grouped analytics now extend PeaLang DataFrames. See `docs/TIME_SERIES_051.md`.
+
+## Forecasting and Accelerated Analytics 0.52
+Baseline trend, moving-average and exponential-smoothing forecasts, evaluation, decomposition, grouped forecasting and chart-ready outputs extend the analytics stack. See `docs/FORECASTING_052.md`.

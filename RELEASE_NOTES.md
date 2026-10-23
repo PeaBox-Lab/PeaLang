@@ -1,3 +1,3 @@
-# PeaLang 0.51.0 Release Notes
+# PeaLang 0.52.0 Release Notes
 
-0.51 adds grouped and time-series analytics. It includes date parsing and extraction, minute-to-year resampling, lag/lead, differences and percentage change, expanding windows, exponential moving averages, linear interpolation, grouped descriptive summaries and grouped rolling calculations.
+0.52 adds transparent baseline forecasting: trend projection, recursive moving average and simple exponential smoothing. It also adds chronological train/test splits, MAE/MSE/RMSE/MAPE, additive seasonal decomposition, grouped forecasts, chart-ready outputs, optional NumPy mean acceleration and performance benchmarks.

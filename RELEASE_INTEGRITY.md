@@ -1,9 +1,9 @@
 # Release Integrity and Retention Audit
-Previous: 0.50.0
-Current: 0.51.0
+Previous: 0.51.0
+Current: 0.52.0
 Missing previous paths: 0
 New files: 6
-Pytest tests passed: 316
+Pytest tests passed: 329
 Conformance cases passed: 500
 Fuzz iterations: 250
 Tests failed: 0

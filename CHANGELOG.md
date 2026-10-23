@@ -1,4 +1,6 @@
 # Changelog
+## 0.52.0 - 2026-10-23
+- Added forecasting baselines, evaluation metrics, seasonal decomposition, grouped forecasts, chart-ready series and optional acceleration benchmarks.
 ## 0.51.0 - 2026-10-23
 - Added grouped and time-series analytics with resampling, shifts, changes, expanding/EWM windows and interpolation.
 ## 0.50.0 - 2026-10-23
