@@ -98,3 +98,6 @@ Shared Redis-compatible state, distributed rate limiting, latency/load gates, Op
 
 ## Kubernetes Security and RC Stabilization 0.61
 Secure YAML manifests, non-root/read-only containers, NetworkPolicy, PDB, spread/anti-affinity, graceful draining, validation and soak tests harden distributed serving. See `docs/KUBERNETES_SECURITY_061.md`.
+
+## Release Candidate Packaging 0.62
+SBOM, provenance, checksums, artifact verification, non-root container packaging, CI matrix and v1 readiness gates establish the release-candidate supply chain. See `docs/SUPPLY_CHAIN_062.md`.
