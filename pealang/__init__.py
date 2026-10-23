@@ -8,7 +8,7 @@ from .runtime import execute, compile_source, Interpreter, PeaError
 from .type_system import TypeChecker,TypeRef,Diagnostic,TypeCheckResult,SemanticAnalyzer,SemanticResult,FunctionContract,parse_type,erase_types
 from .embedding import (PeaRuntime,PeaModule,RuntimeOptions,ExecutionResult,
     PeaRuntimeError,PeaPermissionError,PeaResourceLimitError,to_pea,from_pea)
-__version__='0.56.0'
+__version__='0.57.0'
 __all__=['BytecodeModule','CodeObject','Instruction','Op','Compiler','CompileError','compile_source_to_bytecode','VirtualMachine','VMError','AsyncSuspension','AsyncVirtualMachine','AsyncVMRuntime','AsyncVMModule','CancellationToken','VMRuntime','VMModule','disassemble','execute','compile_source','Interpreter','PeaError','PeaRuntime','PeaModule',
 'SemanticAnalyzer','SemanticResult','FunctionContract','TypeChecker','TypeRef','Diagnostic','TypeCheckResult','parse_type','erase_types','RuntimeOptions','ExecutionResult','PeaRuntimeError','PeaPermissionError',
 'PeaResourceLimitError','to_pea','from_pea','__version__']
@@ -79,3 +79,5 @@ from .ml import LabelEncoder,stratified_split,log_loss,roc_auc,RidgeRegression,L
 from .mlops import create_model_bundle,load_model_bundle,batch_predict,PredictionAudit,audited_predict,population_stability_index,categorical_drift,prediction_drift,group_fairness,optimize_threshold,PlattCalibrator,RegistryEntry,ModelRegistry,compatibility_report,inference_benchmark,create_fastapi_app
 
 from .mlops_secure import sign_bundle,verify_bundle_signature,encrypt_artifact,decrypt_artifact,MonitoringEvent,MonitoringStore,AlertRule,Alert,evaluate_alerts,acknowledge,PromotionPolicy,can_promote,DeploymentPlan,route_variant,compare_variants,should_rollback,structured_inference_log
+
+from .mlops_portable import PIPELINE_FORMAT,save_pipeline,load_pipeline,SQLiteMonitoringStore,load_alert_policy,deployment_manifest

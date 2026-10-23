@@ -62,4 +62,5 @@
 | 0.54 | Production ML: pipelines, CV/tuning, regularization, multiclass models and governance |
 | 0.55 | MLOps: bundles, inference audits, monitoring, registry lifecycle, compatibility and serving |
 | 0.56 | Secure MLOps: signatures/encryption, event stores, alerts, promotion gates and canary rollback |
+| 0.57 | Pipeline portability and MLOps CLI: serialization, SQLite monitoring, policies and deployment manifests |
 

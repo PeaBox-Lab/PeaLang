@@ -3,13 +3,14 @@ requires=["setuptools>=68","wheel"]
 build-backend="setuptools.build_meta"
 [project]
 name="pealang"
-version="0.56.0"
+version="0.57.0"
 description="Readable automation and AI workflow language"
 readme="README.md"
 requires-python=">=3.10"
 license={text="MIT"}
 dependencies=["cryptography>=42"]
 [project.scripts]
+pea-ml = "pealang.mlops_portable:cli"
 pea="pealang.cli:main"
 pealang="pealang.cli:main"
 [tool.pytest.ini_options]

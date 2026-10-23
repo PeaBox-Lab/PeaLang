@@ -1,4 +1,6 @@
 # Changelog
+## 0.57.0 - 2026-10-23
+- Added portable pipelines, SQLite monitoring, policy/deployment manifests and MLOps CLI commands.
 ## 0.56.0 - 2026-10-23
 - Added secure model bundles, monitoring stores, alerts, promotion gates, canary routing and rollback controls.
 ## 0.55.0 - 2026-10-23
