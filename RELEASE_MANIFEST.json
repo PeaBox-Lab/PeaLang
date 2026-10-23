@@ -1,16 +1,16 @@
 {
-  "version": "0.50.0",
-  "previous_version": "0.49.0",
+  "version": "0.51.0",
+  "previous_version": "0.50.0",
   "missing_paths": [],
   "files_added": [
-    "PEALANG_AI_DEVELOPMENT_HANDOVER 0.50.md",
-    "docs/ANALYTICS_050.md",
-    "help/ANALYTICS.md",
-    "examples/analytics.py",
-    "pealang/analytics.py",
-    "tests/test_analytics_v050.py"
+    "PEALANG_AI_DEVELOPMENT_HANDOVER 0.51.md",
+    "docs/TIME_SERIES_051.md",
+    "help/TIME_SERIES.md",
+    "examples/time_series.py",
+    "pealang/timeseries.py",
+    "tests/test_timeseries_v051.py"
   ],
-  "pytest_tests_passed": 304,
+  "pytest_tests_passed": 316,
   "conformance_cases_passed": 500,
   "fuzz_iterations": 250,
   "tests_failed": 0,

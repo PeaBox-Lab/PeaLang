@@ -1,4 +1,6 @@
 # Changelog
+## 0.51.0 - 2026-10-23
+- Added grouped and time-series analytics with resampling, shifts, changes, expanding/EWM windows and interpolation.
 ## 0.50.0 - 2026-10-23
 - Added DataFrame analytics and statistics: summaries, quantiles, dispersion, correlation, frequencies, crosstabs, ranking, cumulative/rolling calculations, outliers and profiling.
 ## 0.49.0 - 2026-10-23

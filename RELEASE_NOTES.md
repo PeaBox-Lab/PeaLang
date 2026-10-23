@@ -1,3 +1,3 @@
-# PeaLang 0.50.0 Release Notes
+# PeaLang 0.51.0 Release Notes
 
-0.50 introduces a dependency-light DataFrame analytics and statistics foundation. It includes descriptive summaries, quantiles, variance/standard deviation, covariance/correlation, frequencies, crosstabs, ranking, cumulative and rolling calculations, IQR outlier detection, missing-data profiling and correlation matrices. Existing connector, VM, package, embedding and data capabilities remain available.
+0.51 adds grouped and time-series analytics. It includes date parsing and extraction, minute-to-year resampling, lag/lead, differences and percentage change, expanding windows, exponential moving averages, linear interpolation, grouped descriptive summaries and grouped rolling calculations.
