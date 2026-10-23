@@ -1,4 +1,8 @@
 # Changelog
+## 0.55.0 - 2026-10-23
+- Added model bundles, inference/audit APIs, drift and fairness diagnostics, calibration, registry lifecycle and FastAPI serving.
+## 0.54.0 - 2026-10-23
+- Added production ML pipelines, cross-validation, tuning, regularization, multiclass classification and governance artifacts.
 ## 0.53.0 - 2026-10-23
 - Added ML foundations: preprocessing, linear/logistic regression, evaluation, k-fold indices, persistence and pipelines.
 ## 0.52.0 - 2026-10-23

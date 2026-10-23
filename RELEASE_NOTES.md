@@ -1,3 +1,3 @@
-# PeaLang 0.53.0 Release Notes
+# PeaLang 0.55.0 Release Notes
 
-0.53 adds machine-learning foundations: seeded train/test splitting, standard and min-max scaling, imputation, one-hot encoding, linear regression, binary logistic regression, regression/classification metrics, k-fold indices, JSON model persistence, DataFrame predictions and basic preprocessing pipelines.
+0.55 adds MLOps foundations: integrity-checked model bundles, batch and audited inference, data/prediction drift metrics, group fairness summaries, threshold optimization, Platt calibration, a persistent model registry with lifecycle and rollback metadata, training-serving compatibility checks, performance benchmarks and an optional FastAPI inference adapter.

@@ -59,4 +59,6 @@
 | 0.51 | Time-series and grouped analytics: resampling, shifts, changes, expanding/EWM and interpolation |
 | 0.52 | Forecasting: baseline models, evaluation, decomposition, grouped forecasts and optional acceleration |
 | 0.53 | Machine learning foundations: preprocessing, regression/classification, metrics and persistence |
+| 0.54 | Production ML: pipelines, CV/tuning, regularization, multiclass models and governance |
+| 0.55 | MLOps: bundles, inference audits, monitoring, registry lifecycle, compatibility and serving |
 

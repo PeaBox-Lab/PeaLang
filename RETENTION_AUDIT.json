@@ -1,16 +1,16 @@
 {
-  "version": "0.53.0",
-  "previous_version": "0.52.0",
+  "version": "0.55.0",
+  "previous_version": "0.54.0",
   "missing_paths": [],
   "files_added": [
-    "PEALANG_AI_DEVELOPMENT_HANDOVER 0.53.md",
-    "docs/ML_FOUNDATIONS_053.md",
-    "help/MACHINE_LEARNING.md",
-    "examples/machine_learning.py",
-    "pealang/ml.py",
-    "tests/test_ml_v053.py"
+    "PEALANG_AI_DEVELOPMENT_HANDOVER 0.55.md",
+    "docs/MLOPS_055.md",
+    "help/MLOPS.md",
+    "examples/mlops.py",
+    "pealang/mlops.py",
+    "tests/test_mlops_v055.py"
   ],
-  "pytest_tests_passed": 341,
+  "pytest_tests_passed": 365,
   "conformance_cases_passed": 500,
   "fuzz_iterations": 250,
   "tests_failed": 0,
