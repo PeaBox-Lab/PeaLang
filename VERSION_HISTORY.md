@@ -44,3 +44,4 @@
 | 0.36 | Type-system completion: generics, protocols and cross-module contracts |
 | 0.37 | Runtime resource completion and structured concurrency |
 | 0.38 | Native testing and migration tooling |
+| 0.39 | WebAssembly container and browser sandbox foundation |

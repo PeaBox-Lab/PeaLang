@@ -1,4 +1,6 @@
 # Changelog
+## 0.39.0 - 2026-10-23
+- Added WebAssembly containers, browser ABI/policy, SDK and CLI.
 ## 0.38.0 - 2026-10-23
 - Added native test/expect runner, filtering, coverage baseline, watch-mode portability baseline and migration CLI.
 ## 0.37.0 - 2026-10-23
