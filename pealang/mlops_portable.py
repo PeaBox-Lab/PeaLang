@@ -64,3 +64,20 @@ def cli(argv=None):
  if a.command=='monitor':print(SQLiteMonitoringStore(a.store).record(a.model_id,a.metric,a.value));return 0
  if a.command=='alerts':
   events=[type('E',(),x) for x in SQLiteMonitoringStore(a.store).query(a.model_id)];print([asdict(x) for x in evaluate_alerts(a.model_id,events,load_alert_policy(a.policy))]);return 0
+
+# 0.58 deployment and serving CLI extension
+def serving_cli(argv=None):
+ import argparse,json
+ from .serving import PipelineRuntime,ServingConfig,create_serving_app,deploy_check,execute_deployment
+ p=argparse.ArgumentParser(prog='pea-serve');sub=p.add_subparsers(dest='command',required=True)
+ s=sub.add_parser('deploy-check');s.add_argument('manifest');s.add_argument('pipeline')
+ s=sub.add_parser('serve');s.add_argument('pipeline');s.add_argument('--version',default='1');s.add_argument('--host',default='127.0.0.1');s.add_argument('--port',type=int,default=8000);s.add_argument('--api-key')
+ s=sub.add_parser('execute');s.add_argument('manifest')
+ a=p.parse_args(argv)
+ if a.command=='deploy-check':
+  m=json.loads(Path(a.manifest).read_text());r=deploy_check(m,a.pipeline);print(json.dumps(r,indent=2));return 0 if r['valid'] else 1
+ if a.command=='execute':print(json.dumps(execute_deployment(a.manifest),indent=2));return 0
+ if a.command=='serve':
+  try:import uvicorn
+  except ImportError as exc:raise RuntimeError('Serving command requires optional dependency: uvicorn') from exc
+  c=ServingConfig(api_keys={a.api_key} if a.api_key else set());runtime=PipelineRuntime({a.version:a.pipeline},config=c);uvicorn.run(create_serving_app(runtime),host=a.host,port=a.port);return 0

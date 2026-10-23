@@ -8,7 +8,7 @@ from .runtime import execute, compile_source, Interpreter, PeaError
 from .type_system import TypeChecker,TypeRef,Diagnostic,TypeCheckResult,SemanticAnalyzer,SemanticResult,FunctionContract,parse_type,erase_types
 from .embedding import (PeaRuntime,PeaModule,RuntimeOptions,ExecutionResult,
     PeaRuntimeError,PeaPermissionError,PeaResourceLimitError,to_pea,from_pea)
-__version__='0.57.0'
+__version__='0.58.0'
 __all__=['BytecodeModule','CodeObject','Instruction','Op','Compiler','CompileError','compile_source_to_bytecode','VirtualMachine','VMError','AsyncSuspension','AsyncVirtualMachine','AsyncVMRuntime','AsyncVMModule','CancellationToken','VMRuntime','VMModule','disassemble','execute','compile_source','Interpreter','PeaError','PeaRuntime','PeaModule',
 'SemanticAnalyzer','SemanticResult','FunctionContract','TypeChecker','TypeRef','Diagnostic','TypeCheckResult','parse_type','erase_types','RuntimeOptions','ExecutionResult','PeaRuntimeError','PeaPermissionError',
 'PeaResourceLimitError','to_pea','from_pea','__version__']
@@ -81,3 +81,5 @@ from .mlops import create_model_bundle,load_model_bundle,batch_predict,Predictio
 from .mlops_secure import sign_bundle,verify_bundle_signature,encrypt_artifact,decrypt_artifact,MonitoringEvent,MonitoringStore,AlertRule,Alert,evaluate_alerts,acknowledge,PromotionPolicy,can_promote,DeploymentPlan,route_variant,compare_variants,should_rollback,structured_inference_log
 
 from .mlops_portable import PIPELINE_FORMAT,save_pipeline,load_pipeline,SQLiteMonitoringStore,load_alert_policy,deployment_manifest
+
+from .serving import ServingConfig,PipelineRuntime,SQLiteAuditStore,create_serving_app,deploy_check,execute_deployment
