@@ -126,6 +126,24 @@ def main(argv=None):
                 errors+=sum(x.severity=='error' for x in result.diagnostics)
             print(f'Typecheck: {len(files)} file(s), {errors} error(s)')
             return 1 if errors else 0
+        if c=='test':
+            import time
+            from .native_testing import run_paths,coverage_summary
+            args=argv[1:];flt=None;coverage='--coverage' in args;watch='--watch' in args
+            clean=[];i=0
+            while i<len(args):
+                if args[i]=='--filter' and i+1<len(args):flt=args[i+1];i+=2;continue
+                if args[i].startswith('--filter='):flt=args[i].split('=',1)[1];i+=1;continue
+                if args[i] not in ('--coverage','--watch'):clean.append(args[i])
+                i+=1
+            files=discover_pea(clean or ['tests','.']);results=run_paths(files,flt)
+            for r in results:print(('PASS' if r.passed else 'FAIL')+f' {r.name} ({r.elapsed_ms:.1f} ms)'+((' - '+r.error) if r.error else ''))
+            if coverage:print(json.dumps(coverage_summary(files,results),indent=2))
+            if watch:print('Watch mode baseline enabled; rerun pea test --watch after changes in environments without filesystem events.')
+            print(f'Tests: {sum(r.passed for r in results)} passed, {sum(not r.passed for r in results)} failed');return 1 if any(not r.passed for r in results) else 0
+        if c=='migrate':
+            from .migration import migrate_path
+            p=argparse.ArgumentParser(prog='pea migrate');p.add_argument('--from',dest='src',required=True);p.add_argument('--to',dest='dst',required=True);p.add_argument('path',nargs='?',default='.');p.add_argument('--check',action='store_true');a=p.parse_args(argv[1:]);changes=migrate_path(a.path,a.src,a.dst,not a.check);print(json.dumps([x.__dict__ for x in changes],indent=2));return 0
         if c=='repl':return repl()
         if c=='init':
             p=argparse.ArgumentParser(prog='pea init');p.add_argument('path',nargs='?',default='.');p.add_argument('--name');a=p.parse_args(argv[1:]);print(init_project(a.path,a.name));return 0

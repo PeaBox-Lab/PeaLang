@@ -1,4 +1,6 @@
 # Changelog
+## 0.38.0 - 2026-10-23
+- Added native test/expect runner, filtering, coverage baseline, watch-mode portability baseline and migration CLI.
 ## 0.37.0 - 2026-10-23
 - Added complete resource limit accounting and structured concurrency with cancellation propagation.
 ## 0.36.0 - 2026-10-23

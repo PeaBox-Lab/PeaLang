@@ -1,11 +1,11 @@
 {
-  "previous_version": "0.36.0",
-  "current_version": "0.37.0",
-  "previous_files": 159,
-  "current_files_before_audit": 165,
-  "retained_paths": 159,
+  "previous_version": "0.37.0",
+  "current_version": "0.38.0",
+  "previous_files": 165,
+  "current_files_before_audit": 172,
+  "retained_paths": 165,
   "missing_paths": [],
-  "unchanged_sha256": 146,
+  "unchanged_sha256": 153,
   "intentionally_modified_retained_files": [
     "CHANGELOG.md",
     "README.md",
@@ -13,8 +13,7 @@
     "VERSION_HISTORY.md",
     "java-sdk/pom.xml",
     "pealang/__init__.py",
-    "pealang/async_vm.py",
-    "pealang/embedding.py",
+    "pealang/cli.py",
     "pealang/registry_auth.py",
     "pealang/runtime_service.py",
     "pyproject.toml",
@@ -22,14 +21,15 @@
     "typescript-sdk/package.json"
   ],
   "added_files": [
-    "PEALANG_AI_DEVELOPMENT_HANDOVER 0.37.md",
-    "docs/RUNTIME_LIMITS_037.md",
-    "help/RUNTIME_LIMITS.md",
-    "pealang/resource_limits.py",
-    "pealang/structured_concurrency.py",
-    "tests/test_runtime_v037.py"
+    "PEALANG_AI_DEVELOPMENT_HANDOVER 0.38.md",
+    "docs/NATIVE_TESTING_038.md",
+    "help/MIGRATION.md",
+    "help/TESTING.md",
+    "pealang/migration.py",
+    "pealang/native_testing.py",
+    "tests/test_native_testing_v038.py"
   ],
-  "tests_passed": 188,
+  "tests_passed": 195,
   "tests_failed": 0,
   "status": "PASS"
 }

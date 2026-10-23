@@ -1,3 +1,3 @@
-# PeaLang 0.37.0 Release Notes
+# PeaLang 0.38.0 Release Notes
 
-0.37 completes the next runtime foundation layer with comprehensive resource accounting and structured concurrency primitives while retaining all v0.36 project paths.
+0.38 adds native PeaLang testing syntax and migration tooling while preserving the complete v0.37 source tree. Coverage is deliberately labeled baseline rather than overstating instrumentation maturity.
