@@ -1,4 +1,6 @@
 # Changelog
+## 0.41.0 - 2026-10-23
+- Added beta/pilot readiness model, candidate pilots, performance regression gate, security-review preparation and 1.0 migration-readiness report.
 ## 0.40.0 - 2026-10-23
 - Added 500-case conformance corpus, differential runner, fuzz harness, security-boundary suite and multi-platform/Python CI definitions.
 ## 0.39.0 - 2026-10-23

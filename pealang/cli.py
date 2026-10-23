@@ -126,6 +126,9 @@ def main(argv=None):
                 errors+=sum(x.severity=='error' for x in result.diagnostics)
             print(f'Typecheck: {len(files)} file(s), {errors} error(s)')
             return 1 if errors else 0
+        if c=='readiness':
+            from .readiness import default_report
+            report=default_report().to_dict();print(json.dumps(report,indent=2));return 0 if report['ok'] else 1
         if c=='conformance':
             from .conformance import conformance_report
             report=conformance_report();print(json.dumps(report,indent=2));return 0 if report['conformance']['ok'] and report['fuzz']['ok'] else 1

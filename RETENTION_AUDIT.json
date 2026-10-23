@@ -1,10 +1,10 @@
 {
-  "previous_version": "0.39.0",
-  "current_version": "0.40.0",
-  "previous_files": 180,
-  "retained_paths": 180,
+  "previous_version": "0.40.0",
+  "current_version": "0.41.0",
+  "previous_files": 188,
+  "retained_paths": 188,
   "missing_paths": [],
-  "unchanged_sha256": 165,
+  "unchanged_sha256": 173,
   "intentionally_modified_retained_files": [
     "CHANGELOG.md",
     "FOUNDATIONAL_ROADMAP.md",
@@ -23,18 +23,24 @@
     "typescript-sdk/package.json"
   ],
   "added_files": [
-    ".github/workflows/ci.yml",
-    ".github/workflows/security.yml",
-    "PEALANG_AI_DEVELOPMENT_HANDOVER 0.40.md",
-    "docs/CONFORMANCE_040.md",
-    "help/CONFORMANCE.md",
-    "pealang/conformance.py",
-    "tests/test_conformance_v040.py",
-    "tests/test_security_boundaries_v040.py"
+    "PEALANG_AI_DEVELOPMENT_HANDOVER 0.41.md",
+    "docs/BETA_PILOTS_041.md",
+    "docs/MIGRATION_TO_1_0.md",
+    "help/READINESS.md",
+    "pealang/performance_gate.py",
+    "pealang/readiness.py",
+    "pilots/hr-fastapi/README.md",
+    "pilots/hr-fastapi/rules.pea",
+    "pilots/java-sidecar/README.md",
+    "pilots/java-sidecar/rules.pea",
+    "security/SECURITY_REVIEW_PREP.md",
+    "tests/test_readiness_v041.py"
   ],
-  "pytest_tests_passed": 216,
-  "generated_conformance_cases_passed": 500,
+  "pytest_tests_passed": 224,
+  "conformance_cases_passed": 500,
   "fuzz_iterations": 250,
+  "pilot_gate_passed": false,
+  "pilot_reason": "Two candidate pilots are included but have not been validated in genuine deployments.",
   "tests_failed": 0,
   "status": "PASS"
 }

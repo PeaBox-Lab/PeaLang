@@ -1,3 +1,3 @@
-# PeaLang 0.40.0 Release Notes
+# PeaLang 0.41.0 Release Notes
 
-0.40 establishes the conformance/platform gate: 500 deterministic interpreter/VM cases, fuzz harness, security-boundary suite and cross-platform/Python CI definitions. All v0.39 clean paths are retained.
+0.41 builds the beta/pilot evidence gate: candidate pilots, host readiness targets, performance regression policy, external-security-review preparation and the 1.0 migration-readiness report. It deliberately does not fabricate production pilot validation.

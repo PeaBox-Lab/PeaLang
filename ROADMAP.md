@@ -46,7 +46,7 @@ The original roadmap goal is not yet complete. The implementation has covered mu
 - Windows/Linux/macOS CI definitions
 - Python 3.10-3.13 matrix or documented supported matrix
 
-## 0.41 - Beta/pilot gate
+## 0.41 - Beta/pilot gate - tooling/evidence framework delivered; real pilot validation pending
 - Two real application pilots
 - three stable host integrations
 - performance baselines and regression thresholds
