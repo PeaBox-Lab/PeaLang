@@ -104,3 +104,6 @@ SBOM, provenance, checksums, artifact verification, non-root container packaging
 
 ## Release Candidate 1 Stabilization
 0.63 RC1 freezes feature scope and adds public API snapshots, compatibility/deprecation policy, integration gate reporting, threat modelling and upgrade guidance. See `docs/API_STABILITY_POLICY.md` and `RC1_GATE_STATUS.md`.
+
+## Release Candidate 2 Stabilization
+RC2 preserves the feature freeze and validates compatibility against RC1. See `docs/RC2_STABILIZATION.md` and `RC2_GATE_STATUS.md`.

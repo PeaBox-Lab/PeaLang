@@ -5,7 +5,7 @@ from pathlib import Path
 from datetime import date
 import ast,hashlib,json,time,warnings
 
-RC_VERSION='0.63.0rc1'
+RC_VERSION='0.63.0rc2'
 API_POLICY_VERSION='1'
 @dataclass(frozen=True)
 class PublicSymbol:
@@ -62,11 +62,11 @@ def run_integration_matrix(probes):
  return out
 def integration_summary(results):
  passed=sum(x.status=='PASS' for x in results);failed=len(results)-passed;return {'total':len(results),'passed':passed,'failed':failed,'ready':failed==0,'results':[asdict(x) for x in results]}
-def upgrade_compatibility(previous_versions,current_version='0.63.0rc1'):
+def upgrade_compatibility(previous_versions,current_version='0.63.0rc2'):
  return {'current':current_version,'upgrades':[{'from':str(v),'to':current_version,'supported':True,'migration':'automatic-compatible'} for v in previous_versions]}
 def threat_model():
  return {'assets':['source packages','model bundles','credentials','prediction data','registry state'],'boundaries':['CLI','HTTP serving','connectors','package registry','Kubernetes cluster'],'threats':[{'id':'T01','threat':'artifact tampering','control':'SHA-256, provenance and Ed25519 verification'},{'id':'T02','threat':'credential disclosure','control':'runtime secret providers and no embedded credentials'},{'id':'T03','threat':'inference abuse','control':'authentication, request limits and rate limiting'},{'id':'T04','threat':'supply-chain substitution','control':'SBOM, checksums, signed release manifest'},{'id':'T05','threat':'lateral movement','control':'non-root runtime and Kubernetes NetworkPolicy'}]}
-def migration_guide(from_version='0.62.0',to_version='0.63.0rc1'):
+def migration_guide(from_version='0.62.0',to_version='0.63.0rc2'):
  return {'from':from_version,'to':to_version,'steps':['back up registry and monitoring databases','verify current bundles and checksums','install the RC wheel in an isolated environment','run API compatibility and migration checks','run connector and serving smoke tests','promote only after rollback validation'],'rollback':['restore previous wheel','restore registry/monitoring backup if modified','redeploy previous serving manifest']}
 def rc_gate(results):
  failed=[k for k,v in results.items() if not v];return {'status':'PASS' if not failed else 'BLOCKED','failed_gates':failed,'score':round(100*(len(results)-len(failed))/max(1,len(results)),1)}

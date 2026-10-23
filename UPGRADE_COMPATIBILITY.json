@@ -1,21 +1,27 @@
 {
-  "current": "0.63.0rc1",
+  "current": "0.63.0rc2",
   "upgrades": [
     {
       "from": "0.60.0",
-      "to": "0.63.0rc1",
+      "to": "0.63.0rc2",
       "supported": true,
       "migration": "automatic-compatible"
     },
     {
       "from": "0.61.0",
-      "to": "0.63.0rc1",
+      "to": "0.63.0rc2",
       "supported": true,
       "migration": "automatic-compatible"
     },
     {
       "from": "0.62.0",
-      "to": "0.63.0rc1",
+      "to": "0.63.0rc2",
+      "supported": true,
+      "migration": "automatic-compatible"
+    },
+    {
+      "from": "0.63.0rc1",
+      "to": "0.63.0rc2",
       "supported": true,
       "migration": "automatic-compatible"
     }

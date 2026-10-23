@@ -1,4 +1,6 @@
 # Changelog
+## 0.63.0rc2 - 2026-10-24
+- RC2 stabilization: refreshed validation evidence, RC1 API compatibility checks and migration/operator guidance.
 ## 0.63.0rc1 - 2026-10-24
 - Froze feature scope for RC1 and added API compatibility, deprecation policy, integration gates, threat model and migration guidance.
 ## 0.62.0 - 2026-10-24

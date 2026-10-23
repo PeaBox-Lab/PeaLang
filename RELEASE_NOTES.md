@@ -1,3 +1,3 @@
-# PeaLang 0.63.0 RC1 Release Notes
+# PeaLang 0.63.0 RC2 Release Notes
 
-RC1 does not expand product scope. It stabilizes the platform with public API snapshots and compatibility comparisons, a formal deprecation policy, integration-probe reporting, upgrade compatibility mapping, a documented threat model, migration guidance and release-candidate gates. GA remains blocked by manual license review, live provider testing, independent security review, extended soak/load testing and signed external publication.
+RC2 is a stabilization release. It preserves the RC1 feature freeze, refreshes automated validation evidence, compares the public API against RC1, and adds focused migration and operator guidance. No destructive migration or intentional public API break is introduced. GA remains blocked by license, live integration, security, soak/load and signed-publication gates.
