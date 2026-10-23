@@ -1,3 +1,3 @@
-# PeaLang 0.57.0 Release Notes
+# PeaLang 0.59.0 Release Notes
 
-0.57 adds portable ProductionPipeline serialization, stateful scaler/model restoration, a SQLite monitoring store, JSON alert-policy files, model deployment manifests and command-line operations for bundling, verification, registration, promotion, monitoring and alerts.
+0.59 hardens model serving with per-client rates, bounded concurrency, request timeouts, environment-driven configuration, structured JSON logs, correlation IDs, trace hooks, degraded health states, graceful model reload, runtime champion switching, alert-driven rollback, signed/encrypted pipeline loading hooks and audit-retention policies.

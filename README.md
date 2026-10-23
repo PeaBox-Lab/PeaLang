@@ -89,3 +89,6 @@ Optional Ed25519 signing/Fernet encryption, monitoring event stores, alert opera
 
 ## Pipeline Portability and MLOps CLI 0.57
 Versioned pipeline serialization, SQLite monitoring, alert policies, deployment manifests and `pea-ml` operations complete the next MLOps layer. See `docs/MLOPS_CLI_057.md`.
+
+## Secure and Resilient Serving 0.59
+Rate and concurrency controls, timeouts, structured logs, trace hooks, live reload, secure artifact loading and alert-driven rollback harden model serving. See `docs/RESILIENT_SERVING_059.md`.

@@ -1,4 +1,6 @@
 # Changelog
+## 0.59.0 - 2026-10-23
+- Added resilient serving with rate/concurrency limits, timeouts, logs/traces, secure loading, live reload and rollback.
 ## 0.57.0 - 2026-10-23
 - Added portable pipelines, SQLite monitoring, policy/deployment manifests and MLOps CLI commands.
 ## 0.56.0 - 2026-10-23

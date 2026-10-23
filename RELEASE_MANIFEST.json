@@ -1,17 +1,16 @@
 {
-  "version": "0.58.0",
-  "previous_version": "0.57.0",
+  "version": "0.59.0",
+  "previous_version": "0.58.0",
   "missing_paths": [],
   "files_added": [
-    "PEALANG_AI_DEVELOPMENT_HANDOVER 0.58.md",
-    "docs/SERVING_RUNTIME_058.md",
-    "help/SERVING.md",
-    "examples/deployment_manifest.json",
-    "pealang/serving.py",
-    "pealang/serve_cli.py",
-    "tests/test_serving_v058.py"
+    "PEALANG_AI_DEVELOPMENT_HANDOVER 0.59.md",
+    "docs/RESILIENT_SERVING_059.md",
+    "help/RESILIENT_SERVING.md",
+    "examples/resilient_serving.py",
+    "pealang/serving_resilience.py",
+    "tests/test_serving_resilience_v059.py"
   ],
-  "pytest_tests_passed": 388,
+  "pytest_tests_passed": 396,
   "conformance_cases_passed": 500,
   "fuzz_iterations": 250,
   "tests_failed": 0,
