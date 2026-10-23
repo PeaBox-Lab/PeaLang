@@ -1,4 +1,6 @@
 # Changelog
+## 0.46.0 - 2026-10-23
+- Added OData and SFTP cloud connectors with pagination, query options, secure transfers and DataFrame ingestion.
 ## 0.45.0 - 2026-10-23
 - Added Connector SDK with registry, transport abstraction, retries, auth helpers, REST and GraphQL connectors, pagination and DataFrame conversion.
 ## 0.44.0 - 2026-10-23

@@ -4,7 +4,7 @@ class Fake(Transport):
  def __init__(self,responses):self.responses=list(responses);self.calls=[]
  def request(self,method,url,headers=None,body=None,timeout=30):self.calls.append((method,url,headers,body));return self.responses.pop(0)
 def R(data,status=200):return ConnectorResponse(status,{'Content-Type':'application/json'},data,'http://x')
-def test_registry():assert REGISTRY.names()==['graphql','rest']
+def test_registry():assert {'graphql','rest'} <= set(REGISTRY.names())
 def test_rest_get_params():
  f=Fake([R([{'id':1}])]);c=RESTConnector(ConnectorConfig('http://api/'),f);assert c.dataframe('users',{'active':True}).to_dicts()==[{'id':1}] and 'active=True' in f.calls[0][1]
 def test_rest_post():

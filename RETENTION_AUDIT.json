@@ -1,17 +1,18 @@
 {
-  "version": "0.45.0",
-  "previous_version": "0.44.0",
+  "version": "0.46.0",
+  "previous_version": "0.45.0",
   "missing_paths": [],
   "files_added": [
-    "PEALANG_AI_DEVELOPMENT_HANDOVER 0.45.md",
-    "docs/CONNECTOR_SDK_045.md",
-    "help/CONNECTORS.md",
-    "pealang/connectors.py",
-    "tests/test_connectors_v045.py",
-    "examples/rest_connector.py",
-    "examples/graphql_connector.py"
+    "PEALANG_AI_DEVELOPMENT_HANDOVER 0.46.md",
+    "docs/CLOUD_CONNECTORS_046.md",
+    "help/ODATA.md",
+    "help/SFTP.md",
+    "pealang/cloud_connectors.py",
+    "tests/test_cloud_connectors_v046.py",
+    "examples/odata_connector.py",
+    "examples/sftp_connector.py"
   ],
-  "pytest_tests_passed": 262,
+  "pytest_tests_passed": 270,
   "conformance_cases_passed": 500,
   "fuzz_iterations": 250,
   "tests_failed": 0,

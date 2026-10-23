@@ -1,10 +1,10 @@
-# PeaLang 0.45.0
+# PeaLang 0.46.0
 
 PeaLang is an embeddable extension language for controlled rules, workflows, automation and host integration. Version 0.37 completes runtime resource accounting and structured concurrency while retaining the v0.35 standard library and v0.36 type-system foundation.
 
 ## Install
 ```bash
-python -m pip install pealang-0.45.0-py3-none-any.whl
+python -m pip install pealang-0.46.0-py3-none-any.whl
 pea --version
 ```
 
@@ -53,3 +53,6 @@ SQLite works with the Python standard library. Adapter contracts also cover Duck
 
 ## Connector SDK 0.45
 Use the built-in REST and GraphQL connectors with runtime authentication headers, retry/backoff controls, pagination and direct DataFrame conversion. See `docs/CONNECTOR_SDK_045.md`.
+
+## Cloud Connectors 0.46
+OData and SFTP now extend the Connector SDK. See `docs/CLOUD_CONNECTORS_046.md`.

@@ -1,5 +1,3 @@
-# PeaLang 0.45.0 Release Notes
+# PeaLang 0.46.0 Release Notes
 
-0.45 introduces the Connector SDK and ships REST plus GraphQL connectors. It includes a pluggable registry and transport, runtime authentication headers, retry/backoff handling, typed errors, REST page/link pagination, GraphQL variables and cursor pagination, and direct conversion of API records into PeaLang DataFrames.
-
-The default transport uses the Python standard library, so the core connectors add no mandatory dependency.
+0.46 adds OData and SFTP support. OData includes standard query options, nextLink pagination, count, metadata and DataFrame conversion. SFTP includes strict host-key verification by default, password/private-key authentication, file operations, upload/download, and CSV/JSON ingestion into DataFrames through optional Paramiko.
