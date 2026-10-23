@@ -1,3 +1,3 @@
-# PeaLang 0.47.0 Release Notes
+# PeaLang 0.48.0 Release Notes
 
-0.47 adds cloud object storage adapters for Amazon S3, Azure Blob Storage, Azure Data Lake Storage Gen2 and Google Cloud Storage. The shared API covers prefix discovery, reads/writes, upload/download, deletion and CSV/JSON DataFrame ingestion. Parquet ingestion is available with optional pyarrow. Provider credentials and SDKs remain runtime concerns.
+0.48 adds an enterprise connector foundation around Microsoft Graph and SharePoint, including site/drive/list access and list-to-DataFrame conversion. It also introduces Environment, Azure Key Vault and AWS Secrets Manager provider contracts plus connector capability descriptors and basic certification checks. Credentials remain runtime-only.

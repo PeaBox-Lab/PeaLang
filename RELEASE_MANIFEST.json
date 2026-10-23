@@ -1,15 +1,16 @@
 {
-  "version": "0.47.0",
-  "previous_version": "0.46.0",
+  "version": "0.48.0",
+  "previous_version": "0.47.0",
   "missing_paths": [],
   "files_added": [
-    "PEALANG_AI_DEVELOPMENT_HANDOVER 0.47.md",
-    "docs/OBJECT_STORAGE_047.md",
-    "help/OBJECT_STORAGE.md",
-    "pealang/object_storage.py",
-    "tests/test_object_storage_v047.py"
+    "PEALANG_AI_DEVELOPMENT_HANDOVER 0.48.md",
+    "docs/ENTERPRISE_CONNECTORS_048.md",
+    "help/SHAREPOINT.md",
+    "help/SECRETS.md",
+    "pealang/enterprise_connectors.py",
+    "tests/test_enterprise_v048.py"
   ],
-  "pytest_tests_passed": 275,
+  "pytest_tests_passed": 285,
   "conformance_cases_passed": 500,
   "fuzz_iterations": 250,
   "tests_failed": 0,
