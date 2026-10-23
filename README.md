@@ -1,10 +1,10 @@
-# PeaLang 0.55.0
+# PeaLang 0.56.0
 
 PeaLang is an embeddable extension language for controlled rules, workflows, automation and host integration. Version 0.37 completes runtime resource accounting and structured concurrency while retaining the v0.35 standard library and v0.36 type-system foundation.
 
 ## Install
 ```bash
-python -m pip install pealang-0.55.0-py3-none-any.whl
+python -m pip install pealang-0.56.0-py3-none-any.whl
 pea --version
 ```
 
@@ -83,3 +83,6 @@ Fitted pipelines, cross-validation, tuning, regularization, multiclass classific
 
 ## ML Deployment and Monitoring 0.55
 Model bundles, batch/audited inference, drift and fairness diagnostics, calibration, registry lifecycle and an optional FastAPI adapter extend production ML. See `docs/MLOPS_055.md`.
+
+## Secure MLOps 0.56
+Optional Ed25519 signing/Fernet encryption, monitoring event stores, alert operations, promotion policies, canary routing and rollback controls extend the ML platform. See `docs/SECURE_MLOPS_056.md`.

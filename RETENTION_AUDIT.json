@@ -1,16 +1,16 @@
 {
-  "version": "0.55.0",
-  "previous_version": "0.54.0",
+  "version": "0.56.0",
+  "previous_version": "0.55.0",
   "missing_paths": [],
   "files_added": [
-    "PEALANG_AI_DEVELOPMENT_HANDOVER 0.55.md",
-    "docs/MLOPS_055.md",
-    "help/MLOPS.md",
-    "examples/mlops.py",
-    "pealang/mlops.py",
-    "tests/test_mlops_v055.py"
+    "PEALANG_AI_DEVELOPMENT_HANDOVER 0.56.md",
+    "docs/SECURE_MLOPS_056.md",
+    "help/SECURE_MLOPS.md",
+    "examples/secure_mlops.py",
+    "pealang/mlops_secure.py",
+    "tests/test_mlops_secure_v056.py"
   ],
-  "pytest_tests_passed": 365,
+  "pytest_tests_passed": 374,
   "conformance_cases_passed": 500,
   "fuzz_iterations": 250,
   "tests_failed": 0,

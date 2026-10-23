@@ -1,4 +1,6 @@
 # Changelog
+## 0.56.0 - 2026-10-23
+- Added secure model bundles, monitoring stores, alerts, promotion gates, canary routing and rollback controls.
 ## 0.55.0 - 2026-10-23
 - Added model bundles, inference/audit APIs, drift and fairness diagnostics, calibration, registry lifecycle and FastAPI serving.
 ## 0.54.0 - 2026-10-23

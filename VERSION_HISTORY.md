@@ -61,4 +61,5 @@
 | 0.53 | Machine learning foundations: preprocessing, regression/classification, metrics and persistence |
 | 0.54 | Production ML: pipelines, CV/tuning, regularization, multiclass models and governance |
 | 0.55 | MLOps: bundles, inference audits, monitoring, registry lifecycle, compatibility and serving |
+| 0.56 | Secure MLOps: signatures/encryption, event stores, alerts, promotion gates and canary rollback |
 
