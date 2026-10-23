@@ -1,3 +1,3 @@
-# PeaLang 0.41.0 Release Notes
+# PeaLang 0.42.0 Release Notes
 
-0.41 builds the beta/pilot evidence gate: candidate pilots, host readiness targets, performance regression policy, external-security-review preparation and the 1.0 migration-readiness report. It deliberately does not fabricate production pilot validation.
+0.42 starts PeaLang Data with a common schema/table model, lazy scans, connector registry, CSV/JSON/JSONL import/export and core transformations. Existing language/runtime features remain retained.

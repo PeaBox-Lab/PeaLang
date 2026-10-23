@@ -1,25 +1,17 @@
 {
-  "version": "0.41.0",
-  "previous_version": "0.40.0",
-  "previous_clean_files": 188,
-  "retained_paths": 188,
+  "version": "0.42.0",
+  "previous_version": "0.41.0",
+  "retained_paths": 200,
   "files_removed": [],
   "files_added": [
-    "PEALANG_AI_DEVELOPMENT_HANDOVER 0.41.md",
-    "docs/BETA_PILOTS_041.md",
-    "docs/MIGRATION_TO_1_0.md",
-    "help/READINESS.md",
-    "pealang/performance_gate.py",
-    "pealang/readiness.py",
-    "pilots/hr-fastapi/README.md",
-    "pilots/hr-fastapi/rules.pea",
-    "pilots/java-sidecar/README.md",
-    "pilots/java-sidecar/rules.pea",
-    "security/SECURITY_REVIEW_PREP.md",
-    "tests/test_readiness_v041.py"
+    "DATA_ROADMAP.md",
+    "PEALANG_AI_DEVELOPMENT_HANDOVER 0.42.md",
+    "docs/DATA_FOUNDATION_042.md",
+    "help/DATA.md",
+    "pealang/data.py",
+    "tests/test_data_v042.py"
   ],
-  "pytest_tests_passed": 224,
+  "pytest_tests_passed": 232,
   "conformance_cases_passed": 500,
-  "pilot_gate_passed": false,
-  "release_integrity": "PASS"
+  "status": "PASS"
 }

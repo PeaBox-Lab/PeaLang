@@ -1,4 +1,6 @@
 # Changelog
+## 0.42.0 - 2026-10-23
+- Added PeaLang Data foundation: schema model, DataFrame/LazyFrame, connector registry, CSV/JSON/JSONL and core transforms.
 ## 0.41.0 - 2026-10-23
 - Added beta/pilot readiness model, candidate pilots, performance regression gate, security-review preparation and 1.0 migration-readiness report.
 ## 0.40.0 - 2026-10-23

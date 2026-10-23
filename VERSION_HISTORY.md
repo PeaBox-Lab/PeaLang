@@ -47,3 +47,4 @@
 | 0.39 | WebAssembly container and browser sandbox foundation |
 | 0.40 | Conformance, fuzzing, security-boundary and platform CI gate |
 | 0.41 | Beta/pilot evidence, performance thresholds, security review preparation and 1.0 migration readiness |
+| 0.42 | Data foundation: schema, frames, connector registry and core file formats |
