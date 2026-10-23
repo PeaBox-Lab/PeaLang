@@ -1,16 +1,21 @@
 {
-  "version": "0.35.0",
-  "previous_version": "0.34.0",
-  "previous_clean_files": 150,
-  "current_clean_files": 154,
-  "files_added": [
-    "PEALANG_AI_DEVELOPMENT_HANDOVER 0.35.md",
-    "docs/STANDARD_LIBRARY.md",
-    "help/STDLIB.md",
-    "tests/test_stdlib_v035.py"
-  ],
+  "version": "0.40.0",
+  "previous_version": "0.39.0",
+  "previous_clean_files": 180,
+  "retained_paths": 180,
   "files_removed": [],
-  "tests_passed": 163,
-  "stdlib_modules": 14,
+  "files_added": [
+    ".github/workflows/ci.yml",
+    ".github/workflows/security.yml",
+    "PEALANG_AI_DEVELOPMENT_HANDOVER 0.40.md",
+    "docs/CONFORMANCE_040.md",
+    "help/CONFORMANCE.md",
+    "pealang/conformance.py",
+    "tests/test_conformance_v040.py",
+    "tests/test_security_boundaries_v040.py"
+  ],
+  "pytest_tests_passed": 216,
+  "conformance_cases_passed": 500,
+  "fuzz_iterations": 250,
   "status": "PASS"
 }

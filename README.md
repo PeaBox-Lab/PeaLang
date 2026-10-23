@@ -1,10 +1,10 @@
-# PeaLang 0.39.0
+# PeaLang 0.40.0
 
 PeaLang is an embeddable extension language for controlled rules, workflows, automation and host integration. Version 0.37 completes runtime resource accounting and structured concurrency while retaining the v0.35 standard library and v0.36 type-system foundation.
 
 ## Install
 ```bash
-python -m pip install pealang-0.39.0-py3-none-any.whl
+python -m pip install pealang-0.40.0-py3-none-any.whl
 pea --version
 ```
 
@@ -34,3 +34,6 @@ Use `test "name" { expect condition }`, `pea test --filter`, `pea test --coverag
 
 ## WebAssembly 0.39
 Use `pea wasm-build` and `pea wasm-inspect`. Executable lowering remains Preview.
+
+## Conformance 0.40
+Run `pea conformance` for the 500-case interpreter/VM gate and deterministic fuzz harness. GitHub Actions defines Windows/Linux/macOS and Python 3.10-3.13 matrices.

@@ -38,7 +38,7 @@ The original roadmap goal is not yet complete. The implementation has covered mu
 - Python VM/WASM differential fixtures
 - Node/browser host capability ABI
 
-## 0.40 - Conformance and platform gate
+## 0.40 - Conformance and platform gate - implementation delivered; CI evidence pending
 - 500+ conformance tests
 - parser/VM >=90% coverage target
 - security-boundary 100% coverage target

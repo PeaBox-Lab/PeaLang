@@ -1,4 +1,6 @@
 # Changelog
+## 0.40.0 - 2026-10-23
+- Added 500-case conformance corpus, differential runner, fuzz harness, security-boundary suite and multi-platform/Python CI definitions.
 ## 0.39.0 - 2026-10-23
 - Added WebAssembly containers, browser ABI/policy, SDK and CLI.
 ## 0.38.0 - 2026-10-23

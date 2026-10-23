@@ -1,15 +1,18 @@
 {
-  "previous_version": "0.38.0",
-  "current_version": "0.39.0",
-  "previous_files": 172,
-  "retained_paths": 172,
+  "previous_version": "0.39.0",
+  "current_version": "0.40.0",
+  "previous_files": 180,
+  "retained_paths": 180,
   "missing_paths": [],
-  "unchanged_sha256": 160,
+  "unchanged_sha256": 165,
   "intentionally_modified_retained_files": [
     "CHANGELOG.md",
+    "FOUNDATIONAL_ROADMAP.md",
     "README.md",
     "RELEASE_NOTES.md",
+    "ROADMAP.md",
     "VERSION_HISTORY.md",
+    "browser-sdk/package.json",
     "java-sdk/pom.xml",
     "pealang/__init__.py",
     "pealang/cli.py",
@@ -20,16 +23,18 @@
     "typescript-sdk/package.json"
   ],
   "added_files": [
-    "PEALANG_AI_DEVELOPMENT_HANDOVER 0.39.md",
-    "browser-sdk/README.md",
-    "browser-sdk/package.json",
-    "browser-sdk/pealang-wasm.js",
-    "docs/WASM_BROWSER_039.md",
-    "help/WASM.md",
-    "pealang/wasm.py",
-    "tests/test_wasm_v039.py"
+    ".github/workflows/ci.yml",
+    ".github/workflows/security.yml",
+    "PEALANG_AI_DEVELOPMENT_HANDOVER 0.40.md",
+    "docs/CONFORMANCE_040.md",
+    "help/CONFORMANCE.md",
+    "pealang/conformance.py",
+    "tests/test_conformance_v040.py",
+    "tests/test_security_boundaries_v040.py"
   ],
-  "tests_passed": 203,
+  "pytest_tests_passed": 216,
+  "generated_conformance_cases_passed": 500,
+  "fuzz_iterations": 250,
   "tests_failed": 0,
   "status": "PASS"
 }

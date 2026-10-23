@@ -63,7 +63,7 @@ def main(argv=None):
             from .signing import TrustStore
             store=TrustStore(argv[1]);kid=store.trust_key(argv[2],argv[3] if len(argv)>3 else None);print(kid);return 0
         if c=='profile':
-            from .compiler import compile_source_to_bytecode_to_bytecode
+            from .compiler import compile_source_to_bytecode
             from .vm import VirtualMachine
             from .observability import Profiler,Coverage,Instrumentation
             path=Path(argv[1]);prof=Profiler().start();cov=Coverage();vm=VirtualMachine(instrumentation=Instrumentation(prof,cov));vm.run(compile_source_to_bytecode(path.read_text(encoding='utf-8'),str(path)));prof.stop();print(json.dumps({'profile':prof.report(),'coverage':cov.report()},indent=2));return 0
@@ -93,7 +93,7 @@ def main(argv=None):
                 print('Audit: clean');return 0
             if c=='build':p,h=build_package(root);print(f'{p}\nsha256 {h}');return 0
         if c=='compile':
-            from .compiler import compile_source_to_bytecode_to_bytecode
+            from .compiler import compile_source_to_bytecode
             p=argparse.ArgumentParser(prog='pea compile');p.add_argument('file');p.add_argument('-o','--output');a=p.parse_args(argv[1:])
             src=Path(a.file);out=Path(a.output) if a.output else src.with_suffix('.peac');compile_source_to_bytecode(src.read_text(encoding='utf-8'),str(src)).save(out);print(out);return 0
         if c=='dis':
@@ -102,7 +102,7 @@ def main(argv=None):
             p=argparse.ArgumentParser(prog='pea dis');p.add_argument('file');a=p.parse_args(argv[1:]);print(disassemble(BytecodeModule.load(a.file)),end='');return 0
         if c=='vm':
             from .bytecode import BytecodeModule
-            from .compiler import compile_source_to_bytecode_to_bytecode
+            from .compiler import compile_source_to_bytecode
             from .vm import VirtualMachine
             p=argparse.ArgumentParser(prog='pea vm');p.add_argument('file');p.add_argument('--max-instructions',type=int,default=100000);a=p.parse_args(argv[1:]);path=Path(a.file);m=BytecodeModule.load(path) if path.suffix=='.peac' else compile_source_to_bytecode(path.read_text(encoding='utf-8'),str(path));VirtualMachine(print,a.max_instructions).run(m);return 0
         if c=='semantic':
@@ -126,6 +126,9 @@ def main(argv=None):
                 errors+=sum(x.severity=='error' for x in result.diagnostics)
             print(f'Typecheck: {len(files)} file(s), {errors} error(s)')
             return 1 if errors else 0
+        if c=='conformance':
+            from .conformance import conformance_report
+            report=conformance_report();print(json.dumps(report,indent=2));return 0 if report['conformance']['ok'] and report['fuzz']['ok'] else 1
         if c=='wasm-build':
             from .compiler import compile_source_to_bytecode
             from .wasm import compile_peac_to_wasm

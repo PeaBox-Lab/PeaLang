@@ -1,3 +1,3 @@
-# PeaLang 0.39.0 Release Notes
+# PeaLang 0.40.0 Release Notes
 
-WebAssembly/browser sandbox format, policy, ABI, SDK and CLI foundation. All v0.38 paths retained.
+0.40 establishes the conformance/platform gate: 500 deterministic interpreter/VM cases, fuzz harness, security-boundary suite and cross-platform/Python CI definitions. All v0.39 clean paths are retained.

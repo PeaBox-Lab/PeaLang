@@ -45,3 +45,4 @@
 | 0.37 | Runtime resource completion and structured concurrency |
 | 0.38 | Native testing and migration tooling |
 | 0.39 | WebAssembly container and browser sandbox foundation |
+| 0.40 | Conformance, fuzzing, security-boundary and platform CI gate |
