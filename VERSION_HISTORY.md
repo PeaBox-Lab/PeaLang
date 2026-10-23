@@ -50,4 +50,5 @@
 | 0.42 | Data foundation: schema, frames, connector registry and core file formats |
 | 0.43 | DataFrame engine: joins, aggregations, expressions, nulls, reshape, windows and lazy plans |
 | 0.44 | SQL and databases: adapters, discovery, parameters, transactions, batching and upsert foundation |
+| 0.45 | Connector SDK: REST and GraphQL connectors, registry, auth, retries, pagination and DataFrame conversion |
 

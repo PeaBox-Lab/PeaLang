@@ -1,4 +1,6 @@
 # Changelog
+## 0.45.0 - 2026-10-23
+- Added Connector SDK with registry, transport abstraction, retries, auth helpers, REST and GraphQL connectors, pagination and DataFrame conversion.
 ## 0.44.0 - 2026-10-23
 - Added SQL/database layer with SQLite, optional database adapters, discovery, parameterized queries, transactions, batching and SQLite upsert.
 ## 0.43.0 - 2026-10-23

@@ -1,10 +1,10 @@
-# PeaLang 0.44.0
+# PeaLang 0.45.0
 
 PeaLang is an embeddable extension language for controlled rules, workflows, automation and host integration. Version 0.37 completes runtime resource accounting and structured concurrency while retaining the v0.35 standard library and v0.36 type-system foundation.
 
 ## Install
 ```bash
-python -m pip install pealang-0.44.0-py3-none-any.whl
+python -m pip install pealang-0.45.0-py3-none-any.whl
 pea --version
 ```
 
@@ -50,3 +50,6 @@ Use joins, grouped aggregations, expression-based columns and filters, null hand
 
 ## SQL and Databases 0.44
 SQLite works with the Python standard library. Adapter contracts also cover DuckDB, PostgreSQL, MySQL/MariaDB, SQL Server and Oracle through optional drivers. See `docs/SQL_DATABASES_044.md`.
+
+## Connector SDK 0.45
+Use the built-in REST and GraphQL connectors with runtime authentication headers, retry/backoff controls, pagination and direct DataFrame conversion. See `docs/CONNECTOR_SDK_045.md`.
