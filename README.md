@@ -1,10 +1,10 @@
-# PeaLang 0.48.0
+# PeaLang 0.49.0
 
 PeaLang is an embeddable extension language for controlled rules, workflows, automation and host integration. Version 0.37 completes runtime resource accounting and structured concurrency while retaining the v0.35 standard library and v0.36 type-system foundation.
 
 ## Install
 ```bash
-python -m pip install pealang-0.48.0-py3-none-any.whl
+python -m pip install pealang-0.49.0-py3-none-any.whl
 pea --version
 ```
 
@@ -62,3 +62,6 @@ Amazon S3, Azure Blob Storage, ADLS Gen2 and Google Cloud Storage now share a no
 
 ## Enterprise Connectors 0.48
 Microsoft Graph/SharePoint, secret-provider abstractions, capability descriptors and certification checks extend the connector platform. See `docs/ENTERPRISE_CONNECTORS_048.md`.
+
+## Connector Runtime 0.49
+Production runtime profiles, renewable token providers, health diagnostics, certification matrices and Graph/SharePoint pagination.

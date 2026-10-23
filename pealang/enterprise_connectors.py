@@ -101,3 +101,19 @@ class SharePointConnector(MicrosoftGraphConnector):
 
 def microsoft_graph(token=None,**kwargs):return MicrosoftGraphConnector(token,**kwargs)
 def sharepoint(token=None,**kwargs):return SharePointConnector(token,**kwargs)
+def _set_tp(self,p):self.token_provider=p;return self
+def _headers49(self,extra=None):
+ h=RESTConnector._headers(self,extra);p=getattr(self,'token_provider',None)
+ if p:h['Authorization']='Bearer '+p.token()
+ return h
+def _paged(self,path,params=None):
+ data=self.get(path,params);out=list(data.get('value',[])) if isinstance(data,dict) else []
+ for _ in range(max(0,self.config.max_pages-1)):
+  nxt=data.get('@odata.nextLink') if isinstance(data,dict) else None
+  if not nxt:break
+  data=self.get(nxt);out.extend(data.get('value',[]))
+ return out
+MicrosoftGraphConnector.set_token_provider=_set_tp;MicrosoftGraphConnector._headers=_headers49;MicrosoftGraphConnector.paged_values=_paged
+def _all(self,site_id,list_id):
+ return DataFrame([{'id':x.get('id'),**x.get('fields',{})} for x in self.paged_values(f'sites/{site_id}/lists/{list_id}/items',{'$expand':'fields'})])
+SharePointConnector.list_items_all=_all

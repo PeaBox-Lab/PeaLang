@@ -1,4 +1,6 @@
 # Changelog
+## 0.49.0 - 2026-10-23
+- Hardened connector runtime with token providers, profiles, health checks, certification matrices and Graph/SharePoint paging.
 ## 0.48.0 - 2026-10-23
 - Added Microsoft Graph/SharePoint connector foundation, secret providers, capability metadata and connector certification.
 ## 0.47.0 - 2026-10-23
