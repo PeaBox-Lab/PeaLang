@@ -1,4 +1,6 @@
 # Changelog
+## 0.60.0 - 2026-10-23
+- Added distributed serving backends, load/performance gates, OpenTelemetry hooks and Kubernetes operations.
 ## 0.59.0 - 2026-10-23
 - Added resilient serving with rate/concurrency limits, timeouts, logs/traces, secure loading, live reload and rollback.
 ## 0.57.0 - 2026-10-23

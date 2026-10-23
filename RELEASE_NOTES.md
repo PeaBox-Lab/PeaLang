@@ -1,3 +1,3 @@
-# PeaLang 0.59.0 Release Notes
+# PeaLang 0.60.0 Release Notes
 
-0.59 hardens model serving with per-client rates, bounded concurrency, request timeouts, environment-driven configuration, structured JSON logs, correlation IDs, trace hooks, degraded health states, graceful model reload, runtime champion switching, alert-driven rollback, signed/encrypted pipeline loading hooks and audit-retention policies.
+0.60 adds distributed model-serving operations: Redis-compatible rate limits and shared deployment state, consistent cross-replica routing, P50/P95/P99 latency summaries, concurrent load tests with error/latency gates, optional OpenTelemetry hooks, and generated Kubernetes Deployment, Service, HPA and Prometheus ServiceMonitor resources.

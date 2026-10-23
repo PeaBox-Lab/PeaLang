@@ -92,3 +92,6 @@ Versioned pipeline serialization, SQLite monitoring, alert policies, deployment 
 
 ## Secure and Resilient Serving 0.59
 Rate and concurrency controls, timeouts, structured logs, trace hooks, live reload, secure artifact loading and alert-driven rollback harden model serving. See `docs/RESILIENT_SERVING_059.md`.
+
+## Distributed Serving and Kubernetes 0.60
+Shared Redis-compatible state, distributed rate limiting, latency/load gates, OpenTelemetry hooks and Kubernetes resources extend resilient serving. See `docs/DISTRIBUTED_SERVING_060.md`.
