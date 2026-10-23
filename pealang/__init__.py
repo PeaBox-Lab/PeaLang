@@ -8,7 +8,7 @@ from .runtime import execute, compile_source, Interpreter, PeaError
 from .type_system import TypeChecker,TypeRef,Diagnostic,TypeCheckResult,SemanticAnalyzer,SemanticResult,FunctionContract,parse_type,erase_types
 from .embedding import (PeaRuntime,PeaModule,RuntimeOptions,ExecutionResult,
     PeaRuntimeError,PeaPermissionError,PeaResourceLimitError,to_pea,from_pea)
-__version__='0.49.0'
+__version__='0.50.0'
 __all__=['BytecodeModule','CodeObject','Instruction','Op','Compiler','CompileError','compile_source_to_bytecode','VirtualMachine','VMError','AsyncSuspension','AsyncVirtualMachine','AsyncVMRuntime','AsyncVMModule','CancellationToken','VMRuntime','VMModule','disassemble','execute','compile_source','Interpreter','PeaError','PeaRuntime','PeaModule',
 'SemanticAnalyzer','SemanticResult','FunctionContract','TypeChecker','TypeRef','Diagnostic','TypeCheckResult','parse_type','erase_types','RuntimeOptions','ExecutionResult','PeaRuntimeError','PeaPermissionError',
 'PeaResourceLimitError','to_pea','from_pea','__version__']
@@ -65,3 +65,5 @@ from .object_storage import ObjectStorageConnector,S3Connector,AzureBlobConnecto
 from .enterprise_connectors import SecretRef,SecretRegistry,EnvironmentSecrets,MappingSecrets,AzureKeyVaultSecrets,AWSSecretsManager,ConnectorCapability,CertificationResult,CAPABILITIES,certify,MicrosoftGraphConnector,SharePointConnector,microsoft_graph,sharepoint
 
 from .connector_runtime import TokenProvider,StaticTokenProvider,CallableTokenProvider,CachedTokenProvider,ConnectorProfile,HealthResult,health_check,CertificationMatrix,certify_matrix
+
+from .analytics import mean,median,mode,quantile,variance,stddev,covariance,correlation,describe,frequencies,crosstab,rank,cumulative,rolling,outliers_iqr,profile,correlation_matrix

@@ -1,4 +1,6 @@
 # Changelog
+## 0.50.0 - 2026-10-23
+- Added DataFrame analytics and statistics: summaries, quantiles, dispersion, correlation, frequencies, crosstabs, ranking, cumulative/rolling calculations, outliers and profiling.
 ## 0.49.0 - 2026-10-23
 - Hardened connector runtime with token providers, profiles, health checks, certification matrices and Graph/SharePoint paging.
 ## 0.48.0 - 2026-10-23
