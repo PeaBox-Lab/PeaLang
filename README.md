@@ -107,3 +107,6 @@ SBOM, provenance, checksums, artifact verification, non-root container packaging
 
 ## Release Candidate 2 Stabilization
 RC2 preserves the feature freeze and validates compatibility against RC1. See `docs/RC2_STABILIZATION.md` and `RC2_GATE_STATUS.md`.
+
+## Distributed Compute Foundation 0.64 alpha
+Engine-neutral plans and optional Arrow, Polars and Spark adapters begin the post-RC scalable-data roadmap. See `docs/DISTRIBUTED_COMPUTE_064.md` and `docs/ROADMAP_064_TO_100.md`.

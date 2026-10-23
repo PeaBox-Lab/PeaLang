@@ -1,4 +1,6 @@
 # Changelog
+## 0.64.0a1 - 2026-10-24
+- Added engine-neutral distributed compute plans and Local/Arrow/Polars/Spark adapters.
 ## 0.63.0rc2 - 2026-10-24
 - RC2 stabilization: refreshed validation evidence, RC1 API compatibility checks and migration/operator guidance.
 ## 0.63.0rc1 - 2026-10-24

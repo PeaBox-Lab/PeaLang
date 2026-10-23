@@ -1,3 +1,3 @@
-# PeaLang 0.63.0 RC2 Release Notes
+# PeaLang 0.64.0 Alpha 1 Release Notes
 
-RC2 is a stabilization release. It preserves the RC1 feature freeze, refreshes automated validation evidence, compares the public API against RC1, and adds focused migration and operator guidance. No destructive migration or intentional public API break is introduced. GA remains blocked by license, live integration, security, soak/load and signed-publication gates.
+0.64 starts a separate post-RC line with engine-neutral execution plans, a compute-engine registry, a local fallback, and optional Arrow, Polars and Spark adapters. The 0.63 RC line remains frozen. 0.64 is an alpha and does not replace RC2 for stabilization.
