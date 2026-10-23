@@ -7,6 +7,7 @@ from typing import Any, Callable, Mapping
 from .errors import PeaError
 from .interpreter import Interpreter, UserFunction
 from .parser import parse_source
+from .resource_limits import ResourceBudget,ResourceLimits,ResourceLimitExceeded,estimated_size
 
 class PeaRuntimeError(PeaError): pass
 class PeaPermissionError(PeaRuntimeError): pass
@@ -18,6 +19,12 @@ class RuntimeOptions:
     max_execution_ms: int = 1000
     max_instructions: int = 100_000
     max_call_depth: int = 100
+    max_memory_bytes: int = 16 * 1024 * 1024
+    max_stack_depth: int = 1024
+    max_collection_items: int = 100_000
+    max_output_bytes: int = 1024 * 1024
+    max_http_requests: int = 32
+    max_file_read_bytes: int = 8 * 1024 * 1024
     allow_process: bool = False
 
     @classmethod
@@ -111,10 +118,14 @@ class PeaRuntime:
 
     def _start_budget(self,vm):
         self._instructions=0;self._deadline=time.perf_counter()+(self.options.max_execution_ms/1000)
+        self._resource_budget=ResourceBudget(ResourceLimits(self.options.max_execution_ms,self.options.max_instructions,self.options.max_memory_bytes,self.options.max_call_depth,self.options.max_stack_depth,self.options.max_collection_items,self.options.max_output_bytes,self.options.max_http_requests,self.options.max_file_read_bytes))
         vm.debug_hook=self._budget_hook
 
     def _budget_hook(self,vm,node):
         self._instructions+=1
+        try:
+            self._resource_budget.instruction();self._resource_budget.set_recursion(len(vm.call_stack));self._resource_budget.set_stack(len(getattr(vm,'call_stack',[])));self._resource_budget.deadline()
+        except ResourceLimitExceeded as exc:raise PeaResourceLimitError(str(exc)) from exc
         if self._instructions>self.options.max_instructions:raise PeaResourceLimitError('Instruction limit exceeded')
         if len(vm.call_stack)>self.options.max_call_depth:raise PeaResourceLimitError('Call-depth limit exceeded')
         if time.perf_counter()>self._deadline:raise PeaResourceLimitError('Execution timeout exceeded')

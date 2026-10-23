@@ -8,7 +8,7 @@ from .runtime import execute, compile_source, Interpreter, PeaError
 from .type_system import TypeChecker,TypeRef,Diagnostic,TypeCheckResult,SemanticAnalyzer,SemanticResult,FunctionContract,parse_type,erase_types
 from .embedding import (PeaRuntime,PeaModule,RuntimeOptions,ExecutionResult,
     PeaRuntimeError,PeaPermissionError,PeaResourceLimitError,to_pea,from_pea)
-__version__='0.36.0'
+__version__='0.37.0'
 __all__=['BytecodeModule','CodeObject','Instruction','Op','Compiler','CompileError','compile_source_to_bytecode','VirtualMachine','VMError','AsyncSuspension','AsyncVirtualMachine','AsyncVMRuntime','AsyncVMModule','CancellationToken','VMRuntime','VMModule','disassemble','execute','compile_source','Interpreter','PeaError','PeaRuntime','PeaModule',
 'SemanticAnalyzer','SemanticResult','FunctionContract','TypeChecker','TypeRef','Diagnostic','TypeCheckResult','parse_type','erase_types','RuntimeOptions','ExecutionResult','PeaRuntimeError','PeaPermissionError',
 'PeaResourceLimitError','to_pea','from_pea','__version__']
@@ -37,3 +37,6 @@ from .specification import SPEC_VERSION,verify_spec
 from .stdlib import STDLIB_VERSION,MODULES,StdModuleSpec,stdlib_manifest,build_standard_library
 
 from .type_system import GenericFunctionContract,ProtocolContract,substitute_type,infer_generic_bindings,parse_generic_functions,parse_protocols,protocol_conforms,option_type,result_type,future_type,analyze_project
+
+from .resource_limits import ResourceLimits,ResourceUsage,ResourceBudget,ResourceLimitExceeded,estimated_size
+from .structured_concurrency import CancellationScope,PeaTask,TaskGroup,gather_structured

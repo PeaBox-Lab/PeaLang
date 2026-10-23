@@ -1,4 +1,6 @@
 # Changelog
+## 0.37.0 - 2026-10-23
+- Added complete resource limit accounting and structured concurrency with cancellation propagation.
 ## 0.36.0 - 2026-10-23
 - Added generic contracts/substitution/inference, protocols, project-wide contract analysis, and Result/Option/Future semantics foundation.
 ## 0.35.0 - 2026-10-23

@@ -5,6 +5,7 @@ from dataclasses import dataclass
 from .vm import VirtualMachine,AsyncSuspension,VMFunction,Frame,VMError
 from .compiler import compile_source_to_bytecode
 from .embedding import RuntimeOptions,to_pea,from_pea,PeaPermissionError
+from .structured_concurrency import TaskGroup,CancellationScope,gather_structured
 @dataclass
 class CancellationToken:
  cancelled:bool=False
