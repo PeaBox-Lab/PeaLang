@@ -1,4 +1,6 @@
 # Changelog
+## 0.53.0 - 2026-10-23
+- Added ML foundations: preprocessing, linear/logistic regression, evaluation, k-fold indices, persistence and pipelines.
 ## 0.52.0 - 2026-10-23
 - Added forecasting baselines, evaluation metrics, seasonal decomposition, grouped forecasts, chart-ready series and optional acceleration benchmarks.
 ## 0.51.0 - 2026-10-23

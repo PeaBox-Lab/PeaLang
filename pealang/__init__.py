@@ -8,7 +8,7 @@ from .runtime import execute, compile_source, Interpreter, PeaError
 from .type_system import TypeChecker,TypeRef,Diagnostic,TypeCheckResult,SemanticAnalyzer,SemanticResult,FunctionContract,parse_type,erase_types
 from .embedding import (PeaRuntime,PeaModule,RuntimeOptions,ExecutionResult,
     PeaRuntimeError,PeaPermissionError,PeaResourceLimitError,to_pea,from_pea)
-__version__='0.52.0'
+__version__='0.53.0'
 __all__=['BytecodeModule','CodeObject','Instruction','Op','Compiler','CompileError','compile_source_to_bytecode','VirtualMachine','VMError','AsyncSuspension','AsyncVirtualMachine','AsyncVMRuntime','AsyncVMModule','CancellationToken','VMRuntime','VMModule','disassemble','execute','compile_source','Interpreter','PeaError','PeaRuntime','PeaModule',
 'SemanticAnalyzer','SemanticResult','FunctionContract','TypeChecker','TypeRef','Diagnostic','TypeCheckResult','parse_type','erase_types','RuntimeOptions','ExecutionResult','PeaRuntimeError','PeaPermissionError',
 'PeaResourceLimitError','to_pea','from_pea','__version__']
@@ -71,3 +71,5 @@ from .analytics import mean,median,mode,quantile,variance,stddev,covariance,corr
 from .timeseries import parse_datetime,with_datetime,date_parts,resample,lag,lead,difference,pct_change,expanding,ewm,interpolate,grouped_describe,grouped_rolling
 
 from .forecasting import mae,mse,rmse,mape,evaluate,train_test_split,linear_trend,moving_average_forecast,exponential_smoothing,seasonal_decompose,chart_series,grouped_forecast,numpy_accelerated_mean,ForecastBenchmark,benchmark_forecast
+
+from .ml import StandardScaler,MinMaxScaler,impute,one_hot_encode,LinearRegression,LogisticRegression,regression_metrics,classification_metrics,kfold_indices,save_model,load_model,Pipeline

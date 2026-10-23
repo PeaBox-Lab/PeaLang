@@ -1,3 +1,3 @@
-# PeaLang 0.52.0 Release Notes
+# PeaLang 0.53.0 Release Notes
 
-0.52 adds transparent baseline forecasting: trend projection, recursive moving average and simple exponential smoothing. It also adds chronological train/test splits, MAE/MSE/RMSE/MAPE, additive seasonal decomposition, grouped forecasts, chart-ready outputs, optional NumPy mean acceleration and performance benchmarks.
+0.53 adds machine-learning foundations: seeded train/test splitting, standard and min-max scaling, imputation, one-hot encoding, linear regression, binary logistic regression, regression/classification metrics, k-fold indices, JSON model persistence, DataFrame predictions and basic preprocessing pipelines.
