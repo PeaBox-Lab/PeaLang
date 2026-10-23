@@ -12,3 +12,4 @@ def test_grammar_contains_async():
 def test_security_spec_present():
  from pealang.specification import spec_root
  assert 'unregistered host' in (spec_root()/'10-security.md').read_text()
+

@@ -55,3 +55,4 @@ class AsyncVMRuntime:
     if isinstance(result,AsyncSuspension):vm.stack.append(await result.awaitable);continue
     return result
   return await asyncio.wait_for(drive(),self.options.max_execution_ms/1000)
+

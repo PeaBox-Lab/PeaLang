@@ -19,3 +19,4 @@ def test_nested_generic_substitution():assert str(substitute_type(parse_type('Re
 def test_generic_conflict():
  import pytest
  with pytest.raises(ValueError):infer_generic_bindings(parse_type('Tuple<T,T>'),parse_type('Tuple<Int,String>'),{'T'})
+

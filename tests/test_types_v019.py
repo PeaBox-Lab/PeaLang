@@ -15,3 +15,4 @@ def test_typed_code_executes():
  out=[];execute('let x: Int = 3\nprint x',output=out.append);assert out==['3']
 def test_typed_function_executes():
  out=[];execute('function add(a: Int, b: Int) -> Int { return a+b }\nprint add(2,3)',output=out.append);assert out==['5']
+

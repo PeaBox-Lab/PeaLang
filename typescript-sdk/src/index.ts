@@ -11,3 +11,4 @@ export class PeaLangClient {
   load(req:LoadRequest){return this.request<RuntimeResponse>("/v1/modules/load",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(req)})}
   invoke<T=PeaValue>(req:InvokeRequest){return this.request<RuntimeResponse<T>>("/v1/invoke",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(req)})}
 }
+

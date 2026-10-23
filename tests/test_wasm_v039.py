@@ -14,3 +14,4 @@ def test_save(tmp_path):
  p=tmp_path/'a.wasm';artifact().save(p);assert p.read_bytes().startswith(b'\x00asm')
 def test_invalid():
  with pytest.raises(ValueError):inspect_wasm(b'bad')
+

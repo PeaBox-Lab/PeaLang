@@ -31,3 +31,4 @@ def validate_deprecation(feature,current_minor):
  dep=int(f.deprecated_since.split('.')[-1]);cur=int(str(current_minor).split('.')[-1])
  if cur-dep<2:raise PeaError(f'Feature {feature} removed before two-minor deprecation window')
  return True
+

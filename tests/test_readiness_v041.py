@@ -10,3 +10,4 @@ def test_performance_gate_pass():assert compare_benchmark({'median_ms':10},{'med
 def test_performance_gate_fail():assert not compare_benchmark({'median_ms':10},{'median_ms':12},10)['ok']
 def test_gate_can_pass_with_evidence():
  r=default_report();r.pilots[0]['status']='validated';r.pilots[1]['status']='validated';assert r.ok()
+

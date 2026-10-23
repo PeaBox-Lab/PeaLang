@@ -1,2 +1,3 @@
 function bonus(employee){ if employee.rating >= 4 { return employee.salary * 0.15 } return employee.salary * 0.08 }
 export bonus
+

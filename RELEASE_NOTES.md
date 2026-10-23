@@ -1,3 +1,5 @@
-# PeaLang 0.42.0 Release Notes
+# PeaLang 0.43.0 Release Notes
 
-0.42 starts PeaLang Data with a common schema/table model, lazy scans, connector registry, CSV/JSON/JSONL import/export and core transformations. Existing language/runtime features remain retained.
+0.43 evolves the 0.42 data foundation into a more practical in-process DataFrame engine. It adds joins, grouped aggregations, expression evaluation, null filling/dropping, pivot/unpivot, row-number windows and more LazyFrame operations while retaining connector and schema compatibility.
+
+Next roadmap milestone: 0.44 SQL and Databases.

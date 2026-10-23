@@ -6,3 +6,4 @@ PeaLang 0.29 adds a TypeScript client and React integration for the runtime side
 
 `@pealang/client` provides `PeaLangClient`, portable `PeaValue` types, compile/load/invoke calls, and health/readiness probes.
 
+

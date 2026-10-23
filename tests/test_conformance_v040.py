@@ -7,3 +7,4 @@ def test_fuzz_deterministic():
  r=fuzz_lexer_parser(100,1337);assert r['iterations']==100 and r['ok']
 def test_ids_unique():
  c=generated_cases();assert len({x.id for x in c})==500
+

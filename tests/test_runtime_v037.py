@@ -38,3 +38,4 @@ def test_taskgroup_result():
   async with TaskGroup() as g:t=g.spawn(asyncio.sleep(0,result=7))
   return await t.result()
  assert asyncio.run(run())==7
+

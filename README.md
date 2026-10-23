@@ -1,10 +1,10 @@
-# PeaLang 0.42.0
+# PeaLang 0.43.0
 
 PeaLang is an embeddable extension language for controlled rules, workflows, automation and host integration. Version 0.37 completes runtime resource accounting and structured concurrency while retaining the v0.35 standard library and v0.36 type-system foundation.
 
 ## Install
 ```bash
-python -m pip install pealang-0.42.0-py3-none-any.whl
+python -m pip install pealang-0.43.0-py3-none-any.whl
 pea --version
 ```
 
@@ -43,3 +43,7 @@ Run `pea readiness`. Candidate pilots and review packs are included, but the gat
 
 ## PeaLang Data 0.42
 A new embeddable data foundation provides schemas, DataFrame/LazyFrame processing, a connector registry, CSV/JSON/JSONL IO and core transforms. See `DATA_ROADMAP.md`.
+
+
+## PeaLang DataFrame Engine 0.43
+Use joins, grouped aggregations, expression-based columns and filters, null handling, pivot/unpivot, row-number windows and lazy pipelines. See `docs/DATAFRAME_ENGINE_043.md`.

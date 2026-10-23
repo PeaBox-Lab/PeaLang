@@ -1,4 +1,6 @@
 # Changelog
+## 0.43.0 - 2026-10-23
+- Added DataFrame Engine: joins, grouped aggregations, expressions, null handling, pivot/unpivot, window row numbers and expanded LazyFrame operations.
 ## 0.42.0 - 2026-10-23
 - Added PeaLang Data foundation: schema model, DataFrame/LazyFrame, connector registry, CSV/JSON/JSONL and core transforms.
 ## 0.41.0 - 2026-10-23
@@ -48,3 +50,4 @@
 - Added embedding, types, compiler/VM, capability safety, exceptions, imports, and VM DAP.
 ## 0.1.0 - 0.17.0
 - Established the language and tooling foundations.
+

@@ -50,3 +50,4 @@ class PublicTrustStore:
   for kid in key_ids:
    if kid not in self.data['keys'] or kid in self.data['revoked']:raise PeaError(f'Untrusted or revoked key: {kid}')
   self.data['registries'][name]={'url':url.rstrip('/'),'keys':list(key_ids)};self.save()
+
