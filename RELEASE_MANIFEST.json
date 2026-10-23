@@ -1,15 +1,15 @@
 {
-  "version": "0.43.0",
-  "previous_version": "0.42.0",
-  "retained_paths": 204,
+  "version": "0.44.0",
+  "previous_version": "0.43.0",
   "files_removed": [],
   "files_added": [
-    "PEALANG_AI_DEVELOPMENT_HANDOVER 0.43.md",
-    "docs/DATAFRAME_ENGINE_043.md",
-    "help/DATAFRAME.md",
-    "tests/test_data_v043.py"
+    "PEALANG_AI_DEVELOPMENT_HANDOVER 0.44.md",
+    "docs/SQL_DATABASES_044.md",
+    "help/SQL.md",
+    "pealang/sql.py",
+    "tests/test_sql_v044.py"
   ],
-  "pytest_tests_passed": 241,
+  "pytest_tests_passed": 250,
   "conformance_cases_passed": 500,
   "fuzz_iterations": 250,
   "status": "PASS"

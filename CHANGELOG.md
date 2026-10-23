@@ -1,4 +1,6 @@
 # Changelog
+## 0.44.0 - 2026-10-23
+- Added SQL/database layer with SQLite, optional database adapters, discovery, parameterized queries, transactions, batching and SQLite upsert.
 ## 0.43.0 - 2026-10-23
 - Added DataFrame Engine: joins, grouped aggregations, expressions, null handling, pivot/unpivot, window row numbers and expanded LazyFrame operations.
 ## 0.42.0 - 2026-10-23
