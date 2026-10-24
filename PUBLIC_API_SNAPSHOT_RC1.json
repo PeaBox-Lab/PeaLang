@@ -1,0 +1,3107 @@
+{
+  "policy_version": "1",
+  "symbols": [
+    {
+      "module": "pealang.agents",
+      "name": "ToolSpec",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.agents",
+      "name": "ToolRegistry",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.agents",
+      "name": "AgentRuntime",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.ai",
+      "name": "AIConfig",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.ai",
+      "name": "AIService",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.ai",
+      "name": "validate_schema",
+      "kind": "function",
+      "signature": "(data,schema)"
+    },
+    {
+      "module": "pealang.ai",
+      "name": "build_ai_namespace",
+      "kind": "function",
+      "signature": "()"
+    },
+    {
+      "module": "pealang.analytics",
+      "name": "mean",
+      "kind": "function",
+      "signature": "(values)"
+    },
+    {
+      "module": "pealang.analytics",
+      "name": "median",
+      "kind": "function",
+      "signature": "(values)"
+    },
+    {
+      "module": "pealang.analytics",
+      "name": "mode",
+      "kind": "function",
+      "signature": "(values)"
+    },
+    {
+      "module": "pealang.analytics",
+      "name": "quantile",
+      "kind": "function",
+      "signature": "(values,q)"
+    },
+    {
+      "module": "pealang.analytics",
+      "name": "variance",
+      "kind": "function",
+      "signature": "(values,sample=?)"
+    },
+    {
+      "module": "pealang.analytics",
+      "name": "stddev",
+      "kind": "function",
+      "signature": "(values,sample=?)"
+    },
+    {
+      "module": "pealang.analytics",
+      "name": "covariance",
+      "kind": "function",
+      "signature": "(x,y,sample=?)"
+    },
+    {
+      "module": "pealang.analytics",
+      "name": "correlation",
+      "kind": "function",
+      "signature": "(x,y)"
+    },
+    {
+      "module": "pealang.analytics",
+      "name": "describe",
+      "kind": "function",
+      "signature": "(frame,columns=?,percentiles=?)"
+    },
+    {
+      "module": "pealang.analytics",
+      "name": "frequencies",
+      "kind": "function",
+      "signature": "(frame,column,normalize=?)"
+    },
+    {
+      "module": "pealang.analytics",
+      "name": "crosstab",
+      "kind": "function",
+      "signature": "(frame,row,column,normalize=?)"
+    },
+    {
+      "module": "pealang.analytics",
+      "name": "rank",
+      "kind": "function",
+      "signature": "(frame,column,descending=?,method=?,name=?)"
+    },
+    {
+      "module": "pealang.analytics",
+      "name": "cumulative",
+      "kind": "function",
+      "signature": "(frame,column,op=?,name=?)"
+    },
+    {
+      "module": "pealang.analytics",
+      "name": "rolling",
+      "kind": "function",
+      "signature": "(frame,column,window,op=?,name=?,min_periods=?)"
+    },
+    {
+      "module": "pealang.analytics",
+      "name": "outliers_iqr",
+      "kind": "function",
+      "signature": "(frame,column,factor=?)"
+    },
+    {
+      "module": "pealang.analytics",
+      "name": "profile",
+      "kind": "function",
+      "signature": "(frame)"
+    },
+    {
+      "module": "pealang.analytics",
+      "name": "correlation_matrix",
+      "kind": "function",
+      "signature": "(frame,columns=?)"
+    },
+    {
+      "module": "pealang.ast_nodes",
+      "name": "Node",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.ast_nodes",
+      "name": "Program",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.ast_nodes",
+      "name": "Stmt",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.ast_nodes",
+      "name": "Expr",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.ast_nodes",
+      "name": "VarDecl",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.ast_nodes",
+      "name": "Assign",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.ast_nodes",
+      "name": "PrintStmt",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.ast_nodes",
+      "name": "ExprStmt",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.ast_nodes",
+      "name": "IfStmt",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.ast_nodes",
+      "name": "WhileStmt",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.ast_nodes",
+      "name": "ForStmt",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.ast_nodes",
+      "name": "FunctionStmt",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.ast_nodes",
+      "name": "ReturnStmt",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.ast_nodes",
+      "name": "BreakStmt",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.ast_nodes",
+      "name": "ContinueStmt",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.ast_nodes",
+      "name": "ImportStmt",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.ast_nodes",
+      "name": "Literal",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.ast_nodes",
+      "name": "Variable",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.ast_nodes",
+      "name": "ListExpr",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.ast_nodes",
+      "name": "DictExpr",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.ast_nodes",
+      "name": "Unary",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.ast_nodes",
+      "name": "Binary",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.ast_nodes",
+      "name": "Index",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.ast_nodes",
+      "name": "Property",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.ast_nodes",
+      "name": "Call",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.ast_nodes",
+      "name": "InterpolatedString",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.ast_nodes",
+      "name": "AssertStmt",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.ast_nodes",
+      "name": "ParallelExpr",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.ast_nodes",
+      "name": "TryStmt",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.ast_nodes",
+      "name": "ThrowStmt",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.ast_nodes",
+      "name": "Param",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.ast_nodes",
+      "name": "ExportStmt",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.ast_nodes",
+      "name": "AwaitExpr",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.async_vm",
+      "name": "CancellationToken",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.async_vm",
+      "name": "AsyncVirtualMachine",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.async_vm",
+      "name": "AsyncVMModule",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.async_vm",
+      "name": "AsyncVMRuntime",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.benchmark",
+      "name": "benchmark_source",
+      "kind": "function",
+      "signature": "(source,iterations=?,source_name=?)"
+    },
+    {
+      "module": "pealang.browser_profile",
+      "name": "validate_browser_permissions",
+      "kind": "function",
+      "signature": "(permissions)"
+    },
+    {
+      "module": "pealang.browser_profile",
+      "name": "validate_ui_schema",
+      "kind": "function",
+      "signature": "(node,depth=?)"
+    },
+    {
+      "module": "pealang.bytecode",
+      "name": "Op",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.bytecode",
+      "name": "Instruction",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.bytecode",
+      "name": "CodeObject",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.bytecode",
+      "name": "BytecodeModule",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.cli",
+      "name": "repl",
+      "kind": "function",
+      "signature": "()"
+    },
+    {
+      "module": "pealang.cli",
+      "name": "run_file",
+      "kind": "function",
+      "signature": "(path,allow_process=?)"
+    },
+    {
+      "module": "pealang.cli",
+      "name": "main",
+      "kind": "function",
+      "signature": "(argv=?)"
+    },
+    {
+      "module": "pealang.cloud_connectors",
+      "name": "ODataError",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.cloud_connectors",
+      "name": "SFTPError",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.cloud_connectors",
+      "name": "ODataQuery",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.cloud_connectors",
+      "name": "ODataConnector",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.cloud_connectors",
+      "name": "SFTPConfig",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.cloud_connectors",
+      "name": "SFTPBackend",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.cloud_connectors",
+      "name": "ParamikoSFTPBackend",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.cloud_connectors",
+      "name": "SFTPConnector",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.cloud_connectors",
+      "name": "odata",
+      "kind": "function",
+      "signature": "(base_url,headers=?)"
+    },
+    {
+      "module": "pealang.cloud_connectors",
+      "name": "sftp",
+      "kind": "function",
+      "signature": "(host)"
+    },
+    {
+      "module": "pealang.compatibility",
+      "name": "Stability",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.compatibility",
+      "name": "Feature",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.compatibility",
+      "name": "feature_status",
+      "kind": "function",
+      "signature": "(name)"
+    },
+    {
+      "module": "pealang.compatibility",
+      "name": "stable_features",
+      "kind": "function",
+      "signature": "()"
+    },
+    {
+      "module": "pealang.compatibility",
+      "name": "validate_deprecation",
+      "kind": "function",
+      "signature": "(feature,current_minor)"
+    },
+    {
+      "module": "pealang.compiler",
+      "name": "CompileError",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.compiler",
+      "name": "Compiler",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.compiler",
+      "name": "compile_source_to_bytecode",
+      "kind": "function",
+      "signature": "(source,source_name=?)"
+    },
+    {
+      "module": "pealang.conformance",
+      "name": "ConformanceCase",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.conformance",
+      "name": "generated_cases",
+      "kind": "function",
+      "signature": "(count=?)"
+    },
+    {
+      "module": "pealang.conformance",
+      "name": "differential",
+      "kind": "function",
+      "signature": "(source)"
+    },
+    {
+      "module": "pealang.conformance",
+      "name": "run_conformance",
+      "kind": "function",
+      "signature": "(count=?)"
+    },
+    {
+      "module": "pealang.conformance",
+      "name": "fuzz_lexer_parser",
+      "kind": "function",
+      "signature": "(iterations=?,seed=?)"
+    },
+    {
+      "module": "pealang.conformance",
+      "name": "conformance_report",
+      "kind": "function",
+      "signature": "()"
+    },
+    {
+      "module": "pealang.connector_runtime",
+      "name": "TokenProvider",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.connector_runtime",
+      "name": "StaticTokenProvider",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.connector_runtime",
+      "name": "CallableTokenProvider",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.connector_runtime",
+      "name": "CachedTokenProvider",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.connector_runtime",
+      "name": "ConnectorProfile",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.connector_runtime",
+      "name": "HealthResult",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.connector_runtime",
+      "name": "health_check",
+      "kind": "function",
+      "signature": "(name,probe,clock=?)"
+    },
+    {
+      "module": "pealang.connector_runtime",
+      "name": "CertificationMatrix",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.connector_runtime",
+      "name": "certify_matrix",
+      "kind": "function",
+      "signature": "(connector,matrix=?)"
+    },
+    {
+      "module": "pealang.connectors",
+      "name": "ConnectorError",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.connectors",
+      "name": "AuthenticationError",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.connectors",
+      "name": "RateLimitError",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.connectors",
+      "name": "ResponseError",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.connectors",
+      "name": "ConnectorConfig",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.connectors",
+      "name": "ConnectorResponse",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.connectors",
+      "name": "Transport",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.connectors",
+      "name": "UrllibTransport",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.connectors",
+      "name": "BaseConnector",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.connectors",
+      "name": "RESTConnector",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.connectors",
+      "name": "GraphQLConnector",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.connectors",
+      "name": "ConnectorRegistry",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.connectors",
+      "name": "connector",
+      "kind": "function",
+      "signature": "(name,base_url,headers=?)"
+    },
+    {
+      "module": "pealang.connectors",
+      "name": "bearer",
+      "kind": "function",
+      "signature": "(token)"
+    },
+    {
+      "module": "pealang.connectors",
+      "name": "api_key",
+      "kind": "function",
+      "signature": "(name,value)"
+    },
+    {
+      "module": "pealang.dap",
+      "name": "read_message",
+      "kind": "function",
+      "signature": "(inp)"
+    },
+    {
+      "module": "pealang.dap",
+      "name": "write_message",
+      "kind": "function",
+      "signature": "(out,obj)"
+    },
+    {
+      "module": "pealang.dap",
+      "name": "serve",
+      "kind": "function",
+      "signature": "(inp=?,out=?)"
+    },
+    {
+      "module": "pealang.dap",
+      "name": "main",
+      "kind": "function",
+      "signature": "()"
+    },
+    {
+      "module": "pealang.data",
+      "name": "DataType",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.data",
+      "name": "Field",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.data",
+      "name": "Schema",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.data",
+      "name": "infer_type",
+      "kind": "function",
+      "signature": "(v)"
+    },
+    {
+      "module": "pealang.data",
+      "name": "infer_schema",
+      "kind": "function",
+      "signature": "(rows)"
+    },
+    {
+      "module": "pealang.data",
+      "name": "DataFrame",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.data",
+      "name": "LazyFrame",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.data",
+      "name": "ConnectorSpec",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.data",
+      "name": "ConnectorRegistry",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.data",
+      "name": "parse_uri",
+      "kind": "function",
+      "signature": "(uri)"
+    },
+    {
+      "module": "pealang.data",
+      "name": "read",
+      "kind": "function",
+      "signature": "(uri)"
+    },
+    {
+      "module": "pealang.data",
+      "name": "write",
+      "kind": "function",
+      "signature": "(data,uri)"
+    },
+    {
+      "module": "pealang.data",
+      "name": "scan",
+      "kind": "function",
+      "signature": "(uri)"
+    },
+    {
+      "module": "pealang.data",
+      "name": "register_connector",
+      "kind": "function",
+      "signature": "(scheme,read_fn,write_fn=?,capabilities=?)"
+    },
+    {
+      "module": "pealang.data",
+      "name": "Expr",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.data",
+      "name": "col",
+      "kind": "function",
+      "signature": "(name)"
+    },
+    {
+      "module": "pealang.data",
+      "name": "lit",
+      "kind": "function",
+      "signature": "(value)"
+    },
+    {
+      "module": "pealang.data",
+      "name": "coalesce",
+      "kind": "function",
+      "signature": "()"
+    },
+    {
+      "module": "pealang.data",
+      "name": "GroupedDataFrame",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.data",
+      "name": "LazyGroupedFrame",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.debugger",
+      "name": "DebugPause",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.debugger",
+      "name": "Breakpoint",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.debugger",
+      "name": "DebugSession",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.disassembler",
+      "name": "disassemble",
+      "kind": "function",
+      "signature": "(module)"
+    },
+    {
+      "module": "pealang.distributed_serving",
+      "name": "DistributedBackend",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.distributed_serving",
+      "name": "MemoryBackend",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.distributed_serving",
+      "name": "RedisBackend",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.distributed_serving",
+      "name": "DistributedRateLimiter",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.distributed_serving",
+      "name": "SharedDeploymentState",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.distributed_serving",
+      "name": "LatencySummary",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.distributed_serving",
+      "name": "latency_summary",
+      "kind": "function",
+      "signature": "(values)"
+    },
+    {
+      "module": "pealang.distributed_serving",
+      "name": "load_test",
+      "kind": "function",
+      "signature": "(call,requests=?,concurrency=?,performance_gate=?)"
+    },
+    {
+      "module": "pealang.distributed_serving",
+      "name": "KubernetesConfig",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.distributed_serving",
+      "name": "kubernetes_manifests",
+      "kind": "function",
+      "signature": "(config=?)"
+    },
+    {
+      "module": "pealang.distributed_serving",
+      "name": "write_kubernetes_manifests",
+      "kind": "function",
+      "signature": "(directory,config=?)"
+    },
+    {
+      "module": "pealang.distributed_serving",
+      "name": "OpenTelemetryHooks",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.ed25519_signing",
+      "name": "Ed25519Envelope",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.ed25519_signing",
+      "name": "public_key_id",
+      "kind": "function",
+      "signature": "(raw)"
+    },
+    {
+      "module": "pealang.ed25519_signing",
+      "name": "generate_ed25519_keypair",
+      "kind": "function",
+      "signature": "(private_path,public_path=?)"
+    },
+    {
+      "module": "pealang.ed25519_signing",
+      "name": "public_key_bytes",
+      "kind": "function",
+      "signature": "(path)"
+    },
+    {
+      "module": "pealang.ed25519_signing",
+      "name": "sign_ed25519",
+      "kind": "function",
+      "signature": "(package,private_key,output=?,publisher=?)"
+    },
+    {
+      "module": "pealang.ed25519_signing",
+      "name": "verify_ed25519",
+      "kind": "function",
+      "signature": "(package,signature,public_key,revoked=?)"
+    },
+    {
+      "module": "pealang.ed25519_signing",
+      "name": "PublicTrustStore",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.embedding",
+      "name": "PeaRuntimeError",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.embedding",
+      "name": "PeaPermissionError",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.embedding",
+      "name": "PeaResourceLimitError",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.embedding",
+      "name": "RuntimeOptions",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.embedding",
+      "name": "ExecutionResult",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.embedding",
+      "name": "HostFunction",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.embedding",
+      "name": "to_pea",
+      "kind": "function",
+      "signature": "(value)"
+    },
+    {
+      "module": "pealang.embedding",
+      "name": "from_pea",
+      "kind": "function",
+      "signature": "(value,target_type=?)"
+    },
+    {
+      "module": "pealang.embedding",
+      "name": "PeaModule",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.embedding",
+      "name": "PeaRuntime",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.enterprise_connectors",
+      "name": "SecretError",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.enterprise_connectors",
+      "name": "SecretProvider",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.enterprise_connectors",
+      "name": "EnvironmentSecrets",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.enterprise_connectors",
+      "name": "MappingSecrets",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.enterprise_connectors",
+      "name": "AzureKeyVaultSecrets",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.enterprise_connectors",
+      "name": "AWSSecretsManager",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.enterprise_connectors",
+      "name": "SecretRef",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.enterprise_connectors",
+      "name": "SecretRegistry",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.enterprise_connectors",
+      "name": "ConnectorCapability",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.enterprise_connectors",
+      "name": "CertificationResult",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.enterprise_connectors",
+      "name": "certify",
+      "kind": "function",
+      "signature": "(name,connector,capability)"
+    },
+    {
+      "module": "pealang.enterprise_connectors",
+      "name": "MicrosoftGraphConnector",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.enterprise_connectors",
+      "name": "SharePointConnector",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.enterprise_connectors",
+      "name": "microsoft_graph",
+      "kind": "function",
+      "signature": "(token=?)"
+    },
+    {
+      "module": "pealang.enterprise_connectors",
+      "name": "sharepoint",
+      "kind": "function",
+      "signature": "(token=?)"
+    },
+    {
+      "module": "pealang.environment",
+      "name": "Env",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.errors",
+      "name": "SourceSpan",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.errors",
+      "name": "PeaError",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.fastapi",
+      "name": "ExtensionStatus",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.fastapi",
+      "name": "RouteSpec",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.fastapi",
+      "name": "PeaExtensionRegistry",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.fastapi",
+      "name": "map_exception",
+      "kind": "function",
+      "signature": "(exc)"
+    },
+    {
+      "module": "pealang.fastapi",
+      "name": "PeaRouter",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.fastapi",
+      "name": "create_validation_dependency",
+      "kind": "function",
+      "signature": "(registry,extension,function)"
+    },
+    {
+      "module": "pealang.fastapi",
+      "name": "install_exception_handlers",
+      "kind": "function",
+      "signature": "(app)"
+    },
+    {
+      "module": "pealang.forecasting",
+      "name": "mae",
+      "kind": "function",
+      "signature": "(actual,predicted)"
+    },
+    {
+      "module": "pealang.forecasting",
+      "name": "mse",
+      "kind": "function",
+      "signature": "(actual,predicted)"
+    },
+    {
+      "module": "pealang.forecasting",
+      "name": "rmse",
+      "kind": "function",
+      "signature": "(actual,predicted)"
+    },
+    {
+      "module": "pealang.forecasting",
+      "name": "mape",
+      "kind": "function",
+      "signature": "(actual,predicted)"
+    },
+    {
+      "module": "pealang.forecasting",
+      "name": "evaluate",
+      "kind": "function",
+      "signature": "(actual,predicted)"
+    },
+    {
+      "module": "pealang.forecasting",
+      "name": "train_test_split",
+      "kind": "function",
+      "signature": "(frame,test_size=?)"
+    },
+    {
+      "module": "pealang.forecasting",
+      "name": "linear_trend",
+      "kind": "function",
+      "signature": "(values,periods,confidence=?)"
+    },
+    {
+      "module": "pealang.forecasting",
+      "name": "moving_average_forecast",
+      "kind": "function",
+      "signature": "(values,periods,window=?)"
+    },
+    {
+      "module": "pealang.forecasting",
+      "name": "exponential_smoothing",
+      "kind": "function",
+      "signature": "(values,periods,alpha=?)"
+    },
+    {
+      "module": "pealang.forecasting",
+      "name": "seasonal_decompose",
+      "kind": "function",
+      "signature": "(values,period)"
+    },
+    {
+      "module": "pealang.forecasting",
+      "name": "chart_series",
+      "kind": "function",
+      "signature": "(frame,x,y,name=?)"
+    },
+    {
+      "module": "pealang.forecasting",
+      "name": "grouped_forecast",
+      "kind": "function",
+      "signature": "(frame,by,value,periods,method=?)"
+    },
+    {
+      "module": "pealang.forecasting",
+      "name": "numpy_accelerated_mean",
+      "kind": "function",
+      "signature": "(values)"
+    },
+    {
+      "module": "pealang.forecasting",
+      "name": "ForecastBenchmark",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.forecasting",
+      "name": "benchmark_forecast",
+      "kind": "function",
+      "signature": "(values,iterations=?)"
+    },
+    {
+      "module": "pealang.interpreter",
+      "name": "ReturnSignal",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.interpreter",
+      "name": "BreakSignal",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.interpreter",
+      "name": "ContinueSignal",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.interpreter",
+      "name": "UserFunction",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.interpreter",
+      "name": "Interpreter",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.kubernetes_security",
+      "name": "SecureKubernetesConfig",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.kubernetes_security",
+      "name": "secure_kubernetes_manifests",
+      "kind": "function",
+      "signature": "(c=?)"
+    },
+    {
+      "module": "pealang.kubernetes_security",
+      "name": "to_yaml",
+      "kind": "function",
+      "signature": "(value,indent=?)"
+    },
+    {
+      "module": "pealang.kubernetes_security",
+      "name": "write_secure_manifests",
+      "kind": "function",
+      "signature": "(directory,config=?,format=?)"
+    },
+    {
+      "module": "pealang.kubernetes_security",
+      "name": "validate_manifests",
+      "kind": "function",
+      "signature": "(documents)"
+    },
+    {
+      "module": "pealang.kubernetes_security",
+      "name": "DrainController",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.kubernetes_security",
+      "name": "CompatibilityCase",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.kubernetes_security",
+      "name": "rc_compatibility_matrix",
+      "kind": "function",
+      "signature": "()"
+    },
+    {
+      "module": "pealang.kubernetes_security",
+      "name": "soak_test",
+      "kind": "function",
+      "signature": "(call,duration_seconds=?,interval_seconds=?)"
+    },
+    {
+      "module": "pealang.lexer",
+      "name": "Token",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.lexer",
+      "name": "Lexer",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.migration",
+      "name": "MigrationChange",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.migration",
+      "name": "migrate_text",
+      "kind": "function",
+      "signature": "(text,from_version,to_version)"
+    },
+    {
+      "module": "pealang.migration",
+      "name": "migrate_path",
+      "kind": "function",
+      "signature": "(path,from_version,to_version,write=?)"
+    },
+    {
+      "module": "pealang.ml",
+      "name": "train_test_split",
+      "kind": "function",
+      "signature": "(frame,test_size=?,shuffle=?,seed=?)"
+    },
+    {
+      "module": "pealang.ml",
+      "name": "StandardScaler",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.ml",
+      "name": "MinMaxScaler",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.ml",
+      "name": "impute",
+      "kind": "function",
+      "signature": "(frame,columns=?,strategy=?,fill_value=?)"
+    },
+    {
+      "module": "pealang.ml",
+      "name": "one_hot_encode",
+      "kind": "function",
+      "signature": "(frame,columns,drop_original=?)"
+    },
+    {
+      "module": "pealang.ml",
+      "name": "LinearRegression",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.ml",
+      "name": "LogisticRegression",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.ml",
+      "name": "regression_metrics",
+      "kind": "function",
+      "signature": "(actual,predicted)"
+    },
+    {
+      "module": "pealang.ml",
+      "name": "classification_metrics",
+      "kind": "function",
+      "signature": "(actual,predicted)"
+    },
+    {
+      "module": "pealang.ml",
+      "name": "kfold_indices",
+      "kind": "function",
+      "signature": "(n,splits=?,shuffle=?,seed=?)"
+    },
+    {
+      "module": "pealang.ml",
+      "name": "save_model",
+      "kind": "function",
+      "signature": "(model,path)"
+    },
+    {
+      "module": "pealang.ml",
+      "name": "load_model",
+      "kind": "function",
+      "signature": "(path)"
+    },
+    {
+      "module": "pealang.ml",
+      "name": "Pipeline",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.ml",
+      "name": "LabelEncoder",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.ml",
+      "name": "stratified_split",
+      "kind": "function",
+      "signature": "(frame,target,test_size=?,seed=?)"
+    },
+    {
+      "module": "pealang.ml",
+      "name": "log_loss",
+      "kind": "function",
+      "signature": "(actual,probabilities,eps=?)"
+    },
+    {
+      "module": "pealang.ml",
+      "name": "roc_auc",
+      "kind": "function",
+      "signature": "(actual,scores)"
+    },
+    {
+      "module": "pealang.ml",
+      "name": "RidgeRegression",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.ml",
+      "name": "LassoRegression",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.ml",
+      "name": "MulticlassLogisticRegression",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.ml",
+      "name": "cross_validate",
+      "kind": "function",
+      "signature": "(model_factory,frame,features,target,splits=?,task=?,shuffle=?,seed=?,fit_options=?)"
+    },
+    {
+      "module": "pealang.ml",
+      "name": "grid_search",
+      "kind": "function",
+      "signature": "(model_factory,frame,features,target,param_grid,task=?,splits=?,metric=?)"
+    },
+    {
+      "module": "pealang.ml",
+      "name": "coefficient_report",
+      "kind": "function",
+      "signature": "(model)"
+    },
+    {
+      "module": "pealang.ml",
+      "name": "prediction_schema",
+      "kind": "function",
+      "signature": "(model)"
+    },
+    {
+      "module": "pealang.ml",
+      "name": "validate_prediction_schema",
+      "kind": "function",
+      "signature": "(model,frame)"
+    },
+    {
+      "module": "pealang.ml",
+      "name": "model_card",
+      "kind": "function",
+      "signature": "(model,name,metrics=?,limitations=?,intended_use=?)"
+    },
+    {
+      "module": "pealang.ml",
+      "name": "reproducibility_manifest",
+      "kind": "function",
+      "signature": "(frame,features,target,seed=?,parameters=?)"
+    },
+    {
+      "module": "pealang.ml",
+      "name": "ProductionPipeline",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.mlops",
+      "name": "create_model_bundle",
+      "kind": "function",
+      "signature": "(model,path,metadata=?,model_id=?,version=?)"
+    },
+    {
+      "module": "pealang.mlops",
+      "name": "load_model_bundle",
+      "kind": "function",
+      "signature": "(path)"
+    },
+    {
+      "module": "pealang.mlops",
+      "name": "batch_predict",
+      "kind": "function",
+      "signature": "(model,frame,batch_size=?,name=?)"
+    },
+    {
+      "module": "pealang.mlops",
+      "name": "PredictionAudit",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.mlops",
+      "name": "audited_predict",
+      "kind": "function",
+      "signature": "(model,frame,model_id=?,model_version=?,name=?)"
+    },
+    {
+      "module": "pealang.mlops",
+      "name": "population_stability_index",
+      "kind": "function",
+      "signature": "(reference,current,bins=?)"
+    },
+    {
+      "module": "pealang.mlops",
+      "name": "categorical_drift",
+      "kind": "function",
+      "signature": "(reference,current)"
+    },
+    {
+      "module": "pealang.mlops",
+      "name": "prediction_drift",
+      "kind": "function",
+      "signature": "(reference,current)"
+    },
+    {
+      "module": "pealang.mlops",
+      "name": "group_fairness",
+      "kind": "function",
+      "signature": "(actual,predicted,groups)"
+    },
+    {
+      "module": "pealang.mlops",
+      "name": "optimize_threshold",
+      "kind": "function",
+      "signature": "(actual,probabilities,metric=?,steps=?)"
+    },
+    {
+      "module": "pealang.mlops",
+      "name": "PlattCalibrator",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.mlops",
+      "name": "RegistryEntry",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.mlops",
+      "name": "ModelRegistry",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.mlops",
+      "name": "compatibility_report",
+      "kind": "function",
+      "signature": "(training_schema,serving_frame)"
+    },
+    {
+      "module": "pealang.mlops",
+      "name": "inference_benchmark",
+      "kind": "function",
+      "signature": "(model,frame,iterations=?)"
+    },
+    {
+      "module": "pealang.mlops",
+      "name": "create_fastapi_app",
+      "kind": "function",
+      "signature": "(model,name=?)"
+    },
+    {
+      "module": "pealang.mlops_portable",
+      "name": "save_pipeline",
+      "kind": "function",
+      "signature": "(pipeline,path,metadata=?)"
+    },
+    {
+      "module": "pealang.mlops_portable",
+      "name": "load_pipeline",
+      "kind": "function",
+      "signature": "(path)"
+    },
+    {
+      "module": "pealang.mlops_portable",
+      "name": "SQLiteMonitoringStore",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.mlops_portable",
+      "name": "load_alert_policy",
+      "kind": "function",
+      "signature": "(path)"
+    },
+    {
+      "module": "pealang.mlops_portable",
+      "name": "deployment_manifest",
+      "kind": "function",
+      "signature": "(model_id,version,bundle_path,environment=?,replicas=?,resources=?)"
+    },
+    {
+      "module": "pealang.mlops_portable",
+      "name": "cli",
+      "kind": "function",
+      "signature": "(argv=?)"
+    },
+    {
+      "module": "pealang.mlops_portable",
+      "name": "serving_cli",
+      "kind": "function",
+      "signature": "(argv=?)"
+    },
+    {
+      "module": "pealang.mlops_secure",
+      "name": "sign_bundle",
+      "kind": "function",
+      "signature": "(path,private_key)"
+    },
+    {
+      "module": "pealang.mlops_secure",
+      "name": "verify_bundle_signature",
+      "kind": "function",
+      "signature": "(path,public_key)"
+    },
+    {
+      "module": "pealang.mlops_secure",
+      "name": "encrypt_artifact",
+      "kind": "function",
+      "signature": "(source,target,key)"
+    },
+    {
+      "module": "pealang.mlops_secure",
+      "name": "decrypt_artifact",
+      "kind": "function",
+      "signature": "(source,target,key)"
+    },
+    {
+      "module": "pealang.mlops_secure",
+      "name": "MonitoringEvent",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.mlops_secure",
+      "name": "MonitoringStore",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.mlops_secure",
+      "name": "AlertRule",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.mlops_secure",
+      "name": "Alert",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.mlops_secure",
+      "name": "evaluate_alerts",
+      "kind": "function",
+      "signature": "(model_id,events,rules)"
+    },
+    {
+      "module": "pealang.mlops_secure",
+      "name": "acknowledge",
+      "kind": "function",
+      "signature": "(alert,user)"
+    },
+    {
+      "module": "pealang.mlops_secure",
+      "name": "PromotionPolicy",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.mlops_secure",
+      "name": "can_promote",
+      "kind": "function",
+      "signature": "(entry,approvers,metrics,policy=?)"
+    },
+    {
+      "module": "pealang.mlops_secure",
+      "name": "DeploymentPlan",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.mlops_secure",
+      "name": "route_variant",
+      "kind": "function",
+      "signature": "(plan,key)"
+    },
+    {
+      "module": "pealang.mlops_secure",
+      "name": "compare_variants",
+      "kind": "function",
+      "signature": "(champion_metrics,challenger_metrics,metric=?,higher_is_better=?)"
+    },
+    {
+      "module": "pealang.mlops_secure",
+      "name": "should_rollback",
+      "kind": "function",
+      "signature": "(alerts,critical_severities=?)"
+    },
+    {
+      "module": "pealang.mlops_secure",
+      "name": "structured_inference_log",
+      "kind": "function",
+      "signature": "(model_id,version,input_count,latency_ms,status=?,request_id=?)"
+    },
+    {
+      "module": "pealang.native_testing",
+      "name": "NativeTestResult",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.native_testing",
+      "name": "split_tests",
+      "kind": "function",
+      "signature": "(source)"
+    },
+    {
+      "module": "pealang.native_testing",
+      "name": "run_source_tests",
+      "kind": "function",
+      "signature": "(source,file=?,filter_text=?)"
+    },
+    {
+      "module": "pealang.native_testing",
+      "name": "run_paths",
+      "kind": "function",
+      "signature": "(paths,filter_text=?)"
+    },
+    {
+      "module": "pealang.native_testing",
+      "name": "coverage_summary",
+      "kind": "function",
+      "signature": "(paths,results)"
+    },
+    {
+      "module": "pealang.object_storage",
+      "name": "ObjectStorageError",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.object_storage",
+      "name": "ObjectInfo",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.object_storage",
+      "name": "ObjectStorageConnector",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.object_storage",
+      "name": "S3Connector",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.object_storage",
+      "name": "AzureBlobConnector",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.object_storage",
+      "name": "ADLSConnector",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.object_storage",
+      "name": "GCSConnector",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.object_storage",
+      "name": "s3",
+      "kind": "function",
+      "signature": "(bucket)"
+    },
+    {
+      "module": "pealang.object_storage",
+      "name": "azure_blob",
+      "kind": "function",
+      "signature": "(container)"
+    },
+    {
+      "module": "pealang.object_storage",
+      "name": "adls",
+      "kind": "function",
+      "signature": "(file_system)"
+    },
+    {
+      "module": "pealang.object_storage",
+      "name": "gcs",
+      "kind": "function",
+      "signature": "(bucket)"
+    },
+    {
+      "module": "pealang.observability",
+      "name": "TraceEvent",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.observability",
+      "name": "Observer",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.observability",
+      "name": "MemoryObserver",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.observability",
+      "name": "Profiler",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.observability",
+      "name": "Coverage",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.observability",
+      "name": "Instrumentation",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.package_manager",
+      "name": "Version",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.package_manager",
+      "name": "satisfies",
+      "kind": "function",
+      "signature": "(version,constraint)"
+    },
+    {
+      "module": "pealang.package_manager",
+      "name": "sha256_file",
+      "kind": "function",
+      "signature": "(path)"
+    },
+    {
+      "module": "pealang.package_manager",
+      "name": "load_pea_toml",
+      "kind": "function",
+      "signature": "(root=?)"
+    },
+    {
+      "module": "pealang.package_manager",
+      "name": "init_manifest",
+      "kind": "function",
+      "signature": "(root=?,name=?)"
+    },
+    {
+      "module": "pealang.package_manager",
+      "name": "dependency_entries",
+      "kind": "function",
+      "signature": "(data)"
+    },
+    {
+      "module": "pealang.package_manager",
+      "name": "resolve",
+      "kind": "function",
+      "signature": "(root=?)"
+    },
+    {
+      "module": "pealang.package_manager",
+      "name": "write_lock",
+      "kind": "function",
+      "signature": "(root=?)"
+    },
+    {
+      "module": "pealang.package_manager",
+      "name": "audit",
+      "kind": "function",
+      "signature": "(root=?)"
+    },
+    {
+      "module": "pealang.package_manager",
+      "name": "build_package",
+      "kind": "function",
+      "signature": "(root=?,output=?)"
+    },
+    {
+      "module": "pealang.package_manager",
+      "name": "install",
+      "kind": "function",
+      "signature": "(root=?)"
+    },
+    {
+      "module": "pealang.parser",
+      "name": "Parser",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.parser",
+      "name": "parse_source",
+      "kind": "function",
+      "signature": "(source,source_name=?)"
+    },
+    {
+      "module": "pealang.performance_gate",
+      "name": "RegressionGate",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.performance_gate",
+      "name": "compare_benchmark",
+      "kind": "function",
+      "signature": "(baseline,current,max_regression_pct=?,metric=?)"
+    },
+    {
+      "module": "pealang.performance_gate",
+      "name": "measure",
+      "kind": "function",
+      "signature": "(source,iterations=?)"
+    },
+    {
+      "module": "pealang.project",
+      "name": "load_manifest",
+      "kind": "function",
+      "signature": "(start=?)"
+    },
+    {
+      "module": "pealang.project",
+      "name": "init_project",
+      "kind": "function",
+      "signature": "(path=?,name=?)"
+    },
+    {
+      "module": "pealang.project",
+      "name": "add_dependency",
+      "kind": "function",
+      "signature": "(name,path,project_dir=?)"
+    },
+    {
+      "module": "pealang.project",
+      "name": "remove_dependency",
+      "kind": "function",
+      "signature": "(name,project_dir=?)"
+    },
+    {
+      "module": "pealang.project",
+      "name": "project_info",
+      "kind": "function",
+      "signature": "(start=?)"
+    },
+    {
+      "module": "pealang.project",
+      "name": "resolve_module",
+      "kind": "function",
+      "signature": "(spec,current_dir,project_root=?,dependencies=?)"
+    },
+    {
+      "module": "pealang.rc_stabilization",
+      "name": "PublicSymbol",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.rc_stabilization",
+      "name": "public_api_snapshot",
+      "kind": "function",
+      "signature": "(package_root)"
+    },
+    {
+      "module": "pealang.rc_stabilization",
+      "name": "compare_api_snapshots",
+      "kind": "function",
+      "signature": "(previous,current)"
+    },
+    {
+      "module": "pealang.rc_stabilization",
+      "name": "snapshot_digest",
+      "kind": "function",
+      "signature": "(snapshot)"
+    },
+    {
+      "module": "pealang.rc_stabilization",
+      "name": "Deprecation",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.rc_stabilization",
+      "name": "deprecated",
+      "kind": "function",
+      "signature": "(symbol,replacement=?,since=?,removal=?)"
+    },
+    {
+      "module": "pealang.rc_stabilization",
+      "name": "validate_deprecation_schedule",
+      "kind": "function",
+      "signature": "(entries,current=?)"
+    },
+    {
+      "module": "pealang.rc_stabilization",
+      "name": "IntegrationResult",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.rc_stabilization",
+      "name": "run_integration_matrix",
+      "kind": "function",
+      "signature": "(probes)"
+    },
+    {
+      "module": "pealang.rc_stabilization",
+      "name": "integration_summary",
+      "kind": "function",
+      "signature": "(results)"
+    },
+    {
+      "module": "pealang.rc_stabilization",
+      "name": "upgrade_compatibility",
+      "kind": "function",
+      "signature": "(previous_versions,current_version=?)"
+    },
+    {
+      "module": "pealang.rc_stabilization",
+      "name": "threat_model",
+      "kind": "function",
+      "signature": "()"
+    },
+    {
+      "module": "pealang.rc_stabilization",
+      "name": "migration_guide",
+      "kind": "function",
+      "signature": "(from_version=?,to_version=?)"
+    },
+    {
+      "module": "pealang.rc_stabilization",
+      "name": "rc_gate",
+      "kind": "function",
+      "signature": "(results)"
+    },
+    {
+      "module": "pealang.readiness",
+      "name": "Pilot",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.readiness",
+      "name": "PerformanceThresholds",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.readiness",
+      "name": "ReadinessReport",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.readiness",
+      "name": "default_report",
+      "kind": "function",
+      "signature": "()"
+    },
+    {
+      "module": "pealang.readiness",
+      "name": "save_report",
+      "kind": "function",
+      "signature": "(path,report=?)"
+    },
+    {
+      "module": "pealang.registry",
+      "name": "PackageCache",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.registry",
+      "name": "fetch_https",
+      "kind": "function",
+      "signature": "(url,timeout=?)"
+    },
+    {
+      "module": "pealang.registry",
+      "name": "verify_registry_index",
+      "kind": "function",
+      "signature": "(index_path,signature_path,public_key,revoked=?)"
+    },
+    {
+      "module": "pealang.registry",
+      "name": "install_verified",
+      "kind": "function",
+      "signature": "(package,signature,public_key,destination,source=?,revoked=?)"
+    },
+    {
+      "module": "pealang.registry",
+      "name": "remote_install",
+      "kind": "function",
+      "signature": "(package_url,signature_url,public_key,destination,cache,expected_sha256=?,offline=?,revoked=?)"
+    },
+    {
+      "module": "pealang.registry_auth",
+      "name": "registry_token",
+      "kind": "function",
+      "signature": "(name,env=?)"
+    },
+    {
+      "module": "pealang.registry_auth",
+      "name": "bearer_headers",
+      "kind": "function",
+      "signature": "(name,env=?)"
+    },
+    {
+      "module": "pealang.registry_index",
+      "name": "PackageRecord",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.registry_index",
+      "name": "RegistryIndex",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.registry_index",
+      "name": "build_index",
+      "kind": "function",
+      "signature": "(registry,sequence,records)"
+    },
+    {
+      "module": "pealang.registry_index",
+      "name": "validate_index",
+      "kind": "function",
+      "signature": "(index,expected_registry=?,last_sequence=?,now=?)"
+    },
+    {
+      "module": "pealang.registry_index",
+      "name": "NamespacePolicy",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.registry_index",
+      "name": "RegistryState",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.release_integrity",
+      "name": "sha256",
+      "kind": "function",
+      "signature": "(path)"
+    },
+    {
+      "module": "pealang.release_integrity",
+      "name": "inventory",
+      "kind": "function",
+      "signature": "(root)"
+    },
+    {
+      "module": "pealang.release_integrity",
+      "name": "compare",
+      "kind": "function",
+      "signature": "(previous,current)"
+    },
+    {
+      "module": "pealang.resource_limits",
+      "name": "ResourceLimitExceeded",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.resource_limits",
+      "name": "ResourceLimits",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.resource_limits",
+      "name": "ResourceUsage",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.resource_limits",
+      "name": "ResourceBudget",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.resource_limits",
+      "name": "estimated_size",
+      "kind": "function",
+      "signature": "(value,seen=?)"
+    },
+    {
+      "module": "pealang.runtime",
+      "name": "compile_source",
+      "kind": "function",
+      "signature": "(source,source_name=?)"
+    },
+    {
+      "module": "pealang.runtime",
+      "name": "execute",
+      "kind": "function",
+      "signature": "(source,output=?,interpreter=?,source_name=?,base_dir=?,allow_process=?,project_root=?,dependencies=?)"
+    },
+    {
+      "module": "pealang.runtime_http",
+      "name": "Handler",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.runtime_http",
+      "name": "serve",
+      "kind": "function",
+      "signature": "(host=?,port=?)"
+    },
+    {
+      "module": "pealang.runtime_service",
+      "name": "ServiceError",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.runtime_service",
+      "name": "RuntimeResponse",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.runtime_service",
+      "name": "RuntimeService",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.secure_packages",
+      "name": "safe_extract",
+      "kind": "function",
+      "signature": "(package,destination)"
+    },
+    {
+      "module": "pealang.secure_packages",
+      "name": "write_receipt",
+      "kind": "function",
+      "signature": "(destination,package,signature=?,key_id=?,source=?)"
+    },
+    {
+      "module": "pealang.secure_packages",
+      "name": "validate_remote_source",
+      "kind": "function",
+      "signature": "(url)"
+    },
+    {
+      "module": "pealang.secure_packages",
+      "name": "dependency_confusion_guard",
+      "kind": "function",
+      "signature": "(name,declared_source,registry_name)"
+    },
+    {
+      "module": "pealang.serving",
+      "name": "ServingConfig",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.serving",
+      "name": "AuthError",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.serving",
+      "name": "RequestLimitError",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.serving",
+      "name": "PipelineRuntime",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.serving",
+      "name": "SQLiteAuditStore",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.serving",
+      "name": "create_serving_app",
+      "kind": "function",
+      "signature": "(runtime)"
+    },
+    {
+      "module": "pealang.serving",
+      "name": "deploy_check",
+      "kind": "function",
+      "signature": "(manifest,pipeline_path)"
+    },
+    {
+      "module": "pealang.serving",
+      "name": "execute_deployment",
+      "kind": "function",
+      "signature": "(manifest_path)"
+    },
+    {
+      "module": "pealang.serving_resilience",
+      "name": "RateLimitExceeded",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.serving_resilience",
+      "name": "ConcurrencyLimitExceeded",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.serving_resilience",
+      "name": "ServingTimeout",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.serving_resilience",
+      "name": "ResilienceConfig",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.serving_resilience",
+      "name": "SlidingWindowRateLimiter",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.serving_resilience",
+      "name": "StructuredLogger",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.serving_resilience",
+      "name": "ResilientRuntime",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.serving_resilience",
+      "name": "verify_signed_pipeline",
+      "kind": "function",
+      "signature": "(path,public_key)"
+    },
+    {
+      "module": "pealang.serving_resilience",
+      "name": "load_encrypted_pipeline",
+      "kind": "function",
+      "signature": "(encrypted_path,key,temp_path)"
+    },
+    {
+      "module": "pealang.serving_resilience",
+      "name": "prune_audits",
+      "kind": "function",
+      "signature": "(sqlite_store,retention_days=?,now=?)"
+    },
+    {
+      "module": "pealang.serving_resilience",
+      "name": "TraceHooks",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.signing",
+      "name": "Signature",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.signing",
+      "name": "file_hash",
+      "kind": "function",
+      "signature": "(path)"
+    },
+    {
+      "module": "pealang.signing",
+      "name": "key_id",
+      "kind": "function",
+      "signature": "(secret)"
+    },
+    {
+      "module": "pealang.signing",
+      "name": "generate_key",
+      "kind": "function",
+      "signature": "(path)"
+    },
+    {
+      "module": "pealang.signing",
+      "name": "load_key",
+      "kind": "function",
+      "signature": "(path)"
+    },
+    {
+      "module": "pealang.signing",
+      "name": "sign_package",
+      "kind": "function",
+      "signature": "(package,key_path,output=?)"
+    },
+    {
+      "module": "pealang.signing",
+      "name": "verify_package",
+      "kind": "function",
+      "signature": "(package,signature,key_path)"
+    },
+    {
+      "module": "pealang.signing",
+      "name": "TrustStore",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.skills",
+      "name": "SkillRegistry",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.specification",
+      "name": "spec_root",
+      "kind": "function",
+      "signature": "()"
+    },
+    {
+      "module": "pealang.specification",
+      "name": "verify_spec",
+      "kind": "function",
+      "signature": "(root=?)"
+    },
+    {
+      "module": "pealang.sql",
+      "name": "DatabaseSpec",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.sql",
+      "name": "connect",
+      "kind": "function",
+      "signature": "(uri)"
+    },
+    {
+      "module": "pealang.sql",
+      "name": "Database",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.sql",
+      "name": "read_sql",
+      "kind": "function",
+      "signature": "(uri,sql,params=?)"
+    },
+    {
+      "module": "pealang.sql",
+      "name": "execute_sql",
+      "kind": "function",
+      "signature": "(uri,sql,params=?)"
+    },
+    {
+      "module": "pealang.stdlib",
+      "name": "Namespace",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.stdlib",
+      "name": "StdModuleSpec",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.stdlib",
+      "name": "stdlib_manifest",
+      "kind": "function",
+      "signature": "()"
+    },
+    {
+      "module": "pealang.stdlib",
+      "name": "build_standard_library",
+      "kind": "function",
+      "signature": "(allow_process=?,permissions=?)"
+    },
+    {
+      "module": "pealang.structured_concurrency",
+      "name": "CancellationScope",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.structured_concurrency",
+      "name": "PeaTask",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.structured_concurrency",
+      "name": "TaskGroup",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.structured_concurrency",
+      "name": "gather_structured",
+      "kind": "function",
+      "signature": "()"
+    },
+    {
+      "module": "pealang.supply_chain",
+      "name": "sha256_file",
+      "kind": "function",
+      "signature": "(path)"
+    },
+    {
+      "module": "pealang.supply_chain",
+      "name": "artifact_checksums",
+      "kind": "function",
+      "signature": "(paths)"
+    },
+    {
+      "module": "pealang.supply_chain",
+      "name": "write_checksums",
+      "kind": "function",
+      "signature": "(paths,output)"
+    },
+    {
+      "module": "pealang.supply_chain",
+      "name": "generate_sbom",
+      "kind": "function",
+      "signature": "(root,version=?)"
+    },
+    {
+      "module": "pealang.supply_chain",
+      "name": "dependency_inventory",
+      "kind": "function",
+      "signature": "(root)"
+    },
+    {
+      "module": "pealang.supply_chain",
+      "name": "build_provenance",
+      "kind": "function",
+      "signature": "(root,artifacts,version=?)"
+    },
+    {
+      "module": "pealang.supply_chain",
+      "name": "verify_wheel",
+      "kind": "function",
+      "signature": "(path,expected_version=?)"
+    },
+    {
+      "module": "pealang.supply_chain",
+      "name": "verify_source_archive",
+      "kind": "function",
+      "signature": "(path,expected_root=?)"
+    },
+    {
+      "module": "pealang.supply_chain",
+      "name": "migration_check",
+      "kind": "function",
+      "signature": "(previous,current)"
+    },
+    {
+      "module": "pealang.supply_chain",
+      "name": "reproducible_build_metadata",
+      "kind": "function",
+      "signature": "(version=?,source_date_epoch=?)"
+    },
+    {
+      "module": "pealang.supply_chain",
+      "name": "release_checklist",
+      "kind": "function",
+      "signature": "()"
+    },
+    {
+      "module": "pealang.supply_chain",
+      "name": "readiness_assessment",
+      "kind": "function",
+      "signature": "(results)"
+    },
+    {
+      "module": "pealang.supply_chain",
+      "name": "containerfile",
+      "kind": "function",
+      "signature": "(version=?)"
+    },
+    {
+      "module": "pealang.supply_chain",
+      "name": "ci_matrix",
+      "kind": "function",
+      "signature": "()"
+    },
+    {
+      "module": "pealang.timeseries",
+      "name": "parse_datetime",
+      "kind": "function",
+      "signature": "(value,formats=?)"
+    },
+    {
+      "module": "pealang.timeseries",
+      "name": "with_datetime",
+      "kind": "function",
+      "signature": "(frame,column,name=?,formats=?)"
+    },
+    {
+      "module": "pealang.timeseries",
+      "name": "date_parts",
+      "kind": "function",
+      "signature": "(frame,column,prefix=?)"
+    },
+    {
+      "module": "pealang.timeseries",
+      "name": "resample",
+      "kind": "function",
+      "signature": "(frame,time_column,freq,value_column=?,op=?,name=?)"
+    },
+    {
+      "module": "pealang.timeseries",
+      "name": "lag",
+      "kind": "function",
+      "signature": "(frame,column,periods=?,name=?,default=?)"
+    },
+    {
+      "module": "pealang.timeseries",
+      "name": "lead",
+      "kind": "function",
+      "signature": "(frame,column,periods=?,name=?,default=?)"
+    },
+    {
+      "module": "pealang.timeseries",
+      "name": "difference",
+      "kind": "function",
+      "signature": "(frame,column,periods=?,name=?)"
+    },
+    {
+      "module": "pealang.timeseries",
+      "name": "pct_change",
+      "kind": "function",
+      "signature": "(frame,column,periods=?,name=?)"
+    },
+    {
+      "module": "pealang.timeseries",
+      "name": "expanding",
+      "kind": "function",
+      "signature": "(frame,column,op=?,min_periods=?,name=?)"
+    },
+    {
+      "module": "pealang.timeseries",
+      "name": "ewm",
+      "kind": "function",
+      "signature": "(frame,column,alpha=?,span=?,name=?)"
+    },
+    {
+      "module": "pealang.timeseries",
+      "name": "interpolate",
+      "kind": "function",
+      "signature": "(frame,column,method=?,name=?)"
+    },
+    {
+      "module": "pealang.timeseries",
+      "name": "grouped_describe",
+      "kind": "function",
+      "signature": "(frame,by,columns=?)"
+    },
+    {
+      "module": "pealang.timeseries",
+      "name": "grouped_rolling",
+      "kind": "function",
+      "signature": "(frame,by,column,window,op=?,name=?)"
+    },
+    {
+      "module": "pealang.tooling",
+      "name": "Diagnostic",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.tooling",
+      "name": "format_source",
+      "kind": "function",
+      "signature": "(source)"
+    },
+    {
+      "module": "pealang.tooling",
+      "name": "format_file",
+      "kind": "function",
+      "signature": "(path,check=?)"
+    },
+    {
+      "module": "pealang.tooling",
+      "name": "Checker",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.tooling",
+      "name": "check_source",
+      "kind": "function",
+      "signature": "(source,source_name=?)"
+    },
+    {
+      "module": "pealang.tooling",
+      "name": "discover_pea",
+      "kind": "function",
+      "signature": "(paths)"
+    },
+    {
+      "module": "pealang.tooling",
+      "name": "generate_docs",
+      "kind": "function",
+      "signature": "(source,path=?)"
+    },
+    {
+      "module": "pealang.type_system",
+      "name": "TypeRef",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.type_system",
+      "name": "Diagnostic",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.type_system",
+      "name": "TypeCheckResult",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.type_system",
+      "name": "parse_type",
+      "kind": "function",
+      "signature": "(text)"
+    },
+    {
+      "module": "pealang.type_system",
+      "name": "split_top",
+      "kind": "function",
+      "signature": "(text,sep)"
+    },
+    {
+      "module": "pealang.type_system",
+      "name": "infer_literal",
+      "kind": "function",
+      "signature": "(text)"
+    },
+    {
+      "module": "pealang.type_system",
+      "name": "compatible",
+      "kind": "function",
+      "signature": "(expected,actual)"
+    },
+    {
+      "module": "pealang.type_system",
+      "name": "TypeChecker",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.type_system",
+      "name": "erase_types",
+      "kind": "function",
+      "signature": "(source)"
+    },
+    {
+      "module": "pealang.type_system",
+      "name": "FunctionContract",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.type_system",
+      "name": "SemanticResult",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.type_system",
+      "name": "SemanticAnalyzer",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.type_system",
+      "name": "GenericFunctionContract",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.type_system",
+      "name": "ProtocolContract",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.type_system",
+      "name": "substitute_type",
+      "kind": "function",
+      "signature": "(t,bindings)"
+    },
+    {
+      "module": "pealang.type_system",
+      "name": "infer_generic_bindings",
+      "kind": "function",
+      "signature": "(expected,actual,type_params,bindings=?)"
+    },
+    {
+      "module": "pealang.type_system",
+      "name": "parse_generic_functions",
+      "kind": "function",
+      "signature": "(source)"
+    },
+    {
+      "module": "pealang.type_system",
+      "name": "parse_protocols",
+      "kind": "function",
+      "signature": "(source)"
+    },
+    {
+      "module": "pealang.type_system",
+      "name": "protocol_conforms",
+      "kind": "function",
+      "signature": "(record_fields,protocol)"
+    },
+    {
+      "module": "pealang.type_system",
+      "name": "option_type",
+      "kind": "function",
+      "signature": "(t)"
+    },
+    {
+      "module": "pealang.type_system",
+      "name": "result_type",
+      "kind": "function",
+      "signature": "(ok,err)"
+    },
+    {
+      "module": "pealang.type_system",
+      "name": "future_type",
+      "kind": "function",
+      "signature": "(t)"
+    },
+    {
+      "module": "pealang.type_system",
+      "name": "analyze_project",
+      "kind": "function",
+      "signature": "(paths)"
+    },
+    {
+      "module": "pealang.vm",
+      "name": "VMError",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.vm",
+      "name": "AsyncSuspension",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.vm",
+      "name": "VMThrown",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.vm",
+      "name": "VMFunction",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.vm",
+      "name": "Handler",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.vm",
+      "name": "Frame",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.vm",
+      "name": "VirtualMachine",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.vm_dap",
+      "name": "read_message",
+      "kind": "function",
+      "signature": "(inp)"
+    },
+    {
+      "module": "pealang.vm_dap",
+      "name": "write_message",
+      "kind": "function",
+      "signature": "(out,obj)"
+    },
+    {
+      "module": "pealang.vm_dap",
+      "name": "serve",
+      "kind": "function",
+      "signature": "(inp=?,out=?)"
+    },
+    {
+      "module": "pealang.vm_dap",
+      "name": "main",
+      "kind": "function",
+      "signature": "()"
+    },
+    {
+      "module": "pealang.vm_embedding",
+      "name": "VMHostFunction",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.vm_embedding",
+      "name": "VMModule",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.vm_embedding",
+      "name": "VMRuntime",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.wasm",
+      "name": "WasmPolicy",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.wasm",
+      "name": "WasmArtifact",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.wasm",
+      "name": "compile_peac_to_wasm",
+      "kind": "function",
+      "signature": "(module,policy=?,exports=?,imports=?)"
+    },
+    {
+      "module": "pealang.wasm",
+      "name": "inspect_wasm",
+      "kind": "function",
+      "signature": "(value)"
+    },
+    {
+      "module": "pealang.wasm",
+      "name": "browser_loader_source",
+      "kind": "function",
+      "signature": "()"
+    }
+  ]
+}

@@ -1,0 +1,17 @@
+{
+  "from": "0.62.0",
+  "to": "0.63.0rc1",
+  "steps": [
+    "back up registry and monitoring databases",
+    "verify current bundles and checksums",
+    "install the RC wheel in an isolated environment",
+    "run API compatibility and migration checks",
+    "run connector and serving smoke tests",
+    "promote only after rollback validation"
+  ],
+  "rollback": [
+    "restore previous wheel",
+    "restore registry/monitoring backup if modified",
+    "redeploy previous serving manifest"
+  ]
+}

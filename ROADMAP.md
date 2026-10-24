@@ -1,0 +1,58 @@
+# PeaLang Revised Foundational Roadmap
+
+The original roadmap goal is not yet complete. The implementation has covered much of the VM, embedding and integration work, but foundational maturity still requires specification completion, standard-library stabilization, deeper type semantics, structured concurrency, complete resource accounting, native language testing, larger conformance coverage, migration tooling, cross-platform CI evidence and production pilots.
+
+## 0.34 - Specification and compatibility foundation - delivered
+- Normative specification directory and EBNF grammar
+- Feature stability registry
+- Compatibility/deprecation rules
+- Spec verification command
+
+## 0.35 - Standard library stabilization
+- `std.collections`, `std.string`, `std.math`, `std.datetime`, `std.json`, `std.csv`, `std.regex`, `std.file`, `std.path`, `std.http`, `std.crypto`, `std.logging`, `std.testing`, `std.concurrent`
+- Permission declarations on sensitive modules
+- Standard-library compatibility tests
+
+## 0.36 - Type system completion
+- Generic functions and substitution
+- Protocols/interfaces
+- Cross-module type checking
+- Exhaustive flow/null narrowing
+- Result/Option/Future semantics
+
+## 0.37 - Runtime resource and concurrency completion
+- Memory accounting and limits
+- Collection/output/file/HTTP quotas
+- recursion and call-depth enforcement everywhere
+- task groups, spawn, cancellation propagation and structured concurrency
+
+## 0.38 - Native testing and migration
+- `test`, `describe`, `before_each`, `expect`
+- `pea test --filter`, `--coverage`, `--watch`
+- `pea migrate`
+- compatibility/deprecation warnings
+
+## 0.39 - Cross-runtime portability
+- WebAssembly VM prototype
+- browser-safe PEAC runtime
+- Python VM/WASM differential fixtures
+- Node/browser host capability ABI
+
+## 0.40 - Conformance and platform gate - implementation delivered; CI evidence pending
+- 500+ conformance tests
+- parser/VM >=90% coverage target
+- security-boundary 100% coverage target
+- lexer/parser/compiler fuzzing
+- Windows/Linux/macOS CI definitions
+- Python 3.10-3.13 matrix or documented supported matrix
+
+## 0.41 - Beta/pilot gate - tooling/evidence framework delivered; real pilot validation pending
+- Two real application pilots
+- three stable host integrations
+- performance baselines and regression thresholds
+- external security review preparation
+- 1.0 migration report
+
+## 1.0 gate
+Grammar, type system, standard library, embedding API, package format and PEAC compatibility policy must be Stable; security must be reviewed; LSP/DAP workflows and documentation must be complete; real applications must run without runtime forks.
+

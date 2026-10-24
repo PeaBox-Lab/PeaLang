@@ -1,0 +1,21 @@
+{
+  "version": "0.63.0rc2",
+  "previous_version": "0.63.0rc1",
+  "missing_paths": [],
+  "pytest_tests_passed": 430,
+  "conformance_cases_passed": 500,
+  "fuzz_iterations": 250,
+  "tests_failed": 0,
+  "api_compatible_with_rc1": true,
+  "removed_api_symbols": [],
+  "changed_api_signatures": [],
+  "automated_status": "PASS",
+  "ga_status": "BLOCKED",
+  "external_gates": [
+    "manual third-party license review",
+    "live provider integration certification",
+    "independent security assessment",
+    "multi-hour soak/load evidence",
+    "signed external publication"
+  ]
+}
