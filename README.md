@@ -1,109 +1,388 @@
-# PeaLang 0.57.0
+# PeaLang 0.63.0 RC2
 
-PeaLang is an embeddable extension language for controlled rules, workflows, automation and host integration. Version 0.37 completes runtime resource accounting and structured concurrency while retaining the v0.35 standard library and v0.36 type-system foundation.
+PeaLang is an embeddable extension language and local-first data platform for controlled rules, workflows, automation, host integration, data processing, analytics, machine learning, and model serving.
 
-## Install
+**0.63.0 RC2 is a stabilization release.** It preserves the RC1 feature freeze, validates public API compatibility against RC1, refreshes automated validation evidence, and adds focused migration and operator guidance. It does not intentionally introduce a breaking API or destructive schema migration.
+
+> Release status: automated RC2 gates pass. PeaLang 1.0 GA remains blocked until the external license, live-integration, security, soak-testing, and signed-publication gates are completed.
+
+## Release highlights
+
+- RC1-to-RC2 public API compatibility check
+- Zero removed public symbols
+- Zero changed public signatures
+- Public API snapshot and SHA-256 digest
+- Upgrade compatibility mapping for 0.60, 0.61, 0.62, and 0.63 RC1
+- RC1-to-RC2 migration guidance
+- Threat model and release-candidate gate documentation
+- Release manifest, retention audit, and integrity report
+- 430 automated tests passed
+- 500 conformance cases passed
+- 250 fuzz iterations completed
+- Zero automated test failures
+
+## Core platform capabilities
+
+### Language and runtime
+
+- Interpreter, REPL, parser, evaluator, and command-line tooling
+- Bytecode compiler and virtual machine
+- Native async VM and structured concurrency foundations
+- Type system, runtime validation, diagnostics, debugger, and DAP foundations
+- Standard library and package ecosystem
+- Signed package and registry foundations
+- Embedding support for Python, Java, FastAPI, React, TypeScript, browser, and WebAssembly-oriented integrations
+
+### Data platform
+
+- DataFrame and LazyFrame APIs
+- Expressions, joins, grouping, aggregation, null handling, pivot/unpivot, and windows
+- CSV, JSON, JSONL, Parquet, and other structured-data foundations
+- SQL and database adapters for SQLite, DuckDB, PostgreSQL, MySQL/MariaDB, SQL Server, and Oracle
+- REST, GraphQL, OData, and SFTP connectors
+- Amazon S3, Azure Blob Storage, Azure Data Lake Storage Gen2, and Google Cloud Storage connectors
+- Microsoft Graph and SharePoint foundations
+- Runtime secret providers and connector certification metadata
+
+### Analytics and machine learning
+
+- Descriptive statistics, correlation, frequency distributions, crosstabs, ranking, rolling calculations, and profiling
+- Time-series resampling, lag/lead, percentage change, expanding windows, exponential moving averages, and interpolation
+- Baseline forecasting and forecast evaluation
+- Linear, ridge, lasso, binary logistic, and multiclass logistic regression foundations
+- Scaling, imputation, categorical encoding, train/test splitting, cross-validation, and grid search
+- Model cards, reproducibility manifests, schema validation, and coefficient reports
+
+### MLOps and serving
+
+- Versioned and integrity-checked model bundles
+- Batch and audited inference
+- Drift and fairness diagnostics
+- Model registry lifecycle and promotion policies
+- Portable production-pipeline serialization
+- SQLite monitoring and prediction-audit stores
+- FastAPI serving adapter and `pea-serve` CLI
+- Authentication hooks, request limits, rate limiting, concurrency control, and timeouts
+- Structured logging, correlation IDs, tracing hooks, live reload, canary routing, and rollback controls
+- Redis-compatible distributed state and Kubernetes operational/security manifests
+- SBOM, provenance, checksums, artifact verification, and release-candidate governance
+
+## Requirements
+
+- Python 3.10 or later
+- Python 3.11 or 3.12 recommended for RC evaluation
+- Windows, Linux, or macOS
+
+Optional integrations require their provider libraries. Examples include `pyarrow`, `polars`, `pyspark`, `paramiko`, `boto3`, Azure SDK packages, Google Cloud Storage, Redis, FastAPI, Uvicorn, and `cryptography`.
+
+## Installation
+
+### Install from the wheel
+
+Place `pealang-0.63.0rc2-py3-none-any.whl` in your working directory and run:
+
 ```bash
-python -m pip install pealang-0.57.0-py3-none-any.whl
-pea --version
+python -m pip install --upgrade pip
+python -m pip install pealang-0.63.0rc2-py3-none-any.whl
 ```
 
-## Run
+Verify the installation:
+
+```bash
+pea --version
+pea --help
+```
+
+### Install from the source ZIP
+
+Extract `PeaLang_v0.63.0_RC2.zip`, open a terminal in the extracted project folder, and run:
+
+```bash
+python -m venv .venv
+```
+
+Activate the environment.
+
+Windows PowerShell:
+
+```powershell
+.\.venv\Scripts\Activate.ps1
+```
+
+Windows Command Prompt:
+
+```bat
+.venv\Scripts\activate.bat
+```
+
+Linux or macOS:
+
+```bash
+source .venv/bin/activate
+```
+
+Install PeaLang:
+
+```bash
+python -m pip install --upgrade pip
+python -m pip install -e .
+```
+
+For development and testing:
+
+```bash
+python -m pip install pytest
+python -m pytest -q
+```
+
+## Quick start
+
+### Start the REPL
+
+```bash
+pea repl
+```
+
+Inside the REPL, use the PeaLang help command documented by the installed CLI. Do not enter shell commands such as `python -m pytest` inside the language REPL.
+
+### Run a PeaLang program
+
 ```bash
 pea run app.pea
-pea repl
-pea stdlib
-pea spec
-pea features
 ```
 
-## Standard library
-Use `std.collections`, `std.string`, `std.math`, `std.datetime`, `std.json`, `std.csv`, `std.regex`, `std.file`, `std.path`, `std.http`, `std.crypto`, `std.logging`, `std.testing`, and `std.concurrent`. Sensitive capabilities require explicit runtime permissions.
+### Inspect available CLI commands
 
-## Platform
-PeaLang retains PEAC bytecode/VM, optional typing, semantic analysis, Python embedding, async VM, FastAPI integration, Java sidecar/client, TypeScript/React SDKs, DAP, package/signing/registry security and observability. See `docs/USER_GUIDE.md`, `docs/BASICS.md`, `FOUNDATIONAL_ROADMAP.md`, and `RELEASE_NOTES.md`.
+```bash
+pea --help
+```
 
-## Type system 0.36
-Generics, structural protocol contracts, project-wide contract analysis and Result/Option/Future semantics are now part of the foundation. See `docs/TYPE_SYSTEM_036.md`.
+Additional installed commands may include:
 
-## Runtime foundation 0.37
-Resource budgets now cover time, instructions, memory, recursion, stack, collections, output, HTTP requests and file reads. Structured concurrency adds task groups and cancellation propagation.
+```bash
+pea-ml --help
+pea-serve --help
+```
 
-## Native testing 0.38
-Use `test "name" { expect condition }`, `pea test --filter`, `pea test --coverage`, and `pea migrate --from 0.37 --to 0.38 .`.
+## Python embedding example
 
-## WebAssembly 0.39
-Use `pea wasm-build` and `pea wasm-inspect`. Executable lowering remains Preview.
+```python
+from pealang.data import DataFrame
 
-## Conformance 0.40
-Run `pea conformance` for the 500-case interpreter/VM gate and deterministic fuzz harness. GitHub Actions defines Windows/Linux/macOS and Python 3.10-3.13 matrices.
+employees = DataFrame([
+    {"employee": "A", "department": "HR", "score": 82},
+    {"employee": "B", "department": "Engineering", "score": 91},
+])
 
-## Beta/pilot readiness 0.41
-Run `pea readiness`. Candidate pilots and review packs are included, but the gate intentionally remains pending until two genuine pilots are validated.
+print(employees.describe().to_dicts())
+```
 
-## PeaLang Data 0.42
-A new embeddable data foundation provides schemas, DataFrame/LazyFrame processing, a connector registry, CSV/JSON/JSONL IO and core transforms. See `DATA_ROADMAP.md`.
+## SQL example
 
+SQLite works through the Python standard library:
 
-## PeaLang DataFrame Engine 0.43
-Use joins, grouped aggregations, expression-based columns and filters, null handling, pivot/unpivot, row-number windows and lazy pipelines. See `docs/DATAFRAME_ENGINE_043.md`.
+```python
+from pealang.sql import connect
 
-## SQL and Databases 0.44
-SQLite works with the Python standard library. Adapter contracts also cover DuckDB, PostgreSQL, MySQL/MariaDB, SQL Server and Oracle through optional drivers. See `docs/SQL_DATABASES_044.md`.
+with connect("sqlite:///example.db") as database:
+    database.execute(
+        "create table if not exists employees(id integer primary key, name text)"
+    )
+    database.execute(
+        "insert into employees(name) values (?)",
+        ("Rajesh",),
+    )
+    database.commit()
 
-## Connector SDK 0.45
-Use the built-in REST and GraphQL connectors with runtime authentication headers, retry/backoff controls, pagination and direct DataFrame conversion. See `docs/CONNECTOR_SDK_045.md`.
+    result = database.query("select * from employees")
+    print(result.to_dicts())
+```
 
-## Cloud Connectors 0.46
-OData and SFTP now extend the Connector SDK. See `docs/CLOUD_CONNECTORS_046.md`.
+Always use SQL parameters for values instead of building SQL strings through concatenation.
 
-## Cloud Object Storage 0.47
-Amazon S3, Azure Blob Storage, ADLS Gen2 and Google Cloud Storage now share a normalized object-storage API. See `docs/OBJECT_STORAGE_047.md`.
+## Connector example
 
-## Enterprise Connectors 0.48
-Microsoft Graph/SharePoint, secret-provider abstractions, capability descriptors and certification checks extend the connector platform. See `docs/ENTERPRISE_CONNECTORS_048.md`.
+```python
+from pealang.connectors import connector, bearer
 
-## Connector Runtime 0.49
-Production runtime profiles, renewable token providers, health diagnostics, certification matrices and Graph/SharePoint pagination.
+api = connector(
+    "rest",
+    "https://api.example.com",
+    headers=bearer("TOKEN_FROM_SECRET_PROVIDER"),
+)
 
-## Data Analytics 0.50
-PeaLang DataFrames now provide descriptive statistics, distributions, correlation, ranking, rolling/cumulative calculations, outlier detection and dataset profiles. See `docs/ANALYTICS_050.md`.
+users = api.dataframe("/users", records_path="items")
+print(users.to_dicts())
+```
 
-## Time-Series and Grouped Analytics 0.51
-Date/time resampling, shifts, period changes, expanding/EWM windows, interpolation and grouped analytics now extend PeaLang DataFrames. See `docs/TIME_SERIES_051.md`.
+Credentials should be supplied at runtime through environment variables, Azure Key Vault, AWS Secrets Manager, or another secret provider. Do not commit tokens or passwords.
 
-## Forecasting and Accelerated Analytics 0.52
-Baseline trend, moving-average and exponential-smoothing forecasts, evaluation, decomposition, grouped forecasting and chart-ready outputs extend the analytics stack. See `docs/FORECASTING_052.md`.
+## Analytics example
 
-## Machine Learning Foundations 0.53
-Dependency-light preprocessing, linear/logistic regression, evaluation, cross-validation indices and model persistence now extend PeaLang DataFrames. See `docs/ML_FOUNDATIONS_053.md`.
+```python
+from pealang.data import DataFrame
 
-## Production ML 0.54
-Fitted pipelines, cross-validation, tuning, regularization, multiclass classification, model cards and reproducibility manifests extend PeaLang ML. See `docs/PRODUCTION_ML_054.md`.
+sales = DataFrame([
+    {"month": "2026-01", "amount": 100},
+    {"month": "2026-02", "amount": 120},
+    {"month": "2026-03", "amount": 135},
+])
 
-## ML Deployment and Monitoring 0.55
-Model bundles, batch/audited inference, drift and fairness diagnostics, calibration, registry lifecycle and an optional FastAPI adapter extend production ML. See `docs/MLOPS_055.md`.
+print(sales.describe().to_dicts())
+print(sales.pct_change("amount").to_dicts())
+print(sales.rolling("amount", window=2).to_dicts())
+```
 
-## Secure MLOps 0.56
-Optional Ed25519 signing/Fernet encryption, monitoring event stores, alert operations, promotion policies, canary routing and rollback controls extend the ML platform. See `docs/SECURE_MLOPS_056.md`.
+## Machine-learning example
 
-## Pipeline Portability and MLOps CLI 0.57
-Versioned pipeline serialization, SQLite monitoring, alert policies, deployment manifests and `pea-ml` operations complete the next MLOps layer. See `docs/MLOPS_CLI_057.md`.
+```python
+from pealang.data import DataFrame
+from pealang.ml import LinearRegression
 
-## Secure and Resilient Serving 0.59
-Rate and concurrency controls, timeouts, structured logs, trace hooks, live reload, secure artifact loading and alert-driven rollback harden model serving. See `docs/RESILIENT_SERVING_059.md`.
+training = DataFrame([
+    {"experience": 0, "salary": 30000},
+    {"experience": 1, "salary": 35000},
+    {"experience": 2, "salary": 40000},
+])
 
-## Distributed Serving and Kubernetes 0.60
-Shared Redis-compatible state, distributed rate limiting, latency/load gates, OpenTelemetry hooks and Kubernetes resources extend resilient serving. See `docs/DISTRIBUTED_SERVING_060.md`.
+model = LinearRegression().fit(
+    training,
+    features=["experience"],
+    target="salary",
+)
 
-## Kubernetes Security and RC Stabilization 0.61
-Secure YAML manifests, non-root/read-only containers, NetworkPolicy, PDB, spread/anti-affinity, graceful draining, validation and soak tests harden distributed serving. See `docs/KUBERNETES_SECURITY_061.md`.
+prediction = model.predict(DataFrame([{"experience": 3}]))
+print(prediction.to_dicts())
+```
 
-## Release Candidate Packaging 0.62
-SBOM, provenance, checksums, artifact verification, non-root container packaging, CI matrix and v1 readiness gates establish the release-candidate supply chain. See `docs/SUPPLY_CHAIN_062.md`.
+The built-in ML implementations are suitable for baselines, education, embedded use, and small-scale workloads. Use mature specialist libraries and independent validation for high-scale or consequential production models.
 
-## Release Candidate 1 Stabilization
-0.63 RC1 freezes feature scope and adds public API snapshots, compatibility/deprecation policy, integration gate reporting, threat modelling and upgrade guidance. See `docs/API_STABILITY_POLICY.md` and `RC1_GATE_STATUS.md`.
+## Model serving
 
-## Release Candidate 2 Stabilization
-RC2 preserves the feature freeze and validates compatibility against RC1. See `docs/RC2_STABILIZATION.md` and `RC2_GATE_STATUS.md`.
+Validate a deployment before starting it:
+
+```bash
+pea-serve deploy-check deployment.json pipeline.json
+```
+
+Start the optional FastAPI/Uvicorn serving runtime:
+
+```bash
+pea-serve serve pipeline.json \
+  --version 0.63.0rc2 \
+  --host 127.0.0.1 \
+  --port 8000 \
+  --api-key YOUR_RUNTIME_SECRET
+```
+
+Serving endpoints include:
+
+- `GET /live`
+- `GET /ready`
+- `GET /metrics`
+- `POST /predict`
+
+## RC2 compatibility and migration
+
+RC2 is intended to be compatible with RC1:
+
+- Removed public symbols: 0
+- Changed public signatures: 0
+- Destructive schema migrations: none intentionally introduced
+
+Before upgrading:
+
+1. Back up model registries and monitoring databases.
+2. Verify RC1 artifacts and checksums.
+3. Install RC2 in an isolated environment.
+4. Review `RC1_TO_RC2_API_COMPATIBILITY.json`.
+5. Run language, package, connector, analytics, and serving smoke tests.
+6. Validate rollback to RC1 before production promotion.
+
+See `docs/MIGRATION_RC1_TO_RC2.md` for the focused migration guide.
+
+## Validation
+
+Run the automated test suite:
+
+```bash
+python -m pytest -q
+```
+
+Run the conformance command:
+
+```bash
+python -m pealang.cli conformance
+```
+
+RC2 recorded:
+
+- 430 automated tests passed
+- 500 conformance cases passed
+- 250 fuzz iterations completed
+- Zero automated failures
+- RC1-to-RC2 public API compatibility passed
+
+## RC2 versus later development
+
+PeaLang 0.63 RC2 is the frozen stabilization line. The 0.64 alpha line begins new feature development, including distributed-compute work. Do not treat alpha features as part of RC2, and do not backport broad new APIs into RC2.
+
+## GA release gates
+
+PeaLang 1.0 GA remains blocked until all of the following are complete:
+
+1. Manual third-party license review
+2. Live database and cloud connector certification
+3. Live SFTP, SharePoint, Redis, and Kubernetes testing
+4. Independent security assessment
+5. Multi-hour production-style soak and load testing
+6. Signed publication of the wheel, source archive, SBOM, provenance statement, and release manifest
+
+Passing the automated RC2 suite does not replace these external gates.
+
+## Documentation map
+
+Start with these files:
+
+- `README.md`: installation and platform overview
+- `RELEASE_NOTES.md`: RC2 release notes
+- `CHANGELOG.md`: cumulative change history
+- `VERSION_HISTORY.md`: release-by-release history
+- `docs/API_STABILITY_POLICY.md`: public API and deprecation policy
+- `docs/RC2_STABILIZATION.md`: RC2 stabilization scope
+- `docs/MIGRATION_RC1_TO_RC2.md`: migration guidance
+- `RC2_GATE_STATUS.md`: automated and external gate status
+- `PUBLIC_API_SNAPSHOT.json`: RC2 public API snapshot
+- `PUBLIC_API_SNAPSHOT_RC1.json`: preserved RC1 API snapshot
+- `RC1_TO_RC2_API_COMPATIBILITY.json`: compatibility result
+- `RELEASE_MANIFEST.json`: release metadata
+- `RELEASE_INTEGRITY.md`: validation summary
+- `RETENTION_AUDIT.json`: prior-version retention evidence
+
+The repository also contains dedicated guides for embedding, connectors, databases, analytics, ML, MLOps, serving, distributed operations, Kubernetes security, and supply-chain controls.
+
+## Security
+
+- Never store credentials in PeaLang source files, connector definitions, model bundles, or Git history.
+- Verify checksums and signatures before installing or loading release artifacts.
+- Keep API keys, bearer tokens, database passwords, signing keys, and encryption keys in runtime secret providers.
+- Review generated Kubernetes NetworkPolicy rules for your actual Redis, telemetry, registry, DNS, and external-service destinations.
+- Treat model fairness and drift metrics as diagnostic evidence, not as automatic approval for consequential decisions.
+
+## Release status
+
+| Item | Status |
+|---|---|
+| Version | 0.63.0rc2 |
+| Release type | Release Candidate 2 |
+| Feature scope | Frozen |
+| Automated tests | 430 passed |
+| Conformance | 500 passed |
+| Fuzzing | 250 iterations |
+| RC1 API compatibility | Passed |
+| Automated RC2 gate | Passed |
+| PeaLang 1.0 GA | Blocked pending external gates |
+
+## License
+
+Review the repository license file and `DEPENDENCY_LICENSE_INVENTORY.json` before redistribution. Third-party optional integrations remain subject to their own licenses. Manual third-party license review is still a release-blocking RC gate.
