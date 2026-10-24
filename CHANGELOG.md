@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.67.0 - 2026-10-24
+- Added Kafka producer/consumer integration, consumer groups, manual commits, security options, batch publishing, and an in-memory test broker.
+
 ## 0.66.0 - 2026-10-24
 - Added event-time streams, watermarks, late-event handling, tumbling/sliding windows, and persistent idempotent delivery semantics.
 
