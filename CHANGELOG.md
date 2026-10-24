@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.71.0 - 2026-10-24
+- Combined three roadmap targets: dataset/column lineage, pipeline observability with SLA/alerts/audit, and a declarative dashboard DSL with React rendering.
+
 ## 0.70.0 - 2026-10-24
 - Added durable SQLite orchestration state, retries with backoff/jitter, deterministic idempotency, interval scheduling, logical dates, run history, and backfill execution.
 

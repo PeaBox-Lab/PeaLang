@@ -15,7 +15,7 @@ PeaLang currently fits enterprise data engineering and embedded analytics best: 
 ## Phase B: Orchestration and governance
 - 0.69 DAG definitions and dependency validation.
 - 0.70 state, retries, backfill, idempotency and scheduling. COMPLETED
-- 0.71 dataset and column lineage.
+- 0.71 dataset and column lineage. COMPLETED (merged release)
 - 0.72 pipeline observability, SLAs and audit reports.
 
 ## Phase C: Interactive analytics

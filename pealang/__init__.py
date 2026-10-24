@@ -95,3 +95,6 @@ from .supply_chain import sha256_file,artifact_checksums,write_checksums,generat
 from .rc_stabilization import RC_VERSION,API_POLICY_VERSION,PublicSymbol,public_api_snapshot,compare_api_snapshots,snapshot_digest,Deprecation,deprecated,validate_deprecation_schedule,IntegrationResult,run_integration_matrix,integration_summary,upgrade_compatibility,threat_model,migration_guide,rc_gate
 
 from .distributed_compute import PlanNode,ExecutionPlan,ComputeEngine,LocalEngine,ArrowEngine,PolarsEngine,SparkEngine,EngineRegistry,ENGINES,DistributedLazyFrame,distributed,compile_lazy,execute_plan,explain_plan
+from .lineage import DatasetRef,ColumnRef,LineageEdge,LineageGraph
+from .pipeline_observability import SLAPolicy,RunMetric,Alert,MetricsRegistry,SLAEvaluator,AlertRouter,AuditReport
+from .dashboard import DashboardComponent,Dashboard,dashboard_from_dict,render_react

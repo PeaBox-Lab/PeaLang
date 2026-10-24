@@ -88,3 +88,5 @@ Failed files: 0
 Excluded directories: 1
 
 | 0.70 | Durable orchestration state, retries, idempotency, scheduling, and backfill |
+
+| 0.71 | Unified lineage, observability, SLA/audit, and dashboard DSL/React rendering |
