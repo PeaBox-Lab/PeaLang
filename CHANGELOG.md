@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.69.0 - 2026-10-24
+- Added DAG/task definitions, dependency validation, cycle detection, deterministic topological ordering, execution layers, declarative graph loading, and local DAG execution.
+
 ## 0.68.0 - 2026-10-24
 - Added RabbitMQ and WebSocket connectors, explicit RabbitMQ acknowledgement controls, QoS/prefetch, JSON messaging, and an in-memory message bus.
 
