@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.66.0 - 2026-10-24
+- Added event-time streams, watermarks, late-event handling, tumbling/sliding windows, and persistent idempotent delivery semantics.
+
 ## 0.65.0 - 2026-10-24
 - Added partitioning, bounded JSONL scans, predicate/projection pushdown, spill execution and checkpoints.
 
