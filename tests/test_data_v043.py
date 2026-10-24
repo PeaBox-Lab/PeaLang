@@ -1,4 +1,3 @@
-
 from pealang.data import DataFrame,LazyFrame,col,coalesce
 
 def test_inner_join():

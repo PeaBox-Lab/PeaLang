@@ -1,4 +1,3 @@
-
 """AST to PeaLang bytecode compiler."""
 from .ast_nodes import *
 from .parser import parse_source

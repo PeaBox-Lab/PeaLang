@@ -1,4 +1,3 @@
-
 """Portable PeaLang bytecode model and .peac serialization."""
 from __future__ import annotations
 from dataclasses import dataclass,field,asdict

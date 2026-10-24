@@ -1,4 +1,3 @@
-
 # PeaLang AI Development Handover 0.37
 ## Delivered
 - Complete resource-limit configuration and accounting foundation

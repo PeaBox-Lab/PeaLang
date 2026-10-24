@@ -1,4 +1,3 @@
-
 """Browser-safe capability and UI-schema validation profile."""
 from __future__ import annotations
 from .errors import PeaError

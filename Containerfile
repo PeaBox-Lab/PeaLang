@@ -1,4 +1,3 @@
-
 FROM python:3.12-slim AS runtime
 ENV PYTHONDONTWRITEBYTECODE=1 PYTHONUNBUFFERED=1
 RUN groupadd --gid 10001 pealang && useradd --uid 10001 --gid 10001 --create-home pealang

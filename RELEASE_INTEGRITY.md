@@ -1,4 +1,3 @@
-
 # Release Integrity
 Version: 0.64.0a1
 Previous: 0.63.0rc2

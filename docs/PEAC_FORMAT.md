@@ -1,4 +1,3 @@
-
 # PEAC Format 1
 
 The `.peac` artifact contains:

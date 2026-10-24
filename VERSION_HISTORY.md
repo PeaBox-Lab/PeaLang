@@ -1,4 +1,3 @@
-
 # Version History
 
 | Version | Theme |
@@ -76,3 +75,16 @@ Binary files listed: 0
 Oversized files skipped: 0
 Failed files: 0
 Excluded directories: 2
+
+================================================================================
+EXPORT SUMMARY
+================================================================================
+
+Files discovered: 360
+Text/source files exported: 360
+Binary files listed: 0
+Oversized files skipped: 0
+Failed files: 0
+Excluded directories: 1
+
+| 0.70 | Durable orchestration state, retries, idempotency, scheduling, and backfill |

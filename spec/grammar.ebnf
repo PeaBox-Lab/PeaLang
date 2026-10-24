@@ -1,4 +1,3 @@
-
 program          = { declaration } ;
 declaration      = variable_decl | constant_decl | function_decl | import_decl | export_decl | statement ;
 variable_decl    = "let", identifier, [ ":", type_ref ], [ "=", expression ] ;

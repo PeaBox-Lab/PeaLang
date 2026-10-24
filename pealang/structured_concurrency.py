@@ -1,4 +1,3 @@
-
 """Structured concurrency primitives with cancellation propagation."""
 from __future__ import annotations
 import asyncio

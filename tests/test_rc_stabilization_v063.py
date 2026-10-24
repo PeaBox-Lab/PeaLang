@@ -1,4 +1,3 @@
-
 import warnings
 from pealang.rc_stabilization import *
 def test_snapshot(tmp_path):

@@ -1,4 +1,3 @@
-
 import time
 from pealang.distributed_serving import *
 def test_distributed_rate():

@@ -1,4 +1,3 @@
-
 # PeaLang AI Development Handover 0.19
 
 ## Direction

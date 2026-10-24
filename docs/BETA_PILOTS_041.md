@@ -1,4 +1,3 @@
-
 # PeaLang 0.41 Beta/Pilot Gate
 
 Candidate pilots are included for Python/FastAPI HR rules and Java-sidecar service extensions. They are runnable reference pilots, not fabricated production deployments. The readiness model requires two pilots to be explicitly marked `validated` before the pilot gate passes.

@@ -1,4 +1,3 @@
-
 """Version-to-version source migration framework."""
 from pathlib import Path
 from dataclasses import dataclass

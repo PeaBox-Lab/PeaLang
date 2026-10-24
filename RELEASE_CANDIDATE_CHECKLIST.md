@@ -1,4 +1,3 @@
-
 # PeaLang 0.62 Release Candidate Checklist
 
 - [x] Full automated tests

@@ -1,4 +1,3 @@
-
 from pealang.conformance import generated_cases,differential,run_conformance,fuzz_lexer_parser
 def test_500_case_corpus_generated():assert len(generated_cases(500))==500
 def test_differential_simple():assert differential('print 2+3')==(['5'],['5'])

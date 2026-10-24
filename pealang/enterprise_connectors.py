@@ -1,4 +1,3 @@
-
 """PeaLang 0.48 enterprise connectors, secrets and certification."""
 from __future__ import annotations
 from dataclasses import dataclass,field,asdict

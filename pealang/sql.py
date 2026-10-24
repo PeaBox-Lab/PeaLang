@@ -1,4 +1,3 @@
-
 """PeaLang 0.44 SQL and database adapter foundation."""
 from __future__ import annotations
 from dataclasses import dataclass

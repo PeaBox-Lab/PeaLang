@@ -1,4 +1,3 @@
-
 from pathlib import Path
 from pealang import TypeRef,parse_type,substitute_type,infer_generic_bindings,parse_generic_functions,parse_protocols,protocol_conforms,option_type,result_type,future_type,analyze_project,execute
 def test_generic_parse():

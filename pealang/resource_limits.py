@@ -1,4 +1,3 @@
-
 """Deterministic runtime resource accounting for PeaLang 0.37."""
 from __future__ import annotations
 from dataclasses import dataclass,asdict

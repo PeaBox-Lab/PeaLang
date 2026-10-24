@@ -1,4 +1,3 @@
-
 from pealang import split_tests,run_source_tests,coverage_summary,migrate_text,migrate_path
 def test_split_expect():
  setup,tests=split_tests('let x=2\ntest "ok" {\n expect x == 2\n}')

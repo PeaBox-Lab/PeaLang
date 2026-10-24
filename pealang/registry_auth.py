@@ -1,4 +1,3 @@
-
 """Registry credential handling without storing plaintext tokens in lockfiles."""
 from __future__ import annotations
 import os

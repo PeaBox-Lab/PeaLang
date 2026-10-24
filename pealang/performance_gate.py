@@ -1,4 +1,3 @@
-
 from dataclasses import dataclass
 from .benchmark import benchmark_source
 @dataclass(frozen=True)

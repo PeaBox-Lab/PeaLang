@@ -1,4 +1,3 @@
-
 # PeaLang Roadmap: 0.64 to 1.0
 
 The 0.63 RC line remains frozen. New capabilities resume in the 0.64 alpha line.
@@ -15,7 +14,7 @@ PeaLang currently fits enterprise data engineering and embedded analytics best: 
 
 ## Phase B: Orchestration and governance
 - 0.69 DAG definitions and dependency validation.
-- 0.70 state, retries, backfill, idempotency and scheduling.
+- 0.70 state, retries, backfill, idempotency and scheduling. COMPLETED
 - 0.71 dataset and column lineage.
 - 0.72 pipeline observability, SLAs and audit reports.
 

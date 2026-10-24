@@ -1,4 +1,3 @@
-
 from pealang import SemanticAnalyzer
 
 def check(src):return SemanticAnalyzer().analyze(src)

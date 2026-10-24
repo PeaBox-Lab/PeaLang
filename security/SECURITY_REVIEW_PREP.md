@@ -1,4 +1,3 @@
-
 # External Security Review Preparation
 ## Review scope
 - Python and VM embedding permission boundaries

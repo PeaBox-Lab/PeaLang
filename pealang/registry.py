@@ -1,4 +1,3 @@
-
 """Verified registry index, cache and remote-install primitives."""
 from pathlib import Path
 import hashlib,json,ssl,urllib.request

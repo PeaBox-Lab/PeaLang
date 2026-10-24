@@ -1,4 +1,3 @@
-
 """Debug Adapter Protocol server powered by the PeaLang VM."""
 from __future__ import annotations
 import json,sys

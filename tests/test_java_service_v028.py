@@ -1,4 +1,3 @@
-
 from pealang.runtime_service import RuntimeService
 
 def test_health():assert RuntimeService().health()['status']=='UP'

@@ -1,4 +1,3 @@
-
 from pathlib import Path
 import hashlib,json
 def sha256(path):

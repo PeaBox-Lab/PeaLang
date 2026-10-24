@@ -1,4 +1,3 @@
-
 # Release Integrity Policy
 
 Every release from 0.29 onward compares its clean source inventory against the previous release. Unintentional file removal blocks packaging.

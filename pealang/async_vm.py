@@ -1,4 +1,3 @@
-
 """Native cooperative async execution for PeaLang bytecode."""
 from __future__ import annotations
 import asyncio

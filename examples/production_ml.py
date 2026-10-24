@@ -1,4 +1,3 @@
-
 from pealang.data import DataFrame
 from pealang.ml import StandardScaler,RidgeRegression,ProductionPipeline,model_card
 df=DataFrame([{"x":0,"y":1},{"x":1,"y":3},{"x":2,"y":5}])

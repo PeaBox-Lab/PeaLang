@@ -1,4 +1,3 @@
-
 import io,json
 from types import SimpleNamespace
 from pealang.connectors import ConnectorConfig,ConnectorResponse,Transport

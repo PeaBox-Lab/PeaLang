@@ -1,4 +1,3 @@
-
 """Transport-neutral PeaLang runtime sidecar core for Java and other hosts."""
 from __future__ import annotations
 from dataclasses import dataclass,asdict

@@ -1,4 +1,3 @@
-
 from pealang import TypeChecker,parse_type,execute
 
 def test_parse_generic():assert str(parse_type('List<String>'))=='List<String>'

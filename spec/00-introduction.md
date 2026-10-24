@@ -1,4 +1,3 @@
-
 # PeaLang Language Specification 0.34
 
 This specification defines the portable language contract independently from the Python implementation. PeaLang is an embeddable extension language for controlled rules, workflows, automation and host integration.

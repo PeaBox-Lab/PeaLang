@@ -1,4 +1,3 @@
-
 """Backward-compatible public runtime facade."""
 from .errors import PeaError, SourceSpan
 from .lexer import Lexer, Token

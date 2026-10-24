@@ -1,4 +1,3 @@
-
 from pealang import default_report,ReadinessReport,compare_benchmark
 def test_candidate_pilots_present():assert len(default_report().pilots)==2
 def test_three_host_targets():assert len(default_report().stable_hosts)==3

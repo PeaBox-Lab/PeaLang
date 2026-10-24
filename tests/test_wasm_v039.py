@@ -1,4 +1,3 @@
-
 import pytest
 from pealang import WasmPolicy,compile_peac_to_wasm,inspect_wasm,browser_loader_source
 from pealang.compiler import compile_source_to_bytecode

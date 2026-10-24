@@ -1,4 +1,3 @@
-
 from pealang.data import DataFrame
 from pealang.forecasting import *
 def test_metrics():

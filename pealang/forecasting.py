@@ -1,4 +1,3 @@
-
 """PeaLang 0.52 forecasting, evaluation and optional acceleration."""
 from __future__ import annotations
 from dataclasses import dataclass

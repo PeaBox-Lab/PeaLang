@@ -1,4 +1,3 @@
-
 """Canonical signed registry indexes, publisher namespaces and anti-replay policy."""
 from __future__ import annotations
 from dataclasses import dataclass,asdict,field

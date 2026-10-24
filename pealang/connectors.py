@@ -1,4 +1,3 @@
-
 """PeaLang 0.45 Connector SDK with REST and GraphQL connectors."""
 from __future__ import annotations
 from dataclasses import dataclass,field

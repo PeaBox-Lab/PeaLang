@@ -1,4 +1,3 @@
-
 # PeaLang Standard Library 0.35
 
 The stable namespace is `std`. Modules: `std.collections`, `std.string`, `std.math`, `std.datetime`, `std.json`, `std.csv`, `std.regex`, `std.file`, `std.path`, `std.http`, `std.crypto`, `std.logging`, `std.testing`, and `std.concurrent`.

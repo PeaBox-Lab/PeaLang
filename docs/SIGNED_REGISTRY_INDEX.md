@@ -1,4 +1,3 @@
-
 # Signed Registry Index and Publisher Policy
 
 PeaLang 0.33 adds canonical registry metadata, namespace ownership, replay protection, immutable package-version policy, expiration checks, and environment-based registry authentication.

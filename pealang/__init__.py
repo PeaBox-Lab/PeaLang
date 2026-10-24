@@ -1,4 +1,3 @@
-
 from .bytecode import BytecodeModule,CodeObject,Instruction,Op
 from .compiler import Compiler,CompileError,compile_source_to_bytecode
 from .vm import VirtualMachine,VMError,AsyncSuspension

@@ -1,4 +1,3 @@
-
 def disassemble(module):
  lines=[f'PEAC {module.version}  source={module.source_name}',f'constants ({len(module.constants)}):']
  for i,v in enumerate(module.constants):lines.append(f'  {i:04} {v!r}')

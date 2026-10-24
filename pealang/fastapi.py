@@ -1,4 +1,3 @@
-
 """FastAPI integration for PeaLang extensions. FastAPI is an optional dependency."""
 from __future__ import annotations
 from dataclasses import dataclass,field

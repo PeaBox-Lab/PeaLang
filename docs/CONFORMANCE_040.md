@@ -1,4 +1,3 @@
-
 # PeaLang Conformance Gate 0.40
 
 0.40 introduces a deterministic 500-case interpreter/VM differential corpus, lexer/parser fuzz harness, security-boundary suite, and GitHub Actions matrices for Windows/Linux/macOS with Python 3.10-3.13.

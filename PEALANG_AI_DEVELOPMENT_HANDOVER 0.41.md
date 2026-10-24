@@ -1,4 +1,3 @@
-
 # PeaLang AI Development Handover 0.41
 ## Delivered
 - beta/pilot readiness evidence model

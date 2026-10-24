@@ -1,4 +1,3 @@
-
 from pealang.data import *
 def test_schema():
  d=DataFrame([{'id':1,'name':'A'}]);assert d.schema.as_dict()=={'id':'Int64','name':'String'}

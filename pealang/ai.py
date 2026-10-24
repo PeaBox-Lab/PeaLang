@@ -1,4 +1,3 @@
-
 from __future__ import annotations
 import json, os, urllib.request, urllib.error
 from dataclasses import dataclass

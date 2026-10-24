@@ -1,4 +1,3 @@
-
 """Beta/pilot and 1.0-readiness evidence model for PeaLang 0.41."""
 from dataclasses import dataclass,asdict,field
 from pathlib import Path

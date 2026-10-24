@@ -1,4 +1,3 @@
-
 from pathlib import Path
 import pytest
 from pealang.browser_profile import validate_browser_permissions,validate_ui_schema

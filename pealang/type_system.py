@@ -1,4 +1,3 @@
-
 """Optional static type system and source-to-runtime annotation erasure."""
 from __future__ import annotations
 from dataclasses import dataclass,field

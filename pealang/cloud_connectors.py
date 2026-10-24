@@ -1,4 +1,3 @@
-
 """PeaLang 0.46 cloud connectors: OData and SFTP."""
 from __future__ import annotations
 from dataclasses import dataclass,field

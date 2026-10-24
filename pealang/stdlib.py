@@ -1,4 +1,3 @@
-
 """PeaLang stable standard library registry (0.35)."""
 from __future__ import annotations
 from dataclasses import dataclass

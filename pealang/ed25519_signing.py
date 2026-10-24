@@ -1,4 +1,3 @@
-
 """Ed25519 publisher signatures and public-key trust for PeaLang packages."""
 from __future__ import annotations
 from dataclasses import dataclass,asdict

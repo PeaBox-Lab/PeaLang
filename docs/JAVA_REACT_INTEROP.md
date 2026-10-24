@@ -1,4 +1,3 @@
-
 # Java and React Interoperability Direction
 
 ## Java

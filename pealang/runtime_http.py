@@ -1,4 +1,3 @@
-
 """Minimal HTTP runtime sidecar using Python stdlib."""
 from http.server import BaseHTTPRequestHandler,ThreadingHTTPServer
 import json

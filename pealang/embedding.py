@@ -1,4 +1,3 @@
-
 """Stable Python embedding API for PeaLang."""
 from __future__ import annotations
 from dataclasses import asdict, dataclass, is_dataclass

@@ -1,4 +1,3 @@
-
 """PeaLang 0.40 conformance, differential and deterministic fuzz harness."""
 from dataclasses import dataclass,asdict
 import random,string

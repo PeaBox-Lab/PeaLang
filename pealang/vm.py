@@ -1,4 +1,3 @@
-
 """PeaLang stack VM with resumable frames, handlers, modules and shared closures."""
 from __future__ import annotations
 from dataclasses import dataclass,field

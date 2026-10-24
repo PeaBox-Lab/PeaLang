@@ -1,4 +1,3 @@
-
 # PeaLang AI Development Handover 0.31
 
 ## Delivered

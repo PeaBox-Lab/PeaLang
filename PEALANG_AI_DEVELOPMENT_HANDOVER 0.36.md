@@ -1,4 +1,3 @@
-
 # PeaLang AI Development Handover 0.36
 ## Delivered
 - Generic function contracts, substitution and inference foundation

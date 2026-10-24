@@ -1,4 +1,3 @@
-
 from pealang.connectors import connector
 gql=connector("graphql","https://api.example.com/graphql")
 query="query Users($after:String){users(after:$after){nodes{id name} pageInfo{hasNextPage endCursor}}}"

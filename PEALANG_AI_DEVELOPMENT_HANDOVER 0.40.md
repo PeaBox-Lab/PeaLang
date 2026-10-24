@@ -1,4 +1,3 @@
-
 # PeaLang AI Development Handover 0.40
 ## Delivered
 - 500-case generated conformance corpus

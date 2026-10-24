@@ -1,4 +1,3 @@
-
 import asyncio,pytest
 from pealang import AsyncVMRuntime,RuntimeOptions
 async def double(x):await asyncio.sleep(.001);return x*2
