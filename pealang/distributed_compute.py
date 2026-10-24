@@ -1,3 +1,4 @@
+
 from __future__ import annotations
 from dataclasses import dataclass,field
 from .data import DataFrame,LazyFrame
@@ -98,3 +99,70 @@ class DistributedLazyFrame:
  def explain(self):return explain_plan(self.plan)
  def to_dict(self):return self.plan.to_dict()
 def distributed(source):return DistributedLazyFrame(source)
+
+# v0.65 scalable execution primitives
+import json as _json, tempfile as _tempfile
+from pathlib import Path as _Path
+
+@dataclass(frozen=True)
+class PartitionSpec:
+    count:int=1
+    key:str|None=None
+
+class CheckpointStore:
+    def __init__(self, root):
+        self.root=_Path(root); self.root.mkdir(parents=True,exist_ok=True)
+    def save(self,name,frame):
+        target=self.root/(str(name)+'.jsonl')
+        with target.open('w',encoding='utf-8') as fh:
+            for row in frame.to_dicts(): fh.write(_json.dumps(row,default=str)+'\n')
+        return str(target)
+    def load(self,name):
+        target=self.root/(str(name)+'.jsonl')
+        return DataFrame([_json.loads(x) for x in target.read_text(encoding='utf-8').splitlines() if x.strip()])
+    def exists(self,name): return (self.root/(str(name)+'.jsonl')).exists()
+
+def partition_frame(frame,spec):
+    if spec.count < 1: raise ValueError('partition count must be >= 1')
+    buckets=[[] for _ in range(spec.count)]
+    for i,row in enumerate(frame.to_dicts()):
+        idx=(hash(row.get(spec.key)) if spec.key else i)%spec.count
+        buckets[idx].append(row)
+    return [DataFrame(x) for x in buckets]
+
+def scan_jsonl(path,columns=None,predicate=None,batch_rows=10000,memory_limit_mb=None):
+    """Bounded JSONL scan with projection/predicate pushdown and spill-friendly batches."""
+    batch=[]; approx=0
+    with _Path(path).open('r',encoding='utf-8') as fh:
+        for line in fh:
+            if not line.strip(): continue
+            approx += len(line)
+            row=_json.loads(line)
+            if predicate and not predicate(row): continue
+            if columns: row={k:row.get(k) for k in columns}
+            batch.append(row)
+            if len(batch)>=batch_rows or (memory_limit_mb and approx>=memory_limit_mb*1024*1024):
+                yield DataFrame(batch); batch=[]; approx=0
+    if batch: yield DataFrame(batch)
+
+def out_of_core_jsonl(path,columns=None,predicate=None,memory_limit_mb=64,spill_dir=None):
+    """Execute a bounded scan. Batches are spilled to JSONL when more than one batch is required."""
+    spill_root=_Path(spill_dir or _tempfile.mkdtemp(prefix='pealang-spill-')); spill_root.mkdir(parents=True,exist_ok=True)
+    parts=[]
+    for n,batch in enumerate(scan_jsonl(path,columns,predicate,memory_limit_mb=memory_limit_mb)):
+        target=spill_root/f'part-{n:05d}.jsonl'
+        with target.open('w',encoding='utf-8') as fh:
+            for row in batch.to_dicts(): fh.write(_json.dumps(row,default=str)+'\n')
+        parts.append(target)
+    rows=[]
+    for target in parts:
+        with target.open('r',encoding='utf-8') as fh: rows.extend(_json.loads(x) for x in fh if x.strip())
+    return DataFrame(rows)
+
+# Extend fluent distributed plans without breaking v0.64 plans.
+def _partitioned(self,count,key=None):
+    self.plan.metadata['partitions']={'count':int(count),'key':key}; return self
+def _checkpoint(self,name,directory='.pea-checkpoints'):
+    frame=self.collect(); CheckpointStore(directory).save(name,frame); return frame
+DistributedLazyFrame.partitioned=_partitioned
+DistributedLazyFrame.checkpoint=_checkpoint

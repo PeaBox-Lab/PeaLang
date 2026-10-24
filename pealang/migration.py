@@ -1,3 +1,4 @@
+
 """Version-to-version source migration framework."""
 from pathlib import Path
 from dataclasses import dataclass
@@ -16,4 +17,3 @@ def migrate_path(path,from_version,to_version,write=True):
   if write and changed:p.write_text(new,encoding='utf-8')
   changes.append(MigrationChange(str(p),changed,notes))
  return changes
-

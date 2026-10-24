@@ -1,3 +1,4 @@
+
 """Debug Adapter Protocol server powered by the PeaLang VM."""
 from __future__ import annotations
 import json,sys
@@ -59,4 +60,3 @@ def serve(inp=None,out=None):
   except Exception as e:response(r,success=False,message=str(e),body={'error':str(e)})
 def main():return serve()
 if __name__=='__main__':raise SystemExit(main())
-

@@ -1,3 +1,4 @@
+
 """Structured concurrency primitives with cancellation propagation."""
 from __future__ import annotations
 import asyncio
@@ -36,4 +37,3 @@ class TaskGroup:
 async def gather_structured(*awaitables):
  async with TaskGroup() as group:tasks=[group.spawn(x) for x in awaitables]
  return [await x.result() for x in tasks]
-

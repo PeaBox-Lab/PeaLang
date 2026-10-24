@@ -1,3 +1,4 @@
+
 """Native PeaLang test runner for test/expect syntax."""
 from __future__ import annotations
 from dataclasses import dataclass,asdict
@@ -51,4 +52,3 @@ def coverage_summary(paths,results):
  executable=total_lines
  passed=sum(x.passed for x in results)
  return {'files':len(paths),'executable_lines':executable,'tests':len(results),'passed':passed,'failed':len(results)-passed,'mode':'test-aware baseline; VM line coverage remains experimental'}
-

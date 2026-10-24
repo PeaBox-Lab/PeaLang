@@ -1,3 +1,4 @@
+
 """PeaLang 0.40 conformance, differential and deterministic fuzz harness."""
 from dataclasses import dataclass,asdict
 import random,string
@@ -49,4 +50,3 @@ def fuzz_lexer_parser(iterations=250,seed=1337):
    if exc.__class__.__module__ not in ('pealang.errors',):crashes.append({'iteration':i,'type':type(exc).__name__,'message':str(exc)})
  return {'iterations':iterations,'seed':seed,'unexpected_crashes':crashes,'ok':not crashes}
 def conformance_report():return {'version':'0.40','conformance':run_conformance(500),'fuzz':fuzz_lexer_parser()}
-

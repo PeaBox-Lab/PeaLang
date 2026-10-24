@@ -1,3 +1,4 @@
+
 from __future__ import annotations
 from dataclasses import dataclass
 from typing import Any
@@ -56,4 +57,3 @@ class Lexer:
             if c in singles:self.advance();out.append(Token(c,c,line,col));continue
             self.error(f'Unexpected character {c!r}',line,col)
         out.append(Token('EOF',None,self.line,self.col));return out
-

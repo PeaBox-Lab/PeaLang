@@ -1,3 +1,4 @@
+
 """Browser-safe capability and UI-schema validation profile."""
 from __future__ import annotations
 from .errors import PeaError
@@ -17,4 +18,3 @@ def validate_ui_schema(node,depth=0):
   if not isinstance(children,list) or len(children)>100:raise PeaError('Invalid UI children')
   for child in children:validate_ui_schema(child,depth+1)
  return node
-

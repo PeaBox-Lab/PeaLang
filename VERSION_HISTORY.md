@@ -1,3 +1,4 @@
+
 # Version History
 
 | Version | Theme |
@@ -64,3 +65,14 @@
 | 0.56 | Secure MLOps: signatures/encryption, event stores, alerts, promotion gates and canary rollback |
 | 0.57 | Pipeline portability and MLOps CLI: serialization, SQLite monitoring, policies and deployment manifests |
 
+
+================================================================================
+EXPORT SUMMARY
+================================================================================
+
+Files discovered: 351
+Text/source files exported: 351
+Binary files listed: 0
+Oversized files skipped: 0
+Failed files: 0
+Excluded directories: 2

@@ -1,3 +1,4 @@
+
 from __future__ import annotations
 from dataclasses import dataclass
 from typing import Any
@@ -47,4 +48,3 @@ class AgentRuntime:
     def tool(self,agent,name,args=None):
         if not isinstance(agent,dict):raise PeaError('agent.tool expects an agent dictionary')
         return self.tools.call(name,args,agent.get('tools',[]))
-

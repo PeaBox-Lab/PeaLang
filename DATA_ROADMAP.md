@@ -1,3 +1,4 @@
+
 # PeaLang Data Roadmap
 
 ## 0.42 Data Foundation
@@ -18,4 +19,3 @@ Kafka/Event Hubs/WebSockets, windows, micro-batches, checkpoints, backpressure, 
 Source-scoped permissions, secret providers, TLS policy, data classification, masking, lineage, audit logs and connector allowlists.
 ## 0.50 Data Conformance Gate
 Cross-engine conformance, connector contract suite, query-plan regression tests, performance/correctness thresholds and real data-pipeline pilots.
-

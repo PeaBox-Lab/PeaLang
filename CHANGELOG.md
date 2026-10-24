@@ -1,4 +1,10 @@
 # Changelog
+
+## 0.65.0 - 2026-10-24
+- Added partitioning, bounded JSONL scans, predicate/projection pushdown, spill execution and checkpoints.
+
+
+# Changelog
 ## 0.64.0a1 - 2026-10-24
 - Added engine-neutral distributed compute plans and Local/Arrow/Polars/Spark adapters.
 ## 0.63.0rc2 - 2026-10-24
@@ -92,4 +98,3 @@
 - Added embedding, types, compiler/VM, capability safety, exceptions, imports, and VM DAP.
 ## 0.1.0 - 0.17.0
 - Established the language and tooling foundations.
-

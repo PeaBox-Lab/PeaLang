@@ -1,3 +1,4 @@
+
 program          = { declaration } ;
 declaration      = variable_decl | constant_decl | function_decl | import_decl | export_decl | statement ;
 variable_decl    = "let", identifier, [ ":", type_ref ], [ "=", expression ] ;
@@ -19,4 +20,3 @@ type_ref         = identifier, [ "<", type_ref, { ",", type_ref }, ">" ], [ "?" 
 expression       = primary, { operator, primary } ;
 primary          = identifier | number | string | "true" | "false" | "null" | list | map | "await", primary ;
 identifier       = letter | "_", { letter | digit | "_" } ;
-

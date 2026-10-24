@@ -1,3 +1,4 @@
+
 from __future__ import annotations
 import json, os, urllib.request, urllib.error
 from dataclasses import dataclass
@@ -61,4 +62,3 @@ def validate_schema(data,schema):
 def build_ai_namespace():
     service=AIService()
     return {'configure':service.configure,'info':service.info,'ask':service.ask,'extract':service.extract,'validate':validate_schema},service
-

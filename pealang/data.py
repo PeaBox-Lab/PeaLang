@@ -1,3 +1,4 @@
+
 """PeaLang Data Foundation 0.42, dependency-light tabular core."""
 from __future__ import annotations
 from dataclasses import dataclass,field
