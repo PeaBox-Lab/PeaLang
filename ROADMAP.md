@@ -193,8 +193,15 @@ Grammar, type system, standard library, embedding API, package format and PEAC c
 - RC blocker and waiver closure
 
 
-## Next: 0.92 release candidate validation II
+## 0.92 release candidate validation II - delivered
 - longer-duration cross-platform soak
 - upgrade-path expansion and rollback drills
 - compatibility-drift surveillance
 - ecosystem/integration certification evidence
+
+
+## Next: 0.93 release candidate validation III
+- extended-duration soak and repeated-run reliability
+- broader ecosystem certification
+- disaster-recovery and state-restoration drills
+- release evidence provenance and reproducibility checks

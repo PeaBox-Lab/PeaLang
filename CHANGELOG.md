@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.92.0-rc1 - 2026-10-25
+- Added RC evidence freshness and staleness enforcement.
+- Added upgrade/rollback/re-upgrade drills with integrity-digest comparison.
+- Added repeated-build API/diagnostic/bytecode drift surveillance.
+- Added security/performance/memory trend gates, ecosystem certification and recovery drills.
+- Added waiver expiry/ownership controls and consolidated RC2 certification gate.
+
 ## 0.91.0-rc1 - 2026-10-25
 - Added cross-platform Windows/Linux/macOS and Python 3.10-3.13 soak-evidence contracts.
 - Added supported-version upgrade and rollback/integrity validation.

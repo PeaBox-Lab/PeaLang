@@ -54,6 +54,7 @@ The roadmap version numbers for advanced ML were delivered early in 0.73, and in
 - 0.89 release-candidate hardening: COMPLETED. Feature families are frozen; blocker/high-severity defects, waivers and consolidated readiness evidence feed a single GO/NO-GO RC gate.
 - 0.90 API freeze: COMPLETED. Frozen syntax/runtime/package/diagnostic/versioned-bytecode surfaces, canonical digests and approval-required breaking-change gates are active.
 - 0.91 release candidate validation I: COMPLETED. Cross-platform/Python matrix contracts, upgrade validation, frozen-contract surveillance, soak aggregation and blocker/waiver gating are included.
-- 0.92-0.96 release candidates: planned. Longer soak, upgrade, security, performance and ecosystem validation.
+- 0.92 release candidate validation II: COMPLETED. Evidence freshness, rollback/re-upgrade drills, drift/trend surveillance, ecosystem/recovery gates and waiver lifecycle controls are included.
+- 0.93-0.96 release candidates: planned. Extended soak, recovery, reproducibility and ecosystem validation.
 - 0.97-0.99 final documentation/ecosystem readiness: planned. Tutorials, examples, package/connector authoring guides and migration handbook.
 - 1.0 stable: planned after all mandatory gates pass.
