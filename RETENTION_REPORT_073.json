@@ -1,0 +1,26 @@
+{
+  "schema": "pealang.retention.v1",
+  "release": "0.73.0",
+  "baseline": "0.72.0",
+  "baseline_files": 384,
+  "release_files": 389,
+  "retained": 384,
+  "added": [
+    "PEALANG_AI_DEVELOPMENT_HANDOVER 0.73.md",
+    "RELEASE_NOTES_0.73.0.md",
+    "docs/ADVANCED_ML_GOVERNED_QUERY_073.md",
+    "pealang/model_interop.py",
+    "tests/test_model_interop_v073.py"
+  ],
+  "removed": [],
+  "modified": [
+    "CHANGELOG.md",
+    "README.md",
+    "VERSION_HISTORY.md",
+    "docs/ROADMAP_064_TO_100.md",
+    "pealang/__init__.py",
+    "pyproject.toml"
+  ],
+  "retention_gate": "PASS",
+  "tests": "449 passed"
+}

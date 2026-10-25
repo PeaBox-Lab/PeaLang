@@ -3,7 +3,7 @@ requires=["setuptools>=68","wheel"]
 build-backend="setuptools.build_meta"
 [project]
 name="pealang"
-version="0.72.0a1"
+version="0.73.0a1"
 description="Readable automation and AI workflow language"
 readme="README.md"
 requires-python=">=3.10"
@@ -25,3 +25,6 @@ fastapi = ["fastapi>=0.110", "pydantic>=2.0", "uvicorn>=0.27"]
 
 
 jupyter = ["ipykernel>=6.29"]
+
+onnx = ["onnxruntime>=1.18", "numpy>=1.26"]
+torch = ["torch>=2.2"]

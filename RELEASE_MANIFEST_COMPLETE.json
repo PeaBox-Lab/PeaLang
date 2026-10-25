@@ -1,12 +1,12 @@
 {
   "schema": "pealang.release-manifest.v1",
-  "version": "0.72.0",
-  "file_count": 384,
+  "version": "0.73.0",
+  "file_count": 391,
   "files": [
     {
       "path": "CHANGELOG.md",
-      "size": 7526,
-      "sha256": "0f53df7690e184513a817fedcc4922d770201bc8c7c0a7c38241557be53a2682"
+      "size": 7686,
+      "sha256": "58f1b125b6b7bfc280782b4d9f894c24d5a0f68494f9560a8c38f35154bb8c8f"
     },
     {
       "path": "Containerfile",
@@ -289,6 +289,11 @@
       "sha256": "e8c756456fd40293cfdfeec458c165d010040c3e38f32cc629045303bd890140"
     },
     {
+      "path": "PEALANG_AI_DEVELOPMENT_HANDOVER 0.73.md",
+      "size": 226,
+      "sha256": "6fa50e3d923b57b4821dadff7636af01ac91146a73003bb8cc43e7e4260b5f5a"
+    },
+    {
       "path": "PUBLIC_API_POLICY.json",
       "size": 160,
       "sha256": "233d1d6d1c9721a47965e3a11397c0d9689e1f11b42b4ff831836f989ce36b48"
@@ -325,8 +330,8 @@
     },
     {
       "path": "README.md",
-      "size": 7160,
-      "sha256": "6ec8b26cdd6079515b16a9f98b8920666719c622c0f3f3955f4ea41c03c62d3c"
+      "size": 7368,
+      "sha256": "f61291c1757779f39ea9e271fe107bdd6528402dbe5a2b27a75044ca1edcd07e"
     },
     {
       "path": "RELEASE_CANDIDATE_CHECKLIST.md",
@@ -345,8 +350,8 @@
     },
     {
       "path": "RELEASE_MANIFEST_COMPLETE.json",
-      "size": 59609,
-      "sha256": "8afb283f89d927887eef84422e4d573d188e0cf570aa846f8c247a8151ebb04a"
+      "size": 61212,
+      "sha256": "a3d559c6fee81c15329a6d4b6603108ef64b8fff21fe63741a5fb0adf5e9c02f"
     },
     {
       "path": "RELEASE_NOTES.md",
@@ -367,6 +372,11 @@
       "path": "RELEASE_NOTES_0.72.0.md",
       "size": 249,
       "sha256": "a71a51ac31a62e156e4416e99c2d00ea601b2c0077c243c95fbb7e8dacd17e37"
+    },
+    {
+      "path": "RELEASE_NOTES_0.73.0.md",
+      "size": 213,
+      "sha256": "8e161302bdb8e8351bdd97d61e5367705062aca34a7e0804b84fe1d3a960b91c"
     },
     {
       "path": "RETENTION_AUDIT.json",
@@ -394,6 +404,16 @@
       "sha256": "04933ce36c6bd4ef3708c34ac52ae59d5cad4042a4fac444594f12becab117c3"
     },
     {
+      "path": "RETENTION_REPORT_073.json",
+      "size": 602,
+      "sha256": "639fe3d7c23847035f238a00a87cc83817245ca1a7bb9837123817beb056a6ba"
+    },
+    {
+      "path": "RETENTION_REPORT_073.md",
+      "size": 199,
+      "sha256": "506d7f08eb373ba66b494c290da7bbb09fd6d10dd8a58b8831203ad3f89df39a"
+    },
+    {
       "path": "ROADMAP.md",
       "size": 2635,
       "sha256": "c2b40969d302eeacc2d7e41b456352201dc8f4d8875fe035d1f5e048d8e13309"
@@ -415,8 +435,8 @@
     },
     {
       "path": "VERSION_HISTORY.md",
-      "size": 4873,
-      "sha256": "c597cc61e6a153f63e8b5e8e94816256b04990e39d0488a1bf87503b69aca4fe"
+      "size": 4955,
+      "sha256": "ee94d750401511aba0804c17f10209ea2bcd6fc29031be0fa8126a1592eb614b"
     },
     {
       "path": "benchmarks/basic.pea",
@@ -437,6 +457,11 @@
       "path": "browser-sdk/pealang-wasm.js",
       "size": 164,
       "sha256": "4b1777caf40b19b065546a38467aaba04e76e11fe5a5081d12170e61905a0d35"
+    },
+    {
+      "path": "docs/ADVANCED_ML_GOVERNED_QUERY_073.md",
+      "size": 807,
+      "sha256": "72872f833b4e3d5341f0e76a8b0871eeb9ba23f3c495b46adcebb235bfc59cb6"
     },
     {
       "path": "docs/ANALYTICS_050.md",
@@ -660,8 +685,8 @@
     },
     {
       "path": "docs/ROADMAP_064_TO_100.md",
-      "size": 1791,
-      "sha256": "86b4d5a05c373118cbee3f42ced51e412e98a17ddd11fe7cd2dd9d5bf2668c81"
+      "size": 1845,
+      "sha256": "dddc8c5344f83c97e223781e02490c7318ee01478ab1d03ce7a6e9ceda3ecb29"
     },
     {
       "path": "docs/RUNTIME_LIMITS_037.md",
@@ -1115,8 +1140,8 @@
     },
     {
       "path": "pealang/__init__.py",
-      "size": 8598,
-      "sha256": "18c2fed1785925e9b7fe908af0c8ad6e18ddc2565e19582c81b5a3517baa3035"
+      "size": 8720,
+      "sha256": "c8f80053d4aa2233cce7fb5d05535132b617f62831e10bbfd5f74cd995cf507f"
     },
     {
       "path": "pealang/__main__.py",
@@ -1344,6 +1369,11 @@
       "sha256": "626c50944a35a4dbe92cae267d0cdbde8477440b07f079d0daa6e1a3867cec53"
     },
     {
+      "path": "pealang/model_interop.py",
+      "size": 5031,
+      "sha256": "edd19f1bfd99702299219caf77d2c9fec1e6b474e23574ef045aa91ce02b4fe4"
+    },
+    {
       "path": "pealang/native_testing.py",
       "size": 2213,
       "sha256": "d537a8ec37eef5da21a3ad965600c5847296e045d7d4b2e3245636c4fe5df6f4"
@@ -1560,8 +1590,8 @@
     },
     {
       "path": "pyproject.toml",
-      "size": 662,
-      "sha256": "8c497e4baa03dc4e6c7e67bffad808c47f98d1d869eedbe58317baecc0566710"
+      "size": 730,
+      "sha256": "df12ad0cb8cad84faaaae451a236460bd03f91836191350ac541e2e8c85098ba"
     },
     {
       "path": "react-sdk/package.json",
@@ -1767,6 +1797,11 @@
       "path": "tests/test_mlops_v055.py",
       "size": 1712,
       "sha256": "8b40be9c15d71c6cdbfcdc6f7bba0e7b7f03a6fc9fe6b92d99cfc37fa0149131"
+    },
+    {
+      "path": "tests/test_model_interop_v073.py",
+      "size": 1335,
+      "sha256": "6f9127a9b4bb7fd62a98820bc0d2f688161fde31ba8c4e9eca0cb985d13b59c1"
     },
     {
       "path": "tests/test_native_testing_v038.py",

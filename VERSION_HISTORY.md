@@ -103,3 +103,5 @@ Failed files: 0
 Excluded directories: 0
 
 | 0.72 | Interactive dashboards, Browser REPL/dataset inspector, Jupyter kernel and rich results |
+
+| 0.73 | ONNX Runtime, tensor/PyTorch interchange, and governed query planning |

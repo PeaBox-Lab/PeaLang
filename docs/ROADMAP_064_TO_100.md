@@ -25,9 +25,9 @@ PeaLang currently fits enterprise data engineering and embedded analytics best: 
 - 0.76 Jupyter kernel and inline rendering. COMPLETED IN 0.72
 
 ## Phase D: Advanced ML and governed agents
-- 0.77 ONNX Runtime bridge.
-- 0.78 PyTorch and tensor/DataFrame interchange.
-- 0.79 governed natural-language query planning.
+- 0.77 ONNX Runtime bridge. COMPLETED IN 0.73
+- 0.78 PyTorch and tensor/DataFrame interchange. COMPLETED IN 0.73
+- 0.79 governed natural-language query planning. COMPLETED IN 0.73
 - 0.80 agent dry-run, validation, policy and approval gates.
 
 ## Phase E: v1 stabilization

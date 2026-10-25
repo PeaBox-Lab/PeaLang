@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.73.0 - 2026-10-25
+- Added optional ONNX Runtime inference, tensor/DataFrame and PyTorch interchange, and policy-governed natural-language query planning.
+
 ## 0.72.0 - 2026-10-25
 - Merged interactive dashboard controls/bindings, browser REPL and dataset inspection, plus Jupyter kernel protocol and rich DataFrame rendering.
 

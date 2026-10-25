@@ -114,3 +114,6 @@ Engine-neutral plans and optional Arrow, Polars and Spark adapters begin the pos
 
 ## PeaLang v0.72 interactive analytics
 Interactive dashboard state/bindings, Browser REPL and dataset inspection, and Jupyter-compatible rich result contracts are documented in `docs/INTERACTIVE_ANALYTICS_072.md`.
+
+## PeaLang v0.73 advanced ML and governed planning
+Optional ONNX inference, tensor/DataFrame interoperability, and rule-first governed query plans are documented in `docs/ADVANCED_ML_GOVERNED_QUERY_073.md`.

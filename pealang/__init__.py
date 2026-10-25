@@ -102,3 +102,4 @@ from .dashboard import DashboardComponent,Dashboard,dashboard_from_dict,render_r
 from .dashboard import DashboardFilter,DashboardState,DataBinding,apply_dashboard_filters
 from .browser_repl import BrowserResult,BrowserREPL,DatasetInspector
 from .jupyter import RichResult,RichDisplay,PeaKernel,kernelspec
+from .model_interop import ModelInteropError,TensorSpec,TensorBridge,ONNXModel,QueryPolicy,QueryPlan,GovernedQueryPlanner
