@@ -63,3 +63,69 @@ def readiness_assessment(results):
 def containerfile(version='0.62.0'):
  return f'''FROM python:3.12-slim AS runtime\nENV PYTHONDONTWRITEBYTECODE=1 PYTHONUNBUFFERED=1\nRUN groupadd --gid 10001 pealang && useradd --uid 10001 --gid 10001 --create-home pealang\nWORKDIR /app\nCOPY pealang-{version}-py3-none-any.whl /tmp/pealang.whl\nRUN pip install --no-cache-dir /tmp/pealang.whl && rm /tmp/pealang.whl\nUSER 10001:10001\nEXPOSE 8000\nHEALTHCHECK --interval=30s --timeout=3s --start-period=10s --retries=3 CMD python -c "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/live', timeout=2)" || exit 1\nLABEL org.opencontainers.image.title="PeaLang" org.opencontainers.image.version="{version}" org.opencontainers.image.source="https://github.com/pealang/pealang"\nCMD ["pea-serve", "serve", "/app/pipeline.json", "--host", "0.0.0.0", "--port", "8000"]\n'''
 def ci_matrix():return {'os':['ubuntu-latest','windows-latest','macos-latest'],'python':['3.10','3.11','3.12','3.13'],'exclude':[{'os':'macos-latest','python':'3.10'}]}
+
+# PeaLang 0.82 reproducible packaging and verification hardening.
+import base64, os, tempfile, re
+
+def deterministic_manifest(root,exclude=('.git','__pycache__','.pytest_cache','dist','build')):
+ root=Path(root); rows=[]
+ for p in sorted(root.rglob('*')):
+  if p.is_file() and not any(x in p.parts for x in exclude):
+   rows.append({'path':str(p.relative_to(root)).replace('\\','/'),'size':p.stat().st_size,'sha256':sha256_file(p)})
+ canonical=json.dumps(rows,sort_keys=True,separators=(',',':')).encode()
+ return {'schema':1,'algorithm':'sha256','files':rows,'root_digest':hashlib.sha256(canonical).hexdigest()}
+
+def verify_manifest(root,manifest):
+ current=deterministic_manifest(root); expected={x['path']:x for x in manifest.get('files',[])}; actual={x['path']:x for x in current['files']}
+ missing=sorted(set(expected)-set(actual)); added=sorted(set(actual)-set(expected)); changed=sorted(k for k in set(expected)&set(actual) if expected[k]['sha256']!=actual[k]['sha256'] or expected[k]['size']!=actual[k]['size'])
+ return {'valid':not(missing or added or changed),'missing':missing,'added':added,'changed':changed,'root_digest':current['root_digest']}
+
+def locked_dependency_evidence(root):
+ root=Path(root); candidates=['requirements.lock','requirements.txt','poetry.lock','uv.lock','Pipfile.lock'];found=[]
+ for name in candidates:
+  p=root/name
+  if p.exists():found.append({'path':name,'sha256':sha256_file(p),'bytes':p.stat().st_size})
+ return {'locked':any(x['path'].endswith('.lock') or x['path']=='requirements.lock' for x in found),'files':found}
+
+def verify_sbom(sbom,root=None):
+ issues=[]
+ if sbom.get('bomFormat')!='CycloneDX':issues.append('unsupported bomFormat')
+ if not sbom.get('components'):issues.append('components missing')
+ if root:
+  root=Path(root)
+  for c in sbom.get('components',[]):
+   if c.get('type')!='file':continue
+   p=root/c.get('name','');h=next((x.get('content') for x in c.get('hashes',[]) if x.get('alg')=='SHA-256'),None)
+   if not p.is_file():issues.append(f"missing SBOM file: {c.get('name')}")
+   elif h and sha256_file(p)!=h:issues.append(f"SBOM hash mismatch: {c.get('name')}")
+ return {'valid':not issues,'issues':issues,'components':len(sbom.get('components',[]))}
+
+def verify_provenance(statement,artifacts):
+ expected={Path(p).name:sha256_file(p) for p in artifacts};subjects={x.get('name'):x.get('digest',{}).get('sha256') for x in statement.get('subject',[])};issues=[]
+ for name,digest in expected.items():
+  if subjects.get(name)!=digest:issues.append(f'provenance mismatch: {name}')
+ return {'valid':not issues,'issues':issues,'subjects':len(subjects)}
+
+def sign_release_manifest(manifest,private_key):
+ """Return detached Ed25519 signature. private_key may be raw 32-byte key."""
+ from cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PrivateKey
+ key=Ed25519PrivateKey.from_private_bytes(private_key) if isinstance(private_key,(bytes,bytearray)) else private_key
+ payload=json.dumps(manifest,sort_keys=True,separators=(',',':')).encode();return base64.b64encode(key.sign(payload)).decode()
+
+def verify_release_signature(manifest,signature,public_key):
+ from cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PublicKey
+ try:
+  key=Ed25519PublicKey.from_public_bytes(public_key) if isinstance(public_key,(bytes,bytearray)) else public_key
+  payload=json.dumps(manifest,sort_keys=True,separators=(',',':')).encode();key.verify(base64.b64decode(signature),payload);return True
+ except Exception:return False
+
+def offline_install_evidence(wheelhouse,required=()):
+ wheelhouse=Path(wheelhouse);files=sorted(p.name for p in wheelhouse.glob('*') if p.is_file());lower=[x.lower().replace('_','-') for x in files];missing=[]
+ for req in required:
+  name=re.split(r'[<>=!~ ]',str(req),1)[0].lower().replace('_','-')
+  if not any(x.startswith(name+'-') for x in lower):missing.append(str(req))
+ return {'ready':not missing,'artifacts':files,'missing':missing}
+
+def packaging_quality_gate(manifest_report,sbom_report,provenance_report,signature_valid,offline_report,dependency_evidence):
+ checks={'manifest':bool(manifest_report.get('valid')),'sbom':bool(sbom_report.get('valid')),'provenance':bool(provenance_report.get('valid')),'signature':bool(signature_valid),'offline_install':bool(offline_report.get('ready')),'dependency_evidence':bool(dependency_evidence.get('files'))}
+ return {'gate':'PASS' if all(checks.values()) else 'FAIL','checks':checks,'failed':[k for k,v in checks.items() if not v]}

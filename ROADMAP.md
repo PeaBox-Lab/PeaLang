@@ -119,8 +119,15 @@ Grammar, type system, standard library, embedding API, package format and PEAC c
 - upgrade fixtures
 
 
-## Next: 0.82 release engineering and supply-chain hardening
+## 0.82 release engineering and supply-chain hardening - delivered
 - reproducible build manifests
 - SBOM and provenance generation
 - signed release verification
 - release quality gates
+
+
+## Next: 0.83 runtime performance II
+- representative benchmark suites
+- optimizer/compiler hot-path profiling
+- cache instrumentation
+- memory-pressure behavior and regression budgets

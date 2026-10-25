@@ -44,7 +44,7 @@ The roadmap version numbers for advanced ML were delivered early in 0.73, and in
 - 0.79 enterprise integration hardening: COMPLETED. Focus: identity/credential-provider interfaces, connector reliability contracts, TLS/proxy configuration normalization, structured retry/circuit-breaker policy.
 - 0.80 observability and operations hardening: COMPLETED. W3C/OpenTelemetry-compatible context propagation, metric conventions/cardinality limits, health/readiness contracts and bounded redacted diagnostic bundles.
 - 0.81 compatibility and migration hardening: COMPLETED. Added deprecation lifecycle enforcement, deterministic/resumable/reversible migrations, public API snapshots and breaking-change gates. Focus: deprecation ledger, schema/config migrations, public API diff enforcement and upgrade fixtures.
-- 0.82 packaging and reproducibility hardening: planned. Focus: deterministic builds, locked dependency evidence, SBOM/provenance verification and offline install validation.
+- 0.82 packaging and reproducibility hardening: COMPLETED. Deterministic manifests, locked dependency evidence, CycloneDX SBOM verification, SLSA/in-toto provenance verification, Ed25519 signature verification and offline-install evidence are included.
 - 0.83 runtime performance II: planned. Focus: representative benchmark suites, optimizer hot paths, cache instrumentation and memory-pressure behavior.
 - 0.84 concurrency and resilience: planned. Focus: cancellation/timeout propagation, structured concurrency stress tests, retry safety and graceful shutdown.
 - 0.85 data/connector conformance: planned. Focus: SQL dialect matrices, streaming failure semantics, object-store edge cases and connector certification.

@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.82.0-alpha.1 - 2026-10-25
+- Added deterministic source manifests and tamper verification.
+- Added CycloneDX SBOM and SLSA/in-toto provenance verification.
+- Added Ed25519 detached release-manifest signing and verification.
+- Added dependency-lock and offline-install evidence plus packaging quality gates.
+- Added tests, release notes, retention evidence and handover.
+
 ## 0.81.0-alpha.1 - 2026-10-25
 - Added machine-readable deprecation lifecycle enforcement.
 - Added deterministic, resumable and reversible migration execution.
