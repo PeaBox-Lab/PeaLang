@@ -1,5 +1,12 @@
 # PeaLang Changelog
 
+## 0.79.0a1 - Enterprise integration hardening
+- Added chained credential providers and normalized integration profiles.
+- Added shared timeout, rate-limit, authentication and availability error taxonomy.
+- Added exponential retry/backoff with jitter and circuit-breaker recovery.
+- Added correlation IDs and connector health reports.
+- Retained v0.78 security controls and all previous connector implementations.
+
 ## 0.78.0a1 - Security hardening
 - Added reusable trust-boundary validation for text, collection, path and URL inputs.
 - Added private/loopback/link-local network blocking for host URL validation.

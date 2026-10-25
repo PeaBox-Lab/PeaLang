@@ -117,3 +117,5 @@ Release hardening gates and clean documentation structure.
 
 ## 0.77.0
 Performance and memory hardening: latency/memory probes, performance budgets and bounded LRU cache.
+## 0.79.0
+Enterprise integration hardening: credentials, retry/backoff, circuit breaking, correlation and health checks.

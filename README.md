@@ -142,3 +142,7 @@ Version 0.77 adds repeatable performance probes, p95/mean latency gates, allocat
 
 ## PeaLang v0.78 security hardening
 Version 0.78 continues the v1 stabilization line with reusable security controls at embedding and service trust boundaries: bounded input validation, allowed-root path checks, HTTPS/private-network URL policy, recursive secret redaction, and tamper-evident audit chains. See `docs/SECURITY_HARDENING_078.md` and `docs/ROADMAP_064_TO_100.md`.
+
+
+## PeaLang v0.79 enterprise integration hardening
+Version 0.79 standardizes credential providers, retry/backoff, circuit breaking, correlation IDs and health checks across PeaLang connector hosts. See `docs/project/ENTERPRISE_INTEGRATION_079.md`.
