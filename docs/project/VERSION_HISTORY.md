@@ -127,3 +127,5 @@ Enterprise integration hardening: credentials, retry/backoff, circuit breaking, 
 - 0.94.0-rc1: RC validation IV and release-engineering evidence closure.
 
 - 0.95.0-rc1: final RC acceptance, signed-artifact/dry-run and GO/NO-GO gates.
+
+- 0.96.0-rc1: release readiness closure and final 1.0 readiness dossier gates.

@@ -1,5 +1,10 @@
 
 # Changelog
+## 0.96.0-rc1 - 2026-10-26
+- Added documentation/support and packaging/operations readiness gates.
+- Added verified release-evidence consolidation and residual-risk closure.
+- Added final 1.0 readiness dossier with three-owner approval requirement.
+
 ## 0.95.0-rc1 - 2026-10-26
 - Added real release-evidence ingestion contracts.
 - Added critical/high blocker burn-down and waiver validation.

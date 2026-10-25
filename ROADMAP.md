@@ -219,9 +219,15 @@ Grammar, type system, standard library, embedding API, package format and PEAC c
 - signed-artifact and provenance verification contracts
 - release dry-run, rollback and explicit GO/NO-GO gate
 
-## Next: 0.96 release readiness closure
-- ingest actual v0.95 external evidence without simulation
-- close documentation, support, packaging and operational readiness
-- consolidate final 1.0 readiness dossier and residual-risk register
-- retain NO-GO until every mandatory external/human gate is satisfied
+## 0.96 release readiness closure - delivered
+- verified-evidence ingestion contracts
+- documentation, support, packaging and operational readiness gates
+- residual-risk closure and final 1.0 readiness dossier
+- mandatory release/security/operations approvals
+
+## Next: 0.97 1.0 launch candidate
+- freeze code except blocker fixes
+- consume verified v0.96 readiness evidence
+- finalize signed distribution metadata and migration/support playbooks
+- define launch rollback criteria and execute launch-candidate validation
 
