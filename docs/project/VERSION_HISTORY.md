@@ -114,3 +114,6 @@ Durable agent governance audit trails and persistent approval records.
 
 ## 0.76.0
 Release hardening gates and clean documentation structure.
+
+## 0.77.0
+Performance and memory hardening: latency/memory probes, performance budgets and bounded LRU cache.

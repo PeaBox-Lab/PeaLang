@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.77.0 - 2026-10-25
+- Added repeatable runtime performance and allocation-memory probes.
+- Added mean/p95 latency and peak-memory budget gates.
+- Added a dependency-free bounded LRU cache with eviction and hit-rate metrics.
+- Retained the clean documentation layout and v0.76 release-hardening gates.
+
 ## 0.76.0 - 2026-10-25
 - Added adversarial agent-policy probes and deterministic probe summaries.
 - Added public API compatibility gating with explicit approved-removal handling.

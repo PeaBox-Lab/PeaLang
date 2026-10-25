@@ -105,3 +105,4 @@ from .jupyter import RichResult,RichDisplay,PeaKernel,kernelspec
 from .model_interop import ModelInteropError,TensorSpec,TensorBridge,ONNXModel,QueryPolicy,QueryPlan,GovernedQueryPlanner
 from .agent_governance import AuditEvent,GovernanceAuditStore,AuditedApprovalGate,approval_request_id
 from .hardening import SecurityProbe,ProbeResult,AdversarialAgentSuite,PublicAPIGate,ReleaseThresholds,ReleaseHardeningGate,sha256_manifest
+from .performance_hardening import PerformanceBudget,PerformanceSample,PerformanceProbe,PerformanceGate,BoundedLRUCache

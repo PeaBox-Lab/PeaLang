@@ -1,12 +1,12 @@
 {
   "schema": "pealang.release-manifest.v1",
-  "version": "0.76.0",
-  "file_count": 413,
+  "version": "0.77.0",
+  "file_count": 420,
   "files": [
     {
       "path": "CHANGELOG.md",
-      "size": 8643,
-      "sha256": "ad6ade68a675b7db572c48d5f01c4331fcc430d7a96ddf7980c0859dc57e77bb"
+      "size": 8948,
+      "sha256": "1851c99431508e37742bac34f68de7a0f2aa8658086df989cd53c7b1cf8c46fc"
     },
     {
       "path": "Containerfile",
@@ -45,8 +45,8 @@
     },
     {
       "path": "README.md",
-      "size": 8439,
-      "sha256": "efd8942d82dc7a5ff96801391b84d166a5af393f09bcca71081dad01e80c74bb"
+      "size": 8698,
+      "sha256": "17358cb62e45e3c589e182eaab4bfeb6d645a0ef332b6585f4629888efdaba92"
     },
     {
       "path": "RELEASE_MANIFEST.json",
@@ -55,13 +55,13 @@
     },
     {
       "path": "RELEASE_MANIFEST_COMPLETE.json",
-      "size": 65047,
-      "sha256": "8f66391b8d62599a20e0b9007390d160e39b2b57b653f5a4149ccf2206abd677"
+      "size": 67044,
+      "sha256": "f2c90fe7133695d66603edd1451b940cc6891905c9ab98884a9aa8f3897bcbdf"
     },
     {
       "path": "ROADMAP.md",
-      "size": 3857,
-      "sha256": "aca5ce6735f5bea6b55d5168c1004fd5e0f47fb81458af713f84a233c1f1ba36"
+      "size": 4167,
+      "sha256": "3aa8931b9241e44816ea3a374ccaeaebbc80b3278b022cd0a023c90052c679de"
     },
     {
       "path": "THREAT_MODEL.json",
@@ -734,6 +734,11 @@
       "sha256": "9c62cbb76a79eaf0f4228bb289e1a1a631bcaa3b987c587b63f3523ccc6387a9"
     },
     {
+      "path": "docs/handover/PEALANG_AI_DEVELOPMENT_HANDOVER 0.77.md",
+      "size": 379,
+      "sha256": "c4fe2fbcc745b673711144d4b6a7ae44239328ee3c112ccf0b8ca0cfe0077727"
+    },
+    {
       "path": "docs/handover/README.md",
       "size": 252,
       "sha256": "80706c7c0be5be13f41e27b7a66a748b05a74732d99bc017c67bb8319b2a12a2"
@@ -757,6 +762,11 @@
       "path": "docs/project/LANGUAGE.md",
       "size": 233,
       "sha256": "45bd02ad57384ebdbd386803dd8e29387cfc3af83e1a76abee277244e3d4e7d5"
+    },
+    {
+      "path": "docs/project/PERFORMANCE_HARDENING_077.md",
+      "size": 588,
+      "sha256": "0d68bc270511b9626d6a050d0b47dfdad7b27a56867a2f6fac874c8b0a4c0b21"
     },
     {
       "path": "docs/project/RC1_GATE_STATUS.md",
@@ -790,8 +800,8 @@
     },
     {
       "path": "docs/project/VERSION_HISTORY.md",
-      "size": 5239,
-      "sha256": "10cf9f1a22ec330fe104a4b62edcccc36acb3d8a9379c29f74b07233d17131cd"
+      "size": 5350,
+      "sha256": "5b77cd7ae629c6148f3974cba70dcac4553fe5b5470f008e34b74e075e7e0b5c"
     },
     {
       "path": "docs/releases/README.md",
@@ -837,6 +847,11 @@
       "path": "docs/releases/RELEASE_NOTES_0.76.0.md",
       "size": 616,
       "sha256": "2c09f82b077c8e7bbb0095d8ed7fe583681a616760d31bd713f922cd24205bb2"
+    },
+    {
+      "path": "docs/releases/RELEASE_NOTES_0.77.0.md",
+      "size": 263,
+      "sha256": "f3a72a13598b4bb05b689a2c40b3a1764760ac49f08fc8fc7c40b52538f15461"
     },
     {
       "path": "docs/retention/README.md",
@@ -897,6 +912,16 @@
       "path": "docs/retention/RETENTION_REPORT_076.md",
       "size": 238,
       "sha256": "dfc7ab248b3a082912919d439c5d5e5a2839eff72588694f9a169400ada25231"
+    },
+    {
+      "path": "docs/retention/RETENTION_REPORT_077.json",
+      "size": 634,
+      "sha256": "0c08d576fed5ece04c9ce5f1922c43029d8816a9a0d32e650fc6718911fd041b"
+    },
+    {
+      "path": "docs/retention/RETENTION_REPORT_077.md",
+      "size": 189,
+      "sha256": "32dde462773a8a1ce278e3fac9c6d23f2e735c0814039b61acb26cd563e3c612"
     },
     {
       "path": "editors/vscode/launch.json",
@@ -1225,8 +1250,8 @@
     },
     {
       "path": "pealang/__init__.py",
-      "size": 8962,
-      "sha256": "ec985a062a5301cade95953acc0f117dc4bd4c7efd39c7aadb9415dabe64bb4b"
+      "size": 9082,
+      "sha256": "cb0b914a4bd05ef46e1eb928c65b4abaebcbafb7fa28e9ae923eae6530ab15c2"
     },
     {
       "path": "pealang/__main__.py",
@@ -1509,6 +1534,11 @@
       "sha256": "030073f206cf2db0e44c16847dddbd7df839a249688e82e59a3258079e213052"
     },
     {
+      "path": "pealang/performance_hardening.py",
+      "size": 2627,
+      "sha256": "b5e266e1fcb165427c240807447505489b10ec97eff71ef55eb7e4945f22b5d4"
+    },
+    {
       "path": "pealang/pipeline_observability.py",
       "size": 2980,
       "sha256": "ce63456f80a5f9d345e625ab4855826be298371a49ce7b15a54bb7354b570cc9"
@@ -1686,7 +1716,7 @@
     {
       "path": "pyproject.toml",
       "size": 730,
-      "sha256": "0fbe17c4262bf1372f2556cd4ddbb2707e0d01137c1e26dca81f102dc6a97b78"
+      "sha256": "0c6528d2738253ff239f9fadcdc9c11102f512289eeb2567214a7b5bf9601db2"
     },
     {
       "path": "react-sdk/package.json",
@@ -1932,6 +1962,11 @@
       "path": "tests/test_packages_v027.py",
       "size": 1965,
       "sha256": "ebfa289c87197e9db742777e25b7553c811b730ad0eefed0e5360ad20f3d3d72"
+    },
+    {
+      "path": "tests/test_performance_hardening_v077.py",
+      "size": 996,
+      "sha256": "6659fe65d7be0469650da3bd90d50a6c688b74aa4eb99f2412ea235492e47d90"
     },
     {
       "path": "tests/test_production_ml_v054.py",

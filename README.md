@@ -136,3 +136,6 @@ PeaLang 0.76 adds adversarial agent-policy probes, public API compatibility chec
 - `docs/retention/`: retention and compatibility evidence.
 - `docs/handover/`: development handover archive.
 - `docs/project/`: roadmaps, version history, readiness and release-gate documentation.
+
+## 0.77 Performance and memory hardening
+Version 0.77 adds repeatable performance probes, p95/mean latency gates, allocation peak-memory limits and a bounded LRU cache for reusable runtime/compiler artifacts. See `docs/project/PERFORMANCE_HARDENING_077.md`.

@@ -93,3 +93,14 @@ Grammar, type system, standard library, embedding API, package format and PEAC c
 - deeper security hardening
 - enterprise integration certification
 - public API freeze preparation
+
+## 0.77 - Performance and memory hardening - delivered
+- repeatable latency and memory probes
+- mean/p95 budget gates
+- bounded LRU runtime cache primitive
+
+## Next
+- deeper security hardening
+- enterprise integration certification
+- broader VM/compiler/data-path optimization
+- public API freeze preparation

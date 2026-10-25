@@ -1,0 +1,25 @@
+{
+  "schema": "pealang.retention.v1",
+  "release": "0.77.0",
+  "baseline": "0.76.0",
+  "baseline_files": 413,
+  "same_path_retained": 413,
+  "unexpected_missing": [],
+  "added": [
+    "docs/handover/PEALANG_AI_DEVELOPMENT_HANDOVER 0.77.md",
+    "docs/project/PERFORMANCE_HARDENING_077.md",
+    "docs/releases/RELEASE_NOTES_0.77.0.md",
+    "pealang/performance_hardening.py",
+    "tests/test_performance_hardening_v077.py"
+  ],
+  "modified": [
+    "CHANGELOG.md",
+    "README.md",
+    "ROADMAP.md",
+    "docs/project/VERSION_HISTORY.md",
+    "pealang/__init__.py",
+    "pyproject.toml"
+  ],
+  "tests": 461,
+  "retention_gate": "PASS"
+}
