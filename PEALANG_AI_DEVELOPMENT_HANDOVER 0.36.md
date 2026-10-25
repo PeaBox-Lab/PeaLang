@@ -10,3 +10,4 @@
 0.37: complete runtime resource accounting and structured concurrency.
 ## Integrity rule
 Future releases must retain every prior clean source/documentation file unless removal is deliberate, documented and migration-safe. Always compare file names and SHA-256 retention before packaging.
+

@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.72.0 - 2026-10-25
+- Merged interactive dashboard controls/bindings, browser REPL and dataset inspection, plus Jupyter kernel protocol and rich DataFrame rendering.
+
 ## 0.71.0 - 2026-10-24
 - Combined three roadmap targets: dataset/column lineage, pipeline observability with SLA/alerts/audit, and a declarative dashboard DSL with React rendering.
 
@@ -116,3 +119,4 @@
 - Added embedding, types, compiler/VM, capability safety, exceptions, imports, and VM DAP.
 ## 0.1.0 - 0.17.0
 - Established the language and tooling foundations.
+

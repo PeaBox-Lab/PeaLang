@@ -16,3 +16,4 @@ from pealang.streaming import EventTimeStream, Watermark, TumblingWindow
 stream = EventTimeStream("event_time", watermark=Watermark(timedelta(minutes=5)))
 windows = stream.window(events, TumblingWindow(timedelta(minutes=10)))
 ```
+

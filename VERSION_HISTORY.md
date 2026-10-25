@@ -90,3 +90,16 @@ Excluded directories: 1
 | 0.70 | Durable orchestration state, retries, idempotency, scheduling, and backfill |
 
 | 0.71 | Unified lineage, observability, SLA/audit, and dashboard DSL/React rendering |
+
+================================================================================
+EXPORT SUMMARY
+================================================================================
+
+Files discovered: 372
+Text/source files exported: 372
+Binary files listed: 0
+Oversized files skipped: 0
+Failed files: 0
+Excluded directories: 0
+
+| 0.72 | Interactive dashboards, Browser REPL/dataset inspector, Jupyter kernel and rich results |

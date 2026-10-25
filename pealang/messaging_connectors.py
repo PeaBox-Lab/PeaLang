@@ -89,3 +89,4 @@ class InMemoryMessageBus:
         q=self.queues.setdefault(name,queue.Queue()); rows=[]
         while not q.empty() and (max_messages is None or len(rows)<max_messages): rows.append(q.get_nowait())
         return rows
+

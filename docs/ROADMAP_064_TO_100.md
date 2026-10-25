@@ -20,9 +20,9 @@ PeaLang currently fits enterprise data engineering and embedded analytics best: 
 
 ## Phase C: Interactive analytics
 - 0.73 declarative dashboard syntax and React renderer.
-- 0.74 interactive controls, tables and chart bindings.
-- 0.75 browser REPL and dataset inspector.
-- 0.76 Jupyter kernel and inline rendering.
+- 0.74 interactive controls, tables and chart bindings. COMPLETED IN 0.72
+- 0.75 browser REPL and dataset inspector. COMPLETED IN 0.72
+- 0.76 Jupyter kernel and inline rendering. COMPLETED IN 0.72
 
 ## Phase D: Advanced ML and governed agents
 - 0.77 ONNX Runtime bridge.
@@ -35,3 +35,4 @@ PeaLang currently fits enterprise data engineering and embedded analytics best: 
 - 0.90 API freeze.
 - 0.91-0.99 release candidates and live certification.
 - 1.0 only after automated and external gates pass.
+

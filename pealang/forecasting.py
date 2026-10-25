@@ -74,3 +74,4 @@ def benchmark_forecast(values,iterations=100):
 DataFrame.train_test_split=lambda self,test_size=.2:train_test_split(self,test_size)
 DataFrame.grouped_forecast=lambda self,by,value,periods,method='linear',**options:grouped_forecast(self,by,value,periods,method,**options)
 DataFrame.chart_series=lambda self,x,y,name=None:chart_series(self,x,y,name)
+

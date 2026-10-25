@@ -231,3 +231,4 @@ LazyFrame.optimize=lambda self:self
 class LazyGroupedFrame:
     def __init__(self,frame,keys):self.frame,self.keys=frame,keys
     def agg(self,**aggs):return _lazy_op(self.frame,'group_by/agg',lambda d:d.group_by(self.keys).agg(**aggs))
+

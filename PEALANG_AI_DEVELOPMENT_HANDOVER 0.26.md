@@ -26,3 +26,4 @@ Synchronous VM execution returns `AsyncSuspension` when an AWAIT instruction rec
 ## Next release
 
 Version 0.27 should deliver the package ecosystem foundation: `pea.toml`, `pea.lock`, semantic version constraints, local/Git/private-feed sources, deterministic resolution, checksums, permission manifests, package archives, install/update/audit commands, and reproducible builds.
+

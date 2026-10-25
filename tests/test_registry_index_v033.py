@@ -27,3 +27,4 @@ def test_missing_token():
  with pytest.raises(Exception):registry_token('x',{})
 def test_duplicate_version_index():
  with pytest.raises(Exception):validate_index(build_index('main',1,[rec(),rec()]))
+

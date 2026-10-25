@@ -30,3 +30,4 @@ def test_dependency_confusion_guard():
  with pytest.raises(Exception):dependency_confusion_guard('x','git','public')
 def test_receipt(tmp_path):
  p=package(tmp_path);d=tmp_path/'dest';d.mkdir();r=write_receipt(d,p,key_id='abc');assert json.loads(r.read_text())['key_id']=='abc'
+

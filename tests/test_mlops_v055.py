@@ -22,3 +22,4 @@ def test_registry(tmp_path):
  r=ModelRegistry(tmp_path/'registry.json');r.register('m','1','bundle');r.transition('m','1','production','raj');assert r.production('m').approved_by=='raj'
 def test_compatibility():assert not compatibility_report(prediction_schema(model()),DataFrame([{'z':1}]))['compatible']
 def test_benchmark():assert inference_benchmark(model(),DataFrame([{'x':1}]),2)['rows']==2
+

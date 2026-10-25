@@ -23,3 +23,4 @@ HMAC uses a shared secret. It is suitable for controlled/internal publisher work
 ## Release requirement
 
 Preserve cumulative changelog, detailed README, release notes, roadmap, version history, basics/foundations, user/help/embedding/security docs, tests/examples, integrity manifest, no-removal gate, and updated handover.
+

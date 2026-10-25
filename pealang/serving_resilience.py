@@ -75,3 +75,4 @@ class TraceHooks:
   token.update({'ended':time.time(),'error':str(error) if error else None})
   if self.on_end:self.on_end(token)
   return token
+

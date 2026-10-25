@@ -22,3 +22,4 @@ kafka.commit()
 ```
 
 The real backend is optional and requires `kafka-python`; the PeaLang core remains dependency-light.
+

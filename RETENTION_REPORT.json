@@ -1,0 +1,28 @@
+{
+  "schema": "pealang.retention.v1",
+  "release": "v0.71.0",
+  "baseline": "v0.70.0",
+  "baseline_file_count": 365,
+  "release_export_file_count": 372,
+  "retained_file_count": 365,
+  "added_files": [
+    "PEALANG_AI_DEVELOPMENT_HANDOVER 0.71.md",
+    "RELEASE_NOTES_0.71.0.md",
+    "docs/UNIFIED_GOVERNANCE_071.md",
+    "pealang/dashboard.py",
+    "pealang/lineage.py",
+    "pealang/pipeline_observability.py",
+    "tests/test_unified_governance_v071.py"
+  ],
+  "removed_files": [],
+  "unexpected_missing_files": [],
+  "unchanged_files": 360,
+  "modified_files": [
+    "CHANGELOG.md",
+    "VERSION_HISTORY.md",
+    "docs/ROADMAP_064_TO_100.md",
+    "pealang/__init__.py",
+    "pyproject.toml"
+  ],
+  "retention_gate": "PASS"
+}

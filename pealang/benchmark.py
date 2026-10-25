@@ -7,3 +7,4 @@ def benchmark_source(source,iterations=20,source_name='<benchmark>'):
  for _ in range(iterations):
   start=time.perf_counter();VirtualMachine(output=lambda x:None).run(module);samples.append((time.perf_counter()-start)*1000)
  return {'iterations':iterations,'min_ms':min(samples),'median_ms':statistics.median(samples),'mean_ms':statistics.mean(samples),'max_ms':max(samples)}
+

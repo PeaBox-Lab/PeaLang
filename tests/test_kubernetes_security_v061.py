@@ -13,3 +13,4 @@ def test_drain_blocks():
  except RuntimeError:assert True
 def test_matrix():assert any(x.platform=='Windows' for x in rc_compatibility_matrix())
 def test_soak():assert soak_test(lambda i:i,.02)['status']=='PASS'
+

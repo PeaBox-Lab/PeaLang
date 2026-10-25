@@ -16,3 +16,4 @@
 - Final signed publication of wheel, source, SBOM and provenance
 
 RC1 code foundation may pass automated gates, but GA remains blocked until all external gates pass.
+

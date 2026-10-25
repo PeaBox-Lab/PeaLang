@@ -18,3 +18,4 @@ plan.checkpoint("employees_clean")
 ```
 
 For large JSONL inputs, use `scan_jsonl()` to consume batches without loading the complete source file in memory.
+

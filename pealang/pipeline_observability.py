@@ -51,3 +51,4 @@ class AuditReport:
     @staticmethod
     def write(path,report):
         with open(path,"w",encoding="utf-8") as fh: json.dump(report,fh,indent=2,default=str)
+

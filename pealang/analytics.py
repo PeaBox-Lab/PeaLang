@@ -106,3 +106,4 @@ DataFrame.rolling=lambda self,column,window,op='mean',name=None,min_periods=1:ro
 DataFrame.outliers_iqr=lambda self,column,factor=1.5:outliers_iqr(self,column,factor)
 DataFrame.profile=lambda self:profile(self)
 DataFrame.correlation_matrix=lambda self,columns=None:correlation_matrix(self,columns)
+

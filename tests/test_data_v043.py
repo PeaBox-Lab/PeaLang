@@ -16,3 +16,4 @@ def test_window_row_number():
  d=DataFrame([{'g':'a','v':2},{'g':'a','v':1}]).window('g','v');assert [r['row_number'] for r in d.to_dicts()]==[1,2]
 def test_lazy_group():
  l=LazyFrame(lambda:DataFrame([{'g':'a','v':1},{'g':'a','v':2}])).group_by('g').agg(total=('sum','v'));assert l.collect().to_dicts()[0]['total']==3 and 'group_by/agg' in l.explain()
+

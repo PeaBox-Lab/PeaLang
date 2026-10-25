@@ -6,3 +6,4 @@ RC2 is a defect-correction and evidence release. No broad feature scope is added
 - No public API removal or signature change from RC1.
 - Defect corrections must retain backwards compatibility.
 - External integration, license, security and soak gates remain release blockers until evidenced.
+

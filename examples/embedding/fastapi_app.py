@@ -10,3 +10,4 @@ class Employee(BaseModel):
 @app.post('/bonus')
 def bonus(employee:Employee):
     return {'bonus':rules.call('calculate_bonus',employee)}
+

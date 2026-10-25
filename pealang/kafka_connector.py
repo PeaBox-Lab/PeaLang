@@ -81,3 +81,4 @@ class InMemoryKafkaBroker:
     def consume(self,topic,offset=0,max_records=None):
         rows=self.topics.get(topic,[])[offset:]
         return rows if max_records is None else rows[:max_records]
+

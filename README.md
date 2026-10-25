@@ -110,3 +110,7 @@ RC2 preserves the feature freeze and validates compatibility against RC1. See `d
 
 ## Distributed Compute Foundation 0.64 alpha
 Engine-neutral plans and optional Arrow, Polars and Spark adapters begin the post-RC scalable-data roadmap. See `docs/DISTRIBUTED_COMPUTE_064.md` and `docs/ROADMAP_064_TO_100.md`.
+
+
+## PeaLang v0.72 interactive analytics
+Interactive dashboard state/bindings, Browser REPL and dataset inspection, and Jupyter-compatible rich result contracts are documented in `docs/INTERACTIVE_ANALYTICS_072.md`.

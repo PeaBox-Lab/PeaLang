@@ -22,3 +22,4 @@ def test_model_card_manifest():
  m=LinearRegression([2],1,['x']);assert model_card(m,'demo')['name']=='demo' and len(reproducibility_manifest(reg(),['x'],'y')['dataset_sha256'])==64
 def test_pipeline():
  p=ProductionPipeline([(StandardScaler(),(['x'],))],LinearRegression()).fit(reg(),['x'],'y',epochs=1000,learning_rate=.05);assert p.predict(DataFrame([{'x':6}])).row_count==1
+

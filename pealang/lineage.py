@@ -58,3 +58,4 @@ class LineageGraph:
     def to_dict(self):
         return {"datasets":[{"id":k,**asdict(v)} for k,v in self.datasets.items()],"columns":[{"id":k,"dataset":v.dataset.id,"name":v.name,"data_type":v.data_type} for k,v in self.columns.items()],"edges":[asdict(e) for e in self.edges]}
     def to_json(self,indent=2): return json.dumps(self.to_dict(),indent=indent,default=str)
+

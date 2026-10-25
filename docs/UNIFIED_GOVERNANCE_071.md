@@ -21,3 +21,4 @@ alerts = SLAEvaluator().evaluate(metric, SLAPolicy(max_duration_seconds=60))
 report = AuditReport.build(metric, alerts, lineage)
 ui = render_react(Dashboard("HR Operations").add("metric", "Duration", source="run"))
 ```
+

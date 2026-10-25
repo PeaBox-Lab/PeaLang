@@ -23,3 +23,4 @@ result = runner.run(dag, logical_date="2026-10-24", retry=RetryPolicy(max_attemp
 ```
 
 Idempotency is scoped to DAG, task, logical date, and canonicalized inputs. A repeated successful run is skipped and its stored result is returned.
+

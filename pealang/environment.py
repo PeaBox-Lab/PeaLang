@@ -21,3 +21,4 @@ class Env:
         raise PeaError(f"Undefined variable '{n}'",span,source_name)
 
     def snapshot(self):return dict(self.values)
+

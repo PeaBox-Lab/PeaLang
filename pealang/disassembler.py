@@ -7,3 +7,4 @@ def disassemble(module):
  code(module.code)
  for c in module.functions.values():code(c)
  return '\n'.join(lines)+'\n'
+

@@ -30,3 +30,4 @@ def test_rate_limit():
 def test_retry_server_error():
  f=Fake([R({},500),R({'ok':True})]);c=RESTConnector(ConnectorConfig('http://api',retries=1,backoff=0),f);assert c.get('x')['ok']
 def test_helpers():assert bearer('x')['Authorization']=='Bearer x' and api_key('X-Key','y')['X-Key']=='y'
+

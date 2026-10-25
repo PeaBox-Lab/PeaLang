@@ -126,3 +126,4 @@ def generate_docs(source,path='<input>'):
         if f.name.startswith('_'):continue
         lines += [f'## `{f.name}({", ".join(p.name + ("=?" if p.default is not None else "") for p in f.params)})`','',f'Defined at line {f.span.line if f.span else "?"}.','']
     return '\n'.join(lines).rstrip()+'\n'
+

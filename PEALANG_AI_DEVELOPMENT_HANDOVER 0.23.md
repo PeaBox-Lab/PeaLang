@@ -28,3 +28,4 @@
 ## Next release
 
 Version 0.24 should mature semantic analysis: typed expression inference, record field conformance, function-call argument checking, return-path validation, null narrowing, unreachable-code diagnostics, imported contract loading, and at least 100 type conformance tests.
+

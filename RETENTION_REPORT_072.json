@@ -1,0 +1,29 @@
+{
+  "schema": "pealang.retention.v1",
+  "release": "0.72.0",
+  "baseline": "0.71.0_REPAIRED",
+  "baseline_files": 375,
+  "release_files": 382,
+  "retained": 375,
+  "added": [
+    "PEALANG_AI_DEVELOPMENT_HANDOVER 0.72.md",
+    "RELEASE_NOTES_0.72.0.md",
+    "docs/INTERACTIVE_ANALYTICS_072.md",
+    "pealang/browser_repl.py",
+    "pealang/jupyter.py",
+    "pealang/jupyter_kernel.py",
+    "tests/test_interactive_v072.py"
+  ],
+  "removed": [],
+  "modified": [
+    "CHANGELOG.md",
+    "README.md",
+    "VERSION_HISTORY.md",
+    "docs/ROADMAP_064_TO_100.md",
+    "pealang/__init__.py",
+    "pealang/dashboard.py",
+    "pyproject.toml"
+  ],
+  "retention_gate": "PASS",
+  "tests": "446 passed"
+}

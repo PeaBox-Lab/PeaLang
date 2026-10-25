@@ -98,3 +98,7 @@ from .distributed_compute import PlanNode,ExecutionPlan,ComputeEngine,LocalEngin
 from .lineage import DatasetRef,ColumnRef,LineageEdge,LineageGraph
 from .pipeline_observability import SLAPolicy,RunMetric,Alert,MetricsRegistry,SLAEvaluator,AlertRouter,AuditReport
 from .dashboard import DashboardComponent,Dashboard,dashboard_from_dict,render_react
+
+from .dashboard import DashboardFilter,DashboardState,DataBinding,apply_dashboard_filters
+from .browser_repl import BrowserResult,BrowserREPL,DatasetInspector
+from .jupyter import RichResult,RichDisplay,PeaKernel,kernelspec
