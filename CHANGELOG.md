@@ -1,6 +1,12 @@
 
 
 # Changelog
+## 0.99.0-rc1 - 2026-10-26
+- Added final blocker/waiver closure gate.
+- Added final documentation-review gate.
+- Added 1.0.0 artifact signature, provenance and SBOM gates.
+- Added authoritative GO-1.0/NO-GO dossier contract.
+
 ## 0.98.0-rc1 - 2026-10-26
 - Added signed staging release-rehearsal evidence gates.
 - Added clean-install, upgrade and rollback integrity drills.

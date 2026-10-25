@@ -1,6 +1,6 @@
 # Current release
 
-See `RELEASE_NOTES_0.98.0.md` for v0.98.0 RC1.
+See `RELEASE_NOTES_0.99.0.md` for v0.99.0 RC1.
 
 
 # Current release

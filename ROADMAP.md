@@ -238,10 +238,16 @@ Grammar, type system, standard library, embedding API, package format and PEAC c
 - support, incident and rollback operational rehearsal gates
 - consolidated rehearsal approval with fail-closed evidence policy
 
-## Next: 0.99 final 1.0 release gate
-- consume verified v0.98 rehearsal evidence
-- close blocker, waiver and residual-risk registers
-- verify final documentation and signed distribution metadata
-- produce explicit PeaLang 1.0 GO/NO-GO dossier
+## 0.99 final 1.0 release gate - delivered
+- v0.98 rehearsal prerequisite
+- blocker, waiver and residual-risk closure contracts
+- final documentation and 1.0 signed distribution gates
+- explicit GO-1.0/NO-GO dossier
+
+## Next: PeaLang 1.0.0
+- release only after all mandatory real evidence passes v0.99
+- generate and sign final wheel, sdist and container artifacts
+- publish final documentation and migration/support material
+- archive the 1.0 release evidence and begin the post-1.0 maintenance line
 
 
