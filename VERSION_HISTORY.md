@@ -105,3 +105,6 @@ Excluded directories: 0
 | 0.72 | Interactive dashboards, Browser REPL/dataset inspector, Jupyter kernel and rich results |
 
 | 0.73 | ONNX Runtime, tensor/PyTorch interchange, and governed query planning |
+
+## 0.74.0-alpha.1
+Agent governance: dry-run planning, policy and approval gates, tool-call budgets, plus handover archive cleanup.

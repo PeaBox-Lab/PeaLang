@@ -2,6 +2,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import Any
 from .errors import PeaError
+from .agent_governance import AgentPolicy, ApprovalGate, plan_tool_call
 
 @dataclass
 class ToolSpec:
@@ -44,7 +45,18 @@ class AgentRuntime:
         aiopts.update(opts.get('ai',{}))
         answer=self.ai.ask(prompt,aiopts)
         return {'agent':agent.get('name'),'text':answer['text'],'provider':answer['provider'],'model':answer['model'],'tools':list(agent.get('tools',[]))}
-    def tool(self,agent,name,args=None):
+    def plan_tool(self,agent,name,args=None,policy=None,call_index=0):
+        return plan_tool_call(agent,name,args,policy,call_index)
+    def tool(self,agent,name,args=None,policy=None,approval=None,call_index=0,dry_run=False):
         if not isinstance(agent,dict):raise PeaError('agent.tool expects an agent dictionary')
+        plan=self.plan_tool(agent,name,args,policy,call_index)
+        if dry_run:return plan
+        decision=plan['decision']
+        if decision['requires_approval']:
+            gate=approval if isinstance(approval,ApprovalGate) else ApprovalGate(approval)
+            if not gate.request({'agent':agent.get('name'),'tool':str(name),'args':list(args or []),'reason':decision['reason']}):
+                raise PeaError(f"Tool '{name}' approval denied or unavailable")
+        elif not decision['allowed']:
+            raise PeaError(f"Tool '{name}' blocked: {decision['reason']}")
         return self.tools.call(name,args,agent.get('tools',[]))
 

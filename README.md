@@ -117,3 +117,8 @@ Interactive dashboard state/bindings, Browser REPL and dataset inspection, and J
 
 ## PeaLang v0.73 advanced ML and governed planning
 Optional ONNX inference, tensor/DataFrame interoperability, and rule-first governed query plans are documented in `docs/ADVANCED_ML_GOVERNED_QUERY_073.md`.
+
+## 0.74 Agent governance
+Version 0.74 adds dry-run agent tool planning, explicit policy decisions, approval gates and tool-call budgets. See `docs/AGENT_GOVERNANCE_074.md`.
+
+Historical AI development handovers are preserved in `docs/handover/` to keep the repository root clean.

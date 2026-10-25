@@ -56,3 +56,16 @@ The original roadmap goal is not yet complete. The implementation has covered mu
 ## 1.0 gate
 Grammar, type system, standard library, embedding API, package format and PEAC compatibility policy must be Stable; security must be reviewed; LSP/DAP workflows and documentation must be complete; real applications must run without runtime forks.
 
+
+## 0.74 - Agent governance and repository hygiene - delivered
+- Agent tool dry-run planning
+- Deterministic deny and approval-required policy gates
+- Host-provided approval callback with fail-closed default
+- Per-run tool-call budget
+- Historical handover archive under `docs/handover/`
+
+## Next: v1 hardening programme
+- End-to-end agent audit trails and persistent approval records
+- Security review and adversarial agent/tool tests
+- Conformance, coverage and cross-platform CI release evidence
+- Documentation and migration completeness gate

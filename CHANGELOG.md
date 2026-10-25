@@ -123,3 +123,11 @@
 ## 0.1.0 - 0.17.0
 - Established the language and tooling foundations.
 
+
+## 0.74.0-alpha.1 - 2026-10-25
+- Added agent dry-run tool planning.
+- Added deterministic tool allow/deny policy gates.
+- Added host approval gates for sensitive agent actions.
+- Added tool-call budget enforcement.
+- Moved historical development handovers to `docs/handover/` for a cleaner project root.
+- Added agent governance documentation and regression tests.
