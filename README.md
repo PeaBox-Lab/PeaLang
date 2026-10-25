@@ -1,4 +1,4 @@
-# PeaLang 0.83.0 Alpha 1
+# PeaLang 0.84.0 Alpha 1
 
 PeaLang is an embeddable extension language for controlled rules, workflows, automation and host integration. Version 0.37 completes runtime resource accounting and structured concurrency while retaining the v0.35 standard library and v0.36 type-system foundation.
 
@@ -162,3 +162,7 @@ Version 0.82 adds deterministic source manifests, CycloneDX SBOM verification, S
 
 ## PeaLang v0.83 Runtime Performance II
 Version 0.83 adds representative benchmark suites, p50/p95/p99 and throughput evidence, prior-baseline regression budgets, named compiler/runtime hot-path profiling, cache eviction/load instrumentation, and memory-pressure probes. See `docs/project/RUNTIME_PERFORMANCE_083.md`.
+
+
+## PeaLang v0.84 concurrency and resilience
+Version 0.84 adds parent-child cancellation, deadlines, fail-fast structured task groups, retry-safety enforcement, idempotency evidence, graceful draining, and resilience release gates. See `docs/project/CONCURRENCY_RESILIENCE_084.md`.

@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.84.0-alpha.1 - 2026-10-25
+- Added parent-child cancellation and deadline propagation.
+- Added fail-fast structured task-group lifecycle guarantees.
+- Added retry safety and idempotency-key payload validation.
+- Added graceful shutdown, draining and resilience release gates.
+- Added stress-oriented regression tests, release notes and retention evidence.
+
 ## 0.83.0-alpha.1 - 2026-10-25
 - Added representative benchmark-suite execution with mean, p50, p95, p99, throughput and peak-memory evidence.
 - Added prior-baseline performance regression budgets and automated gates.

@@ -8,7 +8,7 @@ from .runtime import execute, compile_source, Interpreter, PeaError
 from .type_system import TypeChecker,TypeRef,Diagnostic,TypeCheckResult,SemanticAnalyzer,SemanticResult,FunctionContract,parse_type,erase_types
 from .embedding import (PeaRuntime,PeaModule,RuntimeOptions,ExecutionResult,
     PeaRuntimeError,PeaPermissionError,PeaResourceLimitError,to_pea,from_pea)
-__version__ = "0.83.0a1"
+__version__ = "0.84.0a1"
 __all__=['BytecodeModule','CodeObject','Instruction','Op','Compiler','CompileError','compile_source_to_bytecode','VirtualMachine','VMError','AsyncSuspension','AsyncVirtualMachine','AsyncVMRuntime','AsyncVMModule','CancellationToken','VMRuntime','VMModule','disassemble','execute','compile_source','Interpreter','PeaError','PeaRuntime','PeaModule',
 'SemanticAnalyzer','SemanticResult','FunctionContract','TypeChecker','TypeRef','Diagnostic','TypeCheckResult','parse_type','erase_types','RuntimeOptions','ExecutionResult','PeaRuntimeError','PeaPermissionError',
 'PeaResourceLimitError','to_pea','from_pea','__version__']
@@ -108,3 +108,5 @@ from .hardening import SecurityProbe,ProbeResult,AdversarialAgentSuite,PublicAPI
 from .performance_hardening import PerformanceBudget,PerformanceSample,PerformanceProbe,PerformanceGate,BoundedLRUCache,BenchmarkStats,BenchmarkSuite,RegressionBudget,PerformanceRegressionGate,HotPathProfiler,InstrumentedLRUCache,MemoryPressureProbe,MemoryPressureResult,save_benchmark_baseline,load_benchmark_baseline
 from .security_hardening import SecurityPolicy,SecurityValidator,SecurityViolation,redact_secrets,SignedAuditChain
 from .integration_hardening import IntegrationError,IntegrationAuthenticationError,IntegrationTimeoutError,IntegrationRateLimitError,IntegrationUnavailableError,CircuitOpenError,CredentialProvider,EnvironmentCredentialProvider,MappingCredentialProvider,ChainedCredentialProvider,RetryPolicy as IntegrationRetryPolicy,CircuitState,CircuitBreaker,IntegrationProfile,IntegrationResult,ReliableExecutor,HealthReport,ConnectorHealthCheck
+
+from .concurrency_resilience import CancellationReason,CancellationToken,Deadline,run_with_deadline,TaskOutcome,StructuredTaskGroup,RetryPolicyV2,RetrySafetyError,retry_async,IdempotencyStore,LifecycleState,DrainReport,GracefulShutdown,ResilienceGateBudget,ResilienceGate

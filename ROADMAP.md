@@ -133,8 +133,15 @@ Grammar, type system, standard library, embedding API, package format and PEAC c
 - memory-pressure behavior and regression budgets
 
 
-## Next: 0.84 concurrency and resilience
+## 0.84 concurrency and resilience - delivered
 - cancellation and timeout propagation
 - structured concurrency stress testing
 - retry safety and idempotency evidence
 - graceful shutdown and drain behavior
+
+
+## Next: 0.85 data and connector conformance
+- SQL dialect conformance matrices
+- streaming failure and recovery semantics
+- object-store edge cases
+- connector certification fixtures and gates
