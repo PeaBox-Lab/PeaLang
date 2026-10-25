@@ -129,4 +129,3 @@ def _records(data,path=None):
     if isinstance(value,list):return [x if isinstance(x,dict) else {'value':x} for x in value]
     if isinstance(value,dict):return [value]
     return [{'value':value}]
-

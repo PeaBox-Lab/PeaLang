@@ -18,4 +18,3 @@ def test_corr_matrix():assert sample().correlation_matrix(['x','y']).to_dicts()[
 def test_quantile_bounds():
  try:quantile([1],2);assert False
  except ValueError:assert True
-

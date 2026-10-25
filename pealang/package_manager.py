@@ -96,4 +96,3 @@ def install(root='.'):
   else:(dest).mkdir();(dest/'REMOTE_SOURCE.json').write_text(json.dumps(dep,indent=2))
   installed.append(dep['name'])
  return installed
-

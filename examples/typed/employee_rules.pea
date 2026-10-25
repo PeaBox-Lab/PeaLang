@@ -10,4 +10,3 @@ function calculate_bonus(employee: Employee, rate: Number = 0.10) -> Number {
 
 let employee: Employee = {"name": "Rajesh", "rating": 4, "salary": 100000}
 print calculate_bonus(employee, 0.15)
-

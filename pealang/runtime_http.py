@@ -19,4 +19,3 @@ class Handler(BaseHTTPRequestHandler):
   data['operation']=mapping[self.path];result=SERVICE.handle(data);return self.send_json(200 if result.get('ok',True) else 400,result)
  def log_message(self,*args):pass
 def serve(host='127.0.0.1',port=8787):ThreadingHTTPServer((host,port),Handler).serve_forever()
-

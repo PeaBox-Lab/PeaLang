@@ -197,4 +197,3 @@ class ProductionPipeline:
   validate_prediction_schema(self.model,data);return self.model.predict(data,name)
 
 DataFrame.stratified_split=lambda self,target,test_size=.2,seed=None:stratified_split(self,target,test_size,seed)
-

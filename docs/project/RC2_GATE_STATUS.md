@@ -17,4 +17,3 @@
 - Signed external publication
 
 GA remains blocked until external gates pass.
-

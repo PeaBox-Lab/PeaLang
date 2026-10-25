@@ -25,4 +25,3 @@ def test_module_cache(tmp_path):
  out=[];vm=VirtualMachine(out.append);vm.run(compile_source_to_bytecode(main.read_text(),str(main)));assert out==[6] and len(vm.module_cache)==1
 def test_peac_defaults_roundtrip(tmp_path):
  m=compile_source_to_bytecode('function f(x=4){return x}\nprint f()');p=tmp_path/'x.peac';m.save(p);out=[];VirtualMachine(out.append).run(BytecodeModule.load(p));assert out==[4]
-

@@ -20,4 +20,3 @@ def test_dashboard_dsl_and_react_renderer():
     code=render_react(d,"OperationsDashboard")
     assert "function OperationsDashboard" in code and "pea-dashboard" in code
     loaded=dashboard_from_dict(d.to_dict()); assert len(loaded.components)==2
-

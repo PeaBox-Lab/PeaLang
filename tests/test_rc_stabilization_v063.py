@@ -17,4 +17,3 @@ def test_upgrade():assert len(upgrade_compatibility(['0.60','0.61','0.62'])['upg
 def test_threat():assert len(threat_model()['threats'])>=5
 def test_migration():assert 'back up registry and monitoring databases' in migration_guide()['steps']
 def test_gate():assert rc_gate({'tests':True,'licenses':False})['status']=='BLOCKED'
-

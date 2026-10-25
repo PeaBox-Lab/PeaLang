@@ -36,3 +36,23 @@ PeaLang currently fits enterprise data engineering and embedded analytics best: 
 - 0.91-0.99 release candidates and live certification.
 - 1.0 only after automated and external gates pass.
 
+## Current execution update after 0.78
+The roadmap version numbers for advanced ML were delivered early in 0.73, and interactive work was consolidated in 0.72. The active release line is now using 0.77+ for v1 stabilization.
+
+- 0.77 performance and memory hardening: COMPLETED.
+- 0.78 trust-boundary security hardening: COMPLETED in this build.
+- 0.79 enterprise integration hardening: planned. Focus: identity/credential-provider interfaces, connector reliability contracts, TLS/proxy configuration normalization, structured retry/circuit-breaker policy.
+- 0.80 observability and operations hardening: planned. Focus: OpenTelemetry context propagation across VM/connectors/DAGs/agents, metric conventions, health/readiness contracts and diagnostic bundles.
+- 0.81 compatibility and migration hardening: planned. Focus: deprecation ledger, schema/config migrations, public API diff enforcement and upgrade fixtures.
+- 0.82 packaging and reproducibility hardening: planned. Focus: deterministic builds, locked dependency evidence, SBOM/provenance verification and offline install validation.
+- 0.83 runtime performance II: planned. Focus: representative benchmark suites, optimizer hot paths, cache instrumentation and memory-pressure behavior.
+- 0.84 concurrency and resilience: planned. Focus: cancellation/timeout propagation, structured concurrency stress tests, retry safety and graceful shutdown.
+- 0.85 data/connector conformance: planned. Focus: SQL dialect matrices, streaming failure semantics, object-store edge cases and connector certification.
+- 0.86 ML/serving conformance: planned. Focus: model format compatibility, deterministic inference fixtures, serving overload/reload/rollback tests.
+- 0.87 agent safety conformance: planned. Focus: tool isolation, approval durability, replay protection, budgets and auditable multi-step execution.
+- 0.88 developer tooling stabilization: planned. Focus: LSP/DAP/editor compatibility, diagnostics stability and reproducible debugging.
+- 0.89 release-candidate hardening: planned. No new feature families; close blocker/high-severity defects and complete release evidence.
+- 0.90 API freeze: planned. Freeze public syntax/runtime/package APIs for 1.0, with only approved compatibility fixes afterward.
+- 0.91-0.96 release candidates: planned. Cross-platform soak, upgrade, security, performance and ecosystem validation.
+- 0.97-0.99 final documentation/ecosystem readiness: planned. Tutorials, examples, package/connector authoring guides and migration handbook.
+- 1.0 stable: planned after all mandatory gates pass.

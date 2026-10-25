@@ -17,4 +17,3 @@ v0.68 completes the first scalable-data phase with RabbitMQ and WebSocket connec
 
 ## Local development
 `InMemoryMessageBus` provides dependency-free deterministic messaging for unit tests and local workflows.
-

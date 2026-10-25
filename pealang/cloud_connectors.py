@@ -125,4 +125,3 @@ CONNECTORS.register('odata',ODataConnector,replace=True)
 
 def odata(base_url,headers=None,**options):return ODataConnector(ConnectorConfig(base_url,headers or {},**options))
 def sftp(host,**options):return SFTPConnector(SFTPConfig(host,**options))
-

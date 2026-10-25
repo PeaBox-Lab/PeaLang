@@ -33,4 +33,3 @@ def test_read_sql(tmp_path):
 def test_missing_optional_adapter():
  try:connect('postgresql://invalid-host/db')
  except (RuntimeError,Exception):pass
-

@@ -125,4 +125,3 @@ DataFrame.ewm=lambda self,column,alpha=None,span=None,name=None:ewm(self,column,
 DataFrame.interpolate=lambda self,column,method='linear',name=None:interpolate(self,column,method,name)
 DataFrame.grouped_describe=lambda self,by,columns=None:grouped_describe(self,by,columns)
 DataFrame.grouped_rolling=lambda self,by,column,window,op='mean',name=None:grouped_rolling(self,by,column,window,op,name)
-

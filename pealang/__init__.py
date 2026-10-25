@@ -106,3 +106,4 @@ from .model_interop import ModelInteropError,TensorSpec,TensorBridge,ONNXModel,Q
 from .agent_governance import AuditEvent,GovernanceAuditStore,AuditedApprovalGate,approval_request_id
 from .hardening import SecurityProbe,ProbeResult,AdversarialAgentSuite,PublicAPIGate,ReleaseThresholds,ReleaseHardeningGate,sha256_manifest
 from .performance_hardening import PerformanceBudget,PerformanceSample,PerformanceProbe,PerformanceGate,BoundedLRUCache
+from .security_hardening import SecurityPolicy,SecurityValidator,SecurityViolation,redact_secrets,SignedAuditChain

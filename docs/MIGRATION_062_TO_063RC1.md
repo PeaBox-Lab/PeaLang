@@ -8,4 +8,3 @@
 6. Validate rollback to 0.62 before promotion.
 
 No automatic destructive schema migration is introduced in RC1.
-

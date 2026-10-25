@@ -18,4 +18,3 @@ def test_build_reproducible(tmp_path):
  with tarfile.open(a) as tf:assert 'pea.toml' in tf.getnames() and 'pea.lock' in tf.getnames()
 def test_git_lock_metadata(tmp_path):
  app=tmp_path/'a';init_manifest(app,'a');p=app/'pea.toml';p.write_text(p.read_text().replace('[dependencies]','[dependencies]\nx = { git = "https://example.invalid/x.git", version = "1.0.0", rev = "abc" }'));_,lock=write_lock(app);assert lock['dependencies'][0]['source']=='git'
-

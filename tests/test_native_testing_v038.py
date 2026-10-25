@@ -11,4 +11,3 @@ def test_migrate_advisory():
  out,notes=migrate_text('print 1','0.34','0.38');assert out=='print 1' and notes
 def test_migrate_path_preserves_source(tmp_path):
  p=tmp_path/'x.pea';p.write_text('print 1');x=migrate_path(p,'0.37','0.38');assert p.read_text()=='print 1' and len(x)==1
-

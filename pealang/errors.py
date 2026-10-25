@@ -17,4 +17,3 @@ class PeaError(Exception):
         if self.span:
             return f"{self.source_name}:{self.span.line}:{self.span.col}: {self.message}"
         return self.message
-

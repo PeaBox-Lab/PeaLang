@@ -136,4 +136,3 @@ class VirtualMachine:
   return ret
  def pop_args(self,n):
   args=[self.pop() for _ in range(n)][::-1];return self.pop(),args
-

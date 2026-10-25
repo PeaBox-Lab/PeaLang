@@ -70,4 +70,3 @@ def migration_guide(from_version='0.62.0',to_version='0.63.0rc2'):
  return {'from':from_version,'to':to_version,'steps':['back up registry and monitoring databases','verify current bundles and checksums','install the RC wheel in an isolated environment','run API compatibility and migration checks','run connector and serving smoke tests','promote only after rollback validation'],'rollback':['restore previous wheel','restore registry/monitoring backup if modified','redeploy previous serving manifest']}
 def rc_gate(results):
  failed=[k for k,v in results.items() if not v];return {'status':'PASS' if not failed else 'BLOCKED','failed_gates':failed,'score':round(100*(len(results)-len(failed))/max(1,len(results)),1)}
-

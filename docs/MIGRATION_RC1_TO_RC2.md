@@ -8,4 +8,3 @@
 6. Validate rollback to RC1.
 
 No destructive schema migration is introduced.
-

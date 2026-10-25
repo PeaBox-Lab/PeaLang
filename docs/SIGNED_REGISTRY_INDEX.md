@@ -23,4 +23,3 @@ Once `acme/demo` version `1.0.0` is observed with a SHA-256 digest, the same reg
 ## Authentication
 
 Registry access tokens are read from environment variables such as:
-

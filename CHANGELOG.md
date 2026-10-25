@@ -1,3 +1,12 @@
+# PeaLang Changelog
+
+## 0.78.0a1 - Security hardening
+- Added reusable trust-boundary validation for text, collection, path and URL inputs.
+- Added private/loopback/link-local network blocking for host URL validation.
+- Added recursive credential and bearer-token redaction.
+- Added tamper-evident SHA-256/HMAC audit chains.
+- Added v0.78 security regression tests while retaining the cumulative release history.
+
 # Changelog
 
 ## 0.77.0 - 2026-10-25

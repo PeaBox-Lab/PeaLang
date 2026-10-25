@@ -165,4 +165,3 @@ def _checkpoint(self,name,directory='.pea-checkpoints'):
     frame=self.collect(); CheckpointStore(directory).save(name,frame); return frame
 DistributedLazyFrame.partitioned=_partitioned
 DistributedLazyFrame.checkpoint=_checkpoint
-

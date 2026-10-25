@@ -26,4 +26,3 @@
 ## Release requirement
 
 Continue cumulative documentation, full tests/examples, integrity inventory, no-regression source gate, deterministic artifacts, and updated AI handover on every release.
-

@@ -18,4 +18,3 @@ def test_export():
 def test_instruction_limit():
  import pytest
  with pytest.raises(Exception):VirtualMachine(max_instructions=4).run(compile_source_to_bytecode('let x=0\nwhile x<10 {x=x+1}'))
-

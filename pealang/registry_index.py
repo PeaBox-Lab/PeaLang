@@ -50,4 +50,3 @@ class RegistryState:
    if prior and prior!=p['sha256']:raise PeaError(f'Immutable version changed: {p["name"]} {p["version"]}')
    versions.setdefault(p['name'],{})[p['version']]=p['sha256']
   self.data['sequences'][index.registry]=index.sequence;self.save();return True
-

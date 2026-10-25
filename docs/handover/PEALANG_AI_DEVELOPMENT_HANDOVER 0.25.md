@@ -20,4 +20,3 @@ Version 0.26 should add language-level async/await and a resumable VM suspension
 ## Release requirement
 
 Continue shipping cumulative changelog, release notes, README, roadmap, version history, foundations, full user/embedding/help documentation, architecture/security notes, tests, examples, and an updated AI handover.
-

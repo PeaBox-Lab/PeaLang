@@ -3,4 +3,3 @@ function bonus(employee) {
     return employee.salary * 0.08
 }
 export bonus
-

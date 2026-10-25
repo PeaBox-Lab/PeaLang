@@ -139,3 +139,6 @@ PeaLang 0.76 adds adversarial agent-policy probes, public API compatibility chec
 
 ## 0.77 Performance and memory hardening
 Version 0.77 adds repeatable performance probes, p95/mean latency gates, allocation peak-memory limits and a bounded LRU cache for reusable runtime/compiler artifacts. See `docs/project/PERFORMANCE_HARDENING_077.md`.
+
+## PeaLang v0.78 security hardening
+Version 0.78 continues the v1 stabilization line with reusable security controls at embedding and service trust boundaries: bounded input validation, allowed-root path checks, HTTPS/private-network URL policy, recursive secret redaction, and tamper-evident audit chains. See `docs/SECURITY_HARDENING_078.md` and `docs/ROADMAP_064_TO_100.md`.

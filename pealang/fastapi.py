@@ -85,4 +85,3 @@ def install_exception_handlers(app):
  @app.exception_handler(PeaResourceLimitError)
  async def budget_handler(request,exc):return JSONResponse(status_code=429,content={'code':'PEA_RESOURCE_LIMIT','message':str(exc)})
  return app
-
