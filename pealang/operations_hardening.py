@@ -1,5 +1,6 @@
 
 
+
 """Observability and operations hardening for PeaLang 0.80."""
 from __future__ import annotations
 from contextlib import contextmanager
@@ -116,5 +117,6 @@ class DiagnosticBundleBuilder:
   with zipfile.ZipFile(path,"w",zipfile.ZIP_DEFLATED) as z:
    for n,d in sorted(entries.items()):z.writestr(n,d)
   return path
+
 
 

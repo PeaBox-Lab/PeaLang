@@ -1,7 +1,13 @@
-
-
 # Changelog
-## 0.99.0-rc1 - 2026-10-26
+
+## 0.99.1 - 2026-10-26
+- Closed the pre-1.0 repository audit without adding features.
+- Classified all intentional abstract interface methods.
+- Added component maturity and known-limitations documents.
+- Normalized SDK metadata and cumulative changelog structure.
+- Added automated audit-closure tests and fail-closed 1.0 guidance.
+
+0.99.0-rc1 - 2026-10-26
 - Added final blocker/waiver closure gate.
 - Added final documentation-review gate.
 - Added 1.0.0 artifact signature, provenance and SBOM gates.
@@ -130,7 +136,6 @@
 - Added redacted diagnostic bundles with SHA-256 manifests.
 - Added tests, release notes, operations guide, retention report and handover.
 
-# PeaLang Changelog
 
 ## 0.79.0a1 - Enterprise integration hardening
 - Added chained credential providers and normalized integration profiles.
@@ -146,7 +151,6 @@
 - Added tamper-evident SHA-256/HMAC audit chains.
 - Added v0.78 security regression tests while retaining the cumulative release history.
 
-# Changelog
 
 ## 0.77.0 - 2026-10-25
 - Added repeatable runtime performance and allocation-memory probes.
@@ -191,7 +195,6 @@
 - Added partitioning, bounded JSONL scans, predicate/projection pushdown, spill execution and checkpoints.
 
 
-# Changelog
 ## 0.64.0a1 - 2026-10-24
 - Added engine-neutral distributed compute plans and Local/Arrow/Polars/Spark adapters.
 ## 0.63.0rc2 - 2026-10-24
@@ -253,19 +256,19 @@
 ## 0.35.0 - 2026-10-23
 - Stabilized the 14-module `std.*` standard library, capability gates, manifest, CLI inspection and compatibility tests.
 
-## 0.35.0 - 2026-10-23
+### Language specification
 - Added implementation-independent language specification, EBNF grammar, feature stability registry, compatibility/deprecation contract, spec CLI, and revised foundational roadmap.
 
-## 0.35.0 - 2026-10-23
+### Registry metadata
 - Added canonical registry indexes, sequence/replay protection, immutable version policy, package expiration, publisher namespaces, persistent registry state, and environment-based Bearer credentials.
 
-## 0.35.0 - 2026-10-23
+### Package authenticity
 - Added Ed25519 public-key package signatures, public trust store, revocation, HTTPS registry transport, verified install, offline cache, and lockfile hash enforcement.
 
-## 0.35.0 - 2026-10-23
+### Package archives
 - Added signed .peapkg support, trusted publisher keys, verification, safe extraction, HTTPS registry policy, installation receipts, and dependency-confusion defenses.
 
-## 0.35.0 - 2026-10-23
+### Tooling and conformance
 - Added VM profiling, line coverage, benchmark tooling, and observer hooks.
 - Added interpreter-versus-VM differential conformance coverage.
 - Added source inventory/hash comparison and strengthened release integrity gates.

@@ -1,3 +1,5 @@
+# AUDIT-CLOSURE: intentional interface contract; concrete backends must override the methods documented in docs/project/INTERFACE_COMPLETENESS_0991.md.
+
 
 
 """PeaLang 0.47 cloud object storage connectors."""
@@ -108,5 +110,6 @@ def s3(bucket,**options):return S3Connector(bucket,**options)
 def azure_blob(container,**options):return AzureBlobConnector(container,**options)
 def adls(file_system,**options):return ADLSConnector(file_system,**options)
 def gcs(bucket,**options):return GCSConnector(bucket,**options)
+
 
 

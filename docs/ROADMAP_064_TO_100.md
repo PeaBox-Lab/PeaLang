@@ -1,5 +1,6 @@
 
 
+
 # PeaLang Roadmap: 0.64 to 1.0
 
 The 0.63 RC line remains frozen. New capabilities resume in the 0.64 alpha line.
@@ -60,5 +61,6 @@ The roadmap version numbers for advanced ML were delivered early in 0.73, and in
 - 0.93-0.96 release candidates: planned. Extended soak, recovery, reproducibility and ecosystem validation.
 - 0.97-0.99 final documentation/ecosystem readiness: planned. Tutorials, examples, package/connector authoring guides and migration handbook.
 - 1.0 stable: planned after all mandatory gates pass.
+
 
 

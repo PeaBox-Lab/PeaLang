@@ -1,5 +1,6 @@
 
 
+
 # Version History
 
 | Version | Theme |
@@ -137,3 +138,4 @@ Enterprise integration hardening: credentials, retry/backoff, circuit breaking, 
 - 0.98.0-rc1: Release Dress Rehearsal, staging/install/rollback and operational evidence gates.
 
 - 0.99.0-rc1: final 1.0 release gate and authoritative GO/NO-GO dossier.
+

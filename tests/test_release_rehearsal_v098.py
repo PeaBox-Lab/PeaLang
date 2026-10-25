@@ -1,3 +1,4 @@
+
 from pealang.release_rehearsal_v098 import *
 def h(x): return digest(x)
 def test_signed_staging():
@@ -11,3 +12,4 @@ def test_rehearsal_pass():
  ok={"passed":True}; assert rehearsal_gate(launch97=ok,staging=ok,install=ok,operations=ok,approvals={"release-owner":True,"security-owner":True,"operations-owner":True})["decision"]=="REHEARSAL-PASS"
 def test_missing_approval_no_go():
  ok={"passed":True}; assert rehearsal_gate(launch97=ok,staging=ok,install=ok,operations=ok,approvals={})["decision"]=="NO-GO"
+

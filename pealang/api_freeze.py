@@ -1,5 +1,6 @@
 
 
+
 """PeaLang 0.90 API-freeze and 1.0 compatibility contracts."""
 from dataclasses import dataclass, asdict
 import hashlib, json
@@ -49,5 +50,6 @@ def freeze_gate(diff, policy=FreezePolicy(), approved_breaks=()):
 
 def compatibility_contract(manifest, diagnostic_codes=(), bytecode_version=None):
     return {"schema":1,"target":"1.0","api_digest":manifest.digest(),"diagnostic_codes":sorted(set(diagnostic_codes)),"bytecode_version":bytecode_version,"rules":{"breaking_changes":"approval-required","additions":"compatible-by-default","deprecations":"ledger-required"}}
+
 
 

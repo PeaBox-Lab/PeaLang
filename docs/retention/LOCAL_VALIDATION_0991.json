@@ -1,0 +1,11 @@
+{
+  "release_specific": {
+    "returncode": 0,
+    "stdout": "............                                                             [100%]\n12 passed in 31.80s\n",
+    "stderr": ""
+  },
+  "full_suite": {
+    "returncode": 124,
+    "status": "not completed in sandbox execution window; required in CI before 1.0"
+  }
+}

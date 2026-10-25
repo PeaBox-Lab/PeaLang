@@ -1,5 +1,6 @@
 
 
+
 from pealang.rc_validation_ii import *
 def test_evidence_freshness():
  xs=[TimedEvidence('e1','security',100,True,3600)];assert EvidenceFreshness(50).evaluate(xs,now=120)['passed'];assert not EvidenceFreshness(10).evaluate(xs,now=120)['passed']
@@ -16,5 +17,6 @@ def test_trends_ecosystem_recovery_and_waivers():
  assert WaiverLifecycle().evaluate([Waiver('w1','i1',200,'owner','temporary')],now=100)['passed']
 def test_rc92_gate_and_digest():
  ok={'passed':True};r=rc92_gate(freshness=ok,upgrades=ok,drift=ok,trends=ok,ecosystem=ok,recovery=ok,waivers=ok);assert r['gate']=='GO' and len(certification_digest(r))==64
+
 
 

@@ -1,5 +1,6 @@
 
 
+
 import os
 from pealang.enterprise_connectors import *
 from pealang.connectors import ConnectorResponse,Transport,ConnectorConfig
@@ -27,5 +28,6 @@ def test_azure_secret_fake():
  class C:
   def get_secret(self,n):return V()
  assert AzureKeyVaultSecrets('x',client=C()).get('x')=='s'
+
 
 

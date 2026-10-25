@@ -1,5 +1,6 @@
 
 
+
 import pytest
 from pealang import WasmPolicy,compile_peac_to_wasm,inspect_wasm,browser_loader_source
 from pealang.compiler import compile_source_to_bytecode
@@ -16,5 +17,6 @@ def test_save(tmp_path):
  p=tmp_path/'a.wasm';artifact().save(p);assert p.read_bytes().startswith(b'\x00asm')
 def test_invalid():
  with pytest.raises(ValueError):inspect_wasm(b'bad')
+
 
 

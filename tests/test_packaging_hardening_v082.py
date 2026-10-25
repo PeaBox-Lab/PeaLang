@@ -1,5 +1,6 @@
 
 
+
 import json
 from cryptography.hazmat.primitives import serialization
 from cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PrivateKey
@@ -18,5 +19,6 @@ def test_locked_dependency_and_offline_evidence(tmp_path):
 def test_quality_gate():
  ok={'valid':True};gate=packaging_quality_gate(ok,ok,ok,True,{'ready':True},{'files':[1]});assert gate['gate']=='PASS'
  assert packaging_quality_gate(ok,ok,ok,False,{'ready':True},{'files':[1]})['gate']=='FAIL'
+
 
 

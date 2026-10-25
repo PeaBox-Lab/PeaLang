@@ -1,5 +1,6 @@
 
 
+
 import io,tarfile,json,pytest
 from pealang.ed25519_signing import generate_ed25519_keypair,sign_ed25519,verify_ed25519,PublicTrustStore
 from pealang.registry import PackageCache,install_verified
@@ -32,5 +33,6 @@ def test_private_public_different(tmp_path):
 def test_https_registry_only(tmp_path):
  _,_,pub=generate_ed25519_keypair(tmp_path/'private',tmp_path/'public');s=PublicTrustStore(tmp_path/'t');kid=s.trust(pub)
  with pytest.raises(Exception):s.configure_registry('bad','http://packages.example',[kid])
+
 
 

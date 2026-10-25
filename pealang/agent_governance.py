@@ -1,5 +1,6 @@
 
 
+
 from __future__ import annotations
 from dataclasses import dataclass, asdict
 from typing import Any, Callable
@@ -94,5 +95,6 @@ class AuditedApprovalGate(ApprovalGate):
         if self.approver is not None:self.store.resolve(rid,approved,self.actor or "host",request.get("reason", ""))
         self.store.record(AuditEvent("approval",request.get("agent"),request.get("tool"),"approved" if approved else "denied",self.actor,request.get("reason",""),details={"request_id":rid}))
         return approved
+
 
 

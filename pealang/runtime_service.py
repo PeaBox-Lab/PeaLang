@@ -1,5 +1,6 @@
 
 
+
 """Transport-neutral PeaLang runtime sidecar core for Java and other hosts."""
 from __future__ import annotations
 from dataclasses import dataclass,asdict
@@ -53,5 +54,6 @@ class RuntimeService:
   if op=='load':return asdict(self.load(request['name'],request['source'],request.get('source_name','<remote>')))
   if op=='invoke':return asdict(self.invoke(request['module'],request['function'],request.get('args',[])))
   rid=self._id();return asdict(RuntimeResponse(False,rid,error=asdict(ServiceError('BAD_REQUEST',f'Unknown operation: {op}',rid))))
+
 
 

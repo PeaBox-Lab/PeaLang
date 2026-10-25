@@ -1,5 +1,6 @@
 
 
+
 # PeaLang 0.88 Developer Tooling Stabilization
 
 ## Delivered
@@ -13,5 +14,6 @@
 
 ## Stabilization policy
 Diagnostic codes and severities are treated as compatibility contracts. Debug fixtures must be deterministic and contain no machine-specific paths. Tooling certification requires the mandatory LSP and DAP surfaces plus diagnostic and debug reproducibility evidence.
+
 
 

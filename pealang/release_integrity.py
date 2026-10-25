@@ -1,5 +1,6 @@
 
 
+
 from pathlib import Path
 import hashlib,json
 def sha256(path):
@@ -11,5 +12,6 @@ def inventory(root):
  return out
 def compare(previous,current):
  a,b=inventory(previous),inventory(current);return {'previous_files':len(a),'current_files':len(b),'added':sorted(set(b)-set(a)),'removed':sorted(set(a)-set(b)),'modified':sorted(k for k in set(a)&set(b) if a[k]['sha256']!=b[k]['sha256'])}
+
 
 

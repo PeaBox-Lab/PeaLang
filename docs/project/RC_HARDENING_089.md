@@ -1,5 +1,6 @@
 
 
+
 # PeaLang 0.89 Release-Candidate Hardening
 
 ## Scope freeze
@@ -18,5 +19,6 @@
 - No unresolved blocker/high-severity defect exists without an explicit registered waiver.
 
 Any missing mandatory evidence produces NO-GO. Waivers must name scope, owner, reason and expiry version.
+
 
 

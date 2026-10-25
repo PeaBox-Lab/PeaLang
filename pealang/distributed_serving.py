@@ -1,3 +1,5 @@
+# AUDIT-CLOSURE: intentional interface contract; concrete backends must override the methods documented in docs/project/INTERFACE_COMPLETENESS_0991.md.
+
 
 
 """PeaLang 0.60 distributed serving and Kubernetes operations."""
@@ -107,5 +109,6 @@ class OpenTelemetryHooks:
    def __enter__(self):return self
    def __exit__(self,*args):return False
   return Noop()
+
 
 

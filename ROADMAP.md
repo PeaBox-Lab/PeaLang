@@ -1,5 +1,6 @@
 
 
+
 # PeaLang Revised Foundational Roadmap
 
 The original roadmap goal is not yet complete. The implementation has covered much of the VM, embedding and integration work, but foundational maturity still requires specification completion, standard-library stabilization, deeper type semantics, structured concurrency, complete resource accounting, native language testing, larger conformance coverage, migration tooling, cross-platform CI evidence and production pilots.
@@ -251,3 +252,17 @@ Grammar, type system, standard library, embedding API, package format and PEAC c
 - archive the 1.0 release evidence and begin the post-1.0 maintenance line
 
 
+
+
+
+## 0.99.1 audit closure - delivered
+- component maturity and known limitations
+- interface completeness classification
+- SDK version and changelog normalization
+- automated repository audit checks
+
+## Next: 1.0.0 evidence execution
+- complete full regression and 12-cell OS/Python CI
+- retain real security, packaging, signing and install/upgrade/rollback evidence
+- obtain release, security and operations approvals
+- release only when v0.99 final gate returns GO-1.0

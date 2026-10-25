@@ -1,5 +1,6 @@
 
 
+
 import pytest
 from pealang import execute
 from pealang.stdlib import MODULES,STDLIB_VERSION,stdlib_manifest,build_standard_library
@@ -29,5 +30,6 @@ def test_legacy_json_retained():
  ns=build_standard_library();assert ns['json']['parse']('{"x":1}')['x']==1
 def test_manifest_permissions():
  m=stdlib_manifest();assert m['modules']['std.http']['permissions']==['http.request'] and m['modules']['std.file']['permissions']==['file.read','file.write']
+
 
 

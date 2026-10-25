@@ -1,5 +1,6 @@
 
 
+
 """Verified registry index, cache and remote-install primitives."""
 from pathlib import Path
 import hashlib,json,ssl,urllib.request
@@ -32,5 +33,6 @@ def remote_install(package_url,signature_url,public_key,destination,cache,expect
   sigdata=fetch_https(signature_url);sig=Path(str(package)+'.sig');sig.write_bytes(sigdata)
   if expected_sha256 and digest!=expected_sha256:raise PeaError('Downloaded package SHA-256 does not match lockfile')
  return install_verified(package,sig,public_key,destination,'registry',revoked)
+
 
 

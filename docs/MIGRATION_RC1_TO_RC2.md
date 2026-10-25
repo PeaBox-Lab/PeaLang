@@ -1,5 +1,6 @@
 
 
+
 # Migration from 0.63 RC1 to RC2
 
 1. Back up registries and monitoring stores.
@@ -10,5 +11,6 @@
 6. Validate rollback to RC1.
 
 No destructive schema migration is introduced.
+
 
 

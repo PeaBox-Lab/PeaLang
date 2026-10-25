@@ -1,5 +1,6 @@
 
 
+
 import pytest
 from pealang.agents import AgentRuntime, ToolRegistry
 from pealang.agent_governance import AgentPolicy
@@ -29,5 +30,6 @@ def test_approval_gate():
 def test_call_budget():
     r=runtime(); a=r.define('a',tools=['read'])
     with pytest.raises(PeaError,match='budget'): r.tool(a,'read',['x'],policy=AgentPolicy(max_calls=1),call_index=1)
+
 
 

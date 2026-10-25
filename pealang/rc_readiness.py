@@ -1,5 +1,6 @@
 
 
+
 from dataclasses import dataclass,asdict
 from enum import Enum
 import hashlib,json
@@ -28,5 +29,6 @@ def documentation_gate(paths,required):
  missing=sorted(set(required)-set(paths));return {'status':'PASS' if not missing else 'FAIL','missing':missing}
 def cross_platform_gate(results,required=('linux','windows','macos')):
  missing=[x for x in required if results.get(x)!='PASS'];return {'status':'PASS' if not missing else 'FAIL','missing_or_failed':missing}
+
 
 

@@ -1,0 +1,8 @@
+{
+  "baseline": "0.99.0-rc1",
+  "current": "0.99.1",
+  "baseline_files": 576,
+  "current_files": 584,
+  "removed": [],
+  "passed": true
+}

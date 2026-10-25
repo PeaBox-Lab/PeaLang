@@ -1,5 +1,6 @@
 
 
+
 # PeaLang v0.67 Kafka Connector
 
 v0.67 adds Apache Kafka integration to the v0.66 event-time streaming foundation.
@@ -24,5 +25,6 @@ kafka.commit()
 ```
 
 The real backend is optional and requires `kafka-python`; the PeaLang core remains dependency-light.
+
 
 

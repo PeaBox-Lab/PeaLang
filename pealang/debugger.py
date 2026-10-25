@@ -1,5 +1,6 @@
 
 
+
 from __future__ import annotations
 from dataclasses import dataclass,asdict
 from .parser import parse_source
@@ -49,5 +50,6 @@ class DebugSession:
    for node in pending:self.vm.exec_stmt(node)
    return {'reason':'end','variables':self._user_vars()}
   except DebugPause:return self.events[-1]
+
 
 

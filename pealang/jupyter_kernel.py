@@ -1,5 +1,6 @@
 
 
+
 """Optional ipykernel adapter. Core protocol remains usable without Jupyter installed."""
 from .jupyter import PeaKernel,kernelspec
 
@@ -16,5 +17,6 @@ def main():
             r=self.runtime.execute(code,silent); return {k:v for k,v in r.items() if k not in {"display_data","metadata"}}
     IPKernelApp.launch_instance(kernel_class=KernelAdapter)
 if __name__=="__main__": main()
+
 
 

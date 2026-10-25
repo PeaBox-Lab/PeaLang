@@ -1,5 +1,6 @@
 
 
+
 import io,tarfile,pytest
 from pealang import RuntimeOptions,VMRuntime,PeaRuntime
 from pealang.browser_profile import validate_browser_permissions
@@ -25,5 +26,6 @@ def test_archive_traversal_denied(tmp_path):
  with tarfile.open(p,'w:gz') as tf:
   i=tarfile.TarInfo('../evil');i.size=1;tf.addfile(i,io.BytesIO(b'x'))
  with pytest.raises(Exception):safe_extract(p,tmp_path/'out')
+
 
 

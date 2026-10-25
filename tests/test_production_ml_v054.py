@@ -1,5 +1,6 @@
 
 
+
 from pealang.data import DataFrame
 from pealang.ml import *
 def reg():return DataFrame([{'x':0,'y':1},{'x':1,'y':3},{'x':2,'y':5},{'x':3,'y':7},{'x':4,'y':9},{'x':5,'y':11}])
@@ -24,5 +25,6 @@ def test_model_card_manifest():
  m=LinearRegression([2],1,['x']);assert model_card(m,'demo')['name']=='demo' and len(reproducibility_manifest(reg(),['x'],'y')['dataset_sha256'])==64
 def test_pipeline():
  p=ProductionPipeline([(StandardScaler(),(['x'],))],LinearRegression()).fit(reg(),['x'],'y',epochs=1000,learning_rate=.05);assert p.predict(DataFrame([{'x':6}])).row_count==1
+
 
 

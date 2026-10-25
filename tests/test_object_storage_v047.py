@@ -1,5 +1,6 @@
 
 
+
 import io,datetime
 from pealang.object_storage import *
 class Body:
@@ -47,5 +48,6 @@ def test_gcs_crud():
  gc=GClient();c=GCSConnector('b',client=gc);assert c.list().row_count==1;c.write_bytes('x',b'2');assert c.read_bytes('x')==b'2';c.delete('x')
 def test_json_frame():
  s=S3();s.d['j.json']=b'{"items":[{"id":2}]}' ;assert S3Connector('b',client=s).read_json_frame('j.json','items').row_count==1
+
 
 

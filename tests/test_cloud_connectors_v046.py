@@ -1,5 +1,6 @@
 
 
+
 import io,json
 from types import SimpleNamespace
 from pealang.connectors import ConnectorConfig,ConnectorResponse,Transport
@@ -36,5 +37,6 @@ def test_sftp_json_frame():
 def test_sftp_rename_remove():
  b=MemSFTP();c=SFTPConnector(SFTPConfig('x'),b);c.rename('/a.csv','/b.csv');assert '/b.csv' in b.files;c.remove('/b.csv');assert not b.files
 def test_registry_contains_odata():assert 'odata' in CONNECTORS.names()
+
 
 

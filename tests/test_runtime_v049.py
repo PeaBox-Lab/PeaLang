@@ -1,5 +1,6 @@
 
 
+
 from pealang.connector_runtime import *
 from pealang.enterprise_connectors import *
 from pealang.connectors import ConnectorResponse,Transport
@@ -19,5 +20,6 @@ def test_token_provider():
  f=F([{'id':'me'}]);c=MicrosoftGraphConnector(transport=f).set_token_provider(StaticTokenProvider('abc'));c.me();assert f.calls[0][2]['Authorization']=='Bearer abc'
 def test_paging_sp():
  f=F([{'value':[{'id':'1','fields':{'Title':'A'}}],'@odata.nextLink':'next'},{'value':[{'id':'2','fields':{'Title':'B'}}]}]);c=SharePointConnector('t',transport=f);assert c.list_items_all('s','l').row_count==2
+
 
 

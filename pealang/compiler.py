@@ -1,5 +1,6 @@
 
 
+
 """AST to PeaLang bytecode compiler."""
 from .ast_nodes import *
 from .parser import parse_source
@@ -92,5 +93,6 @@ class Compiler:
    self.emit(Op.CALL,len(e.args),e)
   else:raise CompileError(f'Unsupported expression: {type(e).__name__}')
 def compile_source_to_bytecode(source,source_name='<input>'):return Compiler(source_name).compile(parse_source(source,source_name))
+
 
 

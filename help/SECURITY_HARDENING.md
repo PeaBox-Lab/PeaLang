@@ -1,5 +1,6 @@
 
 
+
 # Security Hardening Help
 
 ```python
@@ -13,5 +14,6 @@ assert audit.verify()
 ```
 
 Use application-managed secret storage for HMAC keys. Treat URL validation as one layer; production HTTP transports should also validate resolved IP addresses and redirects.
+
 
 

@@ -1,5 +1,6 @@
 
 
+
 # PeaLang AI Development Handover 0.37
 ## Delivered
 - Complete resource-limit configuration and accounting foundation
@@ -10,5 +11,6 @@
 0.38: native PeaLang testing syntax, filtering, coverage, watch mode and migrations.
 ## Integrity rule
 Retain every prior clean path, compare SHA-256 hashes, disclose all modifications/additions and require the full regression suite to pass before packaging.
+
 
 

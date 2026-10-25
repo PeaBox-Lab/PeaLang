@@ -1,5 +1,6 @@
 
 
+
 """PeaLang 0.61 Kubernetes security and release-candidate stabilization."""
 from __future__ import annotations
 from dataclasses import dataclass,field
@@ -100,5 +101,6 @@ def soak_test(call,duration_seconds=.1,interval_seconds=0):
   except Exception:errors+=1
   if interval_seconds:time.sleep(interval_seconds)
  return {'duration_seconds':time.perf_counter()-start,'calls':calls,'errors':errors,'max_latency_ms':max(latencies) if latencies else None,'status':'PASS' if errors==0 else 'FAIL'}
+
 
 

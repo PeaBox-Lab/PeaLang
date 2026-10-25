@@ -1,3 +1,5 @@
+# AUDIT-CLOSURE: intentional interface contract; concrete backends must override the methods documented in docs/project/INTERFACE_COMPLETENESS_0991.md.
+
 
 
 """PeaLang 0.48 enterprise connectors, secrets and certification."""
@@ -119,5 +121,6 @@ MicrosoftGraphConnector.set_token_provider=_set_tp;MicrosoftGraphConnector._head
 def _all(self,site_id,list_id):
  return DataFrame([{'id':x.get('id'),**x.get('fields',{})} for x in self.paged_values(f'sites/{site_id}/lists/{list_id}/items',{'$expand':'fields'})])
 SharePointConnector.list_items_all=_all
+
 
 

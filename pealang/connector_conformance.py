@@ -1,5 +1,6 @@
 
 
+
 """PeaLang 0.85 data and connector conformance framework."""
 from __future__ import annotations
 from dataclasses import asdict,dataclass,field
@@ -104,5 +105,6 @@ class ObjectStoreEdgeCases:
    abort(tuple(completed));return {'status':'aborted','parts':completed}
 def certification_gate(report,required_pass_rate=1.0):
  required=[x for x in report.results if x.status!='SKIP'];passed=sum(x.status=='PASS' for x in required);rate=passed/max(1,len(required));return {'gate':'PASS' if rate>=required_pass_rate and report.passed else 'FAIL','pass_rate':rate,'failed':[x.case_id for x in required if x.status!='PASS'],'report_digest':hashlib.sha256(json.dumps(report.to_dict(),sort_keys=True,separators=(',',':')).encode()).hexdigest()}
+
 
 

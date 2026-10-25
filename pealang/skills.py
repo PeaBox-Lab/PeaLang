@@ -1,5 +1,6 @@
 
 
+
 from __future__ import annotations
 import json
 from pathlib import Path
@@ -19,5 +20,6 @@ class SkillRegistry:
         skill=self.get(name);text=str(skill['prompt']);values=dict(values or {})
         for k,v in values.items():text=text.replace('{'+str(k)+'}',str(v))
         return text
+
 
 

@@ -1,3 +1,5 @@
+# AUDIT-CLOSURE: intentional interface contract; concrete backends must override the methods documented in docs/project/INTERFACE_COMPLETENESS_0991.md.
+
 
 
 """PeaLang 0.46 cloud connectors: OData and SFTP."""
@@ -127,5 +129,6 @@ CONNECTORS.register('odata',ODataConnector,replace=True)
 
 def odata(base_url,headers=None,**options):return ODataConnector(ConnectorConfig(base_url,headers or {},**options))
 def sftp(host,**options):return SFTPConnector(SFTPConfig(host,**options))
+
 
 

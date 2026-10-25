@@ -1,5 +1,6 @@
 
 
+
 import time,pytest
 from pealang.registry_index import PackageRecord,build_index,validate_index,NamespacePolicy,RegistryState,RegistryIndex
 from pealang.registry_auth import registry_token,bearer_headers
@@ -29,5 +30,6 @@ def test_missing_token():
  with pytest.raises(Exception):registry_token('x',{})
 def test_duplicate_version_index():
  with pytest.raises(Exception):validate_index(build_index('main',1,[rec(),rec()]))
+
 
 

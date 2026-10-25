@@ -1,5 +1,6 @@
 
 
+
 """Pipeline metrics, SLA evaluation, alerts, and audit reporting for PeaLang v0.71."""
 from __future__ import annotations
 from dataclasses import dataclass, asdict
@@ -53,5 +54,6 @@ class AuditReport:
     @staticmethod
     def write(path,report):
         with open(path,"w",encoding="utf-8") as fh: json.dump(report,fh,indent=2,default=str)
+
 
 

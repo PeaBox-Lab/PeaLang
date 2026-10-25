@@ -1,5 +1,6 @@
 
 
+
 import asyncio,pytest
 from pealang import AsyncVMRuntime,RuntimeOptions
 async def double(x):await asyncio.sleep(.001);return x*2
@@ -26,5 +27,6 @@ def test_timeout():
 def test_async_syntax_compiles():
  from pealang import compile_source_to_bytecode,disassemble
  assert 'AWAIT' in disassemble(compile_source_to_bytecode('async function f(){return await api.get()}'))
+
 
 
