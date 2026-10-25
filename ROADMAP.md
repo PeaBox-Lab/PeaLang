@@ -172,15 +172,22 @@ Grammar, type system, standard library, embedding API, package format and PEAC c
 - release-candidate readiness gate
 
 
-## Next: 0.90 API freeze
+## 0.90 API freeze - delivered
 - freeze public syntax, runtime and package APIs for 1.0
 - require compatibility review for post-freeze changes
 - publish authoritative API baseline
 - permit only approved compatibility and blocker fixes
 
 
-## Next: 0.90 API freeze
+## 0.90 API freeze - delivered
 - freeze public syntax, runtime and package APIs for 1.0
 - allow only approved compatibility fixes
 - publish final API baseline and freeze policy
 - start 0.91-0.96 release-candidate soak line
+
+
+## Next: 0.91 release candidate validation I
+- cross-platform soak and upgrade validation
+- frozen-API compatibility surveillance
+- security and performance regression soak
+- RC blocker and waiver closure

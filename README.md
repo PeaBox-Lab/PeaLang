@@ -1,4 +1,4 @@
-# PeaLang 0.89.0 Alpha 1
+# PeaLang 0.90.0 RC1
 
 PeaLang is an embeddable extension language for controlled rules, workflows, automation and host integration. Version 0.37 completes runtime resource accounting and structured concurrency while retaining the v0.35 standard library and v0.36 type-system foundation.
 
@@ -189,3 +189,7 @@ No new feature family is introduced. v0.89 consolidates regression, API compatib
 
 ## PeaLang v0.89 release-candidate hardening
 No new feature family is introduced. v0.89 aggregates regression, API compatibility, security, performance, supply-chain, migration, tooling, documentation and cross-platform evidence into a single GO/NO-GO RC readiness gate. See `docs/project/RC_HARDENING_089.md`.
+
+
+## PeaLang v0.90 API freeze
+Version 0.90 freezes intended public syntax, runtime/package APIs, stable diagnostics and versioned bytecode compatibility for the 1.0 line. Breaking changes require explicit approval evidence. See `docs/project/API_FREEZE_090.md`.

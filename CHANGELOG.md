@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.90.0-rc1 - 2026-10-25
+- Froze intended public syntax, runtime, package, diagnostic and versioned bytecode compatibility surfaces for 1.0.
+- Added canonical API freeze manifests and SHA-256 API-contract digests.
+- Added additive/breaking API classification and approval-required breaking-change gates.
+- Added the machine-readable 1.0 compatibility contract, tests and release documentation.
+- Corrected stale Containerfile version references for the 0.90 RC line.
+
 ## 0.89.0-rc1 - 2026-10-25
 - Froze new feature families for release-candidate hardening.
 - Added blocker/high-severity defect and waiver registry contracts.
