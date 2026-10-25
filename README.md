@@ -1,4 +1,4 @@
-# PeaLang 0.90.0 RC1
+# PeaLang 0.91.0 RC1
 
 PeaLang is an embeddable extension language for controlled rules, workflows, automation and host integration. Version 0.37 completes runtime resource accounting and structured concurrency while retaining the v0.35 standard library and v0.36 type-system foundation.
 
@@ -193,3 +193,7 @@ No new feature family is introduced. v0.89 aggregates regression, API compatibil
 
 ## PeaLang v0.90 API freeze
 Version 0.90 freezes intended public syntax, runtime/package APIs, stable diagnostics and versioned bytecode compatibility for the 1.0 line. Breaking changes require explicit approval evidence. See `docs/project/API_FREEZE_090.md`.
+
+
+## PeaLang v0.91 release candidate validation I
+Version 0.91 adds cross-platform/Python soak evidence, upgrade validation, frozen-contract surveillance, security/performance/packaging soak aggregation, blocker/waiver closure and a consolidated RC go/no-go gate. See `docs/project/RC_VALIDATION_091.md`.

@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.91.0-rc1 - 2026-10-25
+- Added cross-platform Windows/Linux/macOS and Python 3.10-3.13 soak-evidence contracts.
+- Added supported-version upgrade and rollback/integrity validation.
+- Added frozen API/diagnostic/bytecode compatibility surveillance.
+- Added security, performance, packaging and offline-install soak aggregation.
+- Added blocker/waiver validation and a consolidated RC go/no-go gate.
+
 ## 0.90.0-rc1 - 2026-10-25
 - Froze intended public syntax, runtime, package, diagnostic and versioned bytecode compatibility surfaces for 1.0.
 - Added canonical API freeze manifests and SHA-256 API-contract digests.

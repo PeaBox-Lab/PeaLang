@@ -186,8 +186,15 @@ Grammar, type system, standard library, embedding API, package format and PEAC c
 - start 0.91-0.96 release-candidate soak line
 
 
-## Next: 0.91 release candidate validation I
+## 0.91 release candidate validation I - delivered
 - cross-platform soak and upgrade validation
 - frozen-API compatibility surveillance
 - security and performance regression soak
 - RC blocker and waiver closure
+
+
+## Next: 0.92 release candidate validation II
+- longer-duration cross-platform soak
+- upgrade-path expansion and rollback drills
+- compatibility-drift surveillance
+- ecosystem/integration certification evidence
