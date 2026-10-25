@@ -1,3 +1,4 @@
+
 # Version History
 
 | Version | Theme |
@@ -119,3 +120,6 @@ Release hardening gates and clean documentation structure.
 Performance and memory hardening: latency/memory probes, performance budgets and bounded LRU cache.
 ## 0.79.0
 Enterprise integration hardening: credentials, retry/backoff, circuit breaking, correlation and health checks.
+
+
+- 0.93.0-rc1: RC validation III, extended soak, ecosystem/recovery and reproducibility gates.

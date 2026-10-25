@@ -1,3 +1,4 @@
+
 # PeaLang 0.85 Data and Connector Conformance
 
 ## Delivered
@@ -11,3 +12,4 @@
 
 ## Certification policy
 A connector is certified only when every required case for its declared capabilities passes. Optional undeclared capabilities are skipped; missing required capabilities fail. Production adapters should add vendor-specific fixtures without weakening the common contract.
+

@@ -1,3 +1,4 @@
+
 # Migration from 0.62 to 0.63 RC1
 
 1. Back up model registry and monitoring databases.
@@ -8,3 +9,4 @@
 6. Validate rollback to 0.62 before promotion.
 
 No automatic destructive schema migration is introduced in RC1.
+

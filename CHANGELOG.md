@@ -1,4 +1,11 @@
+
 # Changelog
+## 0.93.0-rc1 - 2026-10-26
+- Added extended-duration repeated-run soak certification.
+- Added broader ecosystem evidence certification.
+- Added disaster-recovery/state-restoration integrity and RTO drills.
+- Added repeated-build reproducibility checks and consolidated RC gate digest.
+
 
 ## 0.92.0-rc1 - 2026-10-25
 - Added RC evidence freshness and staleness enforcement.
@@ -252,3 +259,4 @@
 - Added tool-call budget enforcement.
 - Moved historical development handovers to `docs/handover/` for a cleaner project root.
 - Added agent governance documentation and regression tests.
+

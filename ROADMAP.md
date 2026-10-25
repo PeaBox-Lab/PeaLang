@@ -1,3 +1,4 @@
+
 # PeaLang Revised Foundational Roadmap
 
 The original roadmap goal is not yet complete. The implementation has covered much of the VM, embedding and integration work, but foundational maturity still requires specification completion, standard-library stabilization, deeper type semantics, structured concurrency, complete resource accounting, native language testing, larger conformance coverage, migration tooling, cross-platform CI evidence and production pilots.
@@ -200,8 +201,15 @@ Grammar, type system, standard library, embedding API, package format and PEAC c
 - ecosystem/integration certification evidence
 
 
-## Next: 0.93 release candidate validation III
-- extended-duration soak and repeated-run reliability
-- broader ecosystem certification
+## 0.93 release candidate validation III - delivered
+- extended-duration soak and repeated-run reliability contracts
+- broader ecosystem certification evidence
 - disaster-recovery and state-restoration drills
 - release evidence provenance and reproducibility checks
+
+## Next: 0.94 release candidate validation IV
+- installation and supported-upgrade matrix closure
+- wheel/sdist/container reproducibility and offline-install evidence
+- dependency/license and security-review closure
+- operational runbooks and final 1.0 release-evidence consolidation
+

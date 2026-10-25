@@ -1,3 +1,4 @@
+
 # PeaLang 0.82 Packaging and Reproducibility Hardening
 
 ## Delivered
@@ -11,3 +12,4 @@
 
 ## Release policy
 A releasable package must pass all quality-gate checks. Ed25519 private keys must remain external to the repository. Reproducibility evidence is content based, so timestamps are not part of deterministic source manifests.
+

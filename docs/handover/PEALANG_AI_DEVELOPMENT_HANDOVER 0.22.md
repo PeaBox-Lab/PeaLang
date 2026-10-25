@@ -1,3 +1,4 @@
+
 # PeaLang AI Development Handover 0.22
 
 ## Delivered
@@ -27,3 +28,4 @@
 ## Next release
 
 Version 0.23 should unify VM embedding permissions with `RuntimeOptions`, add registered host namespaces, structured VM diagnostics, VM-backed DAP lifecycle and scopes, conditional breakpoints, exception breakpoints, and source-aware imported-module debugging.
+
