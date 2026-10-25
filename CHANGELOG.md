@@ -1,3 +1,12 @@
+# Changelog
+
+## 0.80.0-alpha.1 - 2026-10-25
+- Added W3C trace-context propagation and parent/child spans.
+- Added bounded span export and metric cardinality controls.
+- Added liveness/readiness operational contracts.
+- Added redacted diagnostic bundles with SHA-256 manifests.
+- Added tests, release notes, operations guide, retention report and handover.
+
 # PeaLang Changelog
 
 ## 0.79.0a1 - Enterprise integration hardening

@@ -104,3 +104,16 @@ Grammar, type system, standard library, embedding API, package format and PEAC c
 - enterprise integration certification
 - broader VM/compiler/data-path optimization
 - public API freeze preparation
+
+
+## 0.80 - Observability and operations hardening - delivered
+- W3C trace-context propagation
+- bounded spans and metric cardinality controls
+- liveness/readiness contracts
+- redacted diagnostic bundles with integrity manifests
+
+## Next: 0.81 compatibility and migration hardening
+- deprecation ledger
+- schema/config migration registry
+- public API diff enforcement
+- upgrade fixtures
