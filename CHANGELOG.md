@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.87.0-alpha.1 - 2026-10-25
+- Added agent tool isolation, approval replay protection, budgets and audit certification.
+
+## 0.86.0-alpha.1 - 2026-10-25
+- Added ML and serving conformance.
+
 ## 0.85.0-alpha.1 - 2026-10-25
 - Added connector capability profiles and certification suites.
 - Added SQL dialect, binding and transaction conformance contracts.

@@ -1,4 +1,4 @@
-# PeaLang 0.85.0 Alpha 1
+# PeaLang 0.87.0 Alpha 1
 
 PeaLang is an embeddable extension language for controlled rules, workflows, automation and host integration. Version 0.37 completes runtime resource accounting and structured concurrency while retaining the v0.35 standard library and v0.36 type-system foundation.
 
@@ -170,3 +170,10 @@ Version 0.84 adds parent-child cancellation, deadlines, fail-fast structured tas
 
 ## PeaLang v0.85 data and connector conformance
 Version 0.85 adds connector capability declarations, SQL dialect and parameter-binding contracts, transaction probes, streaming checkpoint/replay semantics, object-store edge-case fixtures, and certification gates. See `docs/project/CONNECTOR_CONFORMANCE_085.md`.
+
+
+## PeaLang v0.86 ML and serving conformance
+Model-format and deterministic serving certification controls.
+
+## PeaLang v0.87 agent safety conformance
+Tool isolation, request-bound approvals, replay protection, budgets and tamper-evident multi-step audit certification.

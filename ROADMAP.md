@@ -152,3 +152,14 @@ Grammar, type system, standard library, embedding API, package format and PEAC c
 - deterministic inference fixtures
 - overload, reload and rollback tests
 - serving certification gates
+
+
+## 0.86 - ML and serving conformance - delivered
+
+## 0.87 - Agent safety conformance - delivered
+
+## Next: 0.88 developer tooling stabilization
+- LSP/DAP compatibility
+- diagnostics stability
+- reproducible debugging fixtures
+- tooling certification gates
