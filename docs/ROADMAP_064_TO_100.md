@@ -51,7 +51,7 @@ The roadmap version numbers for advanced ML were delivered early in 0.73, and in
 - 0.86 ML/serving conformance: planned. Focus: model format compatibility, deterministic inference fixtures, serving overload/reload/rollback tests.
 - 0.87 agent safety conformance: planned. Focus: tool isolation, approval durability, replay protection, budgets and auditable multi-step execution.
 - 0.88 developer tooling stabilization: COMPLETED. LSP/DAP compatibility certification, diagnostic stability contracts, editor negotiation, reproducible debugging fixtures and tooling gates are included.
-- 0.89 release-candidate hardening: planned. No new feature families; close blocker/high-severity defects and complete release evidence.
+- 0.89 release-candidate hardening: COMPLETED. Feature families are frozen; blocker/high-severity defects, waivers and consolidated readiness evidence feed a single GO/NO-GO RC gate.
 - 0.90 API freeze: planned. Freeze public syntax/runtime/package APIs for 1.0, with only approved compatibility fixes afterward.
 - 0.91-0.96 release candidates: planned. Cross-platform soak, upgrade, security, performance and ecosystem validation.
 - 0.97-0.99 final documentation/ecosystem readiness: planned. Tutorials, examples, package/connector authoring guides and migration handbook.

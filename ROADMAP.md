@@ -165,8 +165,22 @@ Grammar, type system, standard library, embedding API, package format and PEAC c
 - tooling certification gates
 
 
-## Next: 0.89 release-candidate hardening
+## 0.89 release-candidate hardening - delivered
 - freeze new feature families
 - close blocker and high-severity defects
 - complete cross-platform/security/performance evidence
 - release-candidate readiness gate
+
+
+## Next: 0.90 API freeze
+- freeze public syntax, runtime and package APIs for 1.0
+- require compatibility review for post-freeze changes
+- publish authoritative API baseline
+- permit only approved compatibility and blocker fixes
+
+
+## Next: 0.90 API freeze
+- freeze public syntax, runtime and package APIs for 1.0
+- allow only approved compatibility fixes
+- publish final API baseline and freeze policy
+- start 0.91-0.96 release-candidate soak line

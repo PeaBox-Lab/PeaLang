@@ -1,5 +1,18 @@
 # Changelog
 
+## 0.89.0-rc1 - 2026-10-25
+- Froze new feature families for release-candidate hardening.
+- Added blocker/high-severity defect and waiver registry contracts.
+- Added consolidated regression, API, security, performance, supply-chain, migration, tooling, documentation and cross-platform readiness gates.
+- Added tamper-evident RC readiness report digest.
+- Added tests, release notes, known-issues registry and retention evidence.
+
+## 0.89.0-alpha.1 - 2026-10-25
+- Froze new feature families for RC hardening.
+- Added consolidated release evidence and GO/NO-GO decisions.
+- Added blocker/high-severity defect closure and scoped waivers.
+- Added RC readiness tests and documentation.
+
 ## 0.88.0-alpha.1 - 2026-10-25
 - Added LSP and DAP compatibility certification contracts.
 - Added stable diagnostic code/severity registry and snapshots.
