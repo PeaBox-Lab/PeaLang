@@ -122,3 +122,17 @@ Optional ONNX inference, tensor/DataFrame interoperability, and rule-first gover
 Version 0.74 adds dry-run agent tool planning, explicit policy decisions, approval gates and tool-call budgets. See `docs/AGENT_GOVERNANCE_074.md`.
 
 Historical AI development handovers are preserved in `docs/handover/` to keep the repository root clean.
+
+## 0.75 Durable agent governance
+Persistent SQLite audit and approval evidence extends the v0.74 agent governance controls. See `docs/AGENT_AUDIT_075.md`.
+
+## 0.76 Release hardening
+PeaLang 0.76 adds adversarial agent-policy probes, public API compatibility checks, regression thresholds and an integrated release hardening gate. See `docs/project/HARDENING_076.md`.
+
+### Documentation layout
+- `README.md`: detailed current-version guide and project entry point.
+- `CHANGELOG.md`: one cumulative changelog for the complete release history.
+- `docs/releases/`: version-specific release notes.
+- `docs/retention/`: retention and compatibility evidence.
+- `docs/handover/`: development handover archive.
+- `docs/project/`: roadmaps, version history, readiness and release-gate documentation.

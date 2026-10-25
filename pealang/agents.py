@@ -2,7 +2,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import Any
 from .errors import PeaError
-from .agent_governance import AgentPolicy, ApprovalGate, plan_tool_call
+from .agent_governance import AgentPolicy, ApprovalGate, AuditedApprovalGate, GovernanceAuditStore, AuditEvent, plan_tool_call
 
 @dataclass
 class ToolSpec:
@@ -58,5 +58,9 @@ class AgentRuntime:
                 raise PeaError(f"Tool '{name}' approval denied or unavailable")
         elif not decision['allowed']:
             raise PeaError(f"Tool '{name}' blocked: {decision['reason']}")
-        return self.tools.call(name,args,agent.get('tools',[]))
+        result=self.tools.call(name,args,agent.get('tools',[]))
+        store=getattr(approval,"store",None)
+        if store is not None:
+            store.record(AuditEvent("tool_execution",agent.get("name"),str(name),"executed",getattr(approval,"actor",None),details={"args":list(args or [])}))
+        return result
 

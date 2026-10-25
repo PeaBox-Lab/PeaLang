@@ -1,0 +1,30 @@
+{
+  "schema": "pealang.retention.v1",
+  "release": "0.75.0",
+  "baseline": "0.74.0",
+  "baseline_files": 397,
+  "release_files": 401,
+  "retained_same_path": 397,
+  "intentional_moves": [],
+  "added": [
+    "RELEASE_NOTES_0.75.0.md",
+    "docs/AGENT_AUDIT_075.md",
+    "docs/handover/PEALANG_AI_DEVELOPMENT_HANDOVER 0.75.md",
+    "tests/test_agent_governance_v075.py"
+  ],
+  "removed": [],
+  "unexpected_missing": [],
+  "modified": [
+    "CHANGELOG.md",
+    "README.md",
+    "RELEASE_NOTES.md",
+    "ROADMAP.md",
+    "VERSION_HISTORY.md",
+    "pealang/__init__.py",
+    "pealang/agent_governance.py",
+    "pealang/agents.py",
+    "pyproject.toml"
+  ],
+  "retention_gate": "PASS",
+  "tests": "455 passed"
+}

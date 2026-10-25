@@ -1,12 +1,12 @@
 {
   "schema": "pealang.release-manifest.v1",
-  "version": "0.73.0",
-  "file_count": 391,
+  "version": "0.76.0",
+  "file_count": 413,
   "files": [
     {
       "path": "CHANGELOG.md",
-      "size": 7686,
-      "sha256": "58f1b125b6b7bfc280782b4d9f894c24d5a0f68494f9560a8c38f35154bb8c8f"
+      "size": 8643,
+      "sha256": "ad6ade68a675b7db572c48d5f01c4331fcc430d7a96ddf7980c0859dc57e77bb"
     },
     {
       "path": "Containerfile",
@@ -14,284 +14,9 @@
       "sha256": "c94e0c3f64a669f5db177f9eff544efc739fe1c4c60c7f9bc448b9ec41c40c59"
     },
     {
-      "path": "DATA_ROADMAP.md",
-      "size": 1401,
-      "sha256": "6d6c0dc73e520b125ca0cd80f38acb06f6360bf02b3e7633d6b0df3edea25b9f"
-    },
-    {
-      "path": "FOUNDATIONAL_ROADMAP.md",
-      "size": 2635,
-      "sha256": "c2b40969d302eeacc2d7e41b456352201dc8f4d8875fe035d1f5e048d8e13309"
-    },
-    {
-      "path": "LANGUAGE.md",
-      "size": 233,
-      "sha256": "45bd02ad57384ebdbd386803dd8e29387cfc3af83e1a76abee277244e3d4e7d5"
-    },
-    {
       "path": "MIGRATION_GUIDE.json",
       "size": 497,
       "sha256": "5eb60e1d5bfa32b2d345079e9e9f3bbdeafdbca4b7045be66a0923c5c0a3de0c"
-    },
-    {
-      "path": "PEALANG_AI_DEVELOPMENT_HANDOVER 0.15.md",
-      "size": 313,
-      "sha256": "939a23ede3868d9a0ed483729b3b0d3feefcdb23c12d4d25e78344407c2bbc81"
-    },
-    {
-      "path": "PEALANG_AI_DEVELOPMENT_HANDOVER 0.18.md",
-      "size": 1217,
-      "sha256": "9c6b70dcf38467c892d967fb3e4aca51189cbd83be18cc46847a18df5aaf7b60"
-    },
-    {
-      "path": "PEALANG_AI_DEVELOPMENT_HANDOVER 0.19.md",
-      "size": 1259,
-      "sha256": "fb709ee23790ca62ae5198534718e91e8acb63dcf8f480728bfc3bd08aae7678"
-    },
-    {
-      "path": "PEALANG_AI_DEVELOPMENT_HANDOVER 0.20.md",
-      "size": 1289,
-      "sha256": "6aa37cee9ec8f3f3c2a5ed92236b07657a1fe781d3e743b6a6d8e660ba66b0fe"
-    },
-    {
-      "path": "PEALANG_AI_DEVELOPMENT_HANDOVER 0.21.md",
-      "size": 1261,
-      "sha256": "cc6d876d30bc88d5307c02ae2d7178fa5943c12485afe56a2468faed8c112fe2"
-    },
-    {
-      "path": "PEALANG_AI_DEVELOPMENT_HANDOVER 0.22.md",
-      "size": 1157,
-      "sha256": "207b94cd37cc952a0e571646a5858184e07732adba2f149a59252e91d40e5065"
-    },
-    {
-      "path": "PEALANG_AI_DEVELOPMENT_HANDOVER 0.23.md",
-      "size": 1159,
-      "sha256": "1d89ca6885875f76d813d9c66977b1c0ed7d2a2bd6ed01b0071eb1a77d8f7454"
-    },
-    {
-      "path": "PEALANG_AI_DEVELOPMENT_HANDOVER 0.24.md",
-      "size": 1105,
-      "sha256": "a03afa5b84fdcbb1e2fefc9f2ca5d49bd4a5682617c2c620254d8ecb4fe467b0"
-    },
-    {
-      "path": "PEALANG_AI_DEVELOPMENT_HANDOVER 0.25.md",
-      "size": 855,
-      "sha256": "48f8e8f920652d5c74fe4be9954802c0241a74e0504aeb3066720d0d95847e79"
-    },
-    {
-      "path": "PEALANG_AI_DEVELOPMENT_HANDOVER 0.26.md",
-      "size": 1286,
-      "sha256": "87cd11d39c309f319f7c20b28f2c8b139d7a1d72c8848fffe54000732e085954"
-    },
-    {
-      "path": "PEALANG_AI_DEVELOPMENT_HANDOVER 0.27.md",
-      "size": 1161,
-      "sha256": "3d13e83917077800532dfe546430af1a06be8fa4f233f6c95c9e7b5b78737ae4"
-    },
-    {
-      "path": "PEALANG_AI_DEVELOPMENT_HANDOVER 0.28.md",
-      "size": 1126,
-      "sha256": "4c5b812469bd0a441939b07552c54bf855d595f5ced9d053180d1b21f7112fcd"
-    },
-    {
-      "path": "PEALANG_AI_DEVELOPMENT_HANDOVER 0.29.md",
-      "size": 907,
-      "sha256": "649f4c65eb482c20fb5af08e3e8d45544db9efd2bff882cf9c00802acecf4f28"
-    },
-    {
-      "path": "PEALANG_AI_DEVELOPMENT_HANDOVER 0.30.md",
-      "size": 1080,
-      "sha256": "04d56e16e60f13c1b96347a06a716ced7861ba7bb4c4c9b2f8fed261244de1f3"
-    },
-    {
-      "path": "PEALANG_AI_DEVELOPMENT_HANDOVER 0.31.md",
-      "size": 1150,
-      "sha256": "05622bc1bd4afac250837617f11c89aa018d180daed632ee94053cd32c5e3908"
-    },
-    {
-      "path": "PEALANG_AI_DEVELOPMENT_HANDOVER 0.32.md",
-      "size": 933,
-      "sha256": "a1d6a3278aa4df1d8393dddfed33833c2f8d9f91888cb3217bfb36305bc51a77"
-    },
-    {
-      "path": "PEALANG_AI_DEVELOPMENT_HANDOVER 0.33.md",
-      "size": 1042,
-      "sha256": "254652a82c945d0bf403674571e3c8ceee46ec2104e05174924eb026d8e43aee"
-    },
-    {
-      "path": "PEALANG_AI_DEVELOPMENT_HANDOVER 0.34.md",
-      "size": 706,
-      "sha256": "6637b9e758c596567169dd8c2c575c9dbdb1c111f8c8f20465c62dab1470ba8f"
-    },
-    {
-      "path": "PEALANG_AI_DEVELOPMENT_HANDOVER 0.35.md",
-      "size": 673,
-      "sha256": "f1ab3bb76b5d07c052e3b775c3ef354a9eab061fe716616307e23aebeb28c707"
-    },
-    {
-      "path": "PEALANG_AI_DEVELOPMENT_HANDOVER 0.36.md",
-      "size": 645,
-      "sha256": "34284dfe0141ed22378d147a7e63baae1e3a1029e604799ba426cfecc26b7a55"
-    },
-    {
-      "path": "PEALANG_AI_DEVELOPMENT_HANDOVER 0.37.md",
-      "size": 572,
-      "sha256": "84a40616eec8d95e8d3425f220e21cbf6b20cc2b5cd87101c54e1026fea15cdc"
-    },
-    {
-      "path": "PEALANG_AI_DEVELOPMENT_HANDOVER 0.38.md",
-      "size": 602,
-      "sha256": "36bcefe0a688fc2e3beff6f43d6ccfaa48d3c37e10e9f567494461faf57779a8"
-    },
-    {
-      "path": "PEALANG_AI_DEVELOPMENT_HANDOVER 0.39.md",
-      "size": 191,
-      "sha256": "fe78db74e47a8c5ae408c9ded722efd4c1bbb1f92be181a5af93415919f42a1c"
-    },
-    {
-      "path": "PEALANG_AI_DEVELOPMENT_HANDOVER 0.40.md",
-      "size": 746,
-      "sha256": "2154840c832ee937ce9dc07ee4ec73ade41f0318923ceca617f6725531c22e97"
-    },
-    {
-      "path": "PEALANG_AI_DEVELOPMENT_HANDOVER 0.41.md",
-      "size": 684,
-      "sha256": "ee2e38bb37c568b6dfc1f02ce41a8993e2d4c006068ed0e069c51078548e18dc"
-    },
-    {
-      "path": "PEALANG_AI_DEVELOPMENT_HANDOVER 0.42.md",
-      "size": 277,
-      "sha256": "c2da60f5c957ef07e4cb62f0cd95a12d5372426ed5aa51fbabc9aea87d46464a"
-    },
-    {
-      "path": "PEALANG_AI_DEVELOPMENT_HANDOVER 0.43.md",
-      "size": 371,
-      "sha256": "187e0c151bd8bff59d0c859a00b6059c1ba19694b08a3a62524f8d4563eee231"
-    },
-    {
-      "path": "PEALANG_AI_DEVELOPMENT_HANDOVER 0.44.md",
-      "size": 389,
-      "sha256": "a704c3cc3dded53589d3f9495345cd584b6608617fe35d02a6bf3bfd797bd8e2"
-    },
-    {
-      "path": "PEALANG_AI_DEVELOPMENT_HANDOVER 0.45.md",
-      "size": 450,
-      "sha256": "de2cff9323c7175f49c9870e08b36f32c8a9c206bb4512c540abe477b16c2d0a"
-    },
-    {
-      "path": "PEALANG_AI_DEVELOPMENT_HANDOVER 0.46.md",
-      "size": 398,
-      "sha256": "a96221ea9847d641da5fcc9b8e86834aca2928b3dec649739bd8ee21b8fd70ad"
-    },
-    {
-      "path": "PEALANG_AI_DEVELOPMENT_HANDOVER 0.47.md",
-      "size": 305,
-      "sha256": "ce1c8d526750daea1bd60eefad47dea5705bd33e5f6ec8bb79737ea9e4b801c0"
-    },
-    {
-      "path": "PEALANG_AI_DEVELOPMENT_HANDOVER 0.48.md",
-      "size": 328,
-      "sha256": "a78e382d69d7d6e4c23e7363028f00be7972261ef5b3432802a69760ba07c987"
-    },
-    {
-      "path": "PEALANG_AI_DEVELOPMENT_HANDOVER 0.49.md",
-      "size": 233,
-      "sha256": "4e6cc8db84eba4fc57237cb9acf0b1d08d6c9f706bda4b51fb62ddcdb53a197b"
-    },
-    {
-      "path": "PEALANG_AI_DEVELOPMENT_HANDOVER 0.50.md",
-      "size": 360,
-      "sha256": "563f2a0f9b40dfbbbe70d30cf23773a6ca4fca58d606145140337b4d20f22675"
-    },
-    {
-      "path": "PEALANG_AI_DEVELOPMENT_HANDOVER 0.51.md",
-      "size": 330,
-      "sha256": "b2697b19205d7ac68418fc9c6955d5aed76415b108f5f2f39279a491e973931e"
-    },
-    {
-      "path": "PEALANG_AI_DEVELOPMENT_HANDOVER 0.52.md",
-      "size": 368,
-      "sha256": "67eeab32d13d844ec6488482d334b73f7729b038f6f44ba9f753ce493e0b631d"
-    },
-    {
-      "path": "PEALANG_AI_DEVELOPMENT_HANDOVER 0.53.md",
-      "size": 291,
-      "sha256": "9fad8f05953db655781cd0d4c0503ca0253770393087355ed50b6449f31955f2"
-    },
-    {
-      "path": "PEALANG_AI_DEVELOPMENT_HANDOVER 0.54.md",
-      "size": 354,
-      "sha256": "ce8b0d391e7cee277e1c39af7502a664380c3b34d59f5432c47b9adbe609909e"
-    },
-    {
-      "path": "PEALANG_AI_DEVELOPMENT_HANDOVER 0.55.md",
-      "size": 426,
-      "sha256": "0db1f26b53f26516296c150884d83baef814d66e3374b88f27e3a85af0dd43a3"
-    },
-    {
-      "path": "PEALANG_AI_DEVELOPMENT_HANDOVER 0.56.md",
-      "size": 361,
-      "sha256": "cb9fe6932270a69cbb21053f9555a4ec6ab5bf46cac23a110c1187ba31b981b1"
-    },
-    {
-      "path": "PEALANG_AI_DEVELOPMENT_HANDOVER 0.57.md",
-      "size": 312,
-      "sha256": "745e9e95139f5126aa0fd026ddb56116d1757ae224e6c7829aa234d0d4f8baac"
-    },
-    {
-      "path": "PEALANG_AI_DEVELOPMENT_HANDOVER 0.59.md",
-      "size": 360,
-      "sha256": "2fdfdf2e311f28fcdb3c7ee1bb414de2a7261d1d953972db38247cb996a42b37"
-    },
-    {
-      "path": "PEALANG_AI_DEVELOPMENT_HANDOVER 0.60.md",
-      "size": 345,
-      "sha256": "4a1ce54f9b46c058502598185d7d8ebf363d0a43e5282508c219a52d6d75329f"
-    },
-    {
-      "path": "PEALANG_AI_DEVELOPMENT_HANDOVER 0.61.md",
-      "size": 303,
-      "sha256": "2800d55cc455056bb2d20d97fbbb3f6b81325760fedfaf046822ff312c4f8c9a"
-    },
-    {
-      "path": "PEALANG_AI_DEVELOPMENT_HANDOVER 0.62.md",
-      "size": 325,
-      "sha256": "acbffebd12f106876317d5c99659666218ddfcc3e3fd8906a3ad48eb851a57eb"
-    },
-    {
-      "path": "PEALANG_AI_DEVELOPMENT_HANDOVER 0.63 RC1.md",
-      "size": 327,
-      "sha256": "7d08420c5e38cd042d9ab3b82e803d481f43c7ac17be5f2badd3e603de319200"
-    },
-    {
-      "path": "PEALANG_AI_DEVELOPMENT_HANDOVER 0.63 RC2.md",
-      "size": 295,
-      "sha256": "7d35074ee7755147a19ce06e1116be4716503e3c7a212574c5a83a82310c41c3"
-    },
-    {
-      "path": "PEALANG_AI_DEVELOPMENT_HANDOVER 0.64.md",
-      "size": 266,
-      "sha256": "65a7adeedda77736426c43e65fd77c2f33064dc50263fe40b596841f00dbb664"
-    },
-    {
-      "path": "PEALANG_AI_DEVELOPMENT_HANDOVER 0.70.md",
-      "size": 278,
-      "sha256": "a6764539a26c981c45b1d77576f396420d88367eed6e6b7866ca6f03f6a67f59"
-    },
-    {
-      "path": "PEALANG_AI_DEVELOPMENT_HANDOVER 0.71.md",
-      "size": 326,
-      "sha256": "c4bc328b1947f9da9420dc404781cddf2a8a960e4e46f48539335482c05c4b3d"
-    },
-    {
-      "path": "PEALANG_AI_DEVELOPMENT_HANDOVER 0.72.md",
-      "size": 262,
-      "sha256": "e8c756456fd40293cfdfeec458c165d010040c3e38f32cc629045303bd890140"
-    },
-    {
-      "path": "PEALANG_AI_DEVELOPMENT_HANDOVER 0.73.md",
-      "size": 226,
-      "sha256": "6fa50e3d923b57b4821dadff7636af01ac91146a73003bb8cc43e7e4260b5f5a"
     },
     {
       "path": "PUBLIC_API_POLICY.json",
@@ -314,34 +39,14 @@
       "sha256": "891f9169aec8fcbff61f26891fde8f846998ee16cdf9a7bd1eacb05b83bf55a9"
     },
     {
-      "path": "RC1_GATE_STATUS.md",
-      "size": 689,
-      "sha256": "a7132a92f6a38f0c0694c4f8aeef09c4c71b58aa849b89f91436d79ff5f49f1d"
-    },
-    {
       "path": "RC1_TO_RC2_API_COMPATIBILITY.json",
       "size": 75,
       "sha256": "8ae5ffd1fe34cb6c5f3a5ba21aad3a75681f9781c39758618064650425627406"
     },
     {
-      "path": "RC2_GATE_STATUS.md",
-      "size": 541,
-      "sha256": "83a6e7dc117e2d9c41d797d7d47158c3b1cc8f8f4748ea8274791bec7799c83d"
-    },
-    {
       "path": "README.md",
-      "size": 7368,
-      "sha256": "f61291c1757779f39ea9e271fe107bdd6528402dbe5a2b27a75044ca1edcd07e"
-    },
-    {
-      "path": "RELEASE_CANDIDATE_CHECKLIST.md",
-      "size": 476,
-      "sha256": "dad0125a0036f7970af4a650b2353b47e9ea2132eb81bdfec1dd822f9514c2dc"
-    },
-    {
-      "path": "RELEASE_INTEGRITY.md",
-      "size": 196,
-      "sha256": "80b57c3ca286847fd439c1b411d0aca7d5f17b516b825e86907df44e9d9bf91a"
+      "size": 8439,
+      "sha256": "efd8942d82dc7a5ff96801391b84d166a5af393f09bcca71081dad01e80c74bb"
     },
     {
       "path": "RELEASE_MANIFEST.json",
@@ -350,73 +55,13 @@
     },
     {
       "path": "RELEASE_MANIFEST_COMPLETE.json",
-      "size": 61212,
-      "sha256": "a3d559c6fee81c15329a6d4b6603108ef64b8fff21fe63741a5fb0adf5e9c02f"
-    },
-    {
-      "path": "RELEASE_NOTES.md",
-      "size": 300,
-      "sha256": "9f3a934bf113d6b72781af52c4f84d9762151696acde8ffe959e7ecaa9d78718"
-    },
-    {
-      "path": "RELEASE_NOTES_0.70.0.md",
-      "size": 354,
-      "sha256": "52f1251a804978c7ea748bebfb0d744a08cc65e2434222e5bfa43fedf7d04cad"
-    },
-    {
-      "path": "RELEASE_NOTES_0.71.0.md",
-      "size": 356,
-      "sha256": "12696cf2540a0d26ecf64da4281ba3816755ee53f5516cbb286b547ef4551c24"
-    },
-    {
-      "path": "RELEASE_NOTES_0.72.0.md",
-      "size": 249,
-      "sha256": "a71a51ac31a62e156e4416e99c2d00ea601b2c0077c243c95fbb7e8dacd17e37"
-    },
-    {
-      "path": "RELEASE_NOTES_0.73.0.md",
-      "size": 213,
-      "sha256": "8e161302bdb8e8351bdd97d61e5367705062aca34a7e0804b84fe1d3a960b91c"
-    },
-    {
-      "path": "RETENTION_AUDIT.json",
-      "size": 295,
-      "sha256": "edca9a271c9a5d726bc540e26d22bd15a85b3b5df20ea5420efff4bd4435b71f"
-    },
-    {
-      "path": "RETENTION_REPORT.json",
-      "size": 728,
-      "sha256": "169eeff58eb7da6271197fa172562d91dc66eef00ce63ce795641ccc4d5d53e6"
-    },
-    {
-      "path": "RETENTION_REPORT.md",
-      "size": 420,
-      "sha256": "7ef2faf927e761c922ad9ab4e06782764cd9369fceaaad6a9fed7bf92374faf6"
-    },
-    {
-      "path": "RETENTION_REPORT_072.json",
-      "size": 690,
-      "sha256": "1c2670bf369c5fc2a22d5dc382fdf8145bb20ccaf64557bd8d93975e3d7a598a"
-    },
-    {
-      "path": "RETENTION_REPORT_072.md",
-      "size": 199,
-      "sha256": "04933ce36c6bd4ef3708c34ac52ae59d5cad4042a4fac444594f12becab117c3"
-    },
-    {
-      "path": "RETENTION_REPORT_073.json",
-      "size": 602,
-      "sha256": "639fe3d7c23847035f238a00a87cc83817245ca1a7bb9837123817beb056a6ba"
-    },
-    {
-      "path": "RETENTION_REPORT_073.md",
-      "size": 199,
-      "sha256": "506d7f08eb373ba66b494c290da7bbb09fd6d10dd8a58b8831203ad3f89df39a"
+      "size": 65047,
+      "sha256": "8f66391b8d62599a20e0b9007390d160e39b2b57b653f5a4149ccf2206abd677"
     },
     {
       "path": "ROADMAP.md",
-      "size": 2635,
-      "sha256": "c2b40969d302eeacc2d7e41b456352201dc8f4d8875fe035d1f5e048d8e13309"
+      "size": 3857,
+      "sha256": "aca5ce6735f5bea6b55d5168c1004fd5e0f47fb81458af713f84a233c1f1ba36"
     },
     {
       "path": "THREAT_MODEL.json",
@@ -427,16 +72,6 @@
       "path": "UPGRADE_COMPATIBILITY.json",
       "size": 569,
       "sha256": "e0608c553e6cdf35a3815d78c93129ace5f61060b6c79aed6e0226ac27ae4886"
-    },
-    {
-      "path": "V1_READINESS.md",
-      "size": 692,
-      "sha256": "cacc8cd874fd8fd9767b3f76a63e9524ff56789d61e15dc4e000bd12a9604ef6"
-    },
-    {
-      "path": "VERSION_HISTORY.md",
-      "size": 4955,
-      "sha256": "ee94d750401511aba0804c17f10209ea2bcd6fc29031be0fa8126a1592eb614b"
     },
     {
       "path": "benchmarks/basic.pea",
@@ -462,6 +97,16 @@
       "path": "docs/ADVANCED_ML_GOVERNED_QUERY_073.md",
       "size": 807,
       "sha256": "72872f833b4e3d5341f0e76a8b0871eeb9ba23f3c495b46adcebb235bfc59cb6"
+    },
+    {
+      "path": "docs/AGENT_AUDIT_075.md",
+      "size": 568,
+      "sha256": "9561e656faae6751a5bbe0c6c810d251f13a059e7c485bfa9a8fdc222783500d"
+    },
+    {
+      "path": "docs/AGENT_GOVERNANCE_074.md",
+      "size": 798,
+      "sha256": "bc7833c716617ecc1572e56afff5d4606c3c458d11855d1ca9236d575cdddae8"
     },
     {
       "path": "docs/ANALYTICS_050.md",
@@ -814,6 +459,446 @@
       "sha256": "d155e41b429a981107ab0304ffbe93c576146da9e5f28468f664aff867a4db93"
     },
     {
+      "path": "docs/handover/PEALANG_AI_DEVELOPMENT_HANDOVER 0.15.md",
+      "size": 313,
+      "sha256": "939a23ede3868d9a0ed483729b3b0d3feefcdb23c12d4d25e78344407c2bbc81"
+    },
+    {
+      "path": "docs/handover/PEALANG_AI_DEVELOPMENT_HANDOVER 0.18.md",
+      "size": 1217,
+      "sha256": "9c6b70dcf38467c892d967fb3e4aca51189cbd83be18cc46847a18df5aaf7b60"
+    },
+    {
+      "path": "docs/handover/PEALANG_AI_DEVELOPMENT_HANDOVER 0.19.md",
+      "size": 1259,
+      "sha256": "fb709ee23790ca62ae5198534718e91e8acb63dcf8f480728bfc3bd08aae7678"
+    },
+    {
+      "path": "docs/handover/PEALANG_AI_DEVELOPMENT_HANDOVER 0.20.md",
+      "size": 1289,
+      "sha256": "6aa37cee9ec8f3f3c2a5ed92236b07657a1fe781d3e743b6a6d8e660ba66b0fe"
+    },
+    {
+      "path": "docs/handover/PEALANG_AI_DEVELOPMENT_HANDOVER 0.21.md",
+      "size": 1261,
+      "sha256": "cc6d876d30bc88d5307c02ae2d7178fa5943c12485afe56a2468faed8c112fe2"
+    },
+    {
+      "path": "docs/handover/PEALANG_AI_DEVELOPMENT_HANDOVER 0.22.md",
+      "size": 1157,
+      "sha256": "207b94cd37cc952a0e571646a5858184e07732adba2f149a59252e91d40e5065"
+    },
+    {
+      "path": "docs/handover/PEALANG_AI_DEVELOPMENT_HANDOVER 0.23.md",
+      "size": 1159,
+      "sha256": "1d89ca6885875f76d813d9c66977b1c0ed7d2a2bd6ed01b0071eb1a77d8f7454"
+    },
+    {
+      "path": "docs/handover/PEALANG_AI_DEVELOPMENT_HANDOVER 0.24.md",
+      "size": 1105,
+      "sha256": "a03afa5b84fdcbb1e2fefc9f2ca5d49bd4a5682617c2c620254d8ecb4fe467b0"
+    },
+    {
+      "path": "docs/handover/PEALANG_AI_DEVELOPMENT_HANDOVER 0.25.md",
+      "size": 855,
+      "sha256": "48f8e8f920652d5c74fe4be9954802c0241a74e0504aeb3066720d0d95847e79"
+    },
+    {
+      "path": "docs/handover/PEALANG_AI_DEVELOPMENT_HANDOVER 0.26.md",
+      "size": 1286,
+      "sha256": "87cd11d39c309f319f7c20b28f2c8b139d7a1d72c8848fffe54000732e085954"
+    },
+    {
+      "path": "docs/handover/PEALANG_AI_DEVELOPMENT_HANDOVER 0.27.md",
+      "size": 1161,
+      "sha256": "3d13e83917077800532dfe546430af1a06be8fa4f233f6c95c9e7b5b78737ae4"
+    },
+    {
+      "path": "docs/handover/PEALANG_AI_DEVELOPMENT_HANDOVER 0.28.md",
+      "size": 1126,
+      "sha256": "4c5b812469bd0a441939b07552c54bf855d595f5ced9d053180d1b21f7112fcd"
+    },
+    {
+      "path": "docs/handover/PEALANG_AI_DEVELOPMENT_HANDOVER 0.29.md",
+      "size": 907,
+      "sha256": "649f4c65eb482c20fb5af08e3e8d45544db9efd2bff882cf9c00802acecf4f28"
+    },
+    {
+      "path": "docs/handover/PEALANG_AI_DEVELOPMENT_HANDOVER 0.30.md",
+      "size": 1080,
+      "sha256": "04d56e16e60f13c1b96347a06a716ced7861ba7bb4c4c9b2f8fed261244de1f3"
+    },
+    {
+      "path": "docs/handover/PEALANG_AI_DEVELOPMENT_HANDOVER 0.31.md",
+      "size": 1150,
+      "sha256": "05622bc1bd4afac250837617f11c89aa018d180daed632ee94053cd32c5e3908"
+    },
+    {
+      "path": "docs/handover/PEALANG_AI_DEVELOPMENT_HANDOVER 0.32.md",
+      "size": 933,
+      "sha256": "a1d6a3278aa4df1d8393dddfed33833c2f8d9f91888cb3217bfb36305bc51a77"
+    },
+    {
+      "path": "docs/handover/PEALANG_AI_DEVELOPMENT_HANDOVER 0.33.md",
+      "size": 1042,
+      "sha256": "254652a82c945d0bf403674571e3c8ceee46ec2104e05174924eb026d8e43aee"
+    },
+    {
+      "path": "docs/handover/PEALANG_AI_DEVELOPMENT_HANDOVER 0.34.md",
+      "size": 706,
+      "sha256": "6637b9e758c596567169dd8c2c575c9dbdb1c111f8c8f20465c62dab1470ba8f"
+    },
+    {
+      "path": "docs/handover/PEALANG_AI_DEVELOPMENT_HANDOVER 0.35.md",
+      "size": 673,
+      "sha256": "f1ab3bb76b5d07c052e3b775c3ef354a9eab061fe716616307e23aebeb28c707"
+    },
+    {
+      "path": "docs/handover/PEALANG_AI_DEVELOPMENT_HANDOVER 0.36.md",
+      "size": 645,
+      "sha256": "34284dfe0141ed22378d147a7e63baae1e3a1029e604799ba426cfecc26b7a55"
+    },
+    {
+      "path": "docs/handover/PEALANG_AI_DEVELOPMENT_HANDOVER 0.37.md",
+      "size": 572,
+      "sha256": "84a40616eec8d95e8d3425f220e21cbf6b20cc2b5cd87101c54e1026fea15cdc"
+    },
+    {
+      "path": "docs/handover/PEALANG_AI_DEVELOPMENT_HANDOVER 0.38.md",
+      "size": 602,
+      "sha256": "36bcefe0a688fc2e3beff6f43d6ccfaa48d3c37e10e9f567494461faf57779a8"
+    },
+    {
+      "path": "docs/handover/PEALANG_AI_DEVELOPMENT_HANDOVER 0.39.md",
+      "size": 191,
+      "sha256": "fe78db74e47a8c5ae408c9ded722efd4c1bbb1f92be181a5af93415919f42a1c"
+    },
+    {
+      "path": "docs/handover/PEALANG_AI_DEVELOPMENT_HANDOVER 0.40.md",
+      "size": 746,
+      "sha256": "2154840c832ee937ce9dc07ee4ec73ade41f0318923ceca617f6725531c22e97"
+    },
+    {
+      "path": "docs/handover/PEALANG_AI_DEVELOPMENT_HANDOVER 0.41.md",
+      "size": 684,
+      "sha256": "ee2e38bb37c568b6dfc1f02ce41a8993e2d4c006068ed0e069c51078548e18dc"
+    },
+    {
+      "path": "docs/handover/PEALANG_AI_DEVELOPMENT_HANDOVER 0.42.md",
+      "size": 277,
+      "sha256": "c2da60f5c957ef07e4cb62f0cd95a12d5372426ed5aa51fbabc9aea87d46464a"
+    },
+    {
+      "path": "docs/handover/PEALANG_AI_DEVELOPMENT_HANDOVER 0.43.md",
+      "size": 371,
+      "sha256": "187e0c151bd8bff59d0c859a00b6059c1ba19694b08a3a62524f8d4563eee231"
+    },
+    {
+      "path": "docs/handover/PEALANG_AI_DEVELOPMENT_HANDOVER 0.44.md",
+      "size": 389,
+      "sha256": "a704c3cc3dded53589d3f9495345cd584b6608617fe35d02a6bf3bfd797bd8e2"
+    },
+    {
+      "path": "docs/handover/PEALANG_AI_DEVELOPMENT_HANDOVER 0.45.md",
+      "size": 450,
+      "sha256": "de2cff9323c7175f49c9870e08b36f32c8a9c206bb4512c540abe477b16c2d0a"
+    },
+    {
+      "path": "docs/handover/PEALANG_AI_DEVELOPMENT_HANDOVER 0.46.md",
+      "size": 398,
+      "sha256": "a96221ea9847d641da5fcc9b8e86834aca2928b3dec649739bd8ee21b8fd70ad"
+    },
+    {
+      "path": "docs/handover/PEALANG_AI_DEVELOPMENT_HANDOVER 0.47.md",
+      "size": 305,
+      "sha256": "ce1c8d526750daea1bd60eefad47dea5705bd33e5f6ec8bb79737ea9e4b801c0"
+    },
+    {
+      "path": "docs/handover/PEALANG_AI_DEVELOPMENT_HANDOVER 0.48.md",
+      "size": 328,
+      "sha256": "a78e382d69d7d6e4c23e7363028f00be7972261ef5b3432802a69760ba07c987"
+    },
+    {
+      "path": "docs/handover/PEALANG_AI_DEVELOPMENT_HANDOVER 0.49.md",
+      "size": 233,
+      "sha256": "4e6cc8db84eba4fc57237cb9acf0b1d08d6c9f706bda4b51fb62ddcdb53a197b"
+    },
+    {
+      "path": "docs/handover/PEALANG_AI_DEVELOPMENT_HANDOVER 0.50.md",
+      "size": 360,
+      "sha256": "563f2a0f9b40dfbbbe70d30cf23773a6ca4fca58d606145140337b4d20f22675"
+    },
+    {
+      "path": "docs/handover/PEALANG_AI_DEVELOPMENT_HANDOVER 0.51.md",
+      "size": 330,
+      "sha256": "b2697b19205d7ac68418fc9c6955d5aed76415b108f5f2f39279a491e973931e"
+    },
+    {
+      "path": "docs/handover/PEALANG_AI_DEVELOPMENT_HANDOVER 0.52.md",
+      "size": 368,
+      "sha256": "67eeab32d13d844ec6488482d334b73f7729b038f6f44ba9f753ce493e0b631d"
+    },
+    {
+      "path": "docs/handover/PEALANG_AI_DEVELOPMENT_HANDOVER 0.53.md",
+      "size": 291,
+      "sha256": "9fad8f05953db655781cd0d4c0503ca0253770393087355ed50b6449f31955f2"
+    },
+    {
+      "path": "docs/handover/PEALANG_AI_DEVELOPMENT_HANDOVER 0.54.md",
+      "size": 354,
+      "sha256": "ce8b0d391e7cee277e1c39af7502a664380c3b34d59f5432c47b9adbe609909e"
+    },
+    {
+      "path": "docs/handover/PEALANG_AI_DEVELOPMENT_HANDOVER 0.55.md",
+      "size": 426,
+      "sha256": "0db1f26b53f26516296c150884d83baef814d66e3374b88f27e3a85af0dd43a3"
+    },
+    {
+      "path": "docs/handover/PEALANG_AI_DEVELOPMENT_HANDOVER 0.56.md",
+      "size": 361,
+      "sha256": "cb9fe6932270a69cbb21053f9555a4ec6ab5bf46cac23a110c1187ba31b981b1"
+    },
+    {
+      "path": "docs/handover/PEALANG_AI_DEVELOPMENT_HANDOVER 0.57.md",
+      "size": 312,
+      "sha256": "745e9e95139f5126aa0fd026ddb56116d1757ae224e6c7829aa234d0d4f8baac"
+    },
+    {
+      "path": "docs/handover/PEALANG_AI_DEVELOPMENT_HANDOVER 0.59.md",
+      "size": 360,
+      "sha256": "2fdfdf2e311f28fcdb3c7ee1bb414de2a7261d1d953972db38247cb996a42b37"
+    },
+    {
+      "path": "docs/handover/PEALANG_AI_DEVELOPMENT_HANDOVER 0.60.md",
+      "size": 345,
+      "sha256": "4a1ce54f9b46c058502598185d7d8ebf363d0a43e5282508c219a52d6d75329f"
+    },
+    {
+      "path": "docs/handover/PEALANG_AI_DEVELOPMENT_HANDOVER 0.61.md",
+      "size": 303,
+      "sha256": "2800d55cc455056bb2d20d97fbbb3f6b81325760fedfaf046822ff312c4f8c9a"
+    },
+    {
+      "path": "docs/handover/PEALANG_AI_DEVELOPMENT_HANDOVER 0.62.md",
+      "size": 325,
+      "sha256": "acbffebd12f106876317d5c99659666218ddfcc3e3fd8906a3ad48eb851a57eb"
+    },
+    {
+      "path": "docs/handover/PEALANG_AI_DEVELOPMENT_HANDOVER 0.63 RC1.md",
+      "size": 327,
+      "sha256": "7d08420c5e38cd042d9ab3b82e803d481f43c7ac17be5f2badd3e603de319200"
+    },
+    {
+      "path": "docs/handover/PEALANG_AI_DEVELOPMENT_HANDOVER 0.63 RC2.md",
+      "size": 295,
+      "sha256": "7d35074ee7755147a19ce06e1116be4716503e3c7a212574c5a83a82310c41c3"
+    },
+    {
+      "path": "docs/handover/PEALANG_AI_DEVELOPMENT_HANDOVER 0.64.md",
+      "size": 266,
+      "sha256": "65a7adeedda77736426c43e65fd77c2f33064dc50263fe40b596841f00dbb664"
+    },
+    {
+      "path": "docs/handover/PEALANG_AI_DEVELOPMENT_HANDOVER 0.70.md",
+      "size": 278,
+      "sha256": "a6764539a26c981c45b1d77576f396420d88367eed6e6b7866ca6f03f6a67f59"
+    },
+    {
+      "path": "docs/handover/PEALANG_AI_DEVELOPMENT_HANDOVER 0.71.md",
+      "size": 326,
+      "sha256": "c4bc328b1947f9da9420dc404781cddf2a8a960e4e46f48539335482c05c4b3d"
+    },
+    {
+      "path": "docs/handover/PEALANG_AI_DEVELOPMENT_HANDOVER 0.72.md",
+      "size": 262,
+      "sha256": "e8c756456fd40293cfdfeec458c165d010040c3e38f32cc629045303bd890140"
+    },
+    {
+      "path": "docs/handover/PEALANG_AI_DEVELOPMENT_HANDOVER 0.73.md",
+      "size": 226,
+      "sha256": "6fa50e3d923b57b4821dadff7636af01ac91146a73003bb8cc43e7e4260b5f5a"
+    },
+    {
+      "path": "docs/handover/PEALANG_AI_DEVELOPMENT_HANDOVER 0.74.md",
+      "size": 493,
+      "sha256": "c85b2f3875942c66b115718058e2591da0627da18e28f250a37d9ffecc31c77b"
+    },
+    {
+      "path": "docs/handover/PEALANG_AI_DEVELOPMENT_HANDOVER 0.75.md",
+      "size": 310,
+      "sha256": "6d4ccf60e51bb58f437dc5bf09e8e83a5d5f92f68590e581ab10d6f294570a73"
+    },
+    {
+      "path": "docs/handover/PEALANG_AI_DEVELOPMENT_HANDOVER 0.76.md",
+      "size": 350,
+      "sha256": "9c62cbb76a79eaf0f4228bb289e1a1a631bcaa3b987c587b63f3523ccc6387a9"
+    },
+    {
+      "path": "docs/handover/README.md",
+      "size": 252,
+      "sha256": "80706c7c0be5be13f41e27b7a66a748b05a74732d99bc017c67bb8319b2a12a2"
+    },
+    {
+      "path": "docs/project/DATA_ROADMAP.md",
+      "size": 1401,
+      "sha256": "6d6c0dc73e520b125ca0cd80f38acb06f6360bf02b3e7633d6b0df3edea25b9f"
+    },
+    {
+      "path": "docs/project/FOUNDATIONAL_ROADMAP.md",
+      "size": 2635,
+      "sha256": "c2b40969d302eeacc2d7e41b456352201dc8f4d8875fe035d1f5e048d8e13309"
+    },
+    {
+      "path": "docs/project/HARDENING_076.md",
+      "size": 526,
+      "sha256": "ad8f1149ab02e0467e195c4cf4f8adea5b97b83ef1bdb4b5bb8c3c6673e63a7e"
+    },
+    {
+      "path": "docs/project/LANGUAGE.md",
+      "size": 233,
+      "sha256": "45bd02ad57384ebdbd386803dd8e29387cfc3af83e1a76abee277244e3d4e7d5"
+    },
+    {
+      "path": "docs/project/RC1_GATE_STATUS.md",
+      "size": 689,
+      "sha256": "a7132a92f6a38f0c0694c4f8aeef09c4c71b58aa849b89f91436d79ff5f49f1d"
+    },
+    {
+      "path": "docs/project/RC2_GATE_STATUS.md",
+      "size": 541,
+      "sha256": "83a6e7dc117e2d9c41d797d7d47158c3b1cc8f8f4748ea8274791bec7799c83d"
+    },
+    {
+      "path": "docs/project/README.md",
+      "size": 297,
+      "sha256": "a33eac63b9ece38224d130cfc97fb234564a74f0f77a78a1fb3045916e015929"
+    },
+    {
+      "path": "docs/project/RELEASE_CANDIDATE_CHECKLIST.md",
+      "size": 476,
+      "sha256": "dad0125a0036f7970af4a650b2353b47e9ea2132eb81bdfec1dd822f9514c2dc"
+    },
+    {
+      "path": "docs/project/RELEASE_INTEGRITY.md",
+      "size": 196,
+      "sha256": "80b57c3ca286847fd439c1b411d0aca7d5f17b516b825e86907df44e9d9bf91a"
+    },
+    {
+      "path": "docs/project/V1_READINESS.md",
+      "size": 692,
+      "sha256": "cacc8cd874fd8fd9767b3f76a63e9524ff56789d61e15dc4e000bd12a9604ef6"
+    },
+    {
+      "path": "docs/project/VERSION_HISTORY.md",
+      "size": 5239,
+      "sha256": "10cf9f1a22ec330fe104a4b62edcccc36acb3d8a9379c29f74b07233d17131cd"
+    },
+    {
+      "path": "docs/releases/README.md",
+      "size": 177,
+      "sha256": "1a8fe3a0c0141b6df30679dbdd6495ebc52e8af56b86a587cf592a4e1ce33ea1"
+    },
+    {
+      "path": "docs/releases/RELEASE_NOTES.md",
+      "size": 226,
+      "sha256": "e2d246d4b8155f56ac2d3a7717670e8a9032e6cb9c791180252289ed42144be9"
+    },
+    {
+      "path": "docs/releases/RELEASE_NOTES_0.70.0.md",
+      "size": 354,
+      "sha256": "52f1251a804978c7ea748bebfb0d744a08cc65e2434222e5bfa43fedf7d04cad"
+    },
+    {
+      "path": "docs/releases/RELEASE_NOTES_0.71.0.md",
+      "size": 356,
+      "sha256": "12696cf2540a0d26ecf64da4281ba3816755ee53f5516cbb286b547ef4551c24"
+    },
+    {
+      "path": "docs/releases/RELEASE_NOTES_0.72.0.md",
+      "size": 249,
+      "sha256": "a71a51ac31a62e156e4416e99c2d00ea601b2c0077c243c95fbb7e8dacd17e37"
+    },
+    {
+      "path": "docs/releases/RELEASE_NOTES_0.73.0.md",
+      "size": 213,
+      "sha256": "8e161302bdb8e8351bdd97d61e5367705062aca34a7e0804b84fe1d3a960b91c"
+    },
+    {
+      "path": "docs/releases/RELEASE_NOTES_0.74.0.md",
+      "size": 639,
+      "sha256": "3ae88615edc629b2f979b0681256e7b88ab4afc4903f16a772ce5b11c122042a"
+    },
+    {
+      "path": "docs/releases/RELEASE_NOTES_0.75.0.md",
+      "size": 226,
+      "sha256": "e2d246d4b8155f56ac2d3a7717670e8a9032e6cb9c791180252289ed42144be9"
+    },
+    {
+      "path": "docs/releases/RELEASE_NOTES_0.76.0.md",
+      "size": 616,
+      "sha256": "2c09f82b077c8e7bbb0095d8ed7fe583681a616760d31bd713f922cd24205bb2"
+    },
+    {
+      "path": "docs/retention/README.md",
+      "size": 192,
+      "sha256": "e770b51516f300b05801de48312f7db8a028368ef462bc802ff33bde6add3914"
+    },
+    {
+      "path": "docs/retention/RETENTION_AUDIT.json",
+      "size": 295,
+      "sha256": "edca9a271c9a5d726bc540e26d22bd15a85b3b5df20ea5420efff4bd4435b71f"
+    },
+    {
+      "path": "docs/retention/RETENTION_REPORT.json",
+      "size": 728,
+      "sha256": "169eeff58eb7da6271197fa172562d91dc66eef00ce63ce795641ccc4d5d53e6"
+    },
+    {
+      "path": "docs/retention/RETENTION_REPORT.md",
+      "size": 420,
+      "sha256": "7ef2faf927e761c922ad9ab4e06782764cd9369fceaaad6a9fed7bf92374faf6"
+    },
+    {
+      "path": "docs/retention/RETENTION_REPORT_072.json",
+      "size": 690,
+      "sha256": "1c2670bf369c5fc2a22d5dc382fdf8145bb20ccaf64557bd8d93975e3d7a598a"
+    },
+    {
+      "path": "docs/retention/RETENTION_REPORT_072.md",
+      "size": 199,
+      "sha256": "04933ce36c6bd4ef3708c34ac52ae59d5cad4042a4fac444594f12becab117c3"
+    },
+    {
+      "path": "docs/retention/RETENTION_REPORT_073.json",
+      "size": 602,
+      "sha256": "639fe3d7c23847035f238a00a87cc83817245ca1a7bb9837123817beb056a6ba"
+    },
+    {
+      "path": "docs/retention/RETENTION_REPORT_073.md",
+      "size": 199,
+      "sha256": "506d7f08eb373ba66b494c290da7bbb09fd6d10dd8a58b8831203ad3f89df39a"
+    },
+    {
+      "path": "docs/retention/RETENTION_REPORT_075.json",
+      "size": 705,
+      "sha256": "4e98d8b9ca65f39eb38e4f12306c6417b92029c61b6ec0a4f06f2c39c2c309ac"
+    },
+    {
+      "path": "docs/retention/RETENTION_REPORT_075.md",
+      "size": 244,
+      "sha256": "9f548d3b0fa1adc60b0e500fb1ed3b2062695ce249792c96ee327adf36a87183"
+    },
+    {
+      "path": "docs/retention/RETENTION_REPORT_076.json",
+      "size": 5540,
+      "sha256": "ca4d61eb73d1ab50d1599fdd4fb02a8ae129a57d8bedb78ce3ab628dc8651025"
+    },
+    {
+      "path": "docs/retention/RETENTION_REPORT_076.md",
+      "size": 238,
+      "sha256": "dfc7ab248b3a082912919d439c5d5e5a2839eff72588694f9a169400ada25231"
+    },
+    {
       "path": "editors/vscode/launch.json",
       "size": 121,
       "sha256": "738f64688e1d21e18216044a140e53dbadbc35b32e0f340016744a15f584f461"
@@ -1140,8 +1225,8 @@
     },
     {
       "path": "pealang/__init__.py",
-      "size": 8720,
-      "sha256": "c8f80053d4aa2233cce7fb5d05535132b617f62831e10bbfd5f74cd995cf507f"
+      "size": 8962,
+      "sha256": "ec985a062a5301cade95953acc0f117dc4bd4c7efd39c7aadb9415dabe64bb4b"
     },
     {
       "path": "pealang/__main__.py",
@@ -1149,9 +1234,14 @@
       "sha256": "23bb93dfa82b94036fce266f0a5b99f353ebebb2bb71dd25eb3379875a9fc557"
     },
     {
+      "path": "pealang/agent_governance.py",
+      "size": 5572,
+      "sha256": "0e466899388c237af2a69c1da1460c9c28011133b3331d09a9a199c9508f7fe1"
+    },
+    {
       "path": "pealang/agents.py",
-      "size": 2616,
-      "sha256": "2b8246e1b045ed3962daab9e317c50fe560bf6c40724768117ee87db5d0444d0"
+      "size": 3773,
+      "sha256": "e748bdbdc10238b44579f8a52a329ff08d65ddec3dc43f6bbbfe78135c0877a2"
     },
     {
       "path": "pealang/ai.py",
@@ -1297,6 +1387,11 @@
       "path": "pealang/forecasting.py",
       "size": 4927,
       "sha256": "28631eab5154416eb95c68733b9dda64024b2993c700873a525020691ac8ea79"
+    },
+    {
+      "path": "pealang/hardening.py",
+      "size": 3024,
+      "sha256": "36c3cfe2e9acc4335feb5271dfb3d0bc63630395f4b1213f0f327f594dc283dd"
     },
     {
       "path": "pealang/interpreter.py",
@@ -1591,7 +1686,7 @@
     {
       "path": "pyproject.toml",
       "size": 730,
-      "sha256": "df12ad0cb8cad84faaaae451a236460bd03f91836191350ac541e2e8c85098ba"
+      "sha256": "0fbe17c4262bf1372f2556cd4ddbb2707e0d01137c1e26dca81f102dc6a97b78"
     },
     {
       "path": "react-sdk/package.json",
@@ -1672,6 +1767,16 @@
       "path": "spec/grammar.ebnf",
       "size": 1444,
       "sha256": "a6bafe98784168532fb420d86d665b1b055b125ab3522c2e3718baa1ffb95d27"
+    },
+    {
+      "path": "tests/test_agent_governance_v074.py",
+      "size": 1342,
+      "sha256": "3c02943f52d3c675dca291f85f2e574fe1a38e81174481fe2cb30199987c5692"
+    },
+    {
+      "path": "tests/test_agent_governance_v075.py",
+      "size": 1525,
+      "sha256": "73b3d6c27018d0f57d78d3cadc0a728227429773888eef5aa720cdeb29171057"
     },
     {
       "path": "tests/test_analytics_v050.py",
@@ -1762,6 +1867,11 @@
       "path": "tests/test_hardening_v030.py",
       "size": 1589,
       "sha256": "436e759cf4d2552f5c596003c6bda324bf4c3cd4c9179693532c7e0c8609a3c5"
+    },
+    {
+      "path": "tests/test_hardening_v076.py",
+      "size": 1106,
+      "sha256": "2308dbbe933fe8b4c6e10ea32099e30cc0bdc44e2f5de68086297e3bd0d0493c"
     },
     {
       "path": "tests/test_interactive_v072.py",

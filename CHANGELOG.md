@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.76.0 - 2026-10-25
+- Added adversarial agent-policy probes and deterministic probe summaries.
+- Added public API compatibility gating with explicit approved-removal handling.
+- Added integrated test, security, API and file-retention release thresholds.
+- Reorganized release notes, retention evidence and project metadata under `docs/` while retaining one root cumulative changelog and detailed README.
+
+## 0.75.0 - 2026-10-25
+- Added persistent SQLite agent audit trails, durable approval records, deterministic approval IDs, actor/reason capture, and audited tool-execution evidence.
+
 ## 0.73.0 - 2026-10-25
 - Added optional ONNX Runtime inference, tensor/DataFrame and PyTorch interchange, and policy-governed natural-language query planning.
 

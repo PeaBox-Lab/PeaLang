@@ -1,0 +1,182 @@
+{
+  "schema": "pealang.retention.v1",
+  "release": "0.76.0",
+  "baseline": "0.75.0",
+  "baseline_files": 403,
+  "release_files_before_report": 413,
+  "same_path_retained": 378,
+  "intentional_moves": [
+    {
+      "from": "DATA_ROADMAP.md",
+      "to": "docs/project/DATA_ROADMAP.md",
+      "content_modified_after_move": false
+    },
+    {
+      "from": "FOUNDATIONAL_ROADMAP.md",
+      "to": "docs/project/FOUNDATIONAL_ROADMAP.md",
+      "content_modified_after_move": false
+    },
+    {
+      "from": "LANGUAGE.md",
+      "to": "docs/project/LANGUAGE.md",
+      "content_modified_after_move": false
+    },
+    {
+      "from": "RC1_GATE_STATUS.md",
+      "to": "docs/project/RC1_GATE_STATUS.md",
+      "content_modified_after_move": false
+    },
+    {
+      "from": "RC2_GATE_STATUS.md",
+      "to": "docs/project/RC2_GATE_STATUS.md",
+      "content_modified_after_move": false
+    },
+    {
+      "from": "RELEASE_CANDIDATE_CHECKLIST.md",
+      "to": "docs/project/RELEASE_CANDIDATE_CHECKLIST.md",
+      "content_modified_after_move": false
+    },
+    {
+      "from": "RELEASE_INTEGRITY.md",
+      "to": "docs/project/RELEASE_INTEGRITY.md",
+      "content_modified_after_move": false
+    },
+    {
+      "from": "RELEASE_NOTES.md",
+      "to": "docs/releases/RELEASE_NOTES.md",
+      "content_modified_after_move": false
+    },
+    {
+      "from": "RELEASE_NOTES_0.70.0.md",
+      "to": "docs/releases/RELEASE_NOTES_0.70.0.md",
+      "content_modified_after_move": false
+    },
+    {
+      "from": "RELEASE_NOTES_0.71.0.md",
+      "to": "docs/releases/RELEASE_NOTES_0.71.0.md",
+      "content_modified_after_move": false
+    },
+    {
+      "from": "RELEASE_NOTES_0.72.0.md",
+      "to": "docs/releases/RELEASE_NOTES_0.72.0.md",
+      "content_modified_after_move": false
+    },
+    {
+      "from": "RELEASE_NOTES_0.73.0.md",
+      "to": "docs/releases/RELEASE_NOTES_0.73.0.md",
+      "content_modified_after_move": false
+    },
+    {
+      "from": "RELEASE_NOTES_0.74.0.md",
+      "to": "docs/releases/RELEASE_NOTES_0.74.0.md",
+      "content_modified_after_move": false
+    },
+    {
+      "from": "RELEASE_NOTES_0.75.0.md",
+      "to": "docs/releases/RELEASE_NOTES_0.75.0.md",
+      "content_modified_after_move": false
+    },
+    {
+      "from": "RETENTION_AUDIT.json",
+      "to": "docs/retention/RETENTION_AUDIT.json",
+      "content_modified_after_move": false
+    },
+    {
+      "from": "RETENTION_REPORT.json",
+      "to": "docs/retention/RETENTION_REPORT.json",
+      "content_modified_after_move": false
+    },
+    {
+      "from": "RETENTION_REPORT.md",
+      "to": "docs/retention/RETENTION_REPORT.md",
+      "content_modified_after_move": false
+    },
+    {
+      "from": "RETENTION_REPORT_072.json",
+      "to": "docs/retention/RETENTION_REPORT_072.json",
+      "content_modified_after_move": false
+    },
+    {
+      "from": "RETENTION_REPORT_072.md",
+      "to": "docs/retention/RETENTION_REPORT_072.md",
+      "content_modified_after_move": false
+    },
+    {
+      "from": "RETENTION_REPORT_073.json",
+      "to": "docs/retention/RETENTION_REPORT_073.json",
+      "content_modified_after_move": false
+    },
+    {
+      "from": "RETENTION_REPORT_073.md",
+      "to": "docs/retention/RETENTION_REPORT_073.md",
+      "content_modified_after_move": false
+    },
+    {
+      "from": "RETENTION_REPORT_075.json",
+      "to": "docs/retention/RETENTION_REPORT_075.json",
+      "content_modified_after_move": false
+    },
+    {
+      "from": "RETENTION_REPORT_075.md",
+      "to": "docs/retention/RETENTION_REPORT_075.md",
+      "content_modified_after_move": false
+    },
+    {
+      "from": "V1_READINESS.md",
+      "to": "docs/project/V1_READINESS.md",
+      "content_modified_after_move": false
+    },
+    {
+      "from": "VERSION_HISTORY.md",
+      "to": "docs/project/VERSION_HISTORY.md",
+      "content_modified_after_move": true
+    }
+  ],
+  "unexpected_missing": [],
+  "added": [
+    "docs/handover/PEALANG_AI_DEVELOPMENT_HANDOVER 0.76.md",
+    "docs/project/DATA_ROADMAP.md",
+    "docs/project/FOUNDATIONAL_ROADMAP.md",
+    "docs/project/HARDENING_076.md",
+    "docs/project/LANGUAGE.md",
+    "docs/project/RC1_GATE_STATUS.md",
+    "docs/project/RC2_GATE_STATUS.md",
+    "docs/project/README.md",
+    "docs/project/RELEASE_CANDIDATE_CHECKLIST.md",
+    "docs/project/RELEASE_INTEGRITY.md",
+    "docs/project/V1_READINESS.md",
+    "docs/project/VERSION_HISTORY.md",
+    "docs/releases/README.md",
+    "docs/releases/RELEASE_NOTES.md",
+    "docs/releases/RELEASE_NOTES_0.70.0.md",
+    "docs/releases/RELEASE_NOTES_0.71.0.md",
+    "docs/releases/RELEASE_NOTES_0.72.0.md",
+    "docs/releases/RELEASE_NOTES_0.73.0.md",
+    "docs/releases/RELEASE_NOTES_0.74.0.md",
+    "docs/releases/RELEASE_NOTES_0.75.0.md",
+    "docs/releases/RELEASE_NOTES_0.76.0.md",
+    "docs/retention/README.md",
+    "docs/retention/RETENTION_AUDIT.json",
+    "docs/retention/RETENTION_REPORT.json",
+    "docs/retention/RETENTION_REPORT.md",
+    "docs/retention/RETENTION_REPORT_072.json",
+    "docs/retention/RETENTION_REPORT_072.md",
+    "docs/retention/RETENTION_REPORT_073.json",
+    "docs/retention/RETENTION_REPORT_073.md",
+    "docs/retention/RETENTION_REPORT_075.json",
+    "docs/retention/RETENTION_REPORT_075.md",
+    "docs/retention/RETENTION_REPORT_076.json",
+    "docs/retention/RETENTION_REPORT_076.md",
+    "pealang/hardening.py",
+    "tests/test_hardening_v076.py"
+  ],
+  "modified": [
+    "CHANGELOG.md",
+    "README.md",
+    "ROADMAP.md",
+    "pealang/__init__.py",
+    "pyproject.toml"
+  ],
+  "tests": 458,
+  "retention_gate": "PASS"
+}

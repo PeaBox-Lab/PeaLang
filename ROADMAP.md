@@ -69,3 +69,27 @@ Grammar, type system, standard library, embedding API, package format and PEAC c
 - Security review and adversarial agent/tool tests
 - Conformance, coverage and cross-platform CI release evidence
 - Documentation and migration completeness gate
+
+## 0.75 - Durable agent governance - delivered
+- Persistent approval decisions
+- Agent/tool audit trail
+- Reviewer and reason evidence
+- Deterministic approval request IDs
+
+## Next: 0.76 hardening
+- adversarial agent/tool security suite
+- public API compatibility gate
+- conformance and coverage evidence
+- security and performance release gates
+
+## 0.76 - Release hardening - delivered
+- adversarial agent/tool policy probes
+- public API compatibility gate
+- regression test threshold
+- retention and security gate integration
+
+## Next
+- performance and memory optimization
+- deeper security hardening
+- enterprise integration certification
+- public API freeze preparation
