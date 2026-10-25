@@ -140,8 +140,15 @@ Grammar, type system, standard library, embedding API, package format and PEAC c
 - graceful shutdown and drain behavior
 
 
-## Next: 0.85 data and connector conformance
+## 0.85 data and connector conformance - delivered
 - SQL dialect conformance matrices
 - streaming failure and recovery semantics
 - object-store edge cases
 - connector certification fixtures and gates
+
+
+## Next: 0.86 ML and serving conformance
+- model-format compatibility matrix
+- deterministic inference fixtures
+- overload, reload and rollback tests
+- serving certification gates

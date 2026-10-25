@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.85.0-alpha.1 - 2026-10-25
+- Added connector capability profiles and certification suites.
+- Added SQL dialect, binding and transaction conformance contracts.
+- Added streaming checkpoint, replay and deduplication semantics.
+- Added object-store pagination, range-read and multipart-failure fixtures.
+- Added certification gates, tests, release notes and retention evidence.
+
 ## 0.84.0-alpha.1 - 2026-10-25
 - Added parent-child cancellation and deadline propagation.
 - Added fail-fast structured task-group lifecycle guarantees.
