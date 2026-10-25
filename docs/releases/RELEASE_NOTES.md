@@ -1,6 +1,6 @@
 # Current release
 
-See `RELEASE_NOTES_0.93.0.md` for v0.93.0 RC1.
+See `RELEASE_NOTES_0.95.0.md` for v0.95.0 RC1.
 
 
 # PeaLang 0.75.0 Release Notes

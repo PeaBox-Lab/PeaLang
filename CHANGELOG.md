@@ -1,5 +1,18 @@
 
 # Changelog
+## 0.95.0-rc1 - 2026-10-26
+- Added real release-evidence ingestion contracts.
+- Added critical/high blocker burn-down and waiver validation.
+- Added wheel/sdist/container signature and provenance verification gates.
+- Added staging release dry-run and rollback acceptance.
+- Added explicit 1.0 GO/NO-GO decision requiring human approvals.
+
+## 0.94.0-rc1 - 2026-10-26
+- Added Windows/Linux/macOS and Python 3.10-3.13 install/upgrade/rollback/offline-install matrix gates.
+- Added wheel/sdist/container plus SBOM/provenance reproducibility gates.
+- Added dependency/license/security review closure and operational-runbook gates.
+- Added consolidated 1.0 evidence-readiness gate.
+
 ## 0.93.0-rc1 - 2026-10-26
 - Added extended-duration repeated-run soak certification.
 - Added broader ecosystem evidence certification.

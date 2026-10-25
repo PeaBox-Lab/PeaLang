@@ -207,9 +207,21 @@ Grammar, type system, standard library, embedding API, package format and PEAC c
 - disaster-recovery and state-restoration drills
 - release evidence provenance and reproducibility checks
 
-## Next: 0.94 release candidate validation IV
-- installation and supported-upgrade matrix closure
-- wheel/sdist/container reproducibility and offline-install evidence
-- dependency/license and security-review closure
+## 0.94 release candidate validation IV - delivered
+- installation and supported-upgrade matrix closure contracts
+- wheel/sdist/container reproducibility and offline-install evidence contracts
+- dependency/license and security-review closure gates
 - operational runbooks and final 1.0 release-evidence consolidation
+
+## 0.95 final RC acceptance - delivered
+- real-evidence ingestion contracts
+- blocker burn-down and waiver-validation gates
+- signed-artifact and provenance verification contracts
+- release dry-run, rollback and explicit GO/NO-GO gate
+
+## Next: 0.96 release readiness closure
+- ingest actual v0.95 external evidence without simulation
+- close documentation, support, packaging and operational readiness
+- consolidate final 1.0 readiness dossier and residual-risk register
+- retain NO-GO until every mandatory external/human gate is satisfied
 
