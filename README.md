@@ -1,4 +1,4 @@
-# PeaLang 0.80.0 Alpha 1
+# PeaLang 0.81.0 Alpha 1
 
 PeaLang is an embeddable extension language for controlled rules, workflows, automation and host integration. Version 0.37 completes runtime resource accounting and structured concurrency while retaining the v0.35 standard library and v0.36 type-system foundation.
 
@@ -150,3 +150,7 @@ Version 0.79 standardizes credential providers, retry/backoff, circuit breaking,
 
 ## PeaLang v0.80 observability and operations hardening
 Version 0.80 adds W3C trace-context propagation, bounded spans and metrics, liveness/readiness contracts, and secure diagnostic bundles. See `docs/project/OBSERVABILITY_OPERATIONS_080.md`.
+
+
+## PeaLang v0.81 compatibility and migration hardening
+Version 0.81 adds a machine-readable deprecation ledger, ordered and reversible migration registry, public API snapshots/diffs, and breaking-change approval gates. See `docs/project/COMPATIBILITY_MIGRATIONS_081.md`.

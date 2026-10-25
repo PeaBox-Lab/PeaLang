@@ -112,8 +112,15 @@ Grammar, type system, standard library, embedding API, package format and PEAC c
 - liveness/readiness contracts
 - redacted diagnostic bundles with integrity manifests
 
-## Next: 0.81 compatibility and migration hardening
+## 0.81 compatibility and migration hardening - delivered
 - deprecation ledger
 - schema/config migration registry
 - public API diff enforcement
 - upgrade fixtures
+
+
+## Next: 0.82 release engineering and supply-chain hardening
+- reproducible build manifests
+- SBOM and provenance generation
+- signed release verification
+- release quality gates

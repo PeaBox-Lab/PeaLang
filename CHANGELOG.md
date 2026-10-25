@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.81.0-alpha.1 - 2026-10-25
+- Added machine-readable deprecation lifecycle enforcement.
+- Added deterministic, resumable and reversible migration execution.
+- Added public API snapshots, diffs and breaking-change gates.
+- Added upgrade fixtures, tests, release notes and retention evidence.
+
 ## 0.80.0-alpha.1 - 2026-10-25
 - Added W3C trace-context propagation and parent/child spans.
 - Added bounded span export and metric cardinality controls.
