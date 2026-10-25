@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.88.0-alpha.1 - 2026-10-25
+- Added LSP and DAP compatibility certification contracts.
+- Added stable diagnostic code/severity registry and snapshots.
+- Added deterministic editor capability negotiation.
+- Added reproducible breakpoint/stack/variable debugging fixtures.
+- Added combined developer-tooling certification gates, tests and documentation.
+
 ## 0.87.0-alpha.1 - 2026-10-25
 - Added agent tool isolation, approval replay protection, budgets and audit certification.
 

@@ -1,4 +1,4 @@
-# PeaLang 0.87.0 Alpha 1
+# PeaLang 0.88.0 Alpha 1
 
 PeaLang is an embeddable extension language for controlled rules, workflows, automation and host integration. Version 0.37 completes runtime resource accounting and structured concurrency while retaining the v0.35 standard library and v0.36 type-system foundation.
 
@@ -177,3 +177,7 @@ Model-format and deterministic serving certification controls.
 
 ## PeaLang v0.87 agent safety conformance
 Tool isolation, request-bound approvals, replay protection, budgets and tamper-evident multi-step audit certification.
+
+
+## PeaLang v0.88 developer tooling stabilization
+LSP and DAP compatibility certification, stable diagnostic contracts, editor capability negotiation, reproducible debugging fixtures and combined tooling release gates. See `docs/project/DEVELOPER_TOOLING_088.md`.

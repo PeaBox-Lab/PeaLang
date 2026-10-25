@@ -8,7 +8,7 @@ from .runtime import execute, compile_source, Interpreter, PeaError
 from .type_system import TypeChecker,TypeRef,Diagnostic,TypeCheckResult,SemanticAnalyzer,SemanticResult,FunctionContract,parse_type,erase_types
 from .embedding import (PeaRuntime,PeaModule,RuntimeOptions,ExecutionResult,
     PeaRuntimeError,PeaPermissionError,PeaResourceLimitError,to_pea,from_pea)
-__version__ = "0.87.0a1"
+__version__ = "0.88.0a1"
 __all__=['BytecodeModule','CodeObject','Instruction','Op','Compiler','CompileError','compile_source_to_bytecode','VirtualMachine','VMError','AsyncSuspension','AsyncVirtualMachine','AsyncVMRuntime','AsyncVMModule','CancellationToken','VMRuntime','VMModule','disassemble','execute','compile_source','Interpreter','PeaError','PeaRuntime','PeaModule',
 'SemanticAnalyzer','SemanticResult','FunctionContract','TypeChecker','TypeRef','Diagnostic','TypeCheckResult','parse_type','erase_types','RuntimeOptions','ExecutionResult','PeaRuntimeError','PeaPermissionError',
 'PeaResourceLimitError','to_pea','from_pea','__version__']
@@ -114,3 +114,5 @@ from .concurrency_resilience import CancellationReason,CancellationToken,Deadlin
 from .connector_conformance import Capability,ConnectorProfile,ConformanceCase,CaseResult,CertificationReport,ConformanceSuite,SQLDialect,SQLDialectContract,SQL_DIALECTS,validate_parameter_binding,TransactionProbe,StreamEvent,StreamRecoveryModel,ObjectStoreEdgeCases,certification_gate
 
 from .agent_safety_conformance import ToolCapability,ToolIsolationPolicy,ApprovalLedger,ExecutionBudget,BudgetTracker,AgentAuditTrail,SafeAgentExecutor,agent_safety_gate
+
+from .tooling_conformance import Severity,DiagnosticContract,DiagnosticRegistry,ToolProtocolProfile,CompatibilityMatrix,EditorCapabilityNegotiator,BreakpointFixture,DebugSnapshot,ReproducibleDebugSession,DAPConformance,LSPConformance,tooling_certification_gate

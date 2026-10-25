@@ -158,8 +158,15 @@ Grammar, type system, standard library, embedding API, package format and PEAC c
 
 ## 0.87 - Agent safety conformance - delivered
 
-## Next: 0.88 developer tooling stabilization
+## 0.88 developer tooling stabilization - delivered
 - LSP/DAP compatibility
 - diagnostics stability
 - reproducible debugging fixtures
 - tooling certification gates
+
+
+## Next: 0.89 release-candidate hardening
+- freeze new feature families
+- close blocker and high-severity defects
+- complete cross-platform/security/performance evidence
+- release-candidate readiness gate
