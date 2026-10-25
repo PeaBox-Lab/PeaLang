@@ -126,8 +126,15 @@ Grammar, type system, standard library, embedding API, package format and PEAC c
 - release quality gates
 
 
-## Next: 0.83 runtime performance II
+## 0.83 runtime performance II - delivered
 - representative benchmark suites
 - optimizer/compiler hot-path profiling
 - cache instrumentation
 - memory-pressure behavior and regression budgets
+
+
+## Next: 0.84 concurrency and resilience
+- cancellation and timeout propagation
+- structured concurrency stress testing
+- retry safety and idempotency evidence
+- graceful shutdown and drain behavior

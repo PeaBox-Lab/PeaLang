@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.83.0-alpha.1 - 2026-10-25
+- Added representative benchmark-suite execution with mean, p50, p95, p99, throughput and peak-memory evidence.
+- Added prior-baseline performance regression budgets and automated gates.
+- Added named compiler/runtime hot-path profiling.
+- Added cache load/eviction metrics and memory-pressure probes.
+- Added benchmark baseline serialization, tests, release notes and retention evidence.
+
 ## 0.82.0-alpha.1 - 2026-10-25
 - Added deterministic source manifests and tamper verification.
 - Added CycloneDX SBOM and SLSA/in-toto provenance verification.
