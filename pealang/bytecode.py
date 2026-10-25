@@ -1,4 +1,5 @@
 
+
 """Portable PeaLang bytecode model and .peac serialization."""
 from __future__ import annotations
 from dataclasses import dataclass,field,asdict
@@ -32,4 +33,5 @@ class BytecodeModule:
  def save(self,path):open(path,'w',encoding='utf-8').write(self.dumps())
  @classmethod
  def load(cls,path):return cls.loads(open(path,encoding='utf-8').read())
+
 

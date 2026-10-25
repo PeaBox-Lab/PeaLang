@@ -1,4 +1,5 @@
 
+
 # PeaLang Revised Foundational Roadmap
 
 The original roadmap goal is not yet complete. The implementation has covered much of the VM, embedding and integration work, but foundational maturity still requires specification completion, standard-library stabilization, deeper type semantics, structured concurrency, complete resource accounting, native language testing, larger conformance coverage, migration tooling, cross-platform CI evidence and production pilots.
@@ -225,9 +226,22 @@ Grammar, type system, standard library, embedding API, package format and PEAC c
 - residual-risk closure and final 1.0 readiness dossier
 - mandatory release/security/operations approvals
 
-## Next: 0.97 1.0 launch candidate
-- freeze code except blocker fixes
-- consume verified v0.96 readiness evidence
-- finalize signed distribution metadata and migration/support playbooks
-- define launch rollback criteria and execute launch-candidate validation
+## 0.97 1.0 launch candidate - delivered
+- frozen-change admissibility
+- v0.96 readiness prerequisite
+- signed artifact/provenance and operational playbook gates
+- measurable rollback and launch approval gates
+
+## 0.98 release dress rehearsal - delivered
+- signed staging release evidence contracts
+- clean-install, upgrade and rollback integrity drills
+- support, incident and rollback operational rehearsal gates
+- consolidated rehearsal approval with fail-closed evidence policy
+
+## Next: 0.99 final 1.0 release gate
+- consume verified v0.98 rehearsal evidence
+- close blocker, waiver and residual-risk registers
+- verify final documentation and signed distribution metadata
+- produce explicit PeaLang 1.0 GO/NO-GO dossier
+
 

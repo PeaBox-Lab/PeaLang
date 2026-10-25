@@ -1,3 +1,4 @@
+
 """PeaLang 0.96 Release Readiness Closure."""
 from __future__ import annotations
 from dataclasses import dataclass,asdict
@@ -33,3 +34,4 @@ def readiness_dossier(*,evidence,documentation,package_ops,risks,rc95,approvals:
  sections={"evidence":evidence,"documentation":documentation,"package_ops":package_ops,"risks":risks,"rc95":rc95}; approvals=dict(approvals)
  passed=all(x.get("passed") is True for x in sections.values()) and {"release-owner","security-owner","operations-owner"}.issubset({k for k,v in approvals.items() if v})
  out={"version":"0.96.0-rc1","decision":"READY-FOR-1.0" if passed else "NO-GO","passed":passed,"sections":sections,"approvals":approvals}; out["dossier_digest"]=digest(out); return out
+

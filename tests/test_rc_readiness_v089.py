@@ -1,4 +1,5 @@
 
+
 import pytest
 from pealang.rc_readiness import *
 def ready():
@@ -13,4 +14,5 @@ def test_waiver():
  r=ready();r.evidence['cross_platform']=Evidence('cross_platform','FAIL');r.add_waiver(Waiver('W','cross_platform','lab outage','manager','0.89.0a1'));assert r.evaluate()['decision']=='GO'
  with pytest.raises(ValueError):RCReadiness('0.89.0a1').add_waiver(Waiver('x','x','','m','0.89.0a1'))
 def test_doc_platform():assert documentation_gate({'README.md'},{'README.md'})['status']=='PASS' and cross_platform_gate({'linux':'PASS','windows':'PASS','macos':'PASS'})['status']=='PASS'
+
 

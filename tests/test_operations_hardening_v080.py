@@ -1,4 +1,5 @@
 
+
 import json,zipfile,pytest
 from pealang.operations_hardening import *
 def test_trace_context():
@@ -20,4 +21,5 @@ def test_health():
 def test_bundle(tmp_path):
  p=tmp_path/"d.zip";DiagnosticBundleBuilder(max_file_bytes=2048).add_runtime_summary("0.80.0a1").add_json("config",{"token":"secret","mode":"test"}).build(p)
  with zipfile.ZipFile(p) as z:assert json.loads(z.read("config.json"))["token"]=="[REDACTED]" and "config.json" in json.loads(z.read("manifest.json"))
+
 

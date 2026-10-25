@@ -1,4 +1,5 @@
 
+
 from pealang.data import DataFrame
 from pealang.ml import StandardScaler,LinearRegression,ProductionPipeline,save_model
 from pealang.mlops_portable import *
@@ -15,4 +16,5 @@ def test_cli_bundle_verify(tmp_path):
  m=tmp_path/'model.json';save_model(LinearRegression([2],1,['x']),m);bundle=tmp_path/'bundle';assert cli(['bundle',str(m),str(bundle),'--model-id','m'])==0 and cli(['verify',str(bundle)])==0
 def test_cli_registry(tmp_path):
  r=tmp_path/'r.json';b=tmp_path/'b';b.mkdir();assert cli(['register',str(r),'m','1',str(b)])==0 and cli(['promote',str(r),'m','1','approved','--approver','raj'])==0
+
 

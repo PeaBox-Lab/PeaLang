@@ -1,4 +1,5 @@
 
+
 from dataclasses import dataclass
 import pytest
 from pealang import PeaRuntime,RuntimeOptions,PeaPermissionError,to_pea,from_pea
@@ -20,4 +21,5 @@ def test_dataclass_conversion():
 def test_register_module():
  r=PeaRuntime(RuntimeOptions(permissions=frozenset({'hr.get'}))).register_module('hr',{'get':lambda x:{'id':x}},'hr')
  assert r.load('function work() { return hr.get("E1").id }\nexport work').call('work')=='E1'
+
 

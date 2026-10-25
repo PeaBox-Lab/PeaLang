@@ -1,4 +1,5 @@
 
+
 import types,pytest
 from pealang.compatibility import *
 def test_deprecation_ledger():
@@ -19,4 +20,5 @@ def test_api_snapshot_and_gate():
 def test_capture_public_api():
  m=types.ModuleType("demo");m.__all__=["run"];m.run=lambda x:x
  assert PublicApiSnapshot.capture(m).symbols["run"].signature=="(x)"
+
 

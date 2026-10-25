@@ -1,4 +1,5 @@
 
+
 from pealang.performance_hardening import *
 def stat(name,mean=10,p95=12,p99=14,tp=100,mem=10):return BenchmarkStats(name,10,mean,mean,p95,p99,tp,mem)
 def test_benchmark_suite_percentiles_and_throughput():
@@ -15,4 +16,5 @@ def test_instrumented_cache_evictions():
 def test_memory_pressure_and_baseline_roundtrip(tmp_path):
  probe=MemoryPressureProbe(rounds=2);r=probe.run(lambda:[x for x in range(1000)]);assert r.rounds==2 and r.peak_memory_mb>=0
  path=tmp_path/'baseline.json';save_benchmark_baseline(path,'0.83.0a1',{'vm':stat('vm')});loaded=load_benchmark_baseline(path);assert loaded['vm'].p95_ms==12
+
 

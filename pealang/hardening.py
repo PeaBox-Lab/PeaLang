@@ -1,4 +1,5 @@
 
+
 """PeaLang v0.76 release hardening and adversarial governance gates."""
 from __future__ import annotations
 from dataclasses import dataclass,asdict
@@ -65,4 +66,5 @@ def sha256_manifest(root):
         if p.is_file() and '__pycache__' not in p.parts and '.pytest_cache' not in p.parts:
             rows.append({"path":str(p.relative_to(root)).replace('\\','/'),"size":p.stat().st_size,"sha256":hashlib.sha256(p.read_bytes()).hexdigest()})
     return rows
+
 

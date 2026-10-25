@@ -1,4 +1,5 @@
 
+
 import pytest
 from pealang import compile_source_to_bytecode,VirtualMachine,VMRuntime,execute
 
@@ -24,4 +25,5 @@ def test_vm_stack_frames():
  def hook(vm,frame,ins):
   if frame.name=='add':events.extend(vm.stack_trace())
  VirtualMachine(output=lambda x:None,debug_hook=hook).run(m);assert any(x['name']=='add' for x in events)
+
 

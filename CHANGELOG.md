@@ -1,5 +1,16 @@
 
+
 # Changelog
+## 0.98.0-rc1 - 2026-10-26
+- Added signed staging release-rehearsal evidence gates.
+- Added clean-install, upgrade and rollback integrity drills.
+- Added support/incident/rollback operational rehearsal gates.
+- Added consolidated rehearsal approval and NO-GO behavior for missing real evidence.
+
+## 0.97.0-rc1 - 2026-10-26
+- Added launch-candidate frozen-change, signed-artifact/provenance, operational-playbook and rollback gates.
+- Added explicit release/security/operations approval requirements.
+
 ## 0.96.0-rc1 - 2026-10-26
 - Added documentation/support and packaging/operations readiness gates.
 - Added verified release-evidence consolidation and residual-risk closure.
@@ -277,4 +288,5 @@
 - Added tool-call budget enforcement.
 - Moved historical development handovers to `docs/handover/` for a cleaner project root.
 - Added agent governance documentation and regression tests.
+
 

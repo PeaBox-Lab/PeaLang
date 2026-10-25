@@ -1,4 +1,5 @@
 
+
 """Canonical signed registry indexes, publisher namespaces and anti-replay policy."""
 from __future__ import annotations
 from dataclasses import dataclass,asdict,field
@@ -51,4 +52,5 @@ class RegistryState:
    if prior and prior!=p['sha256']:raise PeaError(f'Immutable version changed: {p["name"]} {p["version"]}')
    versions.setdefault(p['name'],{})[p['version']]=p['sha256']
   self.data['sequences'][index.registry]=index.sequence;self.save();return True
+
 

@@ -1,4 +1,5 @@
 
+
 # PeaLang AI Development Handover 0.20
 
 ## Product direction
@@ -24,4 +25,5 @@ Version 0.21 should close VM parity gaps: break/continue patch stacks, compound/
 ## Release rule
 
 Every future release must include cumulative changelog, detailed release notes, README, roadmap, version history, foundations, complete user/embedding guides, help pages, security and architecture notes, tests, examples, and an updated AI handover.
+
 

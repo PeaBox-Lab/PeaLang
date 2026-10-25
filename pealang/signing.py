@@ -1,4 +1,5 @@
 
+
 from dataclasses import dataclass,asdict
 from pathlib import Path
 import base64,hashlib,hmac,json,os,secrets,time
@@ -43,4 +44,5 @@ class TrustStore:
   missing=[k for k in key_ids if k not in self.data['keys']]
   if missing:raise PeaError('Unknown trusted key IDs: '+', '.join(missing))
   self.data['registries'][name]={'url':url.rstrip('/'),'keys':list(key_ids)};self.save()
+
 

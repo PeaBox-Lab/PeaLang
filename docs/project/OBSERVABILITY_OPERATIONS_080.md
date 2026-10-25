@@ -1,4 +1,5 @@
 
+
 # PeaLang 0.80 Observability and Operations Hardening
 
 ## Delivered
@@ -21,4 +22,5 @@ health.add_liveness("runtime", lambda: True)
 with tracer.span("connector.call", {"connector": "sql"}):
     metrics.record("connector_requests_total", 1, attributes={"connector": "sql", "outcome": "ok"})
 ```
+
 

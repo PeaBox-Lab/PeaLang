@@ -1,4 +1,5 @@
 
+
 # PeaLang v0.77 Performance and Memory Hardening
 
 v0.77 starts the performance phase of the v1 hardening programme.
@@ -11,4 +12,5 @@ v0.77 starts the performance phase of the v1 hardening programme.
 - Dependency-free bounded LRU cache with eviction and hit-rate statistics.
 
 Performance budgets are intentionally supplied by the caller because realistic limits differ between the VM, compiler, connectors, analytics and serving workloads.
+
 

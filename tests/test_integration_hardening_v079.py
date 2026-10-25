@@ -1,4 +1,5 @@
 
+
 import pytest
 from pealang.integration_hardening import *
 
@@ -27,4 +28,5 @@ def test_circuit_breaker_opens_and_recovers():
 def test_health_report():
     assert ConnectorHealthCheck('ok',lambda:True).run().healthy
     report=ConnectorHealthCheck('bad',lambda:(_ for _ in ()).throw(ValueError('bad'))).run();assert not report.healthy and 'ValueError' in report.detail
+
 

@@ -1,4 +1,5 @@
 
+
 # PeaLang AI Development Handover 0.21
 
 ## Delivered
@@ -28,4 +29,5 @@ Version 0.22 should implement exception tables and handler unwinding, try/catch/
 ## Release requirement
 
 Every future release must contain the cumulative changelog, detailed release notes, README, roadmap, version history, foundations, user and embedding guides, help pages, security and architecture notes, tests, examples, and an updated AI handover.
+
 

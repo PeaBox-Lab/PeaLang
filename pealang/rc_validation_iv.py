@@ -1,3 +1,4 @@
+
 """PeaLang 0.94 Release Candidate Validation IV: release engineering closure."""
 from __future__ import annotations
 from dataclasses import dataclass,asdict
@@ -51,3 +52,4 @@ def v1_evidence_gate(*,install,reproducibility,reviews,runbooks,rc93,blockers=()
  sections={"install":install,"reproducibility":reproducibility,"reviews":reviews,"runbooks":runbooks,"rc93":rc93}; blockers=list(blockers)
  result={"version":"0.94.0-rc1","passed":all(x.get("passed") is True for x in sections.values()) and not blockers,"sections":sections,"blockers":blockers}
  result["digest"]=digest(result); return result
+

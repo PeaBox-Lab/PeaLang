@@ -1,4 +1,5 @@
 
+
 """Jupyter kernel protocol foundation and rich display helpers for PeaLang v0.72."""
 from __future__ import annotations
 from dataclasses import dataclass
@@ -43,4 +44,5 @@ class PeaKernel:
 
 def kernelspec():
     return {"argv":["python","-m","pealang.jupyter_kernel","-f","{connection_file}"],"display_name":"PeaLang","language":"pealang"}
+
 

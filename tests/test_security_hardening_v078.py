@@ -1,4 +1,5 @@
 
+
 import pytest
 from pealang.security_hardening import SecurityPolicy,SecurityValidator,SecurityViolation,redact_secrets,SignedAuditChain
 
@@ -27,4 +28,5 @@ def test_signed_audit_chain_detects_tamper():
     c=SignedAuditChain(key=b'test-key'); c.append({'action':'read','token':'secret'}); c.append({'action':'write'})
     assert c.verify() and c.entries[0]['event']['token']=='[REDACTED]'
     c.entries[0]['event']['action']='tampered'; assert not c.verify()
+
 

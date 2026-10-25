@@ -1,4 +1,5 @@
 
+
 """PeaLang 0.92 release-candidate validation II."""
 from dataclasses import dataclass,asdict
 import hashlib,json,time
@@ -85,4 +86,5 @@ def rc92_gate(*,freshness,upgrades,drift,trends,ecosystem,recovery,waivers):
  checks={'freshness':freshness.get('passed',False),'upgrades':upgrades.get('passed',False),'drift':drift.get('passed',False),'trends':trends.get('passed',False),'ecosystem':ecosystem.get('passed',False),'recovery':recovery.get('passed',False),'waivers':waivers.get('passed',False)}
  return {'gate':'GO' if all(checks.values()) else 'NO-GO','checks':checks,'failed':[k for k,v in checks.items() if not v]}
 def certification_digest(report):return hashlib.sha256(json.dumps(report,sort_keys=True,separators=(',',':'),default=str).encode()).hexdigest()
+
 

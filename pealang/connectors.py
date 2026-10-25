@@ -1,4 +1,5 @@
 
+
 """PeaLang 0.45 Connector SDK with REST and GraphQL connectors."""
 from __future__ import annotations
 from dataclasses import dataclass,field
@@ -130,4 +131,5 @@ def _records(data,path=None):
     if isinstance(value,list):return [x if isinstance(x,dict) else {'value':x} for x in value]
     if isinstance(value,dict):return [value]
     return [{'value':value}]
+
 

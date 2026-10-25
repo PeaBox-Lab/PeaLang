@@ -1,4 +1,5 @@
 
+
 {
   "current": "0.63.0rc2",
   "upgrades": [
@@ -60,3 +61,14 @@ Binary files listed: 0
 Oversized files skipped: 0
 Failed files: 0
 Excluded directories: 0
+
+================================================================================
+EXPORT SUMMARY
+================================================================================
+
+Files discovered: 555
+Text/source files exported: 555
+Binary files listed: 0
+Oversized files skipped: 0
+Failed files: 0
+Excluded directories: 3

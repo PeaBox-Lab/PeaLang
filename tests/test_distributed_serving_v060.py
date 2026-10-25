@@ -1,4 +1,5 @@
 
+
 import time
 from pealang.distributed_serving import *
 def test_distributed_rate():
@@ -16,4 +17,5 @@ def test_kubernetes():
 def test_write_manifests(tmp_path):assert len(write_kubernetes_manifests(tmp_path))==4
 def test_otel_noop():
  with OpenTelemetryHooks(tracer=None).span('x'):pass
+
 

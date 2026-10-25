@@ -1,4 +1,5 @@
 
+
 from pealang import SemanticAnalyzer
 
 def check(src):return SemanticAnalyzer().analyze(src)
@@ -18,4 +19,5 @@ def test_float_division():assert check('function f()->Float{\n return 4/2\n}').o
 def test_nullable_return_allows_null():assert check('function f()->String?{\n return null\n}').ok
 def test_symbol_collection():assert check('let x: Int=1').symbols['x'].name=='Int'
 def test_function_contract_collection():assert check('function f(a:String)->Int{\n return 1\n}').functions['f'].params[0][1].name=='String'
+
 

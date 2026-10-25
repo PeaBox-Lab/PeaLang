@@ -1,4 +1,5 @@
 
+
 """Beta/pilot and 1.0-readiness evidence model for PeaLang 0.41."""
 from dataclasses import dataclass,asdict,field
 from pathlib import Path
@@ -23,4 +24,5 @@ def default_report():
  return ReadinessReport(pilots=[asdict(Pilot('HR bonus rules','Python/FastAPI','embedded compensation rule extension')),asdict(Pilot('Service extension','Java sidecar','Java host invokes signed PeaLang module'))],stable_hosts=['Python embedding','Java runtime sidecar','TypeScript runtime client'],thresholds=asdict(PerformanceThresholds()),security_review={'prepared':True,'scope':['runtime permissions','resource limits','package signatures','registry replay','safe extraction','browser capability profile'],'external_review_completed':False},migration={'prepared':True,'from':'0.x','to':'1.0','open_items':['stability promotion decisions','PEAC compatibility promise','coverage/CI evidence','pilot validation evidence']})
 def save_report(path,report=None):
  r=report or default_report();Path(path).write_text(json.dumps(r.to_dict(),indent=2)+'\n');return r.to_dict()
+
 

@@ -1,10 +1,11 @@
 
+
 [build-system]
 requires=["setuptools>=68","wheel"]
 build-backend="setuptools.build_meta"
 [project]
 name="pealang"
-version="0.96.0rc1"
+version="0.98.0rc1"
 description="Readable automation and AI workflow language"
 readme="README.md"
 requires-python=">=3.10"
@@ -29,4 +30,5 @@ jupyter = ["ipykernel>=6.29"]
 
 onnx = ["onnxruntime>=1.18", "numpy>=1.26"]
 torch = ["torch>=2.2"]
+
 

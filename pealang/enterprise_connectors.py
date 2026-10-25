@@ -1,4 +1,5 @@
 
+
 """PeaLang 0.48 enterprise connectors, secrets and certification."""
 from __future__ import annotations
 from dataclasses import dataclass,field,asdict
@@ -118,4 +119,5 @@ MicrosoftGraphConnector.set_token_provider=_set_tp;MicrosoftGraphConnector._head
 def _all(self,site_id,list_id):
  return DataFrame([{'id':x.get('id'),**x.get('fields',{})} for x in self.paged_values(f'sites/{site_id}/lists/{list_id}/items',{'$expand':'fields'})])
 SharePointConnector.list_items_all=_all
+
 

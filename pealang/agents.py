@@ -1,4 +1,5 @@
 
+
 from __future__ import annotations
 from dataclasses import dataclass
 from typing import Any
@@ -64,4 +65,5 @@ class AgentRuntime:
         if store is not None:
             store.record(AuditEvent("tool_execution",agent.get("name"),str(name),"executed",getattr(approval,"actor",None),details={"args":list(args or [])}))
         return result
+
 

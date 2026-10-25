@@ -1,4 +1,5 @@
 
+
 """Ed25519 publisher signatures and public-key trust for PeaLang packages."""
 from __future__ import annotations
 from dataclasses import dataclass,asdict
@@ -51,4 +52,5 @@ class PublicTrustStore:
   for kid in key_ids:
    if kid not in self.data['keys'] or kid in self.data['revoked']:raise PeaError(f'Untrusted or revoked key: {kid}')
   self.data['registries'][name]={'url':url.rstrip('/'),'keys':list(key_ids)};self.save()
+
 

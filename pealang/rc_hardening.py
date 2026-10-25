@@ -1,4 +1,5 @@
 
+
 """PeaLang 0.89 release-candidate readiness gates. No new feature family."""
 from dataclasses import dataclass,asdict
 from enum import Enum
@@ -33,4 +34,5 @@ def documentation_completeness(root):
  r=Path(root);required=['README.md','CHANGELOG.md','ROADMAP.md','docs/releases/RELEASE_NOTES_0.89.0.md','docs/project/RC_HARDENING_089.md'];missing=[x for x in required if not (r/x).is_file()];return {'passed':not missing,'missing':missing}
 def cross_platform_evidence(platforms):
  required={'windows','linux','macos'};actual={str(x).lower() for x in platforms};return {'passed':required<=actual,'missing':sorted(required-actual)}
+
 

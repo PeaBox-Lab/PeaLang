@@ -1,4 +1,5 @@
 
+
 from pealang.runtime_service import RuntimeService
 
 def test_health():assert RuntimeService().health()['status']=='UP'
@@ -10,4 +11,5 @@ def test_load_invoke():
 def test_unknown_module():assert not RuntimeService().invoke('missing','x').ok
 def test_bad_semantics():assert not RuntimeService().compile('function f()->Int {\n return "bad"\n}').ok
 def test_bad_operation():assert RuntimeService().handle({'operation':'x'})['error']['code']=='BAD_REQUEST'
+
 

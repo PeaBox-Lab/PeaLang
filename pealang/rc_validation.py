@@ -1,4 +1,5 @@
 
+
 """PeaLang 0.91 release-candidate validation I."""
 from dataclasses import dataclass,asdict
 import hashlib,json
@@ -79,4 +80,5 @@ def rc91_gate(*,cross_platform,upgrades,frozen_contract,soak,blockers):
 def evidence_digest(*evidence):
  normalized=[asdict(x) if hasattr(x,"__dataclass_fields__") else x for x in evidence]
  return hashlib.sha256(json.dumps(normalized,sort_keys=True,separators=(",",":"),default=str).encode()).hexdigest()
+
 

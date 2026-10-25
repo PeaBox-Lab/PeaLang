@@ -1,4 +1,5 @@
 
+
 from pealang.rc_validation import *
 def complete_matrix():
  return CrossPlatformSoak([SoakEvidence(os_name,py,100) for os_name in SUPPORTED_PLATFORMS for py in SUPPORTED_PYTHONS])
@@ -16,4 +17,5 @@ def test_blocker_and_waiver_gate():
 def test_rc91_go_no_go():
  cp=complete_matrix().evaluate();up=UpgradeValidation().evaluate([UpgradeFixture('0.90','0.91',True,True,True)]);fc={'passed':True};soak=SoakGate(True,True,True,True);bl=BlockerRegistry().evaluate([])
  result=rc91_gate(cross_platform=cp,upgrades=up,frozen_contract=fc,soak=soak,blockers=bl);assert result['gate']=='GO' and len(evidence_digest(cp,up,fc,soak,bl))==64
+
 

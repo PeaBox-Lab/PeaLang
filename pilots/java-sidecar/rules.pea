@@ -1,4 +1,6 @@
 
+
 function eligibility(score){ return score >= 70 }
 export eligibility
+
 

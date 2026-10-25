@@ -1,4 +1,5 @@
 
+
 """PeaLang v0.79 enterprise integration and connector reliability controls."""
 from __future__ import annotations
 from dataclasses import dataclass,field,asdict
@@ -106,4 +107,5 @@ class ConnectorHealthCheck:
         started=self.clock()
         try:self.probe();return HealthReport(self.name,True,(self.clock()-started)*1000,"ok")
         except Exception as exc:return HealthReport(self.name,False,(self.clock()-started)*1000,f"{exc.__class__.__name__}: {exc}")
+
 

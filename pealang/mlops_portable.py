@@ -1,4 +1,5 @@
 
+
 """PeaLang 0.57 pipeline portability, monitoring backends and MLOps CLI services."""
 from __future__ import annotations
 from dataclasses import asdict
@@ -82,4 +83,5 @@ def serving_cli(argv=None):
   try:import uvicorn
   except ImportError as exc:raise RuntimeError('Serving command requires optional dependency: uvicorn') from exc
   c=ServingConfig(api_keys={a.api_key} if a.api_key else set());runtime=PipelineRuntime({a.version:a.pipeline},config=c);uvicorn.run(create_serving_app(runtime),host=a.host,port=a.port);return 0
+
 

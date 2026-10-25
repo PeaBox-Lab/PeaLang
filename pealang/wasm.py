@@ -1,4 +1,5 @@
 
+
 from dataclasses import dataclass,asdict
 from pathlib import Path
 import json
@@ -44,4 +45,5 @@ def inspect_wasm(value):
   pos=end
  return {'manifest':json.loads(sections['pealang.manifest']),'peac':json.loads(sections['pealang.peac'])}
 def browser_loader_source():return 'export async function loadPeaWasm(url,imports={}) { const bytes=await (await fetch(url)).arrayBuffer(); return WebAssembly.instantiate(bytes,imports); }'
+
 

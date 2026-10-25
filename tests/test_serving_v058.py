@@ -1,4 +1,5 @@
 
+
 import json
 from pealang.data import DataFrame
 from pealang.ml import StandardScaler,LinearRegression,ProductionPipeline
@@ -26,4 +27,5 @@ def test_deploy_check(tmp_path):
  p=pipeline(tmp_path);m=deployment_manifest('m','1',p);assert deploy_check(m,p)['valid']
 def test_execute_and_cli(tmp_path):
  p=pipeline(tmp_path);m=deployment_manifest('m','1',p);mp=tmp_path/'d.json';mp.write_text(json.dumps(m));assert execute_deployment(mp)['pipeline_path']==str(p) and serving_cli(['deploy-check',str(mp),str(p)])==0 and serving_cli(['execute',str(mp)])==0
+
 

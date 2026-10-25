@@ -1,4 +1,5 @@
 
+
 from pealang.data import DataFrame
 from pealang.ml import *
 def test_split_seed():
@@ -18,4 +19,5 @@ def test_kfold():assert len(kfold_indices(10,5))==5 and all(len(t)==2 for _,t in
 def test_serialization(tmp_path):
  m=LinearRegression([2],1,['x']);p=tmp_path/'m.json';save_model(m,p);assert load_model(p).predict_rows(DataFrame([{'x':3}]))==[7]
 def test_pipeline():assert Pipeline([(StandardScaler(),(['x'],))]).fit_transform(DataFrame([{'x':1},{'x':3}])).row_count==2
+
 

@@ -1,3 +1,4 @@
+
 # PeaLang 0.93 Release Candidate Validation III
 
 v0.93 remains feature-frozen and extends RC evidence rather than adding feature families.
@@ -10,3 +11,4 @@ v0.93 remains feature-frozen and extends RC evidence rather than adding feature 
 - Consolidated gate: all sections pass and no unresolved blocker remains.
 
 These APIs validate supplied evidence. They do not claim that external CI, operating-system matrices, disaster recovery or third-party integrations ran unless real records are supplied.
+
