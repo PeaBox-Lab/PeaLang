@@ -1,6 +1,7 @@
 
 
 
+
 import importlib.util
 import pytest
 from pealang import RuntimeOptions,VMRuntime,PeaPermissionError
@@ -23,6 +24,7 @@ def test_hot_reload(tmp_path):
 def test_router_openapi(tmp_path):
  from fastapi import FastAPI
  p=tmp_path/'r.pea';p.write_text('function f(x){return x}\nexport f');r=PeaExtensionRegistry();r.load('x',p);from pealang.fastapi import PeaRouter;router=PeaRouter(r).add('/f','x','f');app=FastAPI();app.include_router(router.router);op=app.openapi();assert op['paths']['/extensions/f']['post']['x-pealang-extension']=='x'
+
 
 
 

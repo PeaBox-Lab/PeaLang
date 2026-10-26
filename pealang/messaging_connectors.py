@@ -1,6 +1,7 @@
 
 
 
+
 """PeaLang v0.68 RabbitMQ and WebSocket connectors with optional backends."""
 from __future__ import annotations
 from dataclasses import dataclass, field
@@ -92,6 +93,7 @@ class InMemoryMessageBus:
         q=self.queues.setdefault(name,queue.Queue()); rows=[]
         while not q.empty() and (max_messages is None or len(rows)<max_messages): rows.append(q.get_nowait())
         return rows
+
 
 
 

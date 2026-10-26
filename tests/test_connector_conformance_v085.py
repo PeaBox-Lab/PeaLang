@@ -1,6 +1,7 @@
 
 
 
+
 from pealang.connector_conformance import *
 def test_sql_dialects_and_binding():
  assert validate_parameter_binding('select * from t where a=? and b=?',[1,2],SQLDialect.SQLITE)['valid']
@@ -23,6 +24,7 @@ def test_object_store_edges():
 def test_suite_and_certification_gate():
  p=ConnectorProfile('demo','1',frozenset({Capability.SQL}));s=ConformanceSuite().add(ConformanceCase('sql.basic',Capability.SQL,lambda c:True));report=s.run(p,object());assert report.passed and certification_gate(report)['gate']=='PASS'
  failed=ConformanceSuite().add(ConformanceCase('stream.basic',Capability.STREAMING,lambda c:True)).run(p,object());assert certification_gate(failed)['gate']=='FAIL'
+
 
 
 

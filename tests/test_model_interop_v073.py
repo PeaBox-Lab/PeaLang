@@ -1,6 +1,7 @@
 
 
 
+
 from pealang.data import DataFrame
 from pealang.model_interop import TensorBridge,QueryPolicy,QueryPlan,GovernedQueryPlanner
 
@@ -19,6 +20,7 @@ def test_governed_planner_enforces_dataset_operation_and_limit():
 def test_model_proposal_still_goes_through_policy():
     planner=GovernedQueryPlanner(QueryPolicy(("employees",),maximum_limit=10),lambda _: {"dataset":"secret","operations":[{"operation":"limit","count":99}]})
     plan=planner.propose("anything"); assert plan.diagnostics==["dataset is not allowed","limit exceeds policy"]
+
 
 
 

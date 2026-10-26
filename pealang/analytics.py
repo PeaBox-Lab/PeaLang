@@ -1,6 +1,7 @@
 
 
 
+
 """PeaLang 0.50 dependency-light DataFrame analytics and profiling."""
 from __future__ import annotations
 from collections import Counter,defaultdict
@@ -109,6 +110,7 @@ DataFrame.rolling=lambda self,column,window,op='mean',name=None,min_periods=1:ro
 DataFrame.outliers_iqr=lambda self,column,factor=1.5:outliers_iqr(self,column,factor)
 DataFrame.profile=lambda self:profile(self)
 DataFrame.correlation_matrix=lambda self,columns=None:correlation_matrix(self,columns)
+
 
 
 

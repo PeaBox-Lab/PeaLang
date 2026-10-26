@@ -1,6 +1,7 @@
 
 
 
+
 from pealang.api_freeze import *
 
 def test_manifest_digest_and_additive_change():
@@ -24,6 +25,7 @@ def test_one_zero_contract():
     manifest=ApiFreezeManifest([FrozenSurface("pea.run","function","(source)")])
     contract=compatibility_contract(manifest,["PEA1001"],"PEAC-1")
     assert contract["target"]=="1.0" and contract["rules"]["breaking_changes"]=="approval-required"
+
 
 
 

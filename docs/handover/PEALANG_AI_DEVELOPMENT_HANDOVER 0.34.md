@@ -1,6 +1,7 @@
 
 
 
+
 # PeaLang AI Development Handover 0.34
 
 ## Delivered
@@ -15,6 +16,7 @@ The project is not yet at the foundational maturity gate. Do not prioritize addi
 
 ## Next release
 0.35 should stabilize the standard-library namespace and permission model with compatibility tests.
+
 
 
 

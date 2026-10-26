@@ -1,6 +1,7 @@
 
 
 
+
 from __future__ import annotations
 from dataclasses import dataclass
 from typing import Optional
@@ -20,6 +21,7 @@ class PeaError(Exception):
         if self.span:
             return f"{self.source_name}:{self.span.line}:{self.span.col}: {self.message}"
         return self.message
+
 
 
 

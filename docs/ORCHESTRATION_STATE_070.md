@@ -1,6 +1,7 @@
 
 
 
+
 # PeaLang 0.70 Durable Orchestration
 
 Version 0.70 extends the 0.69 DAG layer with operational execution semantics.
@@ -26,6 +27,7 @@ result = runner.run(dag, logical_date="2026-10-24", retry=RetryPolicy(max_attemp
 ```
 
 Idempotency is scoped to DAG, task, logical date, and canonicalized inputs. A repeated successful run is skipped and its stored result is returned.
+
 
 
 

@@ -1,6 +1,7 @@
 
 
 
+
 import pytest
 from pealang.mlops_secure import *
 from types import SimpleNamespace
@@ -26,6 +27,7 @@ def test_encrypt(tmp_path):
  try:from cryptography.fernet import Fernet
  except ImportError:return
  key=Fernet.generate_key();src=tmp_path/'a';enc=tmp_path/'b';out=tmp_path/'c';src.write_text('secret');encrypt_artifact(src,enc,key);decrypt_artifact(enc,out,key);assert out.read_text()=='secret'
+
 
 
 

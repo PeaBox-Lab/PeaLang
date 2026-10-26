@@ -1,6 +1,7 @@
 
 
 
+
 """PeaLang v0.73 ONNX, tensor interchange, and governed query planning."""
 from __future__ import annotations
 from dataclasses import dataclass,field,asdict
@@ -92,6 +93,7 @@ class GovernedQueryPlanner:
     def approve(self,plan,actor,reason):
         if not actor or not reason: raise ValueError("actor and reason are required")
         plan.approved=True; plan.diagnostics=[d for d in plan.diagnostics if not d.startswith("approval required")]; return plan
+
 
 
 

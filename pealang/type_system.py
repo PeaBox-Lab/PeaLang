@@ -1,6 +1,7 @@
 
 
 
+
 """Optional static type system and source-to-runtime annotation erasure."""
 from __future__ import annotations
 from dataclasses import dataclass,field
@@ -314,6 +315,7 @@ def analyze_project(paths):
         for n,c in checked.functions.items():result['functions'][f'{p.stem}.{n}']=c
         for n,c in checked.records.items():result['records'][f'{p.stem}.{n}']=c
     return result
+
 
 
 

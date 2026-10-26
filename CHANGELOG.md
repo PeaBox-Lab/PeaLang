@@ -1,4 +1,9 @@
+
 # Changelog
+## 0.99.5 - 2026-10-26
+- Fixed TypeScript/React Node 24 diagnostic failures and stale client dependency.
+- Added Java and Node CI plus OS/Python and security workflows.
+
 
 ## 0.99.4 - 2026-10-26
 - Replaced MD5 CycloneDX serial generation with UUIDv5.
@@ -313,5 +318,6 @@
 - Added tool-call budget enforcement.
 - Moved historical development handovers to `docs/handover/` for a cleaner project root.
 - Added agent governance documentation and regression tests.
+
 
 

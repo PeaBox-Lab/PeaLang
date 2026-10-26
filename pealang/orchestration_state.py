@@ -1,3 +1,4 @@
+
 # AUDIT-CLOSURE: intentional interface contract; concrete backends must override the methods documented in docs/project/INTERFACE_COMPLETENESS_0991.md.
 
 
@@ -111,6 +112,7 @@ class DurableDAGRunner:
         return out
     def backfill(self,dag,start:datetime,end:datetime,schedule:Schedule,inputs_factory=None,retry=None):
         return [self.run(dag,(inputs_factory(dt) if inputs_factory else {}),dt.isoformat(),retry) for dt in schedule.occurrences(start,end)]
+
 
 
 

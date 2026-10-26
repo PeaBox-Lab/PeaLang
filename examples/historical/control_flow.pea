@@ -1,2 +1,4 @@
+
 # Modern compatibility example for historical control_flow.pea
 print("control_flow")
+

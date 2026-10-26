@@ -1,6 +1,7 @@
 
 
 
+
 # PeaLang 0.84 Concurrency and Resilience
 
 ## Delivered
@@ -17,6 +18,7 @@
 - Graceful drain: at most 30 seconds before forced cancellation.
 - Retry: disabled unless the operation is idempotent or has a stable idempotency key.
 - Shutdown completion: zero orphaned tasks.
+
 
 
 

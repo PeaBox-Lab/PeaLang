@@ -1,6 +1,7 @@
 
 
 
+
 # PeaLang v0.66 Event-Time Streaming
 
 v0.66 adds a compact streaming foundation on top of the v0.65 scalable execution layer.
@@ -19,6 +20,7 @@ from pealang.streaming import EventTimeStream, Watermark, TumblingWindow
 stream = EventTimeStream("event_time", watermark=Watermark(timedelta(minutes=5)))
 windows = stream.window(events, TumblingWindow(timedelta(minutes=10)))
 ```
+
 
 
 

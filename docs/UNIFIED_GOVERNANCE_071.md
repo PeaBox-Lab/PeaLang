@@ -1,6 +1,7 @@
 
 
 
+
 # PeaLang v0.71 Unified Lineage, Observability and Dashboards
 
 This release combines the former v0.71, v0.72 and v0.73 targets into one integrated governance and operational-intelligence release.
@@ -24,6 +25,7 @@ alerts = SLAEvaluator().evaluate(metric, SLAPolicy(max_duration_seconds=60))
 report = AuditReport.build(metric, alerts, lineage)
 ui = render_react(Dashboard("HR Operations").add("metric", "Duration", source="run"))
 ```
+
 
 
 

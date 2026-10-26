@@ -1,0 +1,28 @@
+name: PeaLang 1.0 OS-Python Matrix
+on: [workflow_dispatch, push, pull_request]
+permissions:
+  contents: read
+jobs:
+  test-matrix:
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        python: ['3.10','3.11','3.12','3.13']
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+          cache: pip
+      - run: python -m pip install --upgrade pip setuptools wheel pytest
+      - run: python -m pip install -e .
+      - run: python -m pytest -q -p no:cacheprovider --junitxml=junit.xml
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: os-python-${{ matrix.os }}-${{ matrix.python }}
+          path: junit.xml
+          retention-days: 90

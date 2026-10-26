@@ -1,6 +1,7 @@
 
 
 
+
 from difflib import get_close_matches
 from .errors import PeaError, SourceSpan
 class Env:
@@ -24,6 +25,7 @@ class Env:
         raise PeaError(f"Undefined variable '{n}'",span,source_name)
 
     def snapshot(self):return dict(self.values)
+
 
 
 

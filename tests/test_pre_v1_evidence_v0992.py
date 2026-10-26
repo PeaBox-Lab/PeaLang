@@ -1,3 +1,4 @@
+
 from pealang.pre_v1_evidence_v0992 import *
 def h(x): return digest(x)
 def test_inventory_requires_all(): assert not evidence_inventory([])["passed"]
@@ -9,3 +10,4 @@ def test_pre_v1_no_go_without_real_evidence():
 def test_pre_v1_ready_when_everything_passes():
  ok={"passed":True}; a={"release-owner":True,"security-owner":True,"operations-owner":True}; assert pre_v1_gate(audit_closure=ok,final_gate=ok,evidence=ok,approvals=a)["decision"]=="READY-FOR-1.0"
 def test_template_is_fail_closed(tmp_path): assert local_evidence_template(tmp_path)["policy"]=="fail-closed"
+

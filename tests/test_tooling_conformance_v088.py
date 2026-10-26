@@ -1,6 +1,7 @@
 
 
 
+
 import pytest
 from pealang.tooling_conformance import *
 def test_diagnostics_are_stable():
@@ -19,6 +20,7 @@ def test_tooling_gate_fail_and_pass():
  assert tooling_certification_gate(lsp=bad,dap=ok,diagnostics_stable=True,debug_reproducible=True)['gate']=='FAIL'
 def test_compatibility_matrix():
  m=CompatibilityMatrix().register(ToolProtocolProfile('vscode','lsp','3.17',frozenset({'hover','completion'})));assert m.supports('vscode','lsp',{'hover'}) and not m.supports('vscode','lsp',{'rename'})
+
 
 
 

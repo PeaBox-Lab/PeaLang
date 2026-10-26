@@ -1,6 +1,7 @@
 
 
 
+
 # PeaLang AI Development Handover 0.18
 
 ## Product direction
@@ -25,6 +26,7 @@ Version 0.19 should add semantic types while preserving untyped compatibility. I
 ## Non-negotiable release contents
 
 Every release must include cumulative changelog, release notes, README, roadmap, version history, foundations, full user and embedding guides, help pages, tests, examples, security notes, architecture notes, and an updated AI handover.
+
 
 
 

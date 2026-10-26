@@ -1,6 +1,7 @@
 
 
 
+
 # PeaLang v0.69 DAG Orchestration
 
 v0.69 begins the orchestration and governance phase with dependency-safe directed acyclic graphs.
@@ -33,6 +34,7 @@ results = pipeline.run()
 ```
 
 v0.70 can build persistent task state, retries, backfills, idempotency, and scheduling on this validated DAG model.
+
 
 
 

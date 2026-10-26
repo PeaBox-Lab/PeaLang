@@ -1,6 +1,7 @@
 
 
 
+
 from pealang.data import DataFrame
 from pealang.analytics import *
 def sample():return DataFrame([{'g':'A','x':1,'y':2},{'g':'A','x':2,'y':4},{'g':'B','x':3,'y':6},{'g':'B','x':100,'y':200},{'g':'B','x':None,'y':None}])
@@ -21,6 +22,7 @@ def test_corr_matrix():assert sample().correlation_matrix(['x','y']).to_dicts()[
 def test_quantile_bounds():
  try:quantile([1],2);assert False
  except ValueError:assert True
+
 
 
 

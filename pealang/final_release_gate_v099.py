@@ -1,4 +1,5 @@
 
+
 """PeaLang 0.99 Final 1.0 Release Gate."""
 from dataclasses import dataclass,asdict
 from hashlib import sha256
@@ -28,4 +29,5 @@ def final_artifact_gate(items,required=("wheel","sdist","container")):
  items=list(items); good={x.name for x in items if x.valid()}; missing=sorted(set(required)-good); invalid=[asdict(x) for x in items if not x.valid()]; return {"passed":not missing and not invalid,"missing":missing,"invalid":invalid}
 def final_go_no_go(*,rehearsal98,closure,documentation,artifacts,security,compatibility,operations,approvals):
  sections={"rehearsal98":rehearsal98,"closure":closure,"documentation":documentation,"artifacts":artifacts,"security":security,"compatibility":compatibility,"operations":operations}; approvals=dict(approvals); owners={"release-owner","security-owner","operations-owner"}; passed=all(x.get("passed") is True for x in sections.values()) and owners.issubset({k for k,v in approvals.items() if v}); out={"version":"0.99.0-rc1","target":"1.0.0","passed":passed,"decision":"GO-1.0" if passed else "NO-GO","sections":sections,"approvals":approvals};out["dossier_digest"]=digest(out);return out
+
 

@@ -1,4 +1,5 @@
 
+
 from pealang.final_release_gate_v099 import *
 def h(x): return digest(x)
 def test_closure(): assert closure_gate([ClosureItem("B1","defect","high","closed")])["passed"]
@@ -12,4 +13,5 @@ def test_final_go():
  ok={"passed":True}; r=final_go_no_go(rehearsal98=ok,closure=ok,documentation=ok,artifacts=ok,security=ok,compatibility=ok,operations=ok,approvals={"release-owner":True,"security-owner":True,"operations-owner":True}); assert r["decision"]=="GO-1.0"
 def test_missing_approval_no_go():
  ok={"passed":True}; assert final_go_no_go(rehearsal98=ok,closure=ok,documentation=ok,artifacts=ok,security=ok,compatibility=ok,operations=ok,approvals={})["decision"]=="NO-GO"
+
 

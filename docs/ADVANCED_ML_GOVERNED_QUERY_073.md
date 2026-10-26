@@ -1,6 +1,7 @@
 
 
 
+
 # PeaLang v0.73 Advanced ML and Governed Query Planning
 
 v0.73 combines three roadmap targets: ONNX Runtime inference, PyTorch/tensor-DataFrame interchange, and governed natural-language query planning.
@@ -13,6 +14,7 @@ v0.73 combines three roadmap targets: ONNX Runtime inference, PyTorch/tensor-Dat
 
 ## Governed query planning
 `GovernedQueryPlanner` is rule-first. A model may propose a structured plan, but `QueryPolicy` remains authoritative for allowed datasets, operations, limits, and approval requirements. The default planner does not execute queries.
+
 
 
 

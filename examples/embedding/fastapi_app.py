@@ -1,6 +1,7 @@
 
 
 
+
 from fastapi import FastAPI
 from pydantic import BaseModel
 from pealang import PeaRuntime, RuntimeOptions
@@ -13,6 +14,7 @@ class Employee(BaseModel):
 @app.post('/bonus')
 def bonus(employee:Employee):
     return {'bonus':rules.call('calculate_bonus',employee)}
+
 
 
 

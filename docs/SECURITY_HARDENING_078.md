@@ -1,6 +1,7 @@
 
 
 
+
 # Security Hardening 0.78
 
 PeaLang 0.78 continues the post-0.77 v1 stabilization program by strengthening host trust boundaries without changing language semantics.
@@ -13,6 +14,7 @@ PeaLang 0.78 continues the post-0.77 v1 stabilization program by strengthening h
 
 ## Security position
 These controls complement, rather than replace, PeaLang VM resource budgets, permissions, connector policy, package signing and serving security. DNS resolution/rebinding defenses belong in the network transport layer because hostname resolution is environment-specific.
+
 
 
 

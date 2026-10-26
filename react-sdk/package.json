@@ -1,13 +1,23 @@
 {
   "name": "@pealang/react",
-  "version": "0.99.4",
+  "version": "0.99.5",
   "type": "module",
   "peerDependencies": {
-    "react": ">=18",
-    "@pealang/client": "0.64.0a1"
+    "react": ">=18 <20",
+    "@pealang/client": "^0.99.5"
   },
   "devDependencies": {
     "typescript": "^5.6.0",
-    "@types/react": "^18.3.0"
-  }
+    "@types/react": "^18.3.0",
+    "@pealang/client": "file:../typescript-sdk"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit"
+  },
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ]
 }

@@ -1,3 +1,4 @@
+
 # AUDIT-CLOSURE: intentional interface contract; concrete backends must override the methods documented in docs/project/INTERFACE_COMPLETENESS_0991.md.
 
 
@@ -133,6 +134,7 @@ def _records(data,path=None):
     if isinstance(value,list):return [x if isinstance(x,dict) else {'value':x} for x in value]
     if isinstance(value,dict):return [value]
     return [{'value':value}]
+
 
 
 

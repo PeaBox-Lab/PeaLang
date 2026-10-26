@@ -1,5 +1,6 @@
 
 
+
 from pealang.rc_validation_iii import *
 
 def h(x): return canonical_digest(x)
@@ -31,5 +32,6 @@ def test_drift_fails():
 def test_consolidated_gate_digest():
     ok={"passed":True}; r=release_candidate_gate(soak=ok,ecosystem=ok,recovery=ok,reproducibility=ok)
     assert r["passed"] and len(r["evidence_digest"])==64
+
 
 

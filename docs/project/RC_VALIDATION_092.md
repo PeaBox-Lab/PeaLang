@@ -1,6 +1,7 @@
 
 
 
+
 # PeaLang 0.92 Release Candidate Validation II
 
 0.92 adds no feature family. It deepens certification after the 0.90 freeze.
@@ -15,6 +16,7 @@
 - Waivers require an owner, reason and unexpired deadline.
 
 As in 0.91, validators consume real evidence. Unit tests prove the validation logic, not unexecuted operating-system, database or cloud certification runs.
+
 
 
 

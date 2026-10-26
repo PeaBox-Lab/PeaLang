@@ -1,6 +1,7 @@
 
 
 
+
 """PeaLang stable standard library registry (0.35)."""
 from __future__ import annotations
 from dataclasses import dataclass
@@ -80,6 +81,7 @@ def build_standard_library(allow_process=False,permissions=None):
 def _guard(ns,missing,module):
  def denied(*a,**k):raise PeaError(f"Permission '{sorted(missing)[0]}' is required for '{module}'")
  return _ns(**{k:(denied if callable(v) else v) for k,v in ns.items()})
+
 
 
 

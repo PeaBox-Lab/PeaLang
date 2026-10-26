@@ -1,6 +1,7 @@
 
 
 
+
 """PeaLang Data Foundation 0.42, dependency-light tabular core."""
 from __future__ import annotations
 from dataclasses import dataclass,field
@@ -234,6 +235,7 @@ LazyFrame.optimize=lambda self:self
 class LazyGroupedFrame:
     def __init__(self,frame,keys):self.frame,self.keys=frame,keys
     def agg(self,**aggs):return _lazy_op(self.frame,'group_by/agg',lambda d:d.group_by(self.keys).agg(**aggs))
+
 
 
 

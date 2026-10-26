@@ -1,6 +1,7 @@
 
 
 
+
 import pytest
 from pealang.sql import connect,read_sql,DATABASES
 from pealang.data import DataFrame
@@ -36,6 +37,7 @@ def test_read_sql(tmp_path):
 def test_missing_optional_adapter():
  try:connect('postgresql://invalid-host/db')
  except (RuntimeError,Exception):pass
+
 
 
 

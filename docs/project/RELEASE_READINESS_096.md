@@ -1,5 +1,6 @@
 
 
+
 # PeaLang 0.96 Release Readiness Closure
 
 The 1.0 feature freeze remains active. v0.96 consolidates evidence rather than adding a feature family.
@@ -12,5 +13,6 @@ The 1.0 feature freeze remains active. v0.96 consolidates evidence rather than a
 - Release, security and operations owner approvals.
 
 The gate remains NO-GO when real evidence or approvals are absent.
+
 
 

@@ -1,6 +1,7 @@
 
 
 
+
 """Declarative dashboard model and safe React renderer for PeaLang v0.71."""
 from __future__ import annotations
 from dataclasses import dataclass, field, asdict
@@ -73,6 +74,7 @@ def apply_dashboard_filters(rows,filters,state):
         elif f.kind=="text": out=[r for r in out if str(value).lower() in str(r.get(f.field,"")).lower()]
         else: out=[r for r in out if r.get(f.field)==value]
     return out
+
 
 
 

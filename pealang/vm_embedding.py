@@ -1,6 +1,7 @@
 
 
 
+
 """Capability-safe, VM-backed embedding API."""
 from __future__ import annotations
 from dataclasses import dataclass
@@ -50,6 +51,7 @@ class VMRuntime:
  def load_bytecode(self,module):
   if isinstance(module,(str,Path)):module=BytecodeModule.load(module)
   vm=VirtualMachine(self.output,self.options.max_instructions);vm.run(module,self._globals());return VMModule(self,vm,module)
+
 
 
 

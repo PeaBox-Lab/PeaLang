@@ -1,6 +1,7 @@
 
 
 
+
 """Stable Python embedding API for PeaLang."""
 from __future__ import annotations
 from dataclasses import asdict, dataclass, is_dataclass
@@ -156,6 +157,7 @@ class PeaRuntime:
             result=ExecutionResult(value,self._instructions,(time.perf_counter()-started)*1000);self.last_result=result;return result
         finally:
             if self.last_result is None:self._finish_budget(started)
+
 
 
 

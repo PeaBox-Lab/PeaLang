@@ -1,6 +1,7 @@
 
 
 
+
 import pytest
 from pealang.agent_safety_conformance import *
 def test_isolation_approval_replay():
@@ -9,6 +10,7 @@ def test_isolation_approval_replay():
 def test_budget():
  b=BudgetTracker(ExecutionBudget(max_steps=1));b.charge()
  with pytest.raises(RuntimeError):b.charge()
+
 
 
 

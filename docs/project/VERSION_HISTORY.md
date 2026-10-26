@@ -1,6 +1,7 @@
 
 
 
+
 # Version History
 
 | Version | Theme |
@@ -145,3 +146,6 @@ Enterprise integration hardening: credentials, retry/backoff, circuit breaking, 
 - 0.99.3: historical retention recovery and permanent regression gate.
 
 - 0.99.4: security remediation, UUIDv5 supply-chain serial and scanner gates.
+
+
+- 0.99.5: Java/Node SDK compatibility closure and CI workflows.

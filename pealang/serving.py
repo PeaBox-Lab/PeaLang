@@ -1,6 +1,7 @@
 
 
 
+
 """PeaLang 0.58 serving runtime and deployment execution."""
 from __future__ import annotations
 from dataclasses import dataclass,field
@@ -90,6 +91,7 @@ def execute_deployment(manifest_path):
  manifest=json.loads(Path(manifest_path).read_text());bundle=manifest['spec']['bundle'];check=deploy_check(manifest,bundle)
  if not check['valid']:raise ValueError('; '.join(check['issues']))
  return {'manifest':manifest,'pipeline_path':bundle,'environment':manifest['spec'].get('environment','production')}
+
 
 
 

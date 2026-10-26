@@ -1,6 +1,7 @@
 
 
 
+
 package io.pealang.client;
 import java.net.URI;import java.net.http.*;import java.time.Duration;import java.io.IOException;
 public final class PeaLangClient {
@@ -15,6 +16,7 @@ public final class PeaLangClient {
  private String post(String p,String json)throws IOException,InterruptedException{return send(HttpRequest.newBuilder(base.resolve(p)).header("Content-Type","application/json").POST(HttpRequest.BodyPublishers.ofString(json)).build());}
  private String send(HttpRequest r)throws IOException,InterruptedException{var res=client.send(r,HttpResponse.BodyHandlers.ofString());if(res.statusCode()/100!=2)throw new PeaLangException(res.statusCode(),res.body());return res.body();}
 }
+
 
 
 

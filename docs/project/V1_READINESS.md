@@ -1,6 +1,7 @@
 
 
 
+
 # PeaLang v1.0 Readiness Assessment
 
 ## Ready foundations
@@ -15,6 +16,7 @@ Language runtime, VM, package ecosystem, embeddings, connectors, DataFrames, ana
 6. Signed release artifacts and external registry publication.
 
 Status: Release candidate foundation complete, not yet v1.0 GA.
+
 
 
 

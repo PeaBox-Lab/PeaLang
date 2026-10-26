@@ -1,6 +1,7 @@
 
 
 
+
 """Registry credential handling without storing plaintext tokens in lockfiles."""
 from __future__ import annotations
 import os
@@ -10,6 +11,7 @@ def registry_token(name,env=None):
  if not value:raise PeaError(f'Missing registry credential in {key}')
  return value
 def bearer_headers(name,env=None):return {'Authorization':'Bearer '+registry_token(name,env),'User-Agent':'PeaLang/0.64.0a1'}
+
 
 
 

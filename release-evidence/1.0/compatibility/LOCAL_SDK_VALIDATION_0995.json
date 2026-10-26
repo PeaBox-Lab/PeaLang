@@ -1,0 +1,21 @@
+{
+  "java17_compile": {
+    "returncode": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  "node24_typescript": {
+    "returncode": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  "python_release_tests": {
+    "returncode": 0,
+    "stdout": "......                                                                   [100%]\n6 passed in 27.58s\n",
+    "stderr": ""
+  },
+  "java21": "pending CI",
+  "node20": "pending CI",
+  "node22": "pending CI",
+  "react_isolated_build": "pending npm install/CI"
+}

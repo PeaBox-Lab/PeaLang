@@ -1,2 +1,4 @@
+
 # Modern compatibility example for historical ai_openai_compatible.pea
 print("ai_openai_compatible")
+

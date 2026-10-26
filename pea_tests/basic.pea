@@ -1,9 +1,11 @@
 
 
 
+
 let x = 2
 assert x * 3 == 6, "math failed"
 print "ok"
+
 
 
 

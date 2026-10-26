@@ -1,6 +1,7 @@
 
 
 
+
 import pytest
 from pealang.data import DataFrame
 from pealang.distributed_compute import *
@@ -13,6 +14,7 @@ def test_group():assert distributed(s()).with_engine('local').group_by('g',total
 def test_explain():assert distributed(s()).with_engine('local').explain()['engine']=='local'
 def test_missing():
  with pytest.raises(KeyError):ENGINES.get('missing')
+
 
 
 

@@ -1,6 +1,7 @@
 
 
 
+
 # Java and React Interoperability Direction
 
 ## Java
@@ -14,6 +15,7 @@ React applications should initially invoke PeaLang through a FastAPI or Java bac
 ## Shared value contract
 
 Portable host values are null, boolean, integer, float, string, list, and string-keyed map. Host-specific objects must be converted to this contract before crossing the runtime boundary.
+
 
 
 

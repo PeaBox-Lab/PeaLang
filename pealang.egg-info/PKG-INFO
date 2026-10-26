@@ -1,3 +1,4 @@
+
 Metadata-Version: 2.4
 Name: pealang
 Version: 0.99.3
@@ -224,6 +225,7 @@ Version 0.91 adds cross-platform/Python soak evidence, upgrade validation, froze
 
 ## PeaLang v0.92 release candidate validation II
 Version 0.92 deepens post-freeze certification with evidence aging, rollback/re-upgrade drills, multi-build compatibility drift surveillance, security/performance/memory trend gates, ecosystem certification, recovery drills and waiver lifecycle controls. See `docs/project/RC_VALIDATION_092.md`.
+
 
 
 

@@ -1,6 +1,7 @@
 
 
 
+
 """PeaLang 0.59 secure and resilient model serving."""
 from __future__ import annotations
 from dataclasses import dataclass,field
@@ -78,6 +79,7 @@ class TraceHooks:
   token.update({'ended':time.time(),'error':str(error) if error else None})
   if self.on_end:self.on_end(token)
   return token
+
 
 
 

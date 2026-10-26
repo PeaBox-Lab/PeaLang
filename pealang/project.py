@@ -1,6 +1,7 @@
 
 
 
+
 from __future__ import annotations
 import json, re
 from pathlib import Path
@@ -68,6 +69,7 @@ def resolve_module(spec,current_dir,project_root=None,dependencies=None):
         if p.is_dir():p=p/'main.pea'
         return p.resolve()
     return (Path(current_dir)/spec).with_suffix('.pea').resolve()
+
 
 
 

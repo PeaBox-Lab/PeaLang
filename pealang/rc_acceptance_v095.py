@@ -1,5 +1,6 @@
 
 
+
 """PeaLang 0.95 Final RC Acceptance gates."""
 from __future__ import annotations
 from dataclasses import dataclass,asdict
@@ -50,5 +51,6 @@ def go_no_go(*,evidence,blockers,artifacts,dry_run,rc94,manual_approvals:Mapping
  sections={"evidence":evidence,"blockers":blockers,"artifacts":artifacts,"dry_run":dry_run,"rc94":rc94}; approvals=dict(manual_approvals)
  passed=all(x.get("passed") is True for x in sections.values()) and bool(approvals) and all(approvals.values())
  out={"version":"0.95.0-rc1","decision":"GO" if passed else "NO-GO","passed":passed,"sections":sections,"manual_approvals":approvals}; out["decision_digest"]=digest(out); return out
+
 
 

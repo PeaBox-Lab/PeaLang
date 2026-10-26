@@ -1,6 +1,7 @@
 
 
 
+
 # PeaLang Revised Foundational Roadmap
 
 The original roadmap goal is not yet complete. The implementation has covered much of the VM, embedding and integration work, but foundational maturity still requires specification completion, standard-library stabilization, deeper type semantics, structured concurrency, complete resource accounting, native language testing, larger conformance coverage, migration tooling, cross-platform CI evidence and production pilots.
@@ -293,3 +294,12 @@ Grammar, type system, standard library, embedding API, package format and PEAC c
 - embedded Bandit, pip-audit, Semgrep and Trivy workflow
 
 ## Next: execute real scanner workflow and close findings before 1.0 GO
+
+
+
+## 0.99.5 SDK compatibility closure - delivered
+- modern TypeScript/React builds and aligned SDK dependencies
+- Java 17/21 and Node 20/22/24 CI
+- embedded OS/Python and security workflows
+
+## Next: execute CI evidence and release 1.0 only on GO
