@@ -1,211 +1,708 @@
+# PeaLang
 
+**A modern, embeddable programming language and runtime for application scripting, data engineering, orchestration, streaming, machine learning, and distributed workloads.**
 
+> Current release: **v0.99.5**  
+> Status: **Pre-1.0 / Release Candidate Stabilization**
 
+PeaLang is a general-purpose programming language and runtime designed to work both as a standalone language and as an embeddable extension layer for existing applications.
 
-# PeaLang 0.99.5
+The project has evolved from a lightweight interpreter into a broader language platform with compilation, bytecode execution, type checking, debugging, packaging, data processing, connectors, orchestration, streaming, machine learning, distributed execution, security, and release-integrity tooling.
 
-PeaLang is an embeddable extension language for controlled rules, workflows, automation and host integration. Version 0.37 completes runtime resource accounting and structured concurrency while retaining the v0.35 standard library and v0.36 type-system foundation.
+PeaLang is currently in the final stabilization and certification phase leading to **v1.0.0**.
 
-## Install
-```bash
-python -m pip install pealang-0.57.0-py3-none-any.whl
-pea --version
+---
+
+## Highlights
+
+PeaLang includes:
+
+- Interpreter and parser
+- Compiler and bytecode VM
+- Static and runtime type-system capabilities
+- Modules and package management
+- Standard library
+- Async and structured concurrency
+- Debug Adapter Protocol support
+- Application embedding
+- Python integration
+- FastAPI integration
+- Java SDK
+- TypeScript SDK
+- React SDK
+- Browser/WASM integration
+- SQL and database connectivity
+- DataFrame processing
+- Cloud and object-storage connectors
+- Analytics and time-series processing
+- Forecasting
+- Machine-learning foundations
+- MLOps and model serving
+- Distributed execution
+- Streaming processing
+- Kafka integration
+- RabbitMQ and WebSocket messaging
+- DAG orchestration
+- Agent and tool-governance capabilities
+- Observability and profiling
+- Package signing and verification
+- SBOM and provenance tooling
+- Release-integrity and compatibility gates
+
+---
+
+# Why PeaLang?
+
+PeaLang is designed around a simple idea:
+
+> **Extend existing systems instead of replacing them.**
+
+It can be used as an application scripting and orchestration layer while existing services continue to use technologies such as Python, Java, FastAPI, JavaScript, TypeScript, React, SQL, Kafka, and other established platforms.
+
+Typical use cases include:
+
+### Embedded application logic
+
+Use PeaLang as an extension or scripting language inside another application.
+
+### Automation and orchestration
+
+Define workflows, tasks, pipelines, DAGs, and distributed operations.
+
+### Data engineering
+
+Work with structured data, databases, DataFrames, connectors, streams, and analytical workloads.
+
+### Streaming
+
+Build event-processing workflows with streaming, windowing, Kafka, messaging systems, and WebSockets.
+
+### Machine learning
+
+Develop data-processing, forecasting, ML, MLOps, serving, and production inference workflows.
+
+### Enterprise integration
+
+Connect PeaLang workloads to existing applications and infrastructure instead of requiring complete rewrites.
+
+---
+
+# Quick Start
+
+## Requirements
+
+PeaLang's current pre-1.0 compatibility work targets modern Python environments.
+
+For development, create an isolated environment.
+
+### Windows
+
+```powershell
+python -m venv .venv
+.venv\Scripts\activate
 ```
 
-## Run
+### Linux / macOS
+
 ```bash
-pea run app.pea
-pea repl
-pea stdlib
-pea spec
-pea features
+python3 -m venv .venv
+source .venv/bin/activate
 ```
 
-## Standard library
-Use `std.collections`, `std.string`, `std.math`, `std.datetime`, `std.json`, `std.csv`, `std.regex`, `std.file`, `std.path`, `std.http`, `std.crypto`, `std.logging`, `std.testing`, and `std.concurrent`. Sensitive capabilities require explicit runtime permissions.
+Upgrade the packaging tools:
+
+```bash
+python -m pip install --upgrade pip setuptools wheel
+```
+
+Install PeaLang from the project directory:
+
+```bash
+pip install -e .
+```
+
+---
+
+# Your First PeaLang Program
+
+Create:
+
+```text
+hello.pea
+```
+
+Example:
+
+```pea
+let name = "PeaLang"
+print("Hello from " + name)
+```
+
+Run it using the PeaLang CLI:
+
+```bash
+pea run hello.pea
+```
+
+Use the CLI help for the commands supported by your installed version:
+
+```bash
+pea --help
+```
+
+---
+
+# PeaLang Architecture
 
-## Platform
-PeaLang retains PEAC bytecode/VM, optional typing, semantic analysis, Python embedding, async VM, FastAPI integration, Java sidecar/client, TypeScript/React SDKs, DAP, package/signing/registry security and observability. See `docs/USER_GUIDE.md`, `docs/BASICS.md`, `FOUNDATIONAL_ROADMAP.md`, and `RELEASE_NOTES.md`.
+PeaLang has evolved into a layered runtime:
 
-## Type system 0.36
-Generics, structural protocol contracts, project-wide contract analysis and Result/Option/Future semantics are now part of the foundation. See `docs/TYPE_SYSTEM_036.md`.
+```text
+                    PeaLang Application
+                           |
+              +------------+------------+
+              |                         |
+          Interpreter               Compiler
+              |                         |
+              |                      Bytecode
+              |                         |
+              +------------+------------+
+                           |
+                           VM
+                           |
+             +-------------+-------------+
+             |             |             |
+        Standard       Connectors     Tooling
+        Library
+             |             |             |
+       +-----+-----+       |       +-----+-----+
+       |           |       |       |           |
+      Data       ML/AI   Cloud    Debugging   Profiling
+       |           |       |
+       |        Serving  Messaging
+       |           |       |
+       +-----------+-------+
+                   |
+            Orchestration
+                   |
+        Distributed Execution
+```
 
-## Runtime foundation 0.37
-Resource budgets now cover time, instructions, memory, recursion, stack, collections, output, HTTP requests and file reads. Structured concurrency adds task groups and cancellation propagation.
+---
 
-## Native testing 0.38
-Use `test "name" { expect condition }`, `pea test --filter`, `pea test --coverage`, and `pea migrate --from 0.37 --to 0.38 .`.
+# Language and Runtime
 
-## WebAssembly 0.39
-Use `pea wasm-build` and `pea wasm-inspect`. Executable lowering remains Preview.
+The PeaLang runtime contains implementations for core language processing and execution, including:
 
-## Conformance 0.40
-Run `pea conformance` for the 500-case interpreter/VM gate and deterministic fuzz harness. GitHub Actions defines Windows/Linux/macOS and Python 3.10-3.13 matrices.
+```text
+Parser
+Interpreter
+Compiler
+Bytecode
+Virtual Machine
+Type System
+Module System
+Package System
+Standard Library
+Async Runtime
+Structured Concurrency
+```
 
-## Beta/pilot readiness 0.41
-Run `pea readiness`. Candidate pilots and review packs are included, but the gate intentionally remains pending until two genuine pilots are validated.
+The project also maintains compatibility and public-API snapshots as part of the stabilization process.
 
-## PeaLang Data 0.42
-A new embeddable data foundation provides schemas, DataFrame/LazyFrame processing, a connector registry, CSV/JSON/JSONL IO and core transforms. See `DATA_ROADMAP.md`.
+---
 
+# Data Engineering
 
-## PeaLang DataFrame Engine 0.43
-Use joins, grouped aggregations, expression-based columns and filters, null handling, pivot/unpivot, row-number windows and lazy pipelines. See `docs/DATAFRAME_ENGINE_043.md`.
+PeaLang includes functionality targeting data-oriented workloads.
 
-## SQL and Databases 0.44
-SQLite works with the Python standard library. Adapter contracts also cover DuckDB, PostgreSQL, MySQL/MariaDB, SQL Server and Oracle through optional drivers. See `docs/SQL_DATABASES_044.md`.
+Areas include:
 
-## Connector SDK 0.45
-Use the built-in REST and GraphQL connectors with runtime authentication headers, retry/backoff controls, pagination and direct DataFrame conversion. See `docs/CONNECTOR_SDK_045.md`.
+```text
+DataFrames
+SQL
+Database connectivity
+Object storage
+Cloud connectors
+Analytics
+Time series
+Forecasting
+Streaming
+Windowing
+```
 
-## Cloud Connectors 0.46
-OData and SFTP now extend the Connector SDK. See `docs/CLOUD_CONNECTORS_046.md`.
+This allows PeaLang programs to move beyond simple scripting and participate in larger data pipelines.
 
-## Cloud Object Storage 0.47
-Amazon S3, Azure Blob Storage, ADLS Gen2 and Google Cloud Storage now share a normalized object-storage API. See `docs/OBJECT_STORAGE_047.md`.
+---
 
-## Enterprise Connectors 0.48
-Microsoft Graph/SharePoint, secret-provider abstractions, capability descriptors and certification checks extend the connector platform. See `docs/ENTERPRISE_CONNECTORS_048.md`.
+# Streaming and Messaging
 
-## Connector Runtime 0.49
-Production runtime profiles, renewable token providers, health diagnostics, certification matrices and Graph/SharePoint pagination.
+PeaLang includes capabilities for event-driven and streaming applications.
 
-## Data Analytics 0.50
-PeaLang DataFrames now provide descriptive statistics, distributions, correlation, ranking, rolling/cumulative calculations, outlier detection and dataset profiles. See `docs/ANALYTICS_050.md`.
+These include:
 
-## Time-Series and Grouped Analytics 0.51
-Date/time resampling, shifts, period changes, expanding/EWM windows, interpolation and grouped analytics now extend PeaLang DataFrames. See `docs/TIME_SERIES_051.md`.
+- Streaming execution
+- Windowing
+- Kafka
+- RabbitMQ
+- WebSockets
+- Messaging connectors
+- Stateful processing
+- DAG orchestration
 
-## Forecasting and Accelerated Analytics 0.52
-Baseline trend, moving-average and exponential-smoothing forecasts, evaluation, decomposition, grouped forecasting and chart-ready outputs extend the analytics stack. See `docs/FORECASTING_052.md`.
+These capabilities are intended to allow PeaLang programs to coordinate batch, event-driven, and streaming workflows.
 
-## Machine Learning Foundations 0.53
-Dependency-light preprocessing, linear/logistic regression, evaluation, cross-validation indices and model persistence now extend PeaLang DataFrames. See `docs/ML_FOUNDATIONS_053.md`.
+---
 
-## Production ML 0.54
-Fitted pipelines, cross-validation, tuning, regularization, multiclass classification, model cards and reproducibility manifests extend PeaLang ML. See `docs/PRODUCTION_ML_054.md`.
+# Machine Learning and MLOps
 
-## ML Deployment and Monitoring 0.55
-Model bundles, batch/audited inference, drift and fairness diagnostics, calibration, registry lifecycle and an optional FastAPI adapter extend production ML. See `docs/MLOPS_055.md`.
+PeaLang's ML-oriented capabilities include areas such as:
 
-## Secure MLOps 0.56
-Optional Ed25519 signing/Fernet encryption, monitoring event stores, alert operations, promotion policies, canary routing and rollback controls extend the ML platform. See `docs/SECURE_MLOPS_056.md`.
+```text
+ML foundations
+Forecasting
+Production ML
+Secure MLOps
+Model serving
+Resilient serving
+Distributed serving
+```
 
-## Pipeline Portability and MLOps CLI 0.57
-Versioned pipeline serialization, SQLite monitoring, alert policies, deployment manifests and `pea-ml` operations complete the next MLOps layer. See `docs/MLOPS_CLI_057.md`.
+The goal is not to replace established ML ecosystems, but to provide a language and orchestration layer capable of integrating them into PeaLang workflows.
 
-## Secure and Resilient Serving 0.59
-Rate and concurrency controls, timeouts, structured logs, trace hooks, live reload, secure artifact loading and alert-driven rollback harden model serving. See `docs/RESILIENT_SERVING_059.md`.
+---
 
-## Distributed Serving and Kubernetes 0.60
-Shared Redis-compatible state, distributed rate limiting, latency/load gates, OpenTelemetry hooks and Kubernetes resources extend resilient serving. See `docs/DISTRIBUTED_SERVING_060.md`.
+# Distributed Execution
 
-## Kubernetes Security and RC Stabilization 0.61
-Secure YAML manifests, non-root/read-only containers, NetworkPolicy, PDB, spread/anti-affinity, graceful draining, validation and soak tests harden distributed serving. See `docs/KUBERNETES_SECURITY_061.md`.
+PeaLang includes infrastructure for scalable workloads, including:
 
-## Release Candidate Packaging 0.62
-SBOM, provenance, checksums, artifact verification, non-root container packaging, CI matrix and v1 readiness gates establish the release-candidate supply chain. See `docs/SUPPLY_CHAIN_062.md`.
+- DAG orchestration
+- Distributed compute
+- Scalable execution
+- Streaming
+- Distributed serving
+- State management
+- Recovery and resilience mechanisms
 
-## Release Candidate 1 Stabilization
-0.63 RC1 freezes feature scope and adds public API snapshots, compatibility/deprecation policy, integration gate reporting, threat modelling and upgrade guidance. See `docs/API_STABILITY_POLICY.md` and `RC1_GATE_STATUS.md`.
+---
 
-## Release Candidate 2 Stabilization
-RC2 preserves the feature freeze and validates compatibility against RC1. See `docs/RC2_STABILIZATION.md` and `RC2_GATE_STATUS.md`.
+# SDKs and Integration
 
-## Distributed Compute Foundation 0.64 alpha
-Engine-neutral plans and optional Arrow, Polars and Spark adapters begin the post-RC scalable-data roadmap. See `docs/DISTRIBUTED_COMPUTE_064.md` and `docs/ROADMAP_064_TO_100.md`.
+## Python
 
+PeaLang's primary runtime integrates closely with Python and can be embedded into Python-based systems.
 
-## PeaLang v0.72 interactive analytics
-Interactive dashboard state/bindings, Browser REPL and dataset inspection, and Jupyter-compatible rich result contracts are documented in `docs/INTERACTIVE_ANALYTICS_072.md`.
+## FastAPI
 
-## PeaLang v0.73 advanced ML and governed planning
-Optional ONNX inference, tensor/DataFrame interoperability, and rule-first governed query plans are documented in `docs/ADVANCED_ML_GOVERNED_QUERY_073.md`.
+PeaLang contains FastAPI integration for applications that want PeaLang execution behind HTTP APIs and services.
 
-## 0.74 Agent governance
-Version 0.74 adds dry-run agent tool planning, explicit policy decisions, approval gates and tool-call budgets. See `docs/AGENT_GOVERNANCE_074.md`.
+## Java
 
-Historical AI development handovers are preserved in `docs/handover/` to keep the repository root clean.
+A Java SDK is provided under:
 
-## 0.75 Durable agent governance
-Persistent SQLite audit and approval evidence extends the v0.74 agent governance controls. See `docs/AGENT_AUDIT_075.md`.
+```text
+java-sdk/
+```
 
-## 0.76 Release hardening
-PeaLang 0.76 adds adversarial agent-policy probes, public API compatibility checks, regression thresholds and an integrated release hardening gate. See `docs/project/HARDENING_076.md`.
+The pre-1.0 compatibility program includes validation against modern Java environments.
 
-### Documentation layout
-- `README.md`: detailed current-version guide and project entry point.
-- `CHANGELOG.md`: one cumulative changelog for the complete release history.
-- `docs/releases/`: version-specific release notes.
-- `docs/retention/`: retention and compatibility evidence.
-- `docs/handover/`: development handover archive.
-- `docs/project/`: roadmaps, version history, readiness and release-gate documentation.
+## TypeScript
 
-## 0.77 Performance and memory hardening
-Version 0.77 adds repeatable performance probes, p95/mean latency gates, allocation peak-memory limits and a bounded LRU cache for reusable runtime/compiler artifacts. See `docs/project/PERFORMANCE_HARDENING_077.md`.
+The TypeScript SDK is located under:
 
-## PeaLang v0.78 security hardening
-Version 0.78 continues the v1 stabilization line with reusable security controls at embedding and service trust boundaries: bounded input validation, allowed-root path checks, HTTPS/private-network URL policy, recursive secret redaction, and tamper-evident audit chains. See `docs/SECURITY_HARDENING_078.md` and `docs/ROADMAP_064_TO_100.md`.
+```text
+typescript-sdk/
+```
 
+It supports modern TypeScript compilation and Node module resolution.
 
-## PeaLang v0.79 enterprise integration hardening
-Version 0.79 standardizes credential providers, retry/backoff, circuit breaking, correlation IDs and health checks across PeaLang connector hosts. See `docs/project/ENTERPRISE_INTEGRATION_079.md`.
+## React
 
+A React integration is available under:
 
-## PeaLang v0.80 observability and operations hardening
-Version 0.80 adds W3C trace-context propagation, bounded spans and metrics, liveness/readiness contracts, and secure diagnostic bundles. See `docs/project/OBSERVABILITY_OPERATIONS_080.md`.
+```text
+react-sdk/
+```
 
+It provides the foundation for integrating PeaLang-backed functionality into React applications.
 
-## PeaLang v0.81 compatibility and migration hardening
-Version 0.81 adds a machine-readable deprecation ledger, ordered and reversible migration registry, public API snapshots/diffs, and breaking-change approval gates. See `docs/project/COMPATIBILITY_MIGRATIONS_081.md`.
+## Browser / WASM
 
+Browser integration is available under:
 
-## PeaLang v0.82 packaging and reproducibility hardening
-Version 0.82 adds deterministic source manifests, CycloneDX SBOM verification, SLSA/in-toto provenance verification, Ed25519 release signatures, dependency-lock evidence, offline-install evidence, and a combined packaging quality gate. See `docs/project/PACKAGING_REPRODUCIBILITY_082.md`.
+```text
+browser-sdk/
+```
 
+PeaLang also contains WebAssembly-related runtime functionality for browser-oriented use cases.
 
-## PeaLang v0.83 Runtime Performance II
-Version 0.83 adds representative benchmark suites, p50/p95/p99 and throughput evidence, prior-baseline regression budgets, named compiler/runtime hot-path profiling, cache eviction/load instrumentation, and memory-pressure probes. See `docs/project/RUNTIME_PERFORMANCE_083.md`.
+---
 
+# Developer Tooling
 
-## PeaLang v0.84 concurrency and resilience
-Version 0.84 adds parent-child cancellation, deadlines, fail-fast structured task groups, retry-safety enforcement, idempotency evidence, graceful draining, and resilience release gates. See `docs/project/CONCURRENCY_RESILIENCE_084.md`.
+PeaLang provides tooling for language development and application debugging.
 
+This includes:
 
-## PeaLang v0.85 data and connector conformance
-Version 0.85 adds connector capability declarations, SQL dialect and parameter-binding contracts, transaction probes, streaming checkpoint/replay semantics, object-store edge-case fixtures, and certification gates. See `docs/project/CONNECTOR_CONFORMANCE_085.md`.
+- Debug Adapter Protocol support
+- VM debugging
+- Profiling
+- Coverage support
+- Semantic analysis
+- Runtime diagnostics
+- Conformance testing
+- Performance regression infrastructure
 
+---
 
-## PeaLang v0.86 ML and serving conformance
-Model-format and deterministic serving certification controls.
+# Testing
 
-## PeaLang v0.87 agent safety conformance
-Tool isolation, request-bound approvals, replay protection, budgets and tamper-evident multi-step audit certification.
+Run the Python test suite with:
 
+```bash
+pytest
+```
 
-## PeaLang v0.88 developer tooling stabilization
-LSP and DAP compatibility certification, stable diagnostic contracts, editor capability negotiation, reproducible debugging fixtures and combined tooling release gates. See `docs/project/DEVELOPER_TOOLING_088.md`.
+Specific tests can be executed with:
 
+```bash
+pytest tests/
+```
 
-## PeaLang v0.89 release-candidate hardening
-No new feature family is introduced. v0.89 consolidates regression, API compatibility, security, performance, supply-chain, upgrade, documentation and cross-platform evidence into one RC go/no-go decision. See `docs/project/RC_HARDENING_089.md`.
+PeaLang maintains regression tests across multiple generations of the language to reduce the risk of accidentally removing historical capabilities.
 
+The project also contains dedicated compatibility, conformance, retention, security, packaging, and release-integrity tests.
 
-## PeaLang v0.89 release-candidate hardening
-No new feature family is introduced. v0.89 aggregates regression, API compatibility, security, performance, supply-chain, migration, tooling, documentation and cross-platform evidence into a single GO/NO-GO RC readiness gate. See `docs/project/RC_HARDENING_089.md`.
+---
 
+# Historical Retention
 
-## PeaLang v0.90 API freeze
-Version 0.90 freezes intended public syntax, runtime/package APIs, stable diagnostics and versioned bytecode compatibility for the 1.0 line. Breaking changes require explicit approval evidence. See `docs/project/API_FREEZE_090.md`.
+Backward capability retention is an explicit PeaLang development principle.
 
+The repository maintains historical information including:
 
-## PeaLang v0.91 release candidate validation I
-Version 0.91 adds cross-platform/Python soak evidence, upgrade validation, frozen-contract surveillance, security/performance/packaging soak aggregation, blocker/waiver closure and a consolidated RC go/no-go gate. See `docs/project/RC_VALIDATION_091.md`.
+```text
+Historical capability ledger
+Historical release index
+Retention reports
+Public API snapshots
+Version history
+Compatibility reports
+Approved-removal records
+```
 
+A capability should not disappear silently during development.
 
-## PeaLang v0.92 release candidate validation II
-Version 0.92 deepens post-freeze certification with evidence aging, rollback/re-upgrade drills, multi-build compatibility drift surveillance, security/performance/memory trend gates, ecosystem certification, recovery drills and waiver lifecycle controls. See `docs/project/RC_VALIDATION_092.md`.
+Intentional removals should be explicitly documented and approved.
 
+---
 
+# Security
 
+PeaLang contains security functionality covering areas such as:
 
+- Package verification
+- Signed packages
+- Ed25519 signatures
+- Registry integrity
+- Security boundaries
+- Supply-chain validation
+- Dependency auditing
+- Security regression testing
+- Provenance
+- SBOM generation
+
+Security validation remains part of the final v1.0 release process.
+
+---
+
+# Supply-Chain Integrity
+
+PeaLang's release architecture includes support for:
+
+```text
+SHA-256 artifact verification
+SBOM generation
+Provenance
+ package signatures
+Release manifests
+Public API snapshots
+Compatibility evidence
+Retention evidence
+```
+
+For v1.0, these mechanisms are intended to be applied to the exact final release artifacts.
+
+---
+
+# Repository Structure
+
+A simplified project layout:
+
+```text
+PeaLang/
+|
++-- pealang/                    # Main language/runtime
++-- tests/                      # Regression and validation tests
++-- docs/                       # Documentation
++-- examples/                   # PeaLang examples
+|
++-- java-sdk/                   # Java integration
++-- typescript-sdk/             # TypeScript SDK
++-- react-sdk/                  # React integration
++-- browser-sdk/                # Browser integration
+|
++-- release/                    # Release policy/configuration
++-- release-evidence/           # Release certification evidence
++-- tools/                      # Development/release tooling
+|
++-- .github/
+|   +-- workflows/              # CI and validation
+|
++-- pyproject.toml
++-- README.md
++-- CHANGELOG.md
++-- ROADMAP.md
+```
+
+---
+
+# Documentation
+
+Project documentation is maintained under:
+
+```text
+docs/
+```
+
+Key starting points include:
+
+```text
+docs/BASICS.md
+docs/STANDARD_LIBRARY.md
+docs/PACKAGES.md
+docs/BYTECODE_AND_VM.md
+docs/ASYNC_VM.md
+docs/EMBEDDING.md
+docs/FASTAPI_INTEGRATION.md
+docs/JAVA_REACT_INTEROP.md
+docs/DEBUG_ADAPTER.md
+docs/RELEASE_INTEGRITY.md
+```
+
+Additional documentation covers data engineering, connectors, streaming, machine learning, orchestration, distributed execution, security, migration, compatibility, and release engineering.
+
+---
+
+# Versioning
+
+PeaLang follows incremental development with compatibility and retention checks between releases.
+
+The project is currently in the:
+
+```text
+0.99.x -> 1.0.0
+```
+
+stabilization phase.
+
+Feature development is effectively frozen while remaining release-certification work is completed.
+
+See:
+
+```text
+CHANGELOG.md
+ROADMAP.md
+docs/project/VERSION_HISTORY.md
+docs/releases/
+```
+
+for detailed release history.
+
+---
+
+# Current 1.0 Status
+
+PeaLang v0.99.5 is a **pre-1.0 stabilization release**.
+
+Core implementation is substantially complete, while final release certification remains in progress.
+
+Current areas of final validation include:
+
+- Full regression validation
+- Windows/Linux/macOS compatibility
+- Python version compatibility
+- Java 17/21 SDK validation
+- Node 20/22/24 SDK validation
+- Security scanning
+- Clean installation
+- Offline installation
+- Wheel validation
+- Source distribution validation
+- Container validation
+- Reproducibility
+- SBOM generation
+- Provenance
+- Artifact signing
+- Final release approvals
+
+A workflow or validation framework being present does **not** automatically mean that the corresponding v1.0 certification has passed.
+
+Final v1.0 readiness requires retained evidence produced against the final release candidate.
+
+---
+
+# 1.0 Release Philosophy
+
+PeaLang follows a fail-closed release policy.
+
+A release should not be declared ready merely because the implementation builds successfully.
+
+The final release gate considers:
+
+```text
+Regression
+Historical retention
+API stability
+Compatibility
+Security
+Packaging
+Installation
+Supply-chain integrity
+Documentation
+Release evidence
+Approvals
+```
+
+Missing required release evidence results in a **NO-GO** rather than an assumed PASS.
+
+---
+
+# Roadmap
+
+The immediate objective is:
+
+## PeaLang 1.0
+
+The remaining work focuses on stabilization and release certification rather than adding major new feature families.
+
+The intended sequence is:
+
+```text
+Pre-1.0 stabilization
+        |
+Regression certification
+        |
+Compatibility certification
+        |
+Security certification
+        |
+Packaging certification
+        |
+Supply-chain evidence
+        |
+Release approvals
+        |
+PeaLang 1.0.0
+```
+
+See `ROADMAP.md` for the detailed project roadmap.
+
+---
+
+# Contributing
+
+Contributions should preserve PeaLang's historical compatibility and release-integrity principles.
+
+Before submitting a change:
+
+```bash
+pytest
+```
+
+For changes affecting public APIs, packaging, SDKs, security, compatibility, or release behavior, also run the relevant specialized validation suites.
+
+Changes should:
+
+1. Preserve existing functionality unless removal is intentional.
+2. Include regression tests for new behavior.
+3. Document public-facing changes.
+4. Update the changelog where appropriate.
+5. Avoid committing generated build artifacts.
+6. Avoid undocumented breaking changes.
+
+---
+
+# Generated Files
+
+Generated build output should not be treated as canonical PeaLang source.
+
+Examples include:
+
+```text
+build/
+dist/
+target/
+*.egg-info/
+__pycache__/
+.pytest_cache/
+node_modules/
+coverage/
+```
+
+These artifacts should normally be generated during build, test, packaging, or release processes rather than maintained as source.
+
+---
+
+# Release Documentation
+
+Each PeaLang release should maintain:
+
+- Cumulative `CHANGELOG.md`
+- Version-specific release notes
+- Updated README
+- Version history
+- User documentation
+- Basics/foundation documentation
+- Upgrade and migration guidance
+- Retention evidence
+- Compatibility evidence
+- Release-integrity evidence
+
+This keeps both historical evolution and current usage discoverable.
+
+---
+
+# Stability Notice
+
+PeaLang is currently a **pre-1.0 project**.
+
+The project has entered API and feature stabilization, but users should still expect final packaging, compatibility, and release-certification changes before v1.0.0.
+
+Production adoption should therefore evaluate the specific PeaLang release and its accompanying compatibility and release evidence.
+
+---
+
+# License
+
+See the repository's `LICENSE` file for licensing terms.
+
+---
+
+# Project Status
+
+```text
+Current version       : 0.99.5
+Development phase     : Pre-1.0 stabilization
+Feature development   : Frozen for 1.0
+Historical retention  : Enabled
+Compatibility gates   : Enabled
+Security gates        : Enabled
+Release certification : In progress
+Target milestone      : PeaLang 1.0.0
+```
+
+---
+
+## PeaLang
+
+**Build small scripts. Embed them anywhere. Scale them into real systems.**
