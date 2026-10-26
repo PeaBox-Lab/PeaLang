@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.99.2 - 2026-10-26
+- Added machine-checkable pre-1.0 evidence inventory and fail-closed gate.
+- Added evidence directories for tests, compatibility, security, packaging, install and approvals.
+- Normalized active SDK/core release metadata to 0.99.2.
+- Added no new feature family.
+
 ## 0.99.1 - 2026-10-26
 - Closed the pre-1.0 repository audit without adding features.
 - Classified all intentional abstract interface methods.

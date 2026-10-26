@@ -139,3 +139,5 @@ Enterprise integration hardening: credentials, retry/backoff, circuit breaking, 
 
 - 0.99.0-rc1: final 1.0 release gate and authoritative GO/NO-GO dossier.
 
+
+- 0.99.2: pre-1.0 external evidence inventory and fail-closed readiness gate.

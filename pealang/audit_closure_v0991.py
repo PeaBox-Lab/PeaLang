@@ -9,7 +9,7 @@ def audit_repository(root):
   if not (root/rel).is_file(): failures.append(f"missing:{rel}")
  for rel in SDK_FILES:
   p=root/rel
-  if p.is_file() and json.loads(p.read_text()).get("version")!="0.99.1": failures.append(f"version:{rel}")
+  if p.is_file() and json.loads(p.read_text()).get("version")!="0.99.2": failures.append(f"version:{rel}")
  c=(root/"CHANGELOG.md").read_text()
  if c.count("# Changelog")!=1: failures.append("changelog-root-count")
  if c.count("## 0.35.0 - 2026-10-23")!=1: failures.append("changelog-035-count")

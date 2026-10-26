@@ -266,3 +266,15 @@ Grammar, type system, standard library, embedding API, package format and PEAC c
 - retain real security, packaging, signing and install/upgrade/rollback evidence
 - obtain release, security and operations approvals
 - release only when v0.99 final gate returns GO-1.0
+
+
+## 0.99.2 pre-1.0 evidence closure - delivered
+- explicit complete external evidence inventory
+- fail-closed evidence and approval gate
+- release-evidence directory structure
+- active version normalization
+
+## Next: 1.0.0
+- execute and retain every required real evidence item
+- run final GO/NO-GO using genuine artifacts and approvals
+- publish 1.0 only on GO
