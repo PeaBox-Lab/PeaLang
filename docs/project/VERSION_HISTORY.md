@@ -143,3 +143,5 @@ Enterprise integration hardening: credentials, retry/backoff, circuit breaking, 
 - 0.99.2: pre-1.0 external evidence inventory and fail-closed readiness gate.
 
 - 0.99.3: historical retention recovery and permanent regression gate.
+
+- 0.99.4: security remediation, UUIDv5 supply-chain serial and scanner gates.

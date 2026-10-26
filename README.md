@@ -1,7 +1,7 @@
 
 
 
-# PeaLang 0.99.3
+# PeaLang 0.99.4
 
 PeaLang is an embeddable extension language for controlled rules, workflows, automation and host integration. Version 0.37 completes runtime resource accounting and structured concurrency while retaining the v0.35 standard library and v0.36 type-system foundation.
 

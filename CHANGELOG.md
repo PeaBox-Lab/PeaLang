@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.99.4 - 2026-10-26
+- Replaced MD5 CycloneDX serial generation with UUIDv5.
+- Added AST security regression tests and real scanner workflow.
+- Added no new feature family.
+
+
 ## 0.99.3 - 2026-10-26
 - Historical retention recovery, comparator v2, protected removals, ledgers, fixtures and examples.
 

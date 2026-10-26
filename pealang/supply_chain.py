@@ -6,7 +6,8 @@ from __future__ import annotations
 from dataclasses import dataclass,asdict
 from pathlib import Path
 from datetime import datetime,timezone
-import hashlib,json,platform,sys,zipfile
+import hashlib
+import uuid,json,platform,sys,zipfile
 
 def sha256_file(path):
  h=hashlib.sha256()
@@ -23,7 +24,7 @@ def generate_sbom(root,version='0.62.0'):
  for path in sorted(root.rglob('*')):
   if path.is_file() and not any(x in path.parts for x in ('.git','__pycache__','.pytest_cache','dist','build')):
    components.append({'type':'file','name':str(path.relative_to(root)).replace('\\','/'),'hashes':[{'alg':'SHA-256','content':sha256_file(path)}]})
- return {'bomFormat':'CycloneDX','specVersion':'1.5','serialNumber':'urn:uuid:'+hashlib.md5(str(root).encode()).hexdigest(),'version':1,'metadata':{'timestamp':datetime.now(timezone.utc).isoformat(),'component':components[0]},'components':components}
+ return {'bomFormat':'CycloneDX','specVersion':'1.5','serialNumber':'urn:uuid:'+str(uuid.uuid5(uuid.NAMESPACE_URL, str(root.resolve()))),'version':1,'metadata':{'timestamp':datetime.now(timezone.utc).isoformat(),'component':components[0]},'components':components}
 def dependency_inventory(root):
  text=(Path(root)/'pyproject.toml').read_text();deps=[];inside=False
  for line in text.splitlines():

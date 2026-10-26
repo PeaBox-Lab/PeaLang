@@ -1,0 +1,100 @@
+name: PeaLang 1.0 OS-Python Matrix
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  test-matrix:
+    name: ${{ matrix.os }} / Python ${{ matrix.python }}
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 30
+    continue-on-error: false
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        python: ['3.10', '3.11', '3.12', '3.13']
+
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v4
+
+      - name: Set up Python ${{ matrix.python }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+          cache: pip
+
+      - name: Show environment
+        shell: bash
+        run: |
+          python --version
+          python -c "import platform; print(platform.platform())"
+          python -m pip --version
+
+      - name: Install package and test dependencies
+        shell: bash
+        run: |
+          python -m pip install --upgrade pip setuptools wheel
+          python -m pip install pytest
+          python -m pip install -e .
+
+      - name: Run unrestricted regression suite
+        shell: bash
+        env:
+          PYTHONDONTWRITEBYTECODE: '1'
+          PYTHONUTF8: '1'
+        run: |
+          mkdir -p release-evidence/1.0/tests
+          python -m pytest -q -p no:cacheprovider --junitxml="release-evidence/1.0/tests/junit-${{ matrix.os }}-py${{ matrix.python }}.xml" 2>&1 | tee "release-evidence/1.0/tests/pytest-${{ matrix.os }}-py${{ matrix.python }}.log"
+
+      - name: Record environment evidence
+        if: always()
+        shell: bash
+        run: |
+          mkdir -p release-evidence/1.0/compatibility
+          python - <<'PY'
+          import json, os, platform, sys
+          data = {
+              "runner_os": os.environ.get("RUNNER_OS"),
+              "matrix_os": "${{ matrix.os }}",
+              "python_requested": "${{ matrix.python }}",
+              "python_actual": platform.python_version(),
+              "python_implementation": platform.python_implementation(),
+              "platform": platform.platform(),
+              "architecture": platform.machine(),
+              "workflow_run_id": os.environ.get("GITHUB_RUN_ID"),
+              "commit": os.environ.get("GITHUB_SHA"),
+          }
+          path = "release-evidence/1.0/compatibility/${{ matrix.os }}-py${{ matrix.python }}.json"
+          with open(path, "w", encoding="utf-8") as f:
+              json.dump(data, f, indent=2)
+          PY
+
+      - name: Upload matrix evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: pealang-${{ matrix.os }}-py${{ matrix.python }}
+          path: release-evidence/1.0/
+          if-no-files-found: error
+          retention-days: 90
+
+  matrix-gate:
+    name: 12-cell matrix gate
+    if: always()
+    needs: [test-matrix]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Enforce all matrix cells
+        shell: bash
+        run: |
+          echo "Matrix result: ${{ needs.test-matrix.result }}"
+          test "${{ needs.test-matrix.result }}" = "success"

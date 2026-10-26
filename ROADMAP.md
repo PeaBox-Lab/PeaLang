@@ -286,3 +286,10 @@ Grammar, type system, standard library, embedding API, package format and PEAC c
 
 ## Next: 1.0 evidence execution
 - execute genuine CI/security/package/install/upgrade/rollback evidence and release only on GO
+
+
+## 0.99.4 security closure - delivered
+- local code-pattern remediation and regression checks
+- embedded Bandit, pip-audit, Semgrep and Trivy workflow
+
+## Next: execute real scanner workflow and close findings before 1.0 GO

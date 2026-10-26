@@ -1,0 +1,83 @@
+name: PeaLang 1.0 Security Scanners
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+  security-events: write
+
+jobs:
+  python-security:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: pip
+      - name: Install project and scanners
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -e .
+          python -m pip install bandit pip-audit
+      - name: Bandit SAST
+        run: |
+          mkdir -p release-evidence/1.0/security
+          bandit -r pealang -f json -o release-evidence/1.0/security/bandit.json
+      - name: pip-audit dependency vulnerabilities
+        run: |
+          pip-audit --progress-spinner off --format json --output release-evidence/1.0/security/pip-audit.json
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: python-security-evidence
+          path: release-evidence/1.0/security
+          retention-days: 90
+
+  semgrep:
+    runs-on: ubuntu-latest
+    container:
+      image: semgrep/semgrep:latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Semgrep SAST
+        run: |
+          mkdir -p release-evidence/1.0/security
+          semgrep scan --config auto --error --json --json-output release-evidence/1.0/security/semgrep.json .
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: semgrep-security-evidence
+          path: release-evidence/1.0/security
+          retention-days: 90
+
+  trivy-filesystem:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Trivy filesystem vulnerability and secret scan
+        uses: aquasecurity/trivy-action@master
+        with:
+          scan-type: fs
+          scan-ref: .
+          format: json
+          output: trivy.json
+          scanners: vuln,secret,misconfig
+          severity: HIGH,CRITICAL
+          exit-code: '1'
+      - name: Retain Trivy evidence
+        if: always()
+        run: |
+          mkdir -p release-evidence/1.0/security
+          test -f trivy.json && cp trivy.json release-evidence/1.0/security/trivy.json || true
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: trivy-security-evidence
+          path: release-evidence/1.0/security
+          retention-days: 90
