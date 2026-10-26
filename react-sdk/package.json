@@ -1,6 +1,6 @@
 {
   "name": "@pealang/react",
-  "version": "0.99.2",
+  "version": "0.99.3",
   "type": "module",
   "peerDependencies": {
     "react": ">=18",

@@ -1,0 +1,2 @@
+# Modern compatibility example for historical process_opt_in.pea
+print("process_opt_in")

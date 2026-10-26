@@ -278,3 +278,11 @@ Grammar, type system, standard library, embedding API, package format and PEAC c
 - execute and retain every required real evidence item
 - run final GO/NO-GO using genuine artifacts and approvals
 - publish 1.0 only on GO
+
+
+## 0.99.3 historical retention recovery - delivered
+- root-normalized retention auditor and protected removals
+- historical ledgers and compatibility recovery
+
+## Next: 1.0 evidence execution
+- execute genuine CI/security/package/install/upgrade/rollback evidence and release only on GO

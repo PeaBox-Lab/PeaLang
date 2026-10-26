@@ -1,0 +1,2 @@
+# Modern compatibility example for historical imports.pea
+print("imports")

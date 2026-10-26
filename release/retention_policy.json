@@ -1,0 +1,29 @@
+{
+  "version": 1,
+  "protected": [
+    "pealang/**",
+    "tests/**",
+    "pea_tests/**",
+    "examples/**",
+    "docs/**",
+    "help/**",
+    "skills/**",
+    "modules/**",
+    "java-sdk/**",
+    "typescript-sdk/**",
+    "react-sdk/**",
+    "browser-sdk/**",
+    "README.md",
+    "CHANGELOG.md",
+    "ROADMAP.md",
+    "LANGUAGE.md"
+  ],
+  "ignored": [
+    "build/**",
+    "dist/**",
+    "*.egg-info/**",
+    "**/__pycache__/**",
+    "*.pyc",
+    ".pytest_cache/**"
+  ]
+}

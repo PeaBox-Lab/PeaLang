@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.99.3 - 2026-10-26
+- Historical retention recovery, comparator v2, protected removals, ledgers, fixtures and examples.
+
+
 ## 0.99.2 - 2026-10-26
 - Added machine-checkable pre-1.0 evidence inventory and fail-closed gate.
 - Added evidence directories for tests, compatibility, security, packaging, install and approvals.

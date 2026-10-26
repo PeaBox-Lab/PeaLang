@@ -1,0 +1,70 @@
+{
+  "version": "0.99.3",
+  "source": "PeaLang_ZIP_Comparison_Log.txt",
+  "capabilities": [
+    {
+      "capability": "editor",
+      "disposition": "SUPERSEDED",
+      "current": [
+        "pealang/editor_tooling.py"
+      ]
+    },
+    {
+      "capability": "help-system",
+      "disposition": "SUPERSEDED",
+      "current": [
+        "docs/help"
+      ]
+    },
+    {
+      "capability": "lsp",
+      "disposition": "SUPERSEDED",
+      "current": [
+        "pealang/lsp_server.py"
+      ]
+    },
+    {
+      "capability": "workspace",
+      "disposition": "SUPERSEDED",
+      "current": [
+        "pealang/editor_tooling.py"
+      ]
+    },
+    {
+      "capability": "debugger-dap",
+      "disposition": "SUPERSEDED",
+      "current": [
+        "pealang/dap.py",
+        "pealang/debugger.py"
+      ]
+    },
+    {
+      "capability": "runtime-tests",
+      "disposition": "SUPERSEDED",
+      "current": [
+        "tests"
+      ]
+    },
+    {
+      "capability": "language-fixtures",
+      "disposition": "RESTORED",
+      "current": [
+        "pea_tests"
+      ]
+    },
+    {
+      "capability": "historical-examples",
+      "disposition": "RESTORED",
+      "current": [
+        "examples/historical"
+      ]
+    },
+    {
+      "capability": "historical-docs",
+      "disposition": "SUPERSEDED",
+      "current": [
+        "docs/HISTORICAL_KNOWLEDGE_MAP.md"
+      ]
+    }
+  ]
+}

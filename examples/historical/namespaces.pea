@@ -1,0 +1,2 @@
+# Modern compatibility example for historical namespaces.pea
+print("namespaces")

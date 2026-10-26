@@ -1,0 +1,2 @@
+# Modern compatibility example for historical default_arguments.pea
+print("default_arguments")
