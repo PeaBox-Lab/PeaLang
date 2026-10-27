@@ -1,7 +1,3 @@
-
-
-
-
 function calculate_bonus(employee) {
     if employee.rating >= 4 {
         return employee.salary * 0.15
@@ -12,7 +8,3 @@ function calculate_bonus(employee) {
     return 0
 }
 export calculate_bonus
-
-
-
-

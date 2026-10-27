@@ -1,7 +1,3 @@
-
-
-
-
 """PeaLang v0.77 runtime performance and memory hardening helpers."""
 from __future__ import annotations
 from dataclasses import dataclass,asdict
@@ -169,7 +165,3 @@ def save_benchmark_baseline(path,version,results):
 
 def load_benchmark_baseline(path):
     payload=json.loads(Path(path).read_text());return {k:BenchmarkStats(**v) for k,v in payload.get('benchmarks',{}).items()}
-
-
-
-

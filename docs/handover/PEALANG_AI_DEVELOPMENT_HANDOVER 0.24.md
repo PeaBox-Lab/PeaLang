@@ -1,7 +1,3 @@
-
-
-
-
 # PeaLang AI Development Handover 0.24
 
 ## Delivered
@@ -30,7 +26,3 @@ The current analyzer is source-structural rather than a fully typed AST control-
 ## Next release
 
 Version 0.25 should ship `pealang-fastapi` as a first-class integration layer, including startup script loading, dependency injection, Pydantic request/response conversion, controlled exception mapping, validation and authorization hooks, middleware, hot reload for development, and OpenAPI metadata for extension endpoints.
-
-
-
-

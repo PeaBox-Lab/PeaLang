@@ -1,4 +1,3 @@
-
 import argparse,fnmatch,hashlib,json,re,zipfile
 from pathlib import Path
 R=re.compile(r"^PeaLang_v[^/]+/")
@@ -14,4 +13,3 @@ def load_zip(path):
  return o
 def compare(a,b,approved=()):
  a,b=load_zip(a),load_zip(b);approved=set(approved);same=sorted(k for k in a.keys()&b if a[k]==b[k]);mod=sorted(k for k in a.keys()&b if a[k]!=b[k]);add=sorted(b.keys()-a.keys());rem=sorted(a.keys()-b.keys());bad=sorted(set(rem)-approved);return {"unchanged":same,"modified":mod,"added":add,"removed":rem,"unapproved_removed":bad,"passed":not bad}
-

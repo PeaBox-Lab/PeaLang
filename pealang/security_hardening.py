@@ -1,7 +1,3 @@
-
-
-
-
 """PeaLang v0.78 security hardening primitives.
 
 Small, dependency-free controls intended for hosts embedding PeaLang. They do not
@@ -92,7 +88,3 @@ class SignedAuditChain:
             if not hmac.compare_digest(expected,str(row.get("digest",""))): return False
             previous=expected
         return True
-
-
-
-

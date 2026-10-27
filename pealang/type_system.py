@@ -1,7 +1,3 @@
-
-
-
-
 """Optional static type system and source-to-runtime annotation erasure."""
 from __future__ import annotations
 from dataclasses import dataclass,field
@@ -29,14 +25,16 @@ class TypeCheckResult:
     @property
     def ok(self):return not any(x.severity=='error' for x in self.diagnostics)
 
-TOKEN=re.compile(r'\s*(?:(\w+)|([<>,|?{}:]))')
+MAX_TYPE_SOURCE_CHARS=2_000_000
+TOKEN=re.compile(r'(?:(\w+)|([<>,|?{}:]))')
 def parse_type(text:str)->TypeRef:
+    if len(text)>65536:raise ValueError('Type expression exceeds 65536 characters')
     text=text.strip()
     if '|' in text:
         parts=tuple(parse_type(x) for x in split_top(text,'|'));return TypeRef('Union',parts)
     nullable=text.endswith('?')
     if nullable:text=text[:-1].strip()
-    m=re.fullmatch(r'([A-Za-z_]\w*)\s*(?:<(.*)>)?',text)
+    m=re.fullmatch(r'([A-Za-z_]\w*)(?:[ \t]*<([^<>]*(?:<[^<>]*>[^<>]*)*)>)?',text)
     if not m:raise ValueError(f'Invalid type: {text}')
     args=tuple(parse_type(x) for x in split_top(m.group(2),',')) if m.group(2) else ()
     return TypeRef(m.group(1),args,nullable)
@@ -65,9 +63,10 @@ def compatible(expected:TypeRef,actual:TypeRef)->bool:
 
 class TypeChecker:
     def check(self,source:str,source_name='<input>')->TypeCheckResult:
+        if len(source)>MAX_TYPE_SOURCE_CHARS:raise ValueError('Type-check source exceeds safety limit')
         r=TypeCheckResult();known=set(BUILTINS)
         # record declarations, one-line or multiline
-        for m in re.finditer(r'type\s+(\w+)\s*=\s*\{(.*?)\}',source,re.S):
+        for m in re.finditer(r'(?m)^type[ \t]+([A-Za-z_]\w*)[ \t]*=[ \t]*\{([^{}]*)\}',source):
             name,body=m.group(1),m.group(2);fields={}
             for f in body.split(','):
                 if ':' in f:
@@ -78,7 +77,7 @@ class TypeChecker:
         for ln,line in enumerate(source.splitlines(),1):
             clean=line.split('//',1)[0].strip()
             # Typed declaration: let x: Type = value
-            m=re.match(r'(?:let|const)\s+(\w+)\s*:\s*([^=]+?)(?:\s*=\s*(.+))?$',clean)
+            m=re.match(r'(?:let|const)[ \t]+([A-Za-z_]\w*)[ \t]*:[ \t]*([^=\n]+)(?:[ \t]*=[ \t]*([^\n]+))?$',clean)
             if m:
                 name,raw,value=m.groups()
                 try:t=parse_type(raw.strip());r.symbols[name]=t
@@ -89,15 +88,15 @@ class TypeChecker:
                     if not (t.name in r.records and actual.name=='Map') and not compatible(t,actual):r.diagnostics.append(Diagnostic('T201',f"Cannot assign {actual} to {t} variable '{name}'",ln))
                 continue
             # Untyped declaration
-            m=re.match(r'(?:let|const)\s+(\w+)\s*=\s*(.+)$',clean)
+            m=re.match(r'(?:let|const)[ \t]+([A-Za-z_]\w*)[ \t]*=[ \t]*([^\n]+)$',clean)
             if m:r.symbols[m.group(1)]=infer_literal(m.group(2));continue
             # Assignment to known symbol
-            m=re.match(r'(\w+)\s*=\s*(.+)$',clean)
+            m=re.match(r'([A-Za-z_]\w*)[ \t]*=[ \t]*([^\n]+)$',clean)
             if m and m.group(1) in r.symbols:
                 actual=infer_literal(m.group(2));expected=r.symbols[m.group(1)]
                 if not compatible(expected,actual):r.diagnostics.append(Diagnostic('T202',f"Cannot assign {actual} to {expected} variable '{m.group(1)}'",ln))
             # Function signature validation
-            m=re.match(r'function\s+(\w+)\s*\((.*?)\)\s*(?:->\s*([^\{]+))?',clean)
+            m=re.match(r'function[ \t]+([A-Za-z_]\w*)[ \t]*\(([^()]*)\)[ \t]*(?:->[ \t]*([^{}\n]+))?',clean)
             if m:
                 for p in split_top(m.group(2),','):
                     if ':' in p:
@@ -116,19 +115,19 @@ class TypeChecker:
 
 def erase_types(source:str)->str:
     # Remove protocol declarations and generic parameter lists before runtime parsing.
-    source=re.sub(r'(?ms)^\s*protocol\s+\w+\s*=*\s*\{.*?\}\s*','',source)
+    source=re.sub(r'(?m)^[ \t]*protocol[ \t]+[A-Za-z_]\w*[ \t]*=?[ \t]*\{[^{}]*\}[ \t]*(?:\n|$)','',source)
     source=re.sub(r'(function\s+\w+)\s*<[^>]+>',r'\1',source)
     # Remove record declarations before runtime parsing.
-    source=re.sub(r'(?ms)^\s*type\s+\w+\s*=\s*\{.*?\}\s*','',source)
+    source=re.sub(r'(?m)^[ \t]*type[ \t]+[A-Za-z_]\w*[ \t]*=[ \t]*\{[^{}]*\}[ \t]*(?:\n|$)','',source)
     # Function return annotations.
-    source=re.sub(r'(function\s+\w+\s*\([^)]*\))\s*->\s*[A-Za-z_]\w*(?:\s*<[^>{}]+>)?\??',r'\1',source)
+    source=re.sub(r'(function[ \t]+[A-Za-z_]\w*[ \t]*\([^()]*\))[ \t]*->[ \t]*[A-Za-z_]\w*(?:[ \t]*<[^<>{}\n]+>)?\??',r'\1',source)
     # Parameter annotations, preserving defaults and separators.
     def params(m):
-        inner=re.sub(r'(\b\w+)\s*:\s*[A-Za-z_]\w*(?:\s*<[^,)=]+>)?\??',r'\1',m.group(1))
+        inner=re.sub(r'(\b[A-Za-z_]\w*)[ \t]*:[ \t]*[A-Za-z_]\w*(?:[ \t]*<[^<>,)=\n]+>)?\??',r'\1',m.group(1))
         return '('+inner+')'
     source=re.sub(r'\(([^()]*)\)',params,source)
     # Variable annotations.
-    source=re.sub(r'\b(let|const)\s+(\w+)\s*:\s*[A-Za-z_]\w*(?:\s*<[^=\n]+>)?\??\s*=',r'\1 \2 =',source)
+    source=re.sub(r'\b(let|const)[ \t]+([A-Za-z_]\w*)[ \t]*:[ \t]*[A-Za-z_]\w*(?:[ \t]*<[^<>=\n]+>)?\??[ \t]*=',r'\1 \2 =',source)
     return source
 
 @dataclass
@@ -152,7 +151,7 @@ class SemanticAnalyzer:
         # Collect function contracts and bodies using brace depth.
         i=0
         while i<len(lines):
-            line=lines[i];m=re.search(r'function\s+(\w+)\s*\((.*?)\)\s*(?:->\s*([^\{]+))?\s*\{',line)
+            line=lines[i];m=re.search(r'function[ \t]+([A-Za-z_]\w*)[ \t]*\(([^()]*)\)[ \t]*(?:->[ \t]*([^{}\n]+))?[ \t]*\{',line)
             if not m:i+=1;continue
             name,raw_params,raw_ret=m.groups();params=[]
             for item in split_top(raw_params,','):
@@ -185,7 +184,7 @@ class SemanticAnalyzer:
                 if ret.name!='Any' and not compatible(ret,actual):r.diagnostics.append(Diagnostic('F201',f"Function '{name}' returns {actual}, expected {ret}",line))
                 terminated=True;continue
             if clean.startswith('throw '):terminated=True;continue
-            m=re.match(r'(?:let|const)\s+(\w+)(?:\s*:\s*([^=]+))?\s*=\s*(.+)',clean)
+            m=re.match(r'(?:let|const)[ \t]+([A-Za-z_]\w*)(?:[ \t]*:[ \t]*([^=\n]+))?[ \t]*=[ \t]*([^\n]+)',clean)
             if m:
                 n,t,e=m.groups();actual=self.infer_expr(e,env,r);env[n]=parse_type(t.strip()) if t else actual
             m=re.match(r'if\s+(\w+)\s*!=\s*null',clean)
@@ -204,7 +203,7 @@ class SemanticAnalyzer:
             if m.group(2) not in fields:r.diagnostics.append(Diagnostic('R203',f"Record '{owner.name}' has no field '{m.group(2)}'",1));return TypeRef('Any')
             if owner.nullable:r.diagnostics.append(Diagnostic('N201',f"'{m.group(1)}' may be null",1))
             return fields[m.group(2)]
-        m=re.fullmatch(r'(\w+)\((.*)\)',expr)
+        m=re.fullmatch(r'([A-Za-z_]\w*)\(([^()]*)\)',expr)
         if m and m.group(1) in r.functions:return r.functions[m.group(1)].return_type
         for op in ('+','-','*','/','%'):
             if op in expr:
@@ -214,7 +213,7 @@ class SemanticAnalyzer:
         return TypeRef('Any')
 
     def _check_records(self,source,r):
-        for m in re.finditer(r'(?:let|const)\s+(\w+)\s*:\s*(\w+)\s*=\s*\{([^}]*)\}',source,re.S):
+        for m in re.finditer(r'(?:let|const)[ \t]+([A-Za-z_]\w*)[ \t]*:[ \t]*([A-Za-z_]\w*)[ \t]*=[ \t]*\{([^{}]*)\}',source):
             var,record,body=m.groups()
             if record not in r.records:continue
             fields={}
@@ -271,8 +270,8 @@ def infer_generic_bindings(expected:TypeRef, actual:TypeRef, type_params:set[str
 
 def parse_generic_functions(source:str):
     out={}
-    pattern=r'function\s+(\w+)\s*<([^>]+)>\s*\((.*?)\)\s*(?:->\s*([^\{]+))?\s*\{'
-    for m in re.finditer(pattern,source,re.S):
+    pattern=r'function[ \t]+([A-Za-z_]\w*)[ \t]*<([^<>]+)>[ \t]*\(([^()]*)\)[ \t]*(?:->[ \t]*([^{}\n]+))?[ \t]*\{'
+    for m in re.finditer(pattern,source):
         name,tps,raw_params,raw_ret=m.groups(); type_params=tuple(x.strip() for x in tps.split(',') if x.strip());params=[]
         for item in split_top(raw_params,','):
             if ':' in item:
@@ -283,9 +282,9 @@ def parse_generic_functions(source:str):
 
 def parse_protocols(source:str):
     out={}
-    for m in re.finditer(r'protocol\s+(\w+)\s*\{(.*?)\}',source,re.S):
+    for m in re.finditer(r'protocol[ \t]+([A-Za-z_]\w*)[ \t]*\{([^{}]*)\}',source):
         methods=[]
-        for fn in re.finditer(r'function\s+(\w+)\s*\((.*?)\)\s*(?:->\s*([^\n\{]+))?',m.group(2)):
+        for fn in re.finditer(r'function[ \t]+([A-Za-z_]\w*)[ \t]*\(([^()]*)\)[ \t]*(?:->[ \t]*([^{}\n]+))?',m.group(2)):
             params=[]
             for item in split_top(fn.group(2),','):
                 if not item.strip():continue
@@ -315,7 +314,3 @@ def analyze_project(paths):
         for n,c in checked.functions.items():result['functions'][f'{p.stem}.{n}']=c
         for n,c in checked.records.items():result['records'][f'{p.stem}.{n}']=c
     return result
-
-
-
-

@@ -1,6 +1,3 @@
-
-
-
 # PeaLang 0.93.0 RC1 Release Notes
 
 Release Candidate Validation III continues the 1.0 feature freeze.
@@ -17,6 +14,3 @@ No intentional public-language or runtime API removal. v0.92 capabilities are re
 
 ## Evidence honesty
 The release contains executable validation contracts and local regression tests. External cross-platform soak and real third-party certification remain evidence-producing activities, not simulated claims.
-
-
-

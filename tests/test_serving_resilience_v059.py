@@ -1,7 +1,3 @@
-
-
-
-
 import time
 from types import SimpleNamespace
 from pealang.serving_resilience import *
@@ -34,7 +30,3 @@ def test_reload(tmp_path):
  from pealang.ml import StandardScaler,LinearRegression,ProductionPipeline
  from pealang.mlops_portable import save_pipeline
  p=ProductionPipeline([(StandardScaler(),(['x'],))],LinearRegression()).fit(DataFrame([{'x':0,'y':1},{'x':1,'y':3}]),['x'],'y',epochs=300,learning_rate=.05);path=tmp_path/'p.json';save_pipeline(p,path);rt=Runtime();r=ResilientRuntime(rt);assert r.reload('2',path)=='2'
-
-
-
-

@@ -1,13 +1,10 @@
-name: PeaLang Java and Node Matrix
-on: [workflow_dispatch, push, pull_request]
-permissions:
-  contents: read
+name: Java and Node Matrix
+on: [push, pull_request]
 jobs:
   java:
     strategy:
-      fail-fast: false
       matrix:
-        java: ['17','21']
+        java: ['17', '21']
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -15,28 +12,22 @@ jobs:
         with:
           distribution: temurin
           java-version: ${{ matrix.java }}
-          cache: maven
-      - run: mvn -f java-sdk/pom.xml test package
-      - uses: actions/upload-artifact@v4
-        with:
-          name: java-${{ matrix.java }}-evidence
-          path: java-sdk/target/
+      - run: mvn -f java-sdk/pom.xml test
   node:
     strategy:
-      fail-fast: false
       matrix:
-        node: ['20','22','24']
+        node: ['20', '22', '24']
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node }}
-          cache: npm
-          cache-dependency-path: |
-            typescript-sdk/package-lock.json
-            react-sdk/package-lock.json
-      - run: npm install --prefix typescript-sdk
-      - run: npm run build --prefix typescript-sdk
-      - run: npm install --prefix react-sdk
-      - run: npm run build --prefix react-sdk
+      - run: npm install
+        working-directory: typescript-sdk
+      - run: npm run build --if-present
+        working-directory: typescript-sdk
+      - run: npm install
+        working-directory: react-sdk
+      - run: npm run build --if-present
+        working-directory: react-sdk

@@ -1,7 +1,3 @@
-
-
-
-
 # Signed Registry Index and Publisher Policy
 
 PeaLang 0.33 adds canonical registry metadata, namespace ownership, replay protection, immutable package-version policy, expiration checks, and environment-based registry authentication.
@@ -27,7 +23,3 @@ Once `acme/demo` version `1.0.0` is observed with a SHA-256 digest, the same reg
 ## Authentication
 
 Registry access tokens are read from environment variables such as:
-
-
-
-

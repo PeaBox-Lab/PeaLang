@@ -1,7 +1,3 @@
-
-
-
-
 from pathlib import Path
 from fastapi import FastAPI
 from pealang import RuntimeOptions,VMRuntime
@@ -14,7 +10,3 @@ pea=PeaRouter(registry,prefix='/api').add('/bonus','hr','bonus').include_status(
 app=FastAPI(title='PeaLang FastAPI Example')
 app.include_router(pea.router)
 install_exception_handlers(app)
-
-
-
-

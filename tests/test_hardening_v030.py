@@ -1,7 +1,3 @@
-
-
-
-
 from pathlib import Path
 from pealang import compile_source_to_bytecode,VirtualMachine,Profiler,Coverage,Instrumentation,MemoryObserver,benchmark_source
 from pealang.release_integrity import compare
@@ -19,7 +15,3 @@ def test_release_compare(tmp_path):
 def test_differential_arithmetic():
  from pealang import execute
  src='function add(a,b){return a+b}\nprint add(2,5)';a=[];b=[];execute(src,output=a.append);VirtualMachine(output=b.append).run(compile_source_to_bytecode(src));assert [int(x) for x in a]==b
-
-
-
-

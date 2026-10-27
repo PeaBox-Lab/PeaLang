@@ -1,7 +1,3 @@
-
-
-
-
 import asyncio,pytest
 from pealang import ResourceLimits,ResourceBudget,ResourceLimitExceeded,estimated_size,CancellationScope,TaskGroup,gather_structured
 from pealang.embedding import RuntimeOptions
@@ -42,7 +38,3 @@ def test_taskgroup_result():
   async with TaskGroup() as g:t=g.spawn(asyncio.sleep(0,result=7))
   return await t.result()
  assert asyncio.run(run())==7
-
-
-
-

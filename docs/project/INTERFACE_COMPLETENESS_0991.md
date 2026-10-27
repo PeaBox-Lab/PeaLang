@@ -1,4 +1,3 @@
-
 # Interface Completeness 0.99.1
 
 All 23 `NotImplementedError` sites found by the audit are intentional base-interface contracts, not directly instantiable production backends. Concrete implementations are tested separately. The classified modules and methods are:
@@ -14,4 +13,3 @@ All 23 `NotImplementedError` sites found by the audit are intentional base-inter
 - `pealang/orchestration_state.py`: begin, finish, successful, latest
 
 Release policy: unclassified `NotImplementedError` occurrences are forbidden.
-

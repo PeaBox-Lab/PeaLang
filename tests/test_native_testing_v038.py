@@ -1,7 +1,3 @@
-
-
-
-
 from pealang import split_tests,run_source_tests,coverage_summary,migrate_text,migrate_path
 def test_split_expect():
  setup,tests=split_tests('let x=2\ntest "ok" {\n expect x == 2\n}')
@@ -15,7 +11,3 @@ def test_migrate_advisory():
  out,notes=migrate_text('print 1','0.34','0.38');assert out=='print 1' and notes
 def test_migrate_path_preserves_source(tmp_path):
  p=tmp_path/'x.pea';p.write_text('print 1');x=migrate_path(p,'0.37','0.38');assert p.read_text()=='print 1' and len(x)==1
-
-
-
-

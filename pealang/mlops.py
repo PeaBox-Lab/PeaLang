@@ -1,7 +1,3 @@
-
-
-
-
 """PeaLang 0.55 ML deployment, monitoring and governance."""
 from __future__ import annotations
 from dataclasses import dataclass,field,asdict
@@ -106,7 +102,3 @@ def create_fastapi_app(model,name='prediction'):
   try:return model.predict(DataFrame(payload),name).to_dicts()
   except Exception as exc:raise HTTPException(status_code=400,detail=str(exc))
  return app
-
-
-
-

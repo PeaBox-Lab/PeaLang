@@ -1,7 +1,3 @@
-
-
-
-
 from .bytecode import BytecodeModule,CodeObject,Instruction,Op
 from .compiler import Compiler,CompileError,compile_source_to_bytecode
 from .vm import VirtualMachine,VMError,AsyncSuspension
@@ -12,7 +8,7 @@ from .runtime import execute, compile_source, Interpreter, PeaError
 from .type_system import TypeChecker,TypeRef,Diagnostic,TypeCheckResult,SemanticAnalyzer,SemanticResult,FunctionContract,parse_type,erase_types
 from .embedding import (PeaRuntime,PeaModule,RuntimeOptions,ExecutionResult,
     PeaRuntimeError,PeaPermissionError,PeaResourceLimitError,to_pea,from_pea)
-__version__ = "0.92.0rc1"
+__version__ = "0.99.6"
 __all__=['BytecodeModule','CodeObject','Instruction','Op','Compiler','CompileError','compile_source_to_bytecode','VirtualMachine','VMError','AsyncSuspension','AsyncVirtualMachine','AsyncVMRuntime','AsyncVMModule','CancellationToken','VMRuntime','VMModule','disassemble','execute','compile_source','Interpreter','PeaError','PeaRuntime','PeaModule',
 'SemanticAnalyzer','SemanticResult','FunctionContract','TypeChecker','TypeRef','Diagnostic','TypeCheckResult','parse_type','erase_types','RuntimeOptions','ExecutionResult','PeaRuntimeError','PeaPermissionError',
 'PeaResourceLimitError','to_pea','from_pea','__version__']
@@ -130,7 +126,3 @@ from .api_freeze import FrozenSurface,ApiFreezeManifest,FreezePolicy,BreakingCha
 from .rc_validation import SUPPORTED_PYTHONS,SUPPORTED_PLATFORMS,SoakEvidence,CrossPlatformSoak,UpgradeFixture,UpgradeValidation,FrozenContractSurveillance,SoakGate,RCBlocker,BlockerRegistry,rc91_gate,evidence_digest
 
 from .rc_validation_ii import TimedEvidence,EvidenceFreshness,UpgradeDrill,UpgradeDrillSuite,CompatibilityObservation,DriftSurveillance,TrendPoint,SoakTrendGate,EcosystemCertification,EcosystemGate,RecoveryDrill,RecoveryGate,Waiver,WaiverLifecycle,rc92_gate,certification_digest
-
-
-
-

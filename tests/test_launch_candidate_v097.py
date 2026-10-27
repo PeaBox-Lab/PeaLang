@@ -1,5 +1,3 @@
-
-
 from pealang.launch_candidate_v097 import *
 def h(x): return digest(x)
 def test_freeze_ok(): assert freeze_gate([Change("1","blocker-fix",True)])["passed"]
@@ -12,5 +10,3 @@ def test_launch_pass():
  ok={"passed":True};assert launch_gate(freeze=ok,readiness96=ok,artifacts=ok,playbooks=ok,rollback=ok,approvals={"release-owner":True,"security-owner":True,"operations-owner":True})["passed"]
 def test_no_go_without_approval():
  ok={"passed":True};assert not launch_gate(freeze=ok,readiness96=ok,artifacts=ok,playbooks=ok,rollback=ok,approvals={})["passed"]
-
-

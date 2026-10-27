@@ -1,6 +1,3 @@
-
-
-
 from pealang.release_readiness_v096 import *
 def h(x): return digest(x)
 def test_docs():
@@ -15,6 +12,3 @@ def test_dossier_ready():
  ok={"passed":True}; x=readiness_dossier(evidence=ok,documentation=ok,package_ops=ok,risks=ok,rc95=ok,approvals={"release-owner":True,"security-owner":True,"operations-owner":True}); assert x["decision"]=="READY-FOR-1.0"
 def test_dossier_no_go_without_approvals():
  ok={"passed":True}; assert readiness_dossier(evidence=ok,documentation=ok,package_ops=ok,risks=ok,rc95=ok,approvals={})["decision"]=="NO-GO"
-
-
-

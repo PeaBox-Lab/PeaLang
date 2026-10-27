@@ -1,7 +1,3 @@
-
-
-
-
 # Version History
 
 | Version | Theme |

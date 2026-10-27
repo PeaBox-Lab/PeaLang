@@ -1,5 +1,3 @@
-
-
 """PeaLang 0.98 Release Dress Rehearsal evidence gates."""
 from dataclasses import dataclass,asdict
 from hashlib import sha256
@@ -25,5 +23,3 @@ def operations_gate(drills,required=("support","incident","rollback")):
  drills=list(drills); good={x.name for x in drills if x.valid()}; missing=sorted(set(required)-good); return {"passed":not missing,"missing":missing}
 def rehearsal_gate(*,launch97,staging,install,operations,approvals):
  sections={"launch97":launch97,"staging":staging,"install":install,"operations":operations}; approvals=dict(approvals); required={"release-owner","security-owner","operations-owner"}; passed=all(x.get("passed") is True for x in sections.values()) and required.issubset({k for k,v in approvals.items() if v}); out={"version":"0.98.0-rc1","passed":passed,"decision":"REHEARSAL-PASS" if passed else "NO-GO","sections":sections,"approvals":approvals};out["digest"]=digest(out);return out
-
-

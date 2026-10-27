@@ -1,7 +1,3 @@
-
-
-
-
 from pealang.performance_hardening import PerformanceBudget,PerformanceProbe,PerformanceGate,BoundedLRUCache
 
 def test_performance_probe_and_gate():
@@ -19,7 +15,3 @@ def test_bounded_lru_cache_evicts_and_tracks_hits():
     assert cache.get('a',lambda:2)==1
     cache.get('b',lambda:2);cache.get('c',lambda:3)
     stats=cache.stats();assert stats['entries']==2 and stats['hits']==1 and stats['misses']==3
-
-
-
-

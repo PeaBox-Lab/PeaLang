@@ -1,7 +1,3 @@
-
-
-
-
 # PeaLang 0.63 RC2 Gate Status
 
 ## Automated gates
@@ -21,7 +17,3 @@
 - Signed external publication
 
 GA remains blocked until external gates pass.
-
-
-
-

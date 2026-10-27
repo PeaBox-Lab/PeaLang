@@ -1,4 +1,2 @@
-
 assert true
 print("assertions ok")
-

@@ -1,4 +1,3 @@
-
 """PeaLang 0.99.2 pre-1.0 evidence inventory and fail-closed gate."""
 from pathlib import Path
 from dataclasses import dataclass,asdict
@@ -16,4 +15,3 @@ def pre_v1_gate(*,audit_closure,final_gate,evidence,approvals):
  approvals=dict(approvals); sections={"audit_closure":audit_closure,"final_gate":final_gate,"evidence":evidence}; owners={"release-owner","security-owner","operations-owner"}; passed=all(x.get("passed") is True for x in sections.values()) and owners.issubset({k for k,v in approvals.items() if v}); out={"version":"0.99.2","target":"1.0.0","passed":passed,"decision":"READY-FOR-1.0" if passed else "NO-GO","sections":sections,"approvals":approvals};out["digest"]=digest(out);return out
 def local_evidence_template(root):
  root=Path(root); return {"version":"0.99.2","policy":"fail-closed","required_evidence":list(REQUIRED),"note":"Populate only with genuine retained CI/scanner/signing/approval evidence."}
-

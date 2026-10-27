@@ -1,7 +1,3 @@
-
-
-
-
 from datetime import datetime
 from pealang.data import DataFrame
 from pealang.timeseries import *
@@ -27,7 +23,3 @@ def test_bad_frequency():
 def test_bad_ewm():
  try:DataFrame([{'x':1}]).ewm('x',alpha=0);assert False
  except ValueError:assert True
-
-
-
-

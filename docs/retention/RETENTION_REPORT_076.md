@@ -1,7 +1,3 @@
-
-
-
-
 # PeaLang 0.76 Retention Report
 
 - Baseline files: 403
@@ -12,7 +8,3 @@
 - Modified same-path files: 5
 - Tests: 458 passed
 - Retention gate: **PASS**
-
-
-
-

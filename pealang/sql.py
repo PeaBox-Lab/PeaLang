@@ -1,7 +1,3 @@
-
-
-
-
 """PeaLang 0.44 SQL and database adapter foundation."""
 from __future__ import annotations
 from dataclasses import dataclass
@@ -106,7 +102,3 @@ def read_sql(uri,sql,params=None,**options):
 def execute_sql(uri,sql,params=None,**options):
     with connect(uri,**options) as db:
         with db.transaction():cur=db.execute(sql,params);return cur.rowcount
-
-
-
-

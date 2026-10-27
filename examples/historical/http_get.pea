@@ -1,4 +1,2 @@
-
 # Modern compatibility example for historical http_get.pea
 print("http_get")
-

@@ -1,5 +1,10 @@
-
 # Changelog
+## 0.99.6 - 2026-10-27
+- Closed CodeQL high-severity findings in SFTP host verification, legacy HMAC trust storage, and type-system regular expressions.
+- Removed automatic acceptance of unknown SSH host keys; SFTP now fails closed using known-host verification.
+- Stopped copying HMAC secret material into the legacy trust-store JSON; Ed25519 remains the recommended public package-signing mechanism.
+- Hardened type-system source matching with bounded inputs and non-ambiguous structural patterns to mitigate regular-expression denial of service.
+- Added security regression tests and cumulative release documentation.
 ## 0.99.5 - 2026-10-26
 - Fixed TypeScript/React Node 24 diagnostic failures and stale client dependency.
 - Added Java and Node CI plus OS/Python and security workflows.
@@ -318,6 +323,3 @@
 - Added tool-call budget enforcement.
 - Moved historical development handovers to `docs/handover/` for a cleaner project root.
 - Added agent governance documentation and regression tests.
-
-
-

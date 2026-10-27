@@ -1,7 +1,3 @@
-
-
-
-
 # PeaLang AI Development Handover 0.28
 
 ## Delivered
@@ -32,7 +28,3 @@
 ## Release requirement
 
 Continue cumulative changelog, README, release notes, roadmap, version history, foundations, complete user/embedding/help docs, architecture/security notes, tests, examples, and updated AI handover.
-
-
-
-

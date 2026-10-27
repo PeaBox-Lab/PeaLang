@@ -1,7 +1,3 @@
-
-
-
-
 """PeaLang 0.84 structured concurrency and resilience primitives."""
 from __future__ import annotations
 import asyncio, hashlib, json, random, time
@@ -124,7 +120,3 @@ class ResilienceGate:
  def evaluate(self,*,cancel_seconds,drain_seconds,retry_safety_passed,orphan_tasks=0):
   checks={'cancellation':cancel_seconds<=1.0,'drain':drain_seconds<=30.0,'retry_safety':bool(retry_safety_passed),'no_orphans':orphan_tasks==0}
   return {'gate':'PASS' if all(checks.values()) else 'FAIL','checks':checks}
-
-
-
-

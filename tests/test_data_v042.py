@@ -1,7 +1,3 @@
-
-
-
-
 from pealang.data import *
 def test_schema():
  d=DataFrame([{'id':1,'name':'A'}]);assert d.schema.as_dict()=={'id':'Int64','name':'String'}
@@ -19,7 +15,3 @@ def test_lazy():
  d=LazyFrame(lambda:DataFrame([{'x':1},{'x':2}])).filter(lambda r:r['x']>1).limit(1);assert d.explain()=='scan -> filter -> limit' and d.collect().row_count==1
 def test_custom_connector():
  register_connector('custom',lambda p,o:DataFrame([{'path':p}]));assert read('custom://abc').to_dicts()[0]['path']=='abc'
-
-
-
-

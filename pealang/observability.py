@@ -1,7 +1,3 @@
-
-
-
-
 """Profiling, coverage and observability primitives for PeaLang."""
 from __future__ import annotations
 from dataclasses import dataclass,field,asdict
@@ -31,7 +27,3 @@ class Instrumentation:
   self.profiler.instruction(ins.op,frame.name);self.coverage.hit(frame.code.source_name,ins.line)
   event=TraceEvent('vm.instruction',time.time(),{'opcode':ins.op,'function':frame.name,'source':frame.code.source_name,'line':ins.line})
   for o in self.observers:o.on_event(event)
-
-
-
-

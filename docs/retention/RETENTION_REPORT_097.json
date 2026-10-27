@@ -1,5 +1,3 @@
-
-
 {
   "baseline": "0.96.0-rc1",
   "current": "0.97.0-rc1",
@@ -8,4 +6,3 @@
   "removed": [],
   "passed": true
 }
-

@@ -1,7 +1,3 @@
-
-
-
-
 """PeaLang v0.69 DAG definitions, validation, planning, and local execution."""
 from __future__ import annotations
 from dataclasses import dataclass, field
@@ -107,7 +103,3 @@ def dag_from_dict(spec,registry):
         if fn_name not in registry: raise DAGError(f"Callable {fn_name!r} is not registered")
         graph.add(Task(item["task_id"],registry[fn_name],tuple(item.get("depends_on",())),item.get("metadata",{})))
     return graph
-
-
-
-

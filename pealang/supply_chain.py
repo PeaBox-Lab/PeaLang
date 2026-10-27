@@ -1,7 +1,3 @@
-
-
-
-
 """PeaLang 0.62 release candidate packaging and supply-chain security."""
 from __future__ import annotations
 from dataclasses import dataclass,asdict
@@ -134,7 +130,3 @@ def offline_install_evidence(wheelhouse,required=()):
 def packaging_quality_gate(manifest_report,sbom_report,provenance_report,signature_valid,offline_report,dependency_evidence):
  checks={'manifest':bool(manifest_report.get('valid')),'sbom':bool(sbom_report.get('valid')),'provenance':bool(provenance_report.get('valid')),'signature':bool(signature_valid),'offline_install':bool(offline_report.get('ready')),'dependency_evidence':bool(dependency_evidence.get('files'))}
  return {'gate':'PASS' if all(checks.values()) else 'FAIL','checks':checks,'failed':[k for k,v in checks.items() if not v]}
-
-
-
-

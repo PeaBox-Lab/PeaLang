@@ -1,4 +1,2 @@
-
 # Modern compatibility example for historical agent_mock.pea
 print("agent_mock")
-

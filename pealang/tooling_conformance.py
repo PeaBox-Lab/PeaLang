@@ -1,7 +1,3 @@
-
-
-
-
 """PeaLang 0.88 developer tooling stabilization contracts."""
 from dataclasses import dataclass,asdict
 from enum import Enum
@@ -51,7 +47,3 @@ class LSPConformance:
 def tooling_certification_gate(*,lsp,dap,diagnostics_stable,debug_reproducible,editor_negotiation=True):
  checks={'lsp':bool(lsp.get('passed')),'dap':bool(dap.get('passed')),'diagnostics':bool(diagnostics_stable),'debugging':bool(debug_reproducible),'editor_negotiation':bool(editor_negotiation)}
  return {'gate':'PASS' if all(checks.values()) else 'FAIL','checks':checks,'failed':[k for k,v in checks.items() if not v]}
-
-
-
-

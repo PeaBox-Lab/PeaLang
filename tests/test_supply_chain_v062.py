@@ -1,7 +1,3 @@
-
-
-
-
 import json,zipfile
 from pealang.supply_chain import *
 def test_checksums(tmp_path):
@@ -24,7 +20,3 @@ def test_migration(tmp_path):
  a=tmp_path/'a';b=tmp_path/'b';a.mkdir();b.mkdir();assert migration_check(a,b)['compatible']
 def test_checklist_readiness():assert len(release_checklist())>=10 and readiness_assessment({'a':True,'b':False})['score']==50
 def test_container_ci():assert 'USER 10001:10001' in containerfile() and len(ci_matrix()['os'])==3
-
-
-
-

@@ -1,6 +1,3 @@
-
-
-
 from pealang.rc_acceptance_v095 import *
 
 def h(x): return digest(x)
@@ -25,6 +22,3 @@ def test_go_decision_requires_manual_approval():
 
 def test_no_go_without_approval():
  ok={"passed":True}; r=go_no_go(evidence=ok,blockers=ok,artifacts=ok,dry_run=ok,rc94=ok,manual_approvals={}); assert r["decision"]=="NO-GO"
-
-
-

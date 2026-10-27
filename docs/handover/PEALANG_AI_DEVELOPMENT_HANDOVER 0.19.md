@@ -1,7 +1,3 @@
-
-
-
-
 # PeaLang AI Development Handover 0.19
 
 ## Direction
@@ -29,7 +25,3 @@ Build a bytecode format, compiler, constant pool, stack VM, function call frames
 ## Documentation rule
 
 Every release must include cumulative changelog, release notes, README, roadmap, version history, foundations, language and embedding guides, help pages, security notes, tests, examples, and an updated AI handover.
-
-
-
-

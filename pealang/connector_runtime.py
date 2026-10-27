@@ -1,4 +1,3 @@
-
 # AUDIT-CLOSURE: intentional interface contract; concrete backends must override the methods documented in docs/project/INTERFACE_COMPLETENESS_0991.md.
 
 
@@ -37,7 +36,3 @@ def health_check(name,probe,clock=time.perf_counter):
 class CertificationMatrix:required:tuple[str,...]=('connect','read');optional:tuple[str,...]=('write','paginate','dataframe','health')
 def certify_matrix(connector,matrix=CertificationMatrix()):
  checks={x:hasattr(connector,x) for x in matrix.required+matrix.optional};return {'passed':all(checks[x] for x in matrix.required),'checks':checks}
-
-
-
-

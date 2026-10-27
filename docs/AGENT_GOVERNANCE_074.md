@@ -1,7 +1,3 @@
-
-
-
-
 # Agent Governance 0.74
 
 PeaLang 0.74 adds deterministic safety gates around agent tool execution.
@@ -22,7 +18,3 @@ result = runtime.tool(agent, "deploy", ["staging"], policy=policy,
 ```
 
 Dry-run never invokes the underlying tool handler. Approval-required operations fail closed when no approver is provided.
-
-
-
-

@@ -1,7 +1,3 @@
-
-
-
-
 from pathlib import Path
 from pealang.agents import AgentRuntime,ToolRegistry
 from pealang.agent_governance import AgentPolicy,GovernanceAuditStore,AuditedApprovalGate,approval_request_id
@@ -24,7 +20,3 @@ def test_denied_approval_persists(tmp_path):
     store=GovernanceAuditStore(tmp_path/'audit.db');gate=AuditedApprovalGate(store,actor='reviewer',approver=lambda request:False)
     assert gate.request({'agent':'a','tool':'delete','args':['x'],'reason':'sensitive'}) is False
     rid=approval_request_id('a','delete',['x']);assert store.approval(rid)['status']=='denied'
-
-
-
-

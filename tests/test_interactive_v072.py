@@ -1,7 +1,3 @@
-
-
-
-
 from pealang.dashboard import DashboardFilter,DashboardState,DataBinding,apply_dashboard_filters
 from pealang.browser_repl import BrowserREPL,DatasetInspector
 from pealang.jupyter import RichDisplay,PeaKernel,kernelspec
@@ -24,7 +20,3 @@ def test_jupyter_rich_results_and_kernel_contract():
     assert "text/html" in rich.data and "application/vnd.pealang.dataframe+json" in rich.data
     k=PeaKernel(lambda code:frame); result=k.execute("data"); assert result["status"]=="ok" and result["execution_count"]==1
     assert kernelspec()["language"]=="pealang"
-
-
-
-

@@ -1,7 +1,3 @@
-
-
-
-
 from dataclasses import dataclass
 from enum import Enum
 import hashlib,math
@@ -35,7 +31,3 @@ class CanaryRouter:
  def route(self,k):return "canary" if int(hashlib.sha256(str(k).encode()).hexdigest()[:8],16)%100<self.percent else "stable"
 def serving_certification_gate(rs,o,r,b):
  c={"inference":all(x["status"]=="PASS" for x in rs),"overload":bool(o),"reload":bool(r),"rollback":bool(b)};return {"gate":"PASS" if all(c.values()) else "FAIL","checks":c}
-
-
-
-

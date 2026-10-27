@@ -1,7 +1,3 @@
-
-
-
-
 # PeaLang 0.90 API Freeze
 
 ## Frozen for the 1.0 line
@@ -16,7 +12,3 @@ Additions are compatible by default only when they do not invalidate a frozen co
 
 ## Evidence
 `ApiFreezeManifest` creates canonical SHA-256 API digests. `freeze_gate` blocks unapproved removals or changes. `compatibility_contract` emits the machine-readable contract continuously validated by the 0.91-0.96 release-candidate line.
-
-
-
-

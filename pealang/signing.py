@@ -1,7 +1,3 @@
-
-
-
-
 from dataclasses import dataclass,asdict
 from pathlib import Path
 import base64,hashlib,hmac,json,os,secrets,time
@@ -17,12 +13,12 @@ def file_hash(path):
  return h.hexdigest()
 def key_id(secret):return hashlib.sha256(secret).hexdigest()[:16]
 def generate_key(path):
- secret=secrets.token_bytes(32);p=Path(path);p.parent.mkdir(parents=True,exist_ok=True);p.write_text(base64.b64encode(secret).decode()+'\n')
+ secret=secrets.token_bytes(32);p=Path(path);p.parent.mkdir(parents=True,exist_ok=True);p.write_bytes(base64.b64encode(secret)+b'\n')
  try:os.chmod(p,0o600)
  except OSError:pass
  return key_id(secret)
 def load_key(path):
- try:return base64.b64decode(Path(path).read_text().strip(),validate=True)
+ try:return base64.b64decode(Path(path).read_bytes().strip(),validate=True)
  except Exception as e:raise PeaError(f'Invalid signing key: {e}') from e
 def sign_package(package,key_path,output=None):
  secret=load_key(key_path);digest=file_hash(package);value=hmac.new(secret,digest.encode(),hashlib.sha256).hexdigest();obj=Signature('HMAC-SHA256',key_id(secret),digest,value,int(time.time()));out=Path(output or (str(package)+'.sig'));out.write_text(json.dumps(obj.to_dict(),indent=2,sort_keys=True)+'\n');return out,obj
@@ -40,13 +36,9 @@ class TrustStore:
   if self.path.exists():self.data=json.loads(self.path.read_text())
  def save(self):self.path.parent.mkdir(parents=True,exist_ok=True);self.path.write_text(json.dumps(self.data,indent=2,sort_keys=True)+'\n')
  def trust_key(self,key_path,label=None):
-  secret=load_key(key_path);kid=key_id(secret);self.data['keys'][kid]={'label':label or kid,'key':base64.b64encode(secret).decode()};self.save();return kid
+  secret=load_key(key_path);kid=key_id(secret);self.data['keys'][kid]={'label':label or kid,'algorithm':'HMAC-SHA256','key_id':kid};self.save();return kid
  def trust_registry(self,name,url,key_ids):
   if not str(url).startswith('https://'):raise PeaError('Registry URL must use HTTPS')
   missing=[k for k in key_ids if k not in self.data['keys']]
   if missing:raise PeaError('Unknown trusted key IDs: '+', '.join(missing))
   self.data['registries'][name]={'url':url.rstrip('/'),'keys':list(key_ids)};self.save()
-
-
-
-

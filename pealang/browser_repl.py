@@ -1,7 +1,3 @@
-
-
-
-
 """Browser-safe REPL protocol and dataset inspector for PeaLang v0.72."""
 from __future__ import annotations
 from dataclasses import dataclass,asdict
@@ -43,7 +39,3 @@ class DatasetInspector:
     def column_profile(self,data,column):
         frame=data if isinstance(data,DataFrame) else DataFrame(data); rows=frame.to_dicts() if hasattr(frame,"to_dicts") else frame.rows(); vals=[r.get(column) for r in rows]; nonnull=[v for v in vals if v is not None]
         return {"column":column,"count":len(vals),"null_count":len(vals)-len(nonnull),"distinct_count":len({repr(v) for v in nonnull}),"sample":nonnull[:10]}
-
-
-
-

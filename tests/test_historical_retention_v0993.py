@@ -1,4 +1,3 @@
-
 import json,sys,zipfile
 from pathlib import Path
 ROOT=Path(__file__).parents[1]
@@ -14,4 +13,3 @@ def test_root_normalization(tmp_path):
  with zipfile.ZipFile(b,"w") as z:z.writestr("PeaLang_v0.2.0/docs/X.md","same")
  sys.path.insert(0,str(ROOT/"tools"));from retention_audit import compare
  r=compare(a,b);assert r["unchanged"]==["docs/X.md"] and r["passed"]
-

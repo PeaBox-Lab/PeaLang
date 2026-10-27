@@ -1,4 +1,3 @@
-
 """PeaLang 0.99.4 security closure checks."""
 from pathlib import Path
 import ast,re
@@ -19,4 +18,3 @@ def audit_python_tree(root):
    if isinstance(n,ast.Call) and isinstance(n.func,ast.Name) and n.func.id in {"eval","exec"}: findings.append({"kind":"python-dynamic-exec","call":n.func.id,"path":str(path.relative_to(root)),"line":n.lineno})
    if isinstance(n,ast.Call) and isinstance(n.func,ast.Attribute) and n.func.attr in {"md5","sha1"}: findings.append({"kind":"weak-hash","call":n.func.attr,"path":str(path.relative_to(root)),"line":n.lineno})
  return {"passed":not findings,"findings":findings}
-

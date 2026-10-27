@@ -1,7 +1,3 @@
-
-
-
-
 import json,tarfile,io,pytest
 from pealang.signing import generate_key,sign_package,verify_package,TrustStore
 from pealang.secure_packages import safe_extract,validate_remote_source,dependency_confusion_guard,write_receipt
@@ -34,7 +30,3 @@ def test_dependency_confusion_guard():
  with pytest.raises(Exception):dependency_confusion_guard('x','git','public')
 def test_receipt(tmp_path):
  p=package(tmp_path);d=tmp_path/'dest';d.mkdir();r=write_receipt(d,p,key_id='abc');assert json.loads(r.read_text())['key_id']=='abc'
-
-
-
-

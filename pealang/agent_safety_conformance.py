@@ -1,7 +1,3 @@
-
-
-
-
 from dataclasses import dataclass,asdict
 import hashlib,json,time
 @dataclass(frozen=True)
@@ -45,7 +41,3 @@ class SafeAgentExecutor:
   try:v=op();self.audit.append(a,t.name,"completed",req);return v
   except Exception:self.audit.append(a,t.name,"failed",req);raise
 def agent_safety_gate(e):return {"gate":"PASS" if e.audit.verify() else "FAIL","audit_steps":len(e.audit.steps)}
-
-
-
-

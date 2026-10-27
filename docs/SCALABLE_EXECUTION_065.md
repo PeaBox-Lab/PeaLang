@@ -1,7 +1,3 @@
-
-
-
-
 # PeaLang 0.65 Scalable Execution
 
 Version 0.65 extends the 0.64 engine-neutral compute layer with bounded-memory data movement.
@@ -22,7 +18,3 @@ plan.checkpoint("employees_clean")
 ```
 
 For large JSONL inputs, use `scan_jsonl()` to consume batches without loading the complete source file in memory.
-
-
-
-

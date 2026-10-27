@@ -1,8 +1,4 @@
-
-
-
-
-# PeaLang 0.99.5
+# PeaLang 0.99.6
 
 PeaLang is an embeddable extension language for controlled rules, workflows, automation and host integration. Version 0.37 completes runtime resource accounting and structured concurrency while retaining the v0.35 standard library and v0.36 type-system foundation.
 
@@ -207,5 +203,5 @@ Version 0.91 adds cross-platform/Python soak evidence, upgrade validation, froze
 Version 0.92 deepens post-freeze certification with evidence aging, rollback/re-upgrade drills, multi-build compatibility drift surveillance, security/performance/memory trend gates, ecosystem certification, recovery drills and waiver lifecycle controls. See `docs/project/RC_VALIDATION_092.md`.
 
 
-
-
+## 0.99.6 security hardening
+SFTP host keys now fail closed, legacy HMAC trust metadata no longer stores shared secrets, and type-system parsing is hardened against pathological input. Use Ed25519 for public package signing.

@@ -1,4 +1,3 @@
-
 # PeaLang 1.0 Component Status
 
 | Component | Status | Compatibility commitment |
@@ -11,4 +10,3 @@
 | ML, agents, distributed compute/serving | Preview | May evolve with migration notes |
 | Browser/WASM native execution | Preview | Not part of stable 1.0 surface |
 | Governed natural-language planner | Experimental | No compatibility promise |
-

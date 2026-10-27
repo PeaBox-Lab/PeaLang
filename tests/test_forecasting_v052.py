@@ -1,7 +1,3 @@
-
-
-
-
 from pealang.data import DataFrame
 from pealang.forecasting import *
 def test_metrics():
@@ -25,7 +21,3 @@ def test_bad_alpha():
 def test_bad_season():
  try:seasonal_decompose([1,2],2);assert False
  except ValueError:assert True
-
-
-
-

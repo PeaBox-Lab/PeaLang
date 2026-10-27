@@ -1,4 +1,3 @@
-
 # AUDIT-CLOSURE: intentional interface contract; concrete backends must override the methods documented in docs/project/INTERFACE_COMPLETENESS_0991.md.
 
 
@@ -66,7 +65,6 @@ class SFTPConfig:
     private_key_passphrase:str|None=None
     known_hosts:str|None=None
     timeout:float=30.0
-    allow_unknown_host:bool=False
 
 class SFTPBackend:
     def listdir(self,path):raise NotImplementedError
@@ -84,8 +82,8 @@ class ParamikoSFTPBackend(SFTPBackend):
         client=paramiko.SSHClient()
         if config.known_hosts:client.load_host_keys(config.known_hosts)
         else:client.load_system_host_keys()
-        if config.allow_unknown_host:client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-        else:client.set_missing_host_key_policy(paramiko.RejectPolicy())
+        # v0.99.6: fail closed. Unknown SSH host keys are never accepted automatically.
+        client.set_missing_host_key_policy(paramiko.RejectPolicy())
         kwargs={'hostname':config.host,'port':config.port,'username':config.username,'password':config.password,'timeout':config.timeout,'look_for_keys':config.private_key is None}
         if config.private_key:kwargs['key_filename']=config.private_key
         if config.private_key_passphrase:kwargs['passphrase']=config.private_key_passphrase
@@ -130,7 +128,3 @@ CONNECTORS.register('odata',ODataConnector,replace=True)
 
 def odata(base_url,headers=None,**options):return ODataConnector(ConnectorConfig(base_url,headers or {},**options))
 def sftp(host,**options):return SFTPConnector(SFTPConfig(host,**options))
-
-
-
-

@@ -1,7 +1,3 @@
-
-
-
-
 """PeaLang 0.27 deterministic package ecosystem."""
 from __future__ import annotations
 from dataclasses import dataclass,asdict
@@ -100,7 +96,3 @@ def install(root='.'):
   else:(dest).mkdir();(dest/'REMOTE_SOURCE.json').write_text(json.dumps(dep,indent=2))
   installed.append(dep['name'])
  return installed
-
-
-
-

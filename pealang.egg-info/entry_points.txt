@@ -1,7 +1,0 @@
-
-[console_scripts]
-pea = pealang.cli:main
-pea-ml = pealang.mlops_portable:cli
-pea-serve = pealang.mlops_portable:serving_cli
-pealang = pealang.cli:main
-

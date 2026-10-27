@@ -1,7 +1,3 @@
-
-
-
-
 # PeaLang v0.68 Messaging Connectors
 
 v0.68 completes the first scalable-data phase with RabbitMQ and WebSocket connectivity alongside the v0.67 Kafka connector.
@@ -21,7 +17,3 @@ v0.68 completes the first scalable-data phase with RabbitMQ and WebSocket connec
 
 ## Local development
 `InMemoryMessageBus` provides dependency-free deterministic messaging for unit tests and local workflows.
-
-
-
-

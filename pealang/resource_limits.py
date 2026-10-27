@@ -1,7 +1,3 @@
-
-
-
-
 """Deterministic runtime resource accounting for PeaLang 0.37."""
 from __future__ import annotations
 from dataclasses import dataclass,asdict
@@ -58,7 +54,3 @@ def estimated_size(value,seen=None):
  if isinstance(value,dict):size+=sum(estimated_size(k,seen)+estimated_size(v,seen) for k,v in value.items())
  elif isinstance(value,(list,tuple,set,frozenset)):size+=sum(estimated_size(x,seen) for x in value)
  return size
-
-
-
-
