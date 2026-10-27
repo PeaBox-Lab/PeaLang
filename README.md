@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 # PeaLang v0.99.6
 
 Readable automation, data, integration, orchestration, and AI workflow language.
