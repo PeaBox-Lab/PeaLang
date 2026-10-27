@@ -1,207 +1,504 @@
-# PeaLang 0.99.6
+# PeaLang v0.99.6
 
-PeaLang is an embeddable extension language for controlled rules, workflows, automation and host integration. Version 0.37 completes runtime resource accounting and structured concurrency while retaining the v0.35 standard library and v0.36 type-system foundation.
+Readable automation, data, integration, orchestration, and AI workflow language.
 
-## Install
-```bash
-python -m pip install pealang-0.57.0-py3-none-any.whl
-pea --version
-```
+PeaLang is an embeddable extension language designed for rules, workflows, integrations, data processing, automation, and controlled application customization.
 
-## Run
-```bash
-pea run app.pea
-pea repl
-pea stdlib
-pea spec
-pea features
-```
+PeaLang is designed to complement existing ecosystems such as Python, FastAPI, Java, TypeScript, React, databases, messaging systems, and enterprise applications rather than replace them.
 
-## Standard library
-Use `std.collections`, `std.string`, `std.math`, `std.datetime`, `std.json`, `std.csv`, `std.regex`, `std.file`, `std.path`, `std.http`, `std.crypto`, `std.logging`, `std.testing`, and `std.concurrent`. Sensitive capabilities require explicit runtime permissions.
+## Release Status
 
-## Platform
-PeaLang retains PEAC bytecode/VM, optional typing, semantic analysis, Python embedding, async VM, FastAPI integration, Java sidecar/client, TypeScript/React SDKs, DAP, package/signing/registry security and observability. See `docs/USER_GUIDE.md`, `docs/BASICS.md`, `FOUNDATIONAL_ROADMAP.md`, and `RELEASE_NOTES.md`.
+Current version: **0.99.6**
 
-## Type system 0.36
-Generics, structural protocol contracts, project-wide contract analysis and Result/Option/Future semantics are now part of the foundation. See `docs/TYPE_SYSTEM_036.md`.
+Release type: **Security Hardening / Pre-1.0**
 
-## Runtime foundation 0.37
-Resource budgets now cover time, instructions, memory, recursion, stack, collections, output, HTTP requests and file reads. Structured concurrency adds task groups and cancellation propagation.
+PeaLang v0.99.6 is a security-focused release following the v0.99.5 compatibility and release-readiness work.
 
-## Native testing 0.38
-Use `test "name" { expect condition }`, `pea test --filter`, `pea test --coverage`, and `pea migrate --from 0.37 --to 0.38 .`.
+The release addresses security findings identified after enabling GitHub CodeQL analysis against the reconstructed PeaLang repository history.
 
-## WebAssembly 0.39
-Use `pea wasm-build` and `pea wasm-inspect`. Executable lowering remains Preview.
+No new major feature family is introduced in v0.99.6.
 
-## Conformance 0.40
-Run `pea conformance` for the 500-case interpreter/VM gate and deterministic fuzz harness. GitHub Actions defines Windows/Linux/macOS and Python 3.10-3.13 matrices.
+The objective is to improve security while preserving the existing PeaLang language, runtime, SDK, data, integration, orchestration, ML, tooling, and enterprise capabilities.
 
-## Beta/pilot readiness 0.41
-Run `pea readiness`. Candidate pilots and review packs are included, but the gate intentionally remains pending until two genuine pilots are validated.
+## What's New in v0.99.6
 
-## PeaLang Data 0.42
-A new embeddable data foundation provides schemas, DataFrame/LazyFrame processing, a connector registry, CSV/JSON/JSONL IO and core transforms. See `DATA_ROADMAP.md`.
+### SSH / SFTP Security Hardening
 
+PeaLang SFTP connections now fail closed for unknown SSH host keys.
 
-## PeaLang DataFrame Engine 0.43
-Use joins, grouped aggregations, expression-based columns and filters, null handling, pivot/unpivot, row-number windows and lazy pipelines. See `docs/DATAFRAME_ENGINE_043.md`.
+The previous option that could automatically trust an unknown SSH host has been removed.
 
-## SQL and Databases 0.44
-SQLite works with the Python standard library. Adapter contracts also cover DuckDB, PostgreSQL, MySQL/MariaDB, SQL Server and Oracle through optional drivers. See `docs/SQL_DATABASES_044.md`.
+SFTP now requires trusted host-key information through configured or system known-hosts data.
 
-## Connector SDK 0.45
-Use the built-in REST and GraphQL connectors with runtime authentication headers, retry/backoff controls, pagination and direct DataFrame conversion. See `docs/CONNECTOR_SDK_045.md`.
+This reduces exposure to SSH machine-in-the-middle attacks.
 
-## Cloud Connectors 0.46
-OData and SFTP now extend the Connector SDK. See `docs/CLOUD_CONNECTORS_046.md`.
+### Package Signing Hardening
 
-## Cloud Object Storage 0.47
-Amazon S3, Azure Blob Storage, ADLS Gen2 and Google Cloud Storage now share a normalized object-storage API. See `docs/OBJECT_STORAGE_047.md`.
+The legacy HMAC package-signing subsystem remains available for backwards-compatible controlled/internal workflows.
 
-## Enterprise Connectors 0.48
-Microsoft Graph/SharePoint, secret-provider abstractions, capability descriptors and certification checks extend the connector platform. See `docs/ENTERPRISE_CONNECTORS_048.md`.
+However, legacy trust-store metadata no longer copies the HMAC shared secret into the trust-store JSON.
 
-## Connector Runtime 0.49
-Production runtime profiles, renewable token providers, health diagnostics, certification matrices and Graph/SharePoint pagination.
+For public package authenticity, PeaLang's existing Ed25519 signing infrastructure remains the recommended mechanism.
 
-## Data Analytics 0.50
-PeaLang DataFrames now provide descriptive statistics, distributions, correlation, ranking, rolling/cumulative calculations, outlier detection and dataset profiles. See `docs/ANALYTICS_050.md`.
+### Type-System ReDoS Hardening
 
-## Time-Series and Grouped Analytics 0.51
-Date/time resampling, shifts, period changes, expanding/EWM windows, interpolation and grouped analytics now extend PeaLang DataFrames. See `docs/TIME_SERIES_051.md`.
+The type-system source analyzer has been hardened against pathological source input and expensive regular-expression behavior.
 
-## Forecasting and Accelerated Analytics 0.52
-Baseline trend, moving-average and exponential-smoothing forecasts, evaluation, decomposition, grouped forecasting and chart-ready outputs extend the analytics stack. See `docs/FORECASTING_052.md`.
+v0.99.6 introduces:
 
-## Machine Learning Foundations 0.53
-Dependency-light preprocessing, linear/logistic regression, evaluation, cross-validation indices and model persistence now extend PeaLang DataFrames. See `docs/ML_FOUNDATIONS_053.md`.
+- bounded type-expression input
+- bounded type-check source input
+- safer structural matching
+- reduced use of ambiguous arbitrary-text regular expressions
+- adversarial regression tests
 
-## Production ML 0.54
-Fitted pipelines, cross-validation, tuning, regularization, multiclass classification, model cards and reproducibility manifests extend PeaLang ML. See `docs/PRODUCTION_ML_054.md`.
+Current safety limits:
 
-## ML Deployment and Monitoring 0.55
-Model bundles, batch/audited inference, drift and fairness diagnostics, calibration, registry lifecycle and an optional FastAPI adapter extend production ML. See `docs/MLOPS_055.md`.
+- Maximum individual type expression: **65,536 characters**
+- Maximum type-check source input: **2,000,000 characters**
 
-## Secure MLOps 0.56
-Optional Ed25519 signing/Fernet encryption, monitoring event stores, alert operations, promotion policies, canary routing and rollback controls extend the ML platform. See `docs/SECURE_MLOPS_056.md`.
+These limits protect static analysis from unreasonable or deliberately pathological input.
 
-## Pipeline Portability and MLOps CLI 0.57
-Versioned pipeline serialization, SQLite monitoring, alert policies, deployment manifests and `pea-ml` operations complete the next MLOps layer. See `docs/MLOPS_CLI_057.md`.
+### Security Regression Coverage
 
-## Secure and Resilient Serving 0.59
-Rate and concurrency controls, timeouts, structured logs, trace hooks, live reload, secure artifact loading and alert-driven rollback harden model serving. See `docs/RESILIENT_SERVING_059.md`.
+v0.99.6 adds dedicated regression coverage for:
 
-## Distributed Serving and Kubernetes 0.60
-Shared Redis-compatible state, distributed rate limiting, latency/load gates, OpenTelemetry hooks and Kubernetes resources extend resilient serving. See `docs/DISTRIBUTED_SERVING_060.md`.
+- unknown SSH host-key handling
+- signing trust-store secret exposure
+- oversized type expressions
+- oversized type-check source
+- pathological type-system input
 
-## Kubernetes Security and RC Stabilization 0.61
-Secure YAML manifests, non-root/read-only containers, NetworkPolicy, PDB, spread/anti-affinity, graceful draining, validation and soak tests harden distributed serving. See `docs/KUBERNETES_SECURITY_061.md`.
+## Validation
 
-## Release Candidate Packaging 0.62
-SBOM, provenance, checksums, artifact verification, non-root container packaging, CI matrix and v1 readiness gates establish the release-candidate supply chain. See `docs/SUPPLY_CHAIN_062.md`.
+The v0.99.6 local regression suite completed successfully:
 
-## Release Candidate 1 Stabilization
-0.63 RC1 freezes feature scope and adds public API snapshots, compatibility/deprecation policy, integration gate reporting, threat modelling and upgrade guidance. See `docs/API_STABILITY_POLICY.md` and `RC1_GATE_STATUS.md`.
+    612 passed
+    0 failed
 
-## Release Candidate 2 Stabilization
-RC2 preserves the feature freeze and validates compatibility against RC1. See `docs/RC2_STABILIZATION.md` and `RC2_GATE_STATUS.md`.
+Python package generation also completed successfully for:
 
-## Distributed Compute Foundation 0.64 alpha
-Engine-neutral plans and optional Arrow, Polars and Spark adapters begin the post-RC scalable-data roadmap. See `docs/DISTRIBUTED_COMPUTE_064.md` and `docs/ROADMAP_064_TO_100.md`.
+    pealang-0.99.6-py3-none-any.whl
+    pealang-0.99.6.tar.gz
 
+GitHub CodeQL should be rerun against the v0.99.6 commit before the release is considered fully security-closed.
 
-## PeaLang v0.72 interactive analytics
-Interactive dashboard state/bindings, Browser REPL and dataset inspection, and Jupyter-compatible rich result contracts are documented in `docs/INTERACTIVE_ANALYTICS_072.md`.
+The target is:
 
-## PeaLang v0.73 advanced ML and governed planning
-Optional ONNX inference, tensor/DataFrame interoperability, and rule-first governed query plans are documented in `docs/ADVANCED_ML_GOVERNED_QUERY_073.md`.
+    CodeQL High alerts: 0
 
-## 0.74 Agent governance
-Version 0.74 adds dry-run agent tool planning, explicit policy decisions, approval gates and tool-call budgets. See `docs/AGENT_GOVERNANCE_074.md`.
+## Installation
 
-Historical AI development handovers are preserved in `docs/handover/` to keep the repository root clean.
+PeaLang requires Python 3.10 or newer.
 
-## 0.75 Durable agent governance
-Persistent SQLite audit and approval evidence extends the v0.74 agent governance controls. See `docs/AGENT_AUDIT_075.md`.
+### Install from source
 
-## 0.76 Release hardening
-PeaLang 0.76 adds adversarial agent-policy probes, public API compatibility checks, regression thresholds and an integrated release hardening gate. See `docs/project/HARDENING_076.md`.
+Clone the repository:
 
-### Documentation layout
-- `README.md`: detailed current-version guide and project entry point.
-- `CHANGELOG.md`: one cumulative changelog for the complete release history.
-- `docs/releases/`: version-specific release notes.
-- `docs/retention/`: retention and compatibility evidence.
-- `docs/handover/`: development handover archive.
-- `docs/project/`: roadmaps, version history, readiness and release-gate documentation.
+    git clone https://github.com/PeaBox-Lab/PeaLang.git
+    cd PeaLang
 
-## 0.77 Performance and memory hardening
-Version 0.77 adds repeatable performance probes, p95/mean latency gates, allocation peak-memory limits and a bounded LRU cache for reusable runtime/compiler artifacts. See `docs/project/PERFORMANCE_HARDENING_077.md`.
+Create a virtual environment:
 
-## PeaLang v0.78 security hardening
-Version 0.78 continues the v1 stabilization line with reusable security controls at embedding and service trust boundaries: bounded input validation, allowed-root path checks, HTTPS/private-network URL policy, recursive secret redaction, and tamper-evident audit chains. See `docs/SECURITY_HARDENING_078.md` and `docs/ROADMAP_064_TO_100.md`.
+Windows:
 
+    py -m venv .venv
+    .venv\Scripts\activate
 
-## PeaLang v0.79 enterprise integration hardening
-Version 0.79 standardizes credential providers, retry/backoff, circuit breaking, correlation IDs and health checks across PeaLang connector hosts. See `docs/project/ENTERPRISE_INTEGRATION_079.md`.
+Linux/macOS:
 
+    python3 -m venv .venv
+    source .venv/bin/activate
 
-## PeaLang v0.80 observability and operations hardening
-Version 0.80 adds W3C trace-context propagation, bounded spans and metrics, liveness/readiness contracts, and secure diagnostic bundles. See `docs/project/OBSERVABILITY_OPERATIONS_080.md`.
+Install PeaLang:
 
+    python -m pip install --upgrade pip
+    pip install -e .
 
-## PeaLang v0.81 compatibility and migration hardening
-Version 0.81 adds a machine-readable deprecation ledger, ordered and reversible migration registry, public API snapshots/diffs, and breaking-change approval gates. See `docs/project/COMPATIBILITY_MIGRATIONS_081.md`.
+Verify installation:
 
+    pea --help
 
-## PeaLang v0.82 packaging and reproducibility hardening
-Version 0.82 adds deterministic source manifests, CycloneDX SBOM verification, SLSA/in-toto provenance verification, Ed25519 release signatures, dependency-lock evidence, offline-install evidence, and a combined packaging quality gate. See `docs/project/PACKAGING_REPRODUCIBILITY_082.md`.
+or:
 
+    pealang --help
 
-## PeaLang v0.83 Runtime Performance II
-Version 0.83 adds representative benchmark suites, p50/p95/p99 and throughput evidence, prior-baseline regression budgets, named compiler/runtime hot-path profiling, cache eviction/load instrumentation, and memory-pressure probes. See `docs/project/RUNTIME_PERFORMANCE_083.md`.
+### Install the wheel
 
+If you have the v0.99.6 wheel:
 
-## PeaLang v0.84 concurrency and resilience
-Version 0.84 adds parent-child cancellation, deadlines, fail-fast structured task groups, retry-safety enforcement, idempotency evidence, graceful draining, and resilience release gates. See `docs/project/CONCURRENCY_RESILIENCE_084.md`.
+    pip install pealang-0.99.6-py3-none-any.whl
 
+## Your First PeaLang Program
 
-## PeaLang v0.85 data and connector conformance
-Version 0.85 adds connector capability declarations, SQL dialect and parameter-binding contracts, transaction probes, streaming checkpoint/replay semantics, object-store edge-case fixtures, and certification gates. See `docs/project/CONNECTOR_CONFORMANCE_085.md`.
+Create:
 
+    hello.pea
 
-## PeaLang v0.86 ML and serving conformance
-Model-format and deterministic serving certification controls.
+Add:
 
-## PeaLang v0.87 agent safety conformance
-Tool isolation, request-bound approvals, replay protection, budgets and tamper-evident multi-step audit certification.
+    let name = "PeaLang"
+    print "Hello " + name
 
+Run:
 
-## PeaLang v0.88 developer tooling stabilization
-LSP and DAP compatibility certification, stable diagnostic contracts, editor capability negotiation, reproducible debugging fixtures and combined tooling release gates. See `docs/project/DEVELOPER_TOOLING_088.md`.
+    pea run hello.pea
 
+## Basic Language Example
 
-## PeaLang v0.89 release-candidate hardening
-No new feature family is introduced. v0.89 consolidates regression, API compatibility, security, performance, supply-chain, upgrade, documentation and cross-platform evidence into one RC go/no-go decision. See `docs/project/RC_HARDENING_089.md`.
+    let total = 0
 
+    for x in [1, 2, 3, 4, 5] {
+        total += x
+    }
 
-## PeaLang v0.89 release-candidate hardening
-No new feature family is introduced. v0.89 aggregates regression, API compatibility, security, performance, supply-chain, migration, tooling, documentation and cross-platform evidence into a single GO/NO-GO RC readiness gate. See `docs/project/RC_HARDENING_089.md`.
+    print total
 
+PeaLang supports core language constructs including:
 
-## PeaLang v0.90 API freeze
-Version 0.90 freezes intended public syntax, runtime/package APIs, stable diagnostics and versioned bytecode compatibility for the 1.0 line. Breaking changes require explicit approval evidence. See `docs/project/API_FREEZE_090.md`.
+- variables and constants
+- functions
+- control flow
+- loops
+- collections
+- modules
+- imports
+- exceptions
+- optional static typing
+- asynchronous execution
+- compiler and bytecode VM
+- standard library
+- embedding APIs
 
+## Optional Static Typing
 
-## PeaLang v0.91 release candidate validation I
-Version 0.91 adds cross-platform/Python soak evidence, upgrade validation, frozen-contract surveillance, security/performance/packaging soak aggregation, blocker/waiver closure and a consolidated RC go/no-go gate. See `docs/project/RC_VALIDATION_091.md`.
+PeaLang supports optional type contracts while retaining compatibility with untyped programs.
 
+Example:
 
-## PeaLang v0.92 release candidate validation II
-Version 0.92 deepens post-freeze certification with evidence aging, rollback/re-upgrade drills, multi-build compatibility drift surveillance, security/performance/memory trend gates, ecosystem certification, recovery drills and waiver lifecycle controls. See `docs/project/RC_VALIDATION_092.md`.
+    function add(a: Int, b: Int) -> Int {
+        return a + b
+    }
 
+    let result: Int = add(10, 20)
+    print result
 
-## 0.99.6 security hardening
-SFTP host keys now fail closed, legacy HMAC trust metadata no longer stores shared secrets, and type-system parsing is hardened against pathological input. Use Ed25519 for public package signing.
+Type-check a program:
+
+    pea typecheck program.pea
+
+PeaLang includes support for:
+
+- primitive types
+- records
+- nullable types
+- unions
+- generics
+- protocols
+- generic substitution
+- type inference foundations
+- Result
+- Option
+- Future
+- function contracts
+- semantic analysis
+
+## Compiler and Virtual Machine
+
+PeaLang provides both a tree-walking interpreter and portable bytecode virtual machine.
+
+Compile:
+
+    pea compile program.pea
+
+Run using the VM:
+
+    pea vm program.pea
+
+PeaLang's bytecode/VM architecture includes:
+
+- portable PEAC bytecode
+- compiler
+- constant pool
+- stack virtual machine
+- function call frames
+- closures
+- exception handling
+- module imports
+- source mapping
+- resource accounting
+- async suspension and resume
+- debugger integration
+
+## Embedding PeaLang
+
+PeaLang is intended to operate as an extension language inside existing applications.
+
+Supported integration directions include:
+
+- Python
+- FastAPI
+- Java
+- TypeScript
+- React
+- browser/WebAssembly environments
+
+The goal is not to replace host languages.
+
+Instead:
+
+    Host Application
+          |
+          +-- Python
+          +-- Java
+          +-- FastAPI
+          +-- React
+          |
+          +-- PeaLang
+                |
+                +-- Rules
+                +-- Workflows
+                +-- Automation
+                +-- Integration
+                +-- Data processing
+                +-- Controlled user extensions
+
+## Data Engineering
+
+PeaLang includes a growing data-processing and data-engineering stack.
+
+Capabilities include:
+
+- DataFrame
+- LazyFrame
+- schema inference
+- CSV
+- JSON
+- JSONL
+- transformations
+- joins
+- group-by
+- aggregations
+- expressions
+- null handling
+- pivot/unpivot
+- window operations
+- analytics
+- statistics
+- time-series processing
+- forecasting
+- scalable execution
+- partitioning
+- spill processing
+
+## Databases and Connectors
+
+PeaLang includes database and connector foundations for environments including:
+
+- SQLite
+- DuckDB
+- PostgreSQL
+- MySQL/MariaDB
+- SQL Server
+- Oracle
+- REST
+- GraphQL
+- OData
+- SFTP
+- S3
+- Azure Blob Storage
+- Azure Data Lake Storage
+- Google Cloud Storage
+- Microsoft Graph
+- SharePoint
+
+Optional third-party dependencies may be required for individual connectors.
+
+## Streaming and Messaging
+
+PeaLang includes streaming and messaging capabilities including:
+
+- Kafka
+- RabbitMQ
+- WebSocket messaging
+- event-time processing
+- watermarks
+- late-event handling
+- tumbling windows
+- sliding windows
+- checkpointing
+- replay
+- idempotent delivery
+
+## Workflow Orchestration
+
+PeaLang includes DAG-based orchestration support.
+
+Capabilities include:
+
+- DAG definitions
+- task dependencies
+- cycle detection
+- topological ordering
+- execution layers
+- retries
+- backoff
+- persistent state
+- scheduling
+- logical execution dates
+- run history
+- backfill
+- idempotency
+
+## Machine Learning
+
+PeaLang includes dependency-light machine-learning and production-ML foundations.
+
+Capabilities include:
+
+- preprocessing
+- linear regression
+- logistic regression
+- evaluation metrics
+- cross-validation
+- regularization
+- multiclass classification
+- model persistence
+- pipelines
+- model governance
+- inference
+- model monitoring
+- drift diagnostics
+- fairness diagnostics
+- calibration
+- model registry
+- serving
+- MLOps
+- optional ONNX Runtime integration
+- optional PyTorch interoperability
+
+## Distributed Execution
+
+PeaLang contains engine-neutral distributed execution foundations with optional adapters for:
+
+- local execution
+- Apache Arrow
+- Polars
+- Apache Spark
+
+The architecture is intended to allow PeaLang execution plans to use different processing engines without forcing PeaLang programs to be rewritten around a specific backend.
+
+## Serving and Operations
+
+PeaLang includes operational foundations for:
+
+- FastAPI serving
+- distributed serving
+- rate limits
+- concurrency limits
+- timeouts
+- health checks
+- readiness checks
+- deployment state
+- observability
+- OpenTelemetry integration
+- Kubernetes deployment
+- Kubernetes security controls
+- graceful shutdown
+- rollback
+
+## Security
+
+Security is a core PeaLang design concern.
+
+PeaLang includes capabilities covering:
+
+- capability-controlled execution
+- runtime resource limits
+- secure package handling
+- SHA-256 integrity verification
+- Ed25519 package signatures
+- signed registry metadata
+- key rotation/revocation foundations
+- HTTPS-only registry policies
+- secret-provider abstractions
+- dependency-confusion defenses
+- safe package extraction
+- security regression tests
+- SBOM generation
+- provenance
+- release integrity
+- supply-chain verification
+- GitHub CodeQL scanning
+
+### SFTP Security
+
+Unknown SSH hosts are rejected by default in v0.99.6.
+
+Do not disable host-key verification in production integrations.
+
+### Package Security
+
+For public package distribution, use PeaLang's Ed25519 public/private-key signing infrastructure.
+
+Legacy HMAC support exists primarily for backwards-compatible controlled/internal environments.
+
+### Secrets
+
+Never commit:
+
+- passwords
+- API keys
+- access tokens
+- signing private keys
+- SSH private keys
+- database credentials
+- `.env` files containing secrets
+
+Supply credentials at runtime using an appropriate secret-management mechanism.
+
+## Standard Library
+
+PeaLang provides a stable `std.*` namespace covering common application functionality.
+
+Inspect available modules using:
+
+    pea stdlib
+
+The standard-library architecture includes explicit capability gates for sensitive operations such as:
+
+- filesystem access
+- HTTP/network access
+- logging
+- concurrency
+
+## Testing
+
+Run the complete Python test suite:
+
+    python -m pytest -q
+
+The v0.99.6 release baseline passes:
+
+    612 tests
+
+PeaLang also maintains conformance, compatibility, security, retention, and release-readiness tests.
+
+## CI Validation
+
+The repository contains GitHub Actions workflows covering:
+
+    Windows / Linux / macOS
+    Python 3.10
+    Python 3.11
+    Python 3.12
+    Python 3.13
+
+Additional workflows cover:
+
+    Java 17
+    Java 21
+    Node 20
+    Node 22
+    Node 24
+ 
