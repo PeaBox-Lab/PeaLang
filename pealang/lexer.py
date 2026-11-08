@@ -9,7 +9,7 @@ class Token:
     @property
     def span(self): return SourceSpan(self.line,self.col)
 
-KEYWORDS={"let","const","print","if","else","while","for","in","function","return","true","false","null","and","or","not","break","continue","import","assert","parallel","try","catch","finally","throw","export","as","async","await"}
+KEYWORDS={"let","const","print","if","else","while","for","in","function","return","true","false","null","and","or","not","break","continue","import","assert","parallel","try","catch","finally","throw","export","as","async","await","match"}
 
 class Lexer:
     def __init__(self,text:str,source_name='<input>'):
@@ -23,7 +23,7 @@ class Lexer:
         return c
     def error(self,msg,line,col): raise PeaError(msg,SourceSpan(line,col),self.source_name)
     def tokens(self):
-        out=[]; two={"==","!=","<=",">=","+=","-=","*=","/="}; singles=set("+-*/%(){}[],.:;<>!=")
+        out=[]; two={"==","!=","<=",">=","+=","-=","*=","/=","??","=>","**"}; singles=set("+-*/%(){}[],.:;<>!=?")
         while self.i<len(self.text):
             c=self.peek()
             if c in ' \t\r':self.advance();continue

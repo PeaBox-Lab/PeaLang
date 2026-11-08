@@ -1,16 +1,17 @@
-# PeaLang v0.99.6
+# PeaLang
 
-Readable automation, data, integration, orchestration, and AI workflow language.
+Readable automation, data, integration, orchestration, web, and AI workflow language.
 
-PeaLang is an embeddable extension language designed for rules, workflows, integrations, data processing, automation, and controlled application customization.
+PeaLang is an embeddable extension language designed for rules, workflows, integrations, data processing, web applications, automation, and controlled application customization.
 
 PeaLang is designed to complement existing ecosystems such as Python, FastAPI, Java, TypeScript, React, databases, messaging systems, and enterprise applications rather than replace them.
 
 ## Release Status
 
-Current version: **0.99.6**
+Base version: **0.99.6** (security hardening baseline)  
+Experience layer: **1.0.0-experience** (developer experience, language ergonomics, web/data/interop)
 
-Release type: **Security Hardening / Pre-1.0**
+The 1.0.0-experience layer builds on the 0.99.6 security baseline with a comprehensive application-development surface while preserving the existing runtime, security, and integration foundations.
 
 PeaLang v0.99.6 is a security-focused release following the v0.99.5 compatibility and release-readiness work.
 
@@ -19,6 +20,52 @@ The release addresses security findings identified after enabling GitHub CodeQL 
 No new major feature family is introduced in v0.99.6.
 
 The objective is to improve security while preserving the existing PeaLang language, runtime, SDK, data, integration, orchestration, ML, tooling, and enterprise capabilities.
+
+## What's New in 1.0.0-experience
+
+### Language Ergonomics
+- List comprehensions: `[x * 2 for x in xs if x > 1]`
+- Dict comprehensions with destructuring: `{k: v * v for [k,v] in items(d)}`
+- Optional chaining: `user?.profile?.city`, `handler?.()`, `arr?.[0]`
+- Null coalescing: `value ?? "fallback"`
+- Anonymous functions: `function(x) { return x + 1 }`
+- Pattern matching (statement + expression): `match x { 1 => "one", 2,3 => "few", _ => "other" }`
+- Destructuring in `let` and `for`: `let [a,b]=pair`, `let {name}=user`, `for [k,v] in pairs { ... }`
+- Membership operators: `x in list`, `"sub" in "string"`, `x not in list`
+- Power operator: `**` (`2 ** 10`)
+- Rich builtins/helpers: `enumerate`, `zip`, `sorted`, `reversed`, `map`, `filter`, `sum`, `any`, `all`, `min`, `max`, `abs`, `items`, `get`, `has`, `merge`, `push`, `pop`, `slice`, `contains`, `trim`, `replace`, `starts_with`, `ends_with`, `json_parse`, `json_dump`, `safe`, `now_ms`
+
+### Web Applications (`web` / `std.web`)
+- App/routing: `web.app()`, `app.get/post/put/delete/patch/options()`
+- Path params: `/users/:id` and OpenAPI `{id}` conversion
+- Route groups: `app.group("/api")`
+- Request helpers: query, params, headers, cookies, JSON/form body
+- Response helpers: `web.json/html/text/redirect/error/file/sse/response`, templates, cookies
+- Validation, rate limiting, and auth helpers: `web.validate`, `web.rate_limit`, `web.bearer_auth`
+- Static files, middleware, custom 404/error handlers
+- CORS support with preflight handling (`app.enable_cors()`)
+- OpenAPI 3.0 generation: `web.openapi(app, title, version)`
+
+### Data Analysis (`analysis` / `std.analysis`)
+- Profiling and stats: `profile`, `describe`, `summary`, `correlation`, `corr_matrix`, `quantile`, `outliers`
+- Cleaning: `clean_missing`, `fillna`, `impute`, `drop_duplicates`, `rename`
+- Transform: `select`, `sort_by`, `filter_rows`, `query`, `group_by`, `pivot`, `join/merge`, `concat`, `add_column`, `cumsum`, `normalize`
+- Exploration: `head`, `tail`, `sample`, `unique`, `value_counts`, `top_values`, `columns`
+- I/O and extras: `from_csv`, `from_json`, `to_json`, `between`, `clip`, `mode`, `nunique`, `count`, `melt`, `transpose`
+- Output: `to_csv`, `to_markdown`, `to_html`, `bar_chart`, `line_chart`, `summary`
+
+### Cross-Language Interop (`interop` / `std.interop`)
+- Python: `call_python`, `import_python`
+- Native: `load_library`, `call_native` (ctypes-based)
+- Process: `run`, `pipe_json`, `which`
+- HTTP: `http_get`, `http_post`, `json_rpc`
+- Environment/util: `env`, `pipe_json`
+- Code generation: `generate_typescript`, `generate_java`, `generate_python_stub`
+
+### Developer Experience (`ux` / `std.ux`, CLI)
+- `ux.doctor()`, `ux.explain()`, `ux.suggest()`
+- CLI: `pea run`, `repl`, `eval -e`, `check`, `lint`, `fmt`, `test`, `compile`, `vm`, `dis`, `doctor`, `templates`, `init --template`, `project`, `info`, `serve`, `stdlib`, `typecheck`
+- Project templates: `default`, `webapp`, `analysis`, `library`, `interop`
 
 ## What's New in v0.99.6
 
@@ -169,6 +216,115 @@ PeaLang supports core language constructs including:
 - compiler and bytecode VM
 - standard library
 - embedding APIs
+
+## Modern Language Ergonomics
+
+```pea
+# Comprehensions
+let xs = [1,2,3,4]
+let doubled = [x * 2 for x in xs if x > 1]          # [4, 6, 8]
+let pairs = [[1,10],[2,20]]
+let values = [v for [k,v] in pairs]                 # [10, 20]
+let sq = {k: v*v for [k,v] in items({"a":2,"b":3})}
+
+# Optional chaining and null coalescing
+let city = user?.profile?.city ?? "unknown"
+let result = handler?.()
+
+# Anonymous functions and functional builtins
+let mapped = list(map(function(x){ return x*10 }, [1,2,3]))
+let evens = list(filter(function(x){ return x % 2 == 0 }, xs))
+print sorted(xs)
+print 2 in xs
+print "ell" in "hello"
+
+# Pattern matching
+let label = match status {
+  200, 201 => "ok"
+  404 => "not found"
+  _ => "error"
+}
+
+# Destructuring
+let [a, b] = [10, 20]
+let {name, score} = {"name":"Ada", "score": 91}
+for {name} in users { print name }
+for [k,v] in items(data) { print k }
+```
+
+## Web Applications
+
+```pea
+let app = web.app()
+app.enable_cors("*")
+
+function home(req) {
+  return web.json({"message": "Hello", "query": req["query"]})
+}
+function get_user(req) {
+  return web.json({"id": req["params"]["id"]})
+}
+
+app.get("/", home)
+app.get("/users/:id", get_user)
+
+let api = app.group("/api")
+api.get("/ping", function(req){ return web.json({"ok": true}) })
+
+let spec = web.openapi(app, "My API", "1.0.0")
+# app.serve("127.0.0.1", 8080)
+```
+
+## Data Analysis
+
+```pea
+let data = [{"name":"Ada","score":91,"team":"a"},{"name":"Linus","score":84,"team":"a"}]
+print analysis.summary(data)
+print analysis.describe(data, "score")
+let top = analysis.query(data, "score", ">", 85)
+let grouped = analysis.group_by(data, "team", "score", "mean")
+let filled = analysis.fillna(data, 0, "score")
+print analysis.to_csv(top)
+print analysis.bar_chart(data, "name", "score")
+```
+
+## Cross-Language Interop
+
+```pea
+# Python
+let root = interop.call_python("math", "sqrt", 81)
+
+# Process
+let out = interop.run("python", ["--version"])
+let piped = interop.pipe_json(["python", "-c", "import json,sys; print(json.dumps({'ok':True}))"])
+
+# HTTP / JSON-RPC
+let resp = interop.http_get("https://api.example.com/data")
+let rpc = interop.json_rpc("https://example.com/rpc", "add", [1,2])
+
+# Code generation
+let ts = interop.generate_typescript("http://127.0.0.1:8787")
+```
+
+## Developer Experience and CLI
+
+```bash
+pea run app.pea
+pea eval -e "print [x*x for x in [1,2,3]]"
+pea check src/
+pea lint src/
+pea fmt src/
+pea test tests/
+pea doctor
+pea templates
+pea init myapp --template webapp
+pea info
+pea compile app.pea
+pea vm app.pea
+pea repl
+```
+
+Namespaces: `web`/`std.web`, `analysis`/`std.analysis`, `interop`/`std.interop`, `ux`/`std.ux`.
 
 ## Optional Static Typing
 
@@ -459,18 +615,19 @@ Supply credentials at runtime using an appropriate secret-management mechanism.
 
 ## Standard Library
 
-PeaLang provides a stable `std.*` namespace covering common application functionality.
+PeaLang provides a `std.*` namespace (v1.0 manifest) covering common application functionality, plus application-focused modules:
 
-Inspect available modules using:
+- Core: `std.collections`, `std.string`, `std.math`, `std.datetime`, `std.json`, `std.csv`, `std.regex`, `std.path`, `std.testing`, `std.crypto`
+- Controlled capabilities: `std.file`, `std.http`, `std.logging`, `std.concurrent`
+- Experience layer: `std.web`, `std.analysis`, `std.interop`, `std.ux`
 
-    pea stdlib
+Inspect modules:
 
-The standard-library architecture includes explicit capability gates for sensitive operations such as:
+```bash
+pea stdlib
+```
 
-- filesystem access
-- HTTP/network access
-- logging
-- concurrency
+Sensitive operations require explicit permissions/capabilities in embedded or controlled runtimes (filesystem, HTTP/network, logging, concurrency, and host interop/process access depending on context).
 
 ## Testing
 

@@ -15,7 +15,7 @@ def _ns(legacy_call=None,**x):return Namespace(x,legacy_call=legacy_call)
 @dataclass(frozen=True)
 class StdModuleSpec:
     name:str; stability:str='Stable'; permissions:tuple[str,...]=(); description:str=''
-STDLIB_VERSION='0.35'
+STDLIB_VERSION='1.0'
 MODULES={
  'std.collections':StdModuleSpec('std.collections',description='Collection transforms and queries'),
  'std.string':StdModuleSpec('std.string',description='Unicode string helpers'),
@@ -31,6 +31,10 @@ MODULES={
  'std.logging':StdModuleSpec('std.logging',permissions=('log',),description='Host logging'),
  'std.testing':StdModuleSpec('std.testing',description='Assertions for libraries'),
  'std.concurrent':StdModuleSpec('std.concurrent',permissions=('concurrent',),description='Bounded parallel map'),
+ 'std.web':StdModuleSpec('std.web',description='Web application toolkit'),
+ 'std.analysis':StdModuleSpec('std.analysis',description='Data analysis helpers'),
+ 'std.interop':StdModuleSpec('std.interop',description='Cross-language interoperability'),
+ 'std.ux':StdModuleSpec('std.ux',description='User-experience and diagnostics helpers'),
 }
 
 def stdlib_manifest():return {'version':STDLIB_VERSION,'modules':{k:{'stability':v.stability,'permissions':list(v.permissions),'description':v.description} for k,v in MODULES.items()}}
@@ -47,7 +51,34 @@ def _http(method,url,body=None,headers=None,timeout=15):
  try:
   with urllib.request.urlopen(req,timeout=float(timeout)) as r:raw=r.read();return {'status':r.status,'ok':200<=r.status<300,'headers':dict(r.headers.items()),'text':raw.decode('utf-8','replace'),'url':r.geturl()}
  except urllib.error.HTTPError as e:return {'status':e.code,'ok':False,'headers':dict(e.headers.items()),'text':e.read().decode('utf-8','replace'),'url':e.geturl()}
+def _current_interpreter():
+    try:
+        from .interpreter import CURRENT_INTERPRETER
+        return CURRENT_INTERPRETER
+    except Exception:
+        return None
+
+def _invoke_if_user_function(fn, arg):
+    try:
+        from .interpreter import UserFunction
+    except Exception:
+        UserFunction = None
+    interp = _current_interpreter()
+    if UserFunction is not None and isinstance(fn, UserFunction) and interp is not None:
+        return interp.invoke_user_function(fn, [arg])
+    return fn(arg)
+
+def _concurrent_map(fn, items, workers=4):
+    from concurrent.futures import ThreadPoolExecutor
+    vals = list(items)
+    with ThreadPoolExecutor(max_workers=max(1, min(32, int(workers)))) as pool:
+        return list(pool.map(lambda x: _invoke_if_user_function(fn, x), vals))
+
 def _module_values():
+ from .web import build_web_namespace
+ from .analysis import build_analysis_namespace
+ from .interop import build_interop_namespace
+ from .ux import build_ux_namespace
  return {
  'std.collections':_ns(first=lambda x,d=None:x[0] if x else d,last=lambda x,d=None:x[-1] if x else d,unique=lambda x:list(dict.fromkeys(x)),contains=lambda x,v:v in x,sort=lambda x:sorted(x),reverse=lambda x:list(reversed(x)),flatten=lambda x:[v for a in x for v in a],keys=lambda d:list(d.keys()),values=lambda d:list(d.values())),
  'std.string':_ns(length=lambda s:len(str(s)),upper=lambda s:str(s).upper(),lower=lambda s:str(s).lower(),trim=lambda s:str(s).strip(),split=lambda s,sep=None:str(s).split(sep),join=lambda sep,x:str(sep).join(map(str,x)),starts_with=lambda s,p:str(s).startswith(str(p)),ends_with=lambda s,p:str(s).endswith(str(p)),replace=lambda s,a,b:str(s).replace(str(a),str(b))),
@@ -62,7 +93,11 @@ def _module_values():
  'std.crypto':_ns(sha256=lambda v:hashlib.sha256(_text(v).encode()).hexdigest(),hmac_sha256=lambda k,v:hmac.new(_text(k).encode(),_text(v).encode(),hashlib.sha256).hexdigest(),token_hex=lambda n=32:secrets.token_hex(int(n))),
  'std.logging':_ns(debug=lambda m:(_logging.getLogger('pealang').debug(_text(m)) or None),info=lambda m:(_logging.getLogger('pealang').info(_text(m)) or None),warning=lambda m:(_logging.getLogger('pealang').warning(_text(m)) or None),error=lambda m:(_logging.getLogger('pealang').error(_text(m)) or None)),
  'std.testing':_ns(expect=lambda c,m='Expectation failed': True if c else (_ for _ in ()).throw(PeaError(str(m))),equal=lambda a,b:a==b),
- 'std.concurrent':_ns(map=lambda fn,items,workers=4:list(concurrent.futures.ThreadPoolExecutor(max_workers=max(1,min(32,int(workers)))).map(fn,list(items)))),
+ 'std.concurrent':_ns(map=_concurrent_map),
+ 'std.web':build_web_namespace(None),
+ 'std.analysis':build_analysis_namespace(),
+ 'std.interop':build_interop_namespace(),
+ 'std.ux':build_ux_namespace(),
  }
 def build_standard_library(allow_process=False,permissions=None):
  values=_module_values(); allowed=set(permissions or ())

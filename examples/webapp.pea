@@ -1,0 +1,15 @@
+let app = web.app()
+
+function home(req) {
+    return web.json({"message": "Hello from PeaLang", "path": req["path"]})
+}
+
+function health(req) {
+    return web.json({"status": "ok"})
+}
+
+app.get("/", home)
+app.get("/health", health)
+
+print "PeaLang webapp listening on http://127.0.0.1:8080"
+app.serve("127.0.0.1", 8080)

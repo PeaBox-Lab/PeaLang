@@ -1,0 +1,8 @@
+let version = interop.run("python", ["--version"])
+print version
+
+let root = interop.call_python("math", "sqrt", 81)
+print root
+
+let client = interop.generate_typescript("http://127.0.0.1:8787")
+print client

@@ -30,6 +30,11 @@ class Parser:
             finally:self.loop_depth-=1
             return WhileStmt(c,b,span=x.span)
         if self.match('FOR'):
+            if self.cur().kind in ('[','{'):
+                pat=self.pattern();self.need('IN');seq=self.expression();self.loop_depth+=1
+                try:b=self.block()
+                finally:self.loop_depth-=1
+                return ForStmt('',seq,b,span=x.span,pattern=pat)
             n=self.need('IDENT').value;self.need('IN');seq=self.expression();self.loop_depth+=1
             try:b=self.block()
             finally:self.loop_depth-=1
@@ -63,12 +68,17 @@ class Parser:
             if self.match('FINALLY'):finally_body=self.block()
             if catch_body is None and finally_body is None:raise PeaError('try requires catch or finally',x.span,self.source_name)
             return TryStmt(body,name,catch_body,finally_body,span=x.span)
+        x=self.cur()
+        if self.match('MATCH'):
+            return self.match_stmt(x.span)
         expr=self.expression()
         if self.cur().kind in ('=','+=','-=','*=','/='):
             if not isinstance(expr,(Variable,Index,Property)):raise PeaError('Invalid assignment target',expr.span,self.source_name)
             op=self.advance().kind;return Assign(expr,op,self.expression(),span=x.span)
         return ExprStmt(expr,span=x.span)
     def var_decl(self,const,span):
+        if self.cur().kind in ('[','{'):
+            pat=self.pattern();self.need('=');return DestructureDecl(pat,self.expression(),const,span=span)
         n=self.need('IDENT').value;self.need('=');return VarDecl(n,self.expression(),const,span=span)
     def block(self):
         self.skip();self.need('{');body=[];self.skip()
@@ -92,13 +102,108 @@ class Parser:
                 p.append(Param(pt.value,default,span=pt.span))
                 if not self.match(','):break
         self.need(')');return FunctionStmt(n,p,self.block(),span=span)
-    def expression(self):return self.or_expr()
+    def match_stmt(self, span):
+        value=self.expression(); self.skip(); self.need('{'); self.skip()
+        cases=[]
+        while self.cur().kind!='}':
+            pat=self.pattern(); self.skip()
+            patterns=[pat]
+            while self.cur().kind==',':
+                self.advance(); self.skip(); patterns.append(self.pattern()); self.skip()
+            if len(patterns)>1:pat=OrPattern(patterns)
+            guard=None
+            if self.match('IF'):guard=self.expression()
+            self.need('=>');self.skip()
+            if self.cur().kind=='{':body=self.block(); val=None
+            else:
+                # try expression first? ambiguous with statements like print. Use expression for match expr context, but this is stmt.
+                # In statement context, `=> print ...` is a statement. `=> 42` could be expr stmt.
+                body=[self.statement()]; val=None
+            cases.append(MatchCase(pat,guard,body,span=span,value=val));self.skip()
+        self.need('}');return MatchStmt(value,cases,span=span)
+
+    def match_expr(self, span):
+        value=self.expression(); self.skip(); self.need('{'); self.skip()
+        cases=[]
+        while self.cur().kind!='}':
+            pat=self.pattern(); self.skip()
+            patterns=[pat]
+            while self.cur().kind==',':
+                self.advance(); self.skip(); patterns.append(self.pattern()); self.skip()
+            if len(patterns)>1:pat=OrPattern(patterns)
+            guard=None
+            if self.match('IF'):guard=self.expression()
+            self.need('=>');self.skip()
+            if self.cur().kind=='{':
+                body=self.block(); val=None
+            else:
+                val=self.expression(); body=None
+            cases.append(MatchCase(pat,guard,body or [],span=span,value=val));self.skip()
+        self.need('}');return MatchExpr(value,cases,span=span)
+
+    def pattern(self):
+        self.skip()
+        x=self.cur()
+        if x.kind=='_':
+            self.advance();return WildcardPattern(span=x.span)
+        if x.kind in ('NUMBER','STRING','TRUE','FALSE','NULL'):
+            self.advance();return LiteralPattern(x.value,span=x.span)
+        if x.kind=='[':
+            self.advance();self.skip();elements=[];rest=None
+            while self.cur().kind!=']':
+                if self.cur().kind=='...':
+                    self.advance();rest=self.need('IDENT').value;self.skip();break
+                elements.append(self.pattern());self.skip()
+                if not self.match(','):break
+                self.skip()
+            self.need(']');return ListPattern(elements,rest,span=x.span)
+        if x.kind=='{':
+            self.advance();self.skip();fields=[]
+            while self.cur().kind!='}':
+                key=self.cur()
+                if key.kind not in ('IDENT','STRING'):raise PeaError('Expected field name in pattern',key.span,self.source_name)
+                self.advance();self.skip()
+                if self.match(':'):
+                    self.skip();p=self.pattern()
+                else:
+                    p=VariablePattern(key.value if hasattr(key,'value') else str(key.value),span=key.span)
+                fields.append((key.value if hasattr(key,'value') else str(key.value),p));self.skip()
+                if not self.match(','):break
+                self.skip()
+            self.need('}');return DictPattern(fields,span=x.span)
+        if x.kind=='IDENT':
+            self.advance()
+            if x.value=='_':return WildcardPattern(span=x.span)
+            return VariablePattern(x.value,span=x.span)
+        raise PeaError(f'Unexpected pattern token {x.kind}',x.span,self.source_name)
+
+    def expression(self):return self.nullish()
+    def nullish(self):
+        e=self.or_expr()
+        if self.cur().kind=='??':
+            self.advance();return Binary('??',e,self.nullish(),span=self.t[self.i-1].span)
+        return e
     def or_expr(self):return self.left(self.and_expr,('OR',))
     def and_expr(self):return self.left(self.equality,('AND',))
     def equality(self):return self.left(self.compare,('==','!='))
-    def compare(self):return self.left(self.term,('<','<=','>','>='))
+    def compare(self):
+        e=self.term()
+        while True:
+            if self.cur().kind in ('<','<=','>','>='):
+                op=self.advance();e=Binary(op.value,e,self.term(),span=op.span)
+            elif self.cur().kind=='IN':
+                op=self.advance();e=Binary('in',e,self.term(),span=op.span)
+            elif self.cur().kind=='NOT' and self.i+1<len(self.t) and self.t[self.i+1].kind=='IN':
+                op=self.advance();self.advance();e=Binary('not in',e,self.term(),span=op.span)
+            else:break
+        return e
     def term(self):return self.left(self.factor,('+','-'))
-    def factor(self):return self.left(self.unary,('*','/','%'))
+    def factor(self):return self.left(self.power,('*','/','%'))
+    def power(self):
+        e=self.unary()
+        if self.cur().kind=='**':
+            op=self.advance();e=Binary('**',e,self.power(),span=op.span)
+        return e
     def left(self,sub,ops):
         e=sub()
         while self.cur().kind in ops:
@@ -114,15 +219,41 @@ class Parser:
         e=self.primary()
         while True:
             if self.match('('):
+                self.skip()
                 a=[]
                 if self.cur().kind!=')':
                     while True:
-                        a.append(self.expression())
+                        a.append(self.expression());self.skip()
                         if not self.match(','):break
+                        self.skip()
                 self.need(')');e=Call(e,a,span=e.span)
             elif self.match('['):idx=self.expression();self.need(']');e=Index(e,idx,span=e.span)
             elif self.match('.'):
                 name=self.need('IDENT','Expected property name after dot');e=Property(e,name.value,span=e.span)
+            elif self.cur().kind=='?':
+                self.advance()
+                if self.match('.'):
+                    if self.cur().kind=='(':
+                        self.advance();a=[];self.skip()
+                        if self.cur().kind!=')':
+                            while True:
+                                a.append(self.expression());self.skip()
+                                if not self.match(','):break
+                                self.skip()
+                        self.need(')');e=OptionalCall(e,a,span=e.span)
+                    else:
+                        name=self.need('IDENT','Expected property name after ?.');e=OptionalProperty(e,name.value,span=e.span)
+                elif self.match('['):
+                    idx=self.expression();self.need(']');e=OptionalIndex(e,idx,span=e.span)
+                elif self.match('('):
+                    a=[]
+                    if self.cur().kind!=')':
+                        while True:
+                            a.append(self.expression());self.skip()
+                            if not self.match(','):break
+                            self.skip()
+                    self.need(')');e=OptionalCall(e,a,span=e.span)
+                else:raise PeaError('Expected property, index, or call after ?',self.cur().span,self.source_name)
             else:break
         return e
     def primary(self):
@@ -134,7 +265,22 @@ class Parser:
         if self.match('TRUE'):return Literal(True,span=x.span)
         if self.match('FALSE'):return Literal(False,span=x.span)
         if self.match('NULL'):return Literal(None,span=x.span)
+        if self.match('FUNCTION'):
+            span=x.span
+            self.need('(');p=[];saw_default=False
+            if self.cur().kind!=')':
+                while True:
+                    pt=self.need('IDENT');default=None
+                    if self.match('='):default=self.expression();saw_default=True
+                    elif saw_default:raise PeaError('Required parameter cannot follow a default parameter',pt.span,self.source_name)
+                    p.append(Param(pt.value,default,span=pt.span))
+                    if not self.match(','):break
+            self.need(')')
+            body=self.block()
+            return FunctionExpr(p,body,span=span)
         if self.match('IDENT'):return Variable(x.value,span=x.span)
+        if self.match('MATCH'):
+            return self.match_expr(x.span)
         if self.match('PARALLEL'):
             self.skip();self.need('{');items=[];self.skip()
             while self.cur().kind!='}':
@@ -142,19 +288,45 @@ class Parser:
             self.need('}');return ParallelExpr(items,span=x.span)
         if self.match('('):e=self.expression();self.need(')');return e
         if self.match('['):
-            a=[]
-            if self.cur().kind!=']':
-                while True:
-                    a.append(self.expression())
-                    if not self.match(','):break
-            self.need(']');return ListExpr(a,span=x.span)
+            self.skip()
+            if self.cur().kind==']':
+                self.need(']');return ListExpr([],span=x.span)
+            first=self.expression()
+            if self.cur().kind=='FOR':
+                self.skip()
+                self.advance()
+                pattern=None;name=''
+                if self.cur().kind in ('[','{'):pattern=self.pattern()
+                else:name=self.need('IDENT').value
+                self.need('IN');iterable=self.expression();condition=None
+                if self.match('IF'):condition=self.expression()
+                self.skip();self.need(']');return ComprehensionExpr(first,name,iterable,condition,span=x.span,pattern=pattern)
+            items=[first]
+            while self.match(','):
+                self.skip()
+                if self.cur().kind==']':break
+                items.append(self.expression());self.skip()
+            self.skip();self.need(']');return ListExpr(items,span=x.span)
         if self.match('{'):
-            pairs=[]
-            if self.cur().kind!='}':
-                while True:
+            self.skip()
+            if self.cur().kind=='}':self.need('}');return DictExpr([],span=x.span)
+            k=self.expression();self.need(':');v=self.expression();self.skip()
+            if self.cur().kind=='FOR':
+                self.advance();pattern=None;name=''
+                if self.cur().kind in ('[','{'):pattern=self.pattern()
+                else:name=self.need('IDENT').value
+                self.need('IN');iterable=self.expression();condition=None
+                if self.match('IF'):condition=self.expression()
+                self.skip();self.need('}');return DictComprehensionExpr(k,v,name,iterable,condition,span=x.span,pattern=pattern)
+            pairs=[(k,v)]
+            if self.match(','):
+                self.skip()
+                while self.cur().kind!='}':
                     k=self.expression();self.need(':');v=self.expression();pairs.append((k,v))
+                    self.skip()
                     if not self.match(','):break
-            self.need('}');return DictExpr(pairs,span=x.span)
+                    self.skip()
+            self.skip();self.need('}');return DictExpr(pairs,span=x.span)
         raise PeaError(f'Unexpected token {x.kind}',x.span,self.source_name)
     def interpolated(self,tok):
         text=tok.value;parts=[];i=0;buf=''

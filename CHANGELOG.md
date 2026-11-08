@@ -1,4 +1,64 @@
 # Changelog
+
+## 1.0.0-experience (ongoing) - 2026-11-08
+
+### Language and Runtime
+- Added list comprehensions with filters and destructuring patterns.
+- Added dict comprehensions with destructuring patterns.
+- Added optional chaining (`?.` for properties, indexes, calls) and null coalescing (`??`).
+- Added anonymous function expressions.
+- Added multiline list/dict literals and function-call argument formatting.
+- Added pattern matching as statements and expressions, including literal/wildcard/OR cases and guards.
+- Added destructuring in `let` declarations and `for` loops (lists and records).
+- Added membership operators `in` and `not in`.
+- Added/expanded builtins: `enumerate`, `zip`, `sorted`, `reversed`, `map`, `filter`, `sum`, `any`, `all`, `min`, `max`, `abs`, `items`, `list`, `dict`, `bool`, `float`.
+
+### Web (`web` / `std.web`)
+- Added lightweight web app framework: routing, middleware, static files, request/response helpers.
+- Added path params (`:id`), params/query/header/cookie access, JSON/form parsing helpers.
+- Added response helpers (`json`, `html`, `text`, `redirect`, `error`), templates, and cookie setting.
+- Added route groups (`app.group()`), `patch`/`options` methods, custom 404/error handlers.
+- Added CORS support with preflight/header application.
+- Added OpenAPI 3.0 generation from registered routes.
+
+### Data Analysis (`analysis` / `std.analysis`)
+- Added profiling, descriptive statistics, correlation, correlation matrix, quantiles, and outlier detection.
+- Added cleaning/transforms: `clean_missing`, `fillna`, `impute`, `normalize`, `rename`, `drop_duplicates`, `sort_by`, `select`, `filter_rows`, `query`, `add_column`, `cumsum`.
+- Added reshaping/combining: `group_by`, `pivot`, `join`/`merge`, `concat`, `sample`, `unique`, `value_counts`, `top_values`, `head`, `tail`.
+- Added outputs/visualization: `to_csv`, `to_markdown`, `to_html`, `bar_chart`, `line_chart`, `summary`.
+
+### Interop (`interop` / `std.interop`)
+- Added Python bridge (`call_python`, `import_python`), native ctypes bridge, and process execution.
+- Added HTTP helpers (`http_get`, `http_post`), JSON-RPC helper, JSON piping, environment lookup, and executable discovery.
+- Added client/code stub generation for TypeScript, Java, and Python.
+
+### UX, CLI, and Project Scaffolding
+- Added `ux`/`std.ux` diagnostics (`doctor`, `explain`, `suggest`).
+- Added project templates: `default`, `webapp`, `analysis`, `library`, `interop`.
+- Added CLI commands/features: `eval -e`, `lint`, `doctor`, `templates`, `info`, improved version handling, and template-aware `init`.
+
+### Language and Runtime (v103 additions)
+- Added power operator `**`.
+- Added helpers/builtins: `get`, `has`, `merge`, `push`, `pop`, `slice`, `contains`, `trim`, `replace`, `starts_with`, `ends_with`, `json_parse`, `json_dump`, `safe`, `now_ms`.
+- Note: `//` remains a line-comment token (for compatibility with existing comment syntax); floor division can use `int(a / b)`.
+
+### Web (v103 additions)
+- Added route groups (`app.group()`), `patch`/`options` handlers, CORS preflight handling.
+- Added helpers: `web.validate`, `web.file`, `web.sse`, `web.response`, `web.rate_limit`, `web.bearer_auth`.
+
+### Data Analysis (v103 additions)
+- Added I/O/conversion: `from_csv`, `from_json`, `to_json`.
+- Added transforms/stats: `between`, `clip`, `mode`, `nunique`, `count`, `melt`, `transpose`.
+
+### Interop and CLI (v103 additions)
+- Added interop: `json_rpc`, `pipe_json`, `env`.
+- Added CLI: `pea eval -e`, `pea info` (and version/info improvements).
+
+### Documentation and Quality
+- Updated `README.md`, `docs/USER_GUIDE.md`, `CHANGELOG.md`, and `docs/RELEASE_NOTES_1.0_EXPERIENCE.md`.
+- Added/expanded tests for v102/v103 features (language, analysis, web, CLI).
+- Regression baseline: **644 passed, 1 skipped**.
+
 ## 0.99.6 - 2026-10-27
 - Closed CodeQL high-severity findings in SFTP host verification, legacy HMAC trust storage, and type-system regular expressions.
 - Removed automatic acceptance of unknown SSH host keys; SFTP now fails closed using known-host verification.

@@ -22,7 +22,7 @@ class IfStmt(Stmt): condition:Optional[Expr]=None; then_body:list[Stmt]=field(de
 @dataclass
 class WhileStmt(Stmt): condition:Optional[Expr]=None; body:list[Stmt]=field(default_factory=list)
 @dataclass
-class ForStmt(Stmt): name:str=''; iterable:Optional[Expr]=None; body:list[Stmt]=field(default_factory=list)
+class ForStmt(Stmt): name:str=''; iterable:Optional[Expr]=None; body:list[Stmt]=field(default_factory=list); pattern:Any=None
 @dataclass
 class FunctionStmt(Stmt): name:str=''; params:list[Any]=field(default_factory=list); body:list[Stmt]=field(default_factory=list)
 @dataclass
@@ -69,6 +69,39 @@ class Param(Node): name:str=''; default:Optional[Expr]=None
 
 @dataclass
 class ExportStmt(Stmt): name:str=''
+@dataclass
+class MatchStmt(Stmt): value:Optional[Expr]=None; cases:list[Any]=field(default_factory=list)
+@dataclass
+class MatchExpr(Expr): value:Optional[Expr]=None; cases:list[Any]=field(default_factory=list)
+@dataclass
+class MatchCase(Node): pattern:Any=None; guard:Optional[Expr]=None; body:list[Stmt]=field(default_factory=list); value:Optional[Expr]=None
+@dataclass
+class DestructureDecl(Stmt): pattern:Any=None; value:Optional[Expr]=None; constant:bool=False
+class Pattern(Node): pass
+@dataclass
+class WildcardPattern(Pattern): pass
+@dataclass
+class LiteralPattern(Pattern): value:Any=None
+@dataclass
+class VariablePattern(Pattern): name:str=''
+@dataclass
+class ListPattern(Pattern): elements:list[Any]=field(default_factory=list); rest:Optional[str]=None
+@dataclass
+class DictPattern(Pattern): fields:list[tuple[Any,Any]]=field(default_factory=list)
+@dataclass
+class OrPattern(Pattern): patterns:list[Any]=field(default_factory=list)
 
 @dataclass
 class AwaitExpr(Expr): value:Optional[Expr]=None
+@dataclass
+class FunctionExpr(Expr): params:list[Any]=field(default_factory=list); body:list[Stmt]=field(default_factory=list)
+@dataclass
+class ComprehensionExpr(Expr): value:Optional[Expr]=None; name:str=''; iterable:Optional[Expr]=None; condition:Optional[Expr]=None; pattern:Any=None
+@dataclass
+class DictComprehensionExpr(Expr): key:Optional[Expr]=None; value:Optional[Expr]=None; name:str=''; iterable:Optional[Expr]=None; condition:Optional[Expr]=None; pattern:Any=None
+@dataclass
+class OptionalProperty(Expr): target:Optional[Expr]=None; name:str=''
+@dataclass
+class OptionalIndex(Expr): target:Optional[Expr]=None; index:Optional[Expr]=None
+@dataclass
+class OptionalCall(Expr): callee:Optional[Expr]=None; args:list[Expr]=field(default_factory=list)

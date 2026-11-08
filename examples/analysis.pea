@@ -1,0 +1,9 @@
+let data = [
+    {"name": "Ada", "score": 91},
+    {"name": "Linus", "score": 84},
+    {"name": "Grace", "score": 97}
+]
+
+print analysis.profile(data)
+print analysis.describe(data, "score")
+print analysis.to_markdown(analysis.profile(data))
