@@ -714,6 +714,100 @@ def parse_query(text: str) -> dict[str, Any]:
 def build_query(params: dict[str, Any]) -> str:
     return urllib.parse.urlencode(params or {}, doseq=True)
 
+
+def health(payload: dict[str, Any] | None = None) -> WebResponse:
+    body = {"status": "ok"}
+    if payload: body.update(payload)
+    return json_response(body)
+
+
+def envelope(data: Any = None, meta: dict[str, Any] | None = None, ok: bool = True) -> WebResponse:
+    body = {"ok": ok, "data": data}
+    if meta: body["meta"] = meta
+    return json_response(body)
+
+
+def with_links(data: Any, links: dict[str, str]) -> dict[str, Any]:
+    if isinstance(data, dict):
+        out = dict(data); out["_links"] = links; return out
+    return {"data": data, "_links": links}
+
+
+def negotiate(request, mapping: dict[str, Any], default: str = "json") -> WebResponse:
+    accept = ""
+    if hasattr(request, "headers"): accept = request.headers.get("accept", "")
+    elif isinstance(request, dict): accept = (request.get("headers") or {}).get("accept", "")
+    accept = str(accept).lower()
+    for key, value in (mapping or {}).items():
+        if key.lower() in accept or (key == "html" and "text/html" in accept) or (key == "json" and "application/json" in accept):
+            return normalize_response(value)
+    if default in (mapping or {}): return normalize_response(mapping[default])
+    if mapping: return normalize_response(next(iter(mapping.values())))
+    return error_response("Not Acceptable", status=406)
+
+
+def request_logger(prefix: str = ""):
+    def mw(request):
+        try:
+            m = getattr(request, "method", "?"); p = getattr(request, "path", "?")
+            print(f"{prefix}{m} {p}")
+        except Exception:
+            pass
+        return request
+    return mw
+
+
+def validation_error(errors: Any, message: str = "Validation failed") -> WebResponse:
+    body = {"error": message, "status": 422, "errors": errors}
+    return json_response(body, status=422)
+
+
+def content_type(mime: str, charset: str = "utf-8") -> dict[str, str]:
+    ct = str(mime)
+    if charset and "charset" not in ct and ct.startswith("text/") or "json" in ct or "xml" in ct or "javascript" in ct:
+        ct = f"{ct}; charset={charset}"
+    return {"Content-Type": ct}
+
+
+def merge_headers(*headers) -> dict[str, str]:
+    out = {}
+    for h in headers:
+        if isinstance(h, dict): out.update({str(k): str(v) for k, v in h.items()})
+    return out
+
+
+def query_int(request, name: str, default: int = 0) -> int:
+    q = request.query if hasattr(request, "query") else (request.get("query") or {}) if isinstance(request, dict) else {}
+    try: return int(float(q.get(name, default)))
+    except Exception: return int(default)
+
+
+def query_bool(request, name: str, default: bool = False) -> bool:
+    q = request.query if hasattr(request, "query") else (request.get("query") or {}) if isinstance(request, dict) else {}
+    v = q.get(name)
+    if v is None: return bool(default)
+    if isinstance(v, bool): return v
+    return str(v).lower() in ("1","true","yes","on")
+
+
+def api_key_auth(header: str = "x-api-key", query: str | None = "api_key"):
+    def get_key(request):
+        h = request.headers.get(header.lower(), "") if hasattr(request,"headers") else (request.get("headers") or {}).get(header.lower(),"")
+        if h: return h
+        if query:
+            q = request.query if hasattr(request,"query") else (request.get("query") or {})
+            return q.get(query)
+        return None
+    return get_key
+
+
+def method_is(request, *methods) -> bool:
+    m = request.method if hasattr(request, "method") else (request.get("method") if isinstance(request, dict) else "")
+    allowed = {str(x).upper() for x in methods}
+    if len(allowed)==1 and isinstance(list(methods)[0], (list,tuple,set)):
+        allowed = {str(x).upper() for x in list(methods)[0]}
+    return str(m).upper() in allowed
+
 def build_web_namespace(interpreter: Any) -> dict[str, Any]:
     def app():
         return PeaWebApp(interpreter if interpreter is not None else _CURRENT_INTERPRETER)
@@ -773,6 +867,18 @@ def build_web_namespace(interpreter: Any) -> dict[str, Any]:
         "security_headers": security_headers,
         "parse_query": parse_query,
         "build_query": build_query,
+        "health": health,
+        "envelope": envelope,
+        "with_links": with_links,
+        "negotiate": negotiate,
+        "request_logger": request_logger,
+        "validation_error": validation_error,
+        "content_type": content_type,
+        "merge_headers": merge_headers,
+        "query_int": query_int,
+        "query_bool": query_bool,
+        "api_key_auth": api_key_auth,
+        "method_is": method_is,
         "openapi": lambda app_obj, title="PeaLang App", version="1.0.0": app_obj.openapi(title, version),
         "serve": lambda app_obj, host="127.0.0.1", port=8000: app_obj.serve(host, port),
     }

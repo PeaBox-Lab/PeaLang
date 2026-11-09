@@ -132,10 +132,41 @@
 - Added `pea web-openapi <file> [--title T] [--version V]` (extracts OpenAPI from a file defining `app`; suppresses `app.serve` during extraction).
 - Added `pea hash <file> [--algo sha256]`.
 
+### Language and Runtime (v110 additions)
+- Added builtins/helpers: `min_by`, `max_by`, `without`, `xor`, `zip_object`, `ensure_list`, `ensure_dict`, `size`, `random_choice`, `sample_list`, `clone`, `deep_clone`, `deep_equal`, `nth`, `initial`, `rest`.
+
+### Data Analysis (v110 additions)
+- Added: `drop_columns`, `keep_columns`, `assign`, `round_col`, `abs_col`, `variance`, `std`, `covariance`, `idxmax`, `idxmin`.
+
+### Web and UX (v110 additions)
+- Added web helpers: `health`, `envelope`, `with_links`, `negotiate`, `request_logger` (middleware factory).
+- Added `ux.quickstart()` and `ux.commands()`.
+
+### Interop, CLI, and Templates (v110 additions)
+- Added interop helpers (host access; trusted contexts): `walk`, `readlines`, `writelines`, `tempfile`.
+- Added `pea openapi` alias for `web-openapi` and `pea quickstart`.
+- Added project template: `api` (CORS, `/health`, envelope/items endpoints, 404 handler).
+
+### Language and Runtime (v111 additions)
+- Added builtins/helpers: `group_by` (list→dict of lists), `frequencies`, `scan`, `hex_encode`/`hex_decode`, `ensure_str`/`ensure_int`/`ensure_float`, `pipe`, `apply`.
+
+### Data Analysis (v111 additions)
+- Added aggregates: `mean_col`, `sum_col`, `min_col`, `max_col`, `median_col`.
+- Added stats/series: `skew`, `kurtosis`, `expanding_mean`, `corr` (alias).
+- Added I/O: `to_jsonl`, `from_jsonl`.
+
+### Web (v111 additions)
+- Added: `validation_error`, `content_type`, `merge_headers`, `query_int`, `query_bool`, `api_key_auth`, `method_is`.
+
+### Interop, CLI, and Templates (v111 additions)
+- Added interop helpers (host access; trusted contexts): `env_all`, `expanduser`, `expandvars`, `touch`, `head_file`, `tail_file`.
+- Added CLI: `pea tree [path]`, `pea version --json`.
+- Added project template: `etl` (JSON load/transform/profile starter).
+
 ### Documentation and Quality
 - Updated `README.md`, `docs/USER_GUIDE.md`, `CHANGELOG.md`, and `docs/RELEASE_NOTES_1.0_EXPERIENCE.md`.
-- Added/expanded tests for v102–v109 features (language, analysis, web, interop, CLI).
-- Regression baseline: **671 passed, 1 skipped**.
+- Added/expanded tests for v102–v111 features (language, analysis, web, interop/UX, CLI/templates).
+- Regression baseline: **686 passed, 1 skipped**.
 
 ## 0.99.6 - 2026-10-27
 - Closed CodeQL high-severity findings in SFTP host verification, legacy HMAC trust storage, and type-system regular expressions.

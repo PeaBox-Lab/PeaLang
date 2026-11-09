@@ -7,9 +7,11 @@ DEFAULT_MANIFEST={'project':{'name':'my-pea-project','version':'0.1.0','entry':'
 TEMPLATES={
  'default':'print "Hello from PeaLang"\n',
  'webapp':'let app = web.app()\n\nfunction home(req) {\n    return web.json({"message": "Hello from PeaLang webapp", "path": req["path"]})\n}\n\napp.get("/", home)\napp.get("/health", function(req) { return web.json({"status": "ok"}) })\n\nprint "Starting PeaLang webapp on http://127.0.0.1:8080"\napp.serve("127.0.0.1", 8080)\n',
+ 'api':'let app = web.app()\napp.enable_cors()\n\napp.get("/health", function(req){ return web.health() })\napp.get("/v1/items", function(req){ return web.envelope([{"id":1,"name":"example"}], {"count":1}) })\napp.post("/v1/items", function(req){\n  let body = req["json"] ?? {}\n  return web.created({"id": 2, "item": body}, "/v1/items/2")\n})\napp.not_found(function(req){ return web.not_found("Route not found: " + req["path"]) })\n\nprint "API on http://127.0.0.1:8080"\napp.serve("127.0.0.1", 8080)\n',
  'analysis':'let data = [{"name": "Ada", "score": 91}, {"name": "Linus", "score": 84}, {"name": "Grace", "score": 97}]\nprint analysis.profile(data)\nprint analysis.describe(data, "score")\nprint "Top scores:"\nfor row in data { print row["name"] + ": " + row["score"] }\n',
  'library':'export function add(a, b) {\n    return a + b\n}\n\nexport function greet(name) {\n    return "Hello, " + name\n}\n',
  'interop':'let result = interop.run("python", ["--version"])\nprint result\n',
+ 'etl':'// ETL starter: load -> transform -> output\nlet raw = analysis.from_json(interop.read_text("data.json"))\nprint "rows: " + str(len(raw))\nlet clean = analysis.dropna(raw)\nlet prof = analysis.profile(clean)\ninterop.write_json("profile.json", prof)\nprint analysis.summary(clean)\n',
 }
 
 def load_manifest(start='.'):

@@ -11,6 +11,7 @@ from __future__ import annotations
 import ctypes
 import importlib
 import json
+import os
 import subprocess
 import sys
 import urllib.request
@@ -305,6 +306,61 @@ def hash_file(path: str, algo: str = "sha256") -> str:
             h.update(chunk)
     return h.hexdigest()
 
+
+def walk(path: str = ".") -> list[str]:
+    out = []
+    for root, dirs, files in os.walk(str(path)):
+        for name in files:
+            out.append(str(Path(root) / name))
+    return sorted(out)
+
+
+def readlines(path: str, encoding: str = "utf-8") -> list[str]:
+    return Path(path).read_text(encoding=encoding).splitlines()
+
+
+def writelines(path: str, lines: list[str], encoding: str = "utf-8") -> str:
+    p = Path(path); p.parent.mkdir(parents=True, exist_ok=True)
+    p.write_text("\n".join(str(x) for x in (lines or [])), encoding=encoding)
+    return str(p)
+
+
+def tempfile_path(prefix: str = "pea_", suffix: str = ".tmp", text: str | None = None) -> str:
+    import tempfile
+    fd, name = tempfile.mkstemp(prefix=prefix, suffix=suffix)
+    os.close(fd)
+    if text is not None:
+        Path(name).write_text(str(text), encoding="utf-8")
+    return name
+
+
+def env_all() -> dict[str, str]:
+    return dict(os.environ)
+
+
+def expanduser(path: str) -> str:
+    return str(Path(path).expanduser())
+
+
+def expandvars(path: str) -> str:
+    return os.path.expandvars(str(path))
+
+
+def touch(path: str) -> str:
+    p = Path(path); p.parent.mkdir(parents=True, exist_ok=True)
+    p.touch(exist_ok=True)
+    return str(p)
+
+
+def head_file(path: str, n: int = 10, encoding: str = "utf-8") -> list[str]:
+    lines = Path(path).read_text(encoding=encoding).splitlines()
+    return lines[:int(n)]
+
+
+def tail_file(path: str, n: int = 10, encoding: str = "utf-8") -> list[str]:
+    lines = Path(path).read_text(encoding=encoding).splitlines()
+    return lines[-int(n):] if n else []
+
 def build_interop_namespace() -> dict[str, Any]:
     return {
         "call_python": call_python,
@@ -341,7 +397,17 @@ def build_interop_namespace() -> dict[str, Any]:
         "list_dir": list_dir,
         "stat": stat,
         "hash_file": hash_file,
+        "walk": walk,
+        "readlines": readlines,
+        "writelines": writelines,
+        "tempfile": tempfile_path,
         "env": env_get,
+        "env_all": env_all,
+        "expanduser": expanduser,
+        "expandvars": expandvars,
+        "touch": touch,
+        "head_file": head_file,
+        "tail_file": tail_file,
         "generate_typescript": generate_typescript_client,
         "generate_java": generate_java_client,
         "generate_python_stub": generate_python_stub,

@@ -1057,6 +1057,144 @@ def split_column(data: Any, column: str, sep: str = ",", names: list[str] | None
         out.append(nr)
     return out
 
+
+def drop_columns(data: Any, *cols) -> list[dict[str, Any]]:
+    if len(cols)==1 and isinstance(cols[0], list): cols=tuple(cols[0])
+    drop=set(cols)
+    return [{k:v for k,v in r.items() if k not in drop} for r in _rows(data)]
+
+
+def keep_columns(data: Any, *cols) -> list[dict[str, Any]]:
+    if len(cols)==1 and isinstance(cols[0], list): cols=list(cols[0])
+    else: cols=list(cols)
+    return [{c:r.get(c) for c in cols} for r in _rows(data)]
+
+
+def assign(data: Any, mapping: dict[str, Any]) -> list[dict[str, Any]]:
+    rows=_rows(data); out=[]
+    for r in rows:
+        nr=dict(r)
+        for k,v in (mapping or {}).items(): nr[k]=v
+        out.append(nr)
+    return out
+
+
+def round_col(data: Any, column: str, ndigits: int = 0) -> list[dict[str, Any]]:
+    rows=_rows(data); out=[]
+    for r in rows:
+        nr=dict(r); v=_numeric(nr.get(column))
+        nr[column]=round(v, int(ndigits)) if v is not None else nr.get(column)
+        out.append(nr)
+    return out
+
+
+def abs_col(data: Any, column: str) -> list[dict[str, Any]]:
+    rows=_rows(data); out=[]
+    for r in rows:
+        nr=dict(r); v=_numeric(nr.get(column))
+        nr[column]=abs(v) if v is not None else nr.get(column)
+        out.append(nr)
+    return out
+
+
+def variance(data: Any, column: str) -> float | None:
+    vals=[v for v in (_numeric(r.get(column)) for r in _rows(data)) if v is not None]
+    if len(vals)<2: return 0.0 if len(vals)==1 else None
+    m=mean(vals); return sum((x-m)**2 for x in vals)/(len(vals)-1)
+
+
+def std_col(data: Any, column: str) -> float | None:
+    v=variance(data,column)
+    return (v**0.5) if v is not None else None
+
+
+def covariance(data: Any, x: str, y: str) -> float | None:
+    rows=_rows(data)
+    xs=[(_numeric(r.get(x)), _numeric(r.get(y))) for r in rows]
+    xs=[(a,b) for a,b in xs if a is not None and b is not None]
+    if len(xs)<2: return None
+    mx=mean([a for a,_ in xs]); my=mean([b for _,b in xs])
+    return sum((a-mx)*(b-my) for a,b in xs)/(len(xs)-1)
+
+
+def idxmax(data: Any, column: str) -> int | None:
+    rows=_rows(data); best=None; bi=None
+    for i,r in enumerate(rows):
+        v=_numeric(r.get(column))
+        if v is None: continue
+        if best is None or v>best: best=v; bi=i
+    return bi
+
+
+def idxmin(data: Any, column: str) -> int | None:
+    rows=_rows(data); best=None; bi=None
+    for i,r in enumerate(rows):
+        v=_numeric(r.get(column))
+        if v is None: continue
+        if best is None or v<best: best=v; bi=i
+    return bi
+
+
+def mean_col(data: Any, column: str) -> float | None:
+    vals=[v for v in (_numeric(r.get(column)) for r in _rows(data)) if v is not None]
+    return mean(vals) if vals else None
+
+def sum_col(data: Any, column: str) -> float:
+    return sum(v for v in (_numeric(r.get(column)) for r in _rows(data)) if v is not None)
+
+def min_col(data: Any, column: str) -> float | None:
+    vals=[v for v in (_numeric(r.get(column)) for r in _rows(data)) if v is not None]
+    return min(vals) if vals else None
+
+def max_col(data: Any, column: str) -> float | None:
+    vals=[v for v in (_numeric(r.get(column)) for r in _rows(data)) if v is not None]
+    return max(vals) if vals else None
+
+def median_col(data: Any, column: str) -> float | None:
+    vals=[v for v in (_numeric(r.get(column)) for r in _rows(data)) if v is not None]
+    return median(vals) if vals else None
+
+def skew(data: Any, column: str) -> float | None:
+    vals=[v for v in (_numeric(r.get(column)) for r in _rows(data)) if v is not None]
+    n=len(vals)
+    if n<3: return None
+    m=mean(vals); s2=sum((x-m)**2 for x in vals)/(n-1); sd=s2**0.5
+    if sd==0: return 0.0
+    m3=sum((x-m)**3 for x in vals)/n
+    return (n**2/((n-1)*(n-2))) * (m3/(sd**3))
+
+def kurtosis(data: Any, column: str) -> float | None:
+    vals=[v for v in (_numeric(r.get(column)) for r in _rows(data)) if v is not None]
+    n=len(vals)
+    if n<4: return None
+    m=mean(vals); s2=sum((x-m)**2 for x in vals)/n
+    if s2==0: return 0.0
+    m4=sum((x-m)**4 for x in vals)/n
+    return m4/(s2**2) - 3.0
+
+def expanding_mean(data: Any, column: str) -> list[dict[str, Any]]:
+    rows=_rows(data); vals=[]; out=[]
+    for r in rows:
+        nr=dict(r); v=_numeric(r.get(column))
+        if v is not None: vals.append(v)
+        nr[column+"_expanding_mean"]=mean(vals) if vals else None
+        out.append(nr)
+    return out
+
+def to_jsonl(data: Any) -> str:
+    import json
+    return "\n".join(json.dumps(r, ensure_ascii=False, default=str) for r in _rows(data))
+
+def from_jsonl(text: str) -> list[dict[str, Any]]:
+    import json
+    out=[]
+    for line in str(text).splitlines():
+        line=line.strip()
+        if not line: continue
+        try: v=json.loads(line); out.append(v if isinstance(v,dict) else {"value":v})
+        except Exception: pass
+    return out
+
 def build_analysis_namespace() -> dict[str, Any]:
     return {
         "profile": profile,
@@ -1146,5 +1284,26 @@ def build_analysis_namespace() -> dict[str, Any]:
         "one_hot": one_hot,
         "split_column": split_column,
         "percentile": quantile,
+        "drop_columns": drop_columns,
+        "keep_columns": keep_columns,
+        "assign": assign,
+        "round_col": round_col,
+        "abs_col": abs_col,
+        "variance": variance,
+        "std": std_col,
+        "covariance": covariance,
+        "idxmax": idxmax,
+        "idxmin": idxmin,
+        "mean_col": mean_col,
+        "sum_col": sum_col,
+        "min_col": min_col,
+        "max_col": max_col,
+        "median_col": median_col,
+        "skew": skew,
+        "kurtosis": kurtosis,
+        "expanding_mean": expanding_mean,
+        "to_jsonl": to_jsonl,
+        "from_jsonl": from_jsonl,
+        "corr": correlation,
     }
 

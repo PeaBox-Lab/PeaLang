@@ -53,9 +53,23 @@ This release delivers a broad, practical application-development surface on top 
 python -m pytest -q
 ```
 
-**Result:** 671 passed, 1 skipped.
+**Result:** 686 passed, 1 skipped.
 
-New/updated coverage includes: language ergonomics (comprehensions, `in`/`not in`, `**`, match/destructuring, helpers/builtins), web routing/groups/CORS/OpenAPI/validation/SSE/file/auth/cache/status/redirect/security helpers, analysis profiling/transforms/stats/IO/charts/melt/zscore/histogram/cut/shape/string/reshape/timeseries/encoding, interop (Python/native/process/HTTP/JSON-RPC/env/files/paths/copy/hash/codegen), and CLI (`eval -e/-f`, `check/lint --json`, `analyze`, `web-openapi`, `hash`, `info`, `new`, `serve-web`, templates/doctor).
+New/updated coverage includes: language ergonomics (comprehensions, `in`/`not in`, `**`, match/destructuring, helpers/builtins), web routing/groups/CORS/OpenAPI/validation/SSE/file/auth/cache/status/redirect/security/health/envelope/validation helpers, analysis profiling/transforms/stats/IO/charts/melt/zscore/histogram/cut/shape/string/reshape/timeseries/encoding/columns/aggregates/jsonl, interop (Python/native/process/HTTP/JSON-RPC/env/files/paths/copy/hash/walk/temp/codegen), UX/templates, and CLI (`eval -e/-f`, `check/lint --json`, `analyze`, `web-openapi`/`openapi`, `hash`, `tree`, `version --json`, `quickstart`, `info`, `new`, `serve-web`, templates/doctor).
+
+## Additional Batch Notes (v111)
+- **Builtins:** `group_by` (list), `frequencies`, `scan`, `hex_encode`/`hex_decode`, `ensure_str`/`ensure_int`/`ensure_float`, `pipe`, `apply`.
+- **Analysis:** `mean_col`/`sum_col`/`min_col`/`max_col`/`median_col`, `skew`, `kurtosis`, `expanding_mean`, `corr` (alias), `to_jsonl`/`from_jsonl`.
+- **Web:** `validation_error`, `content_type`, `merge_headers`, `query_int`/`query_bool`, `api_key_auth`, `method_is`.
+- **Interop (host, trusted):** `env_all`, `expanduser`, `expandvars`, `touch`, `head_file`/`tail_file`.
+- **CLI/Templates:** `pea tree [path]`, `pea version --json`, `etl` project template.
+
+## Additional Batch Notes (v110)
+- **Builtins:** `min_by`, `max_by`, `without`, `xor`, `zip_object`, `ensure_list`, `ensure_dict`, `size`, `random_choice`, `sample_list`, `clone`, `deep_clone`, `deep_equal`, `nth`, `initial`, `rest`.
+- **Analysis:** `drop_columns`, `keep_columns`, `assign`, `round_col`, `abs_col`, `variance`, `std`, `covariance`, `idxmax`, `idxmin`.
+- **Web/UX:** `web.health`, `web.envelope`, `web.with_links`, `web.negotiate`, `web.request_logger`; `ux.quickstart`, `ux.commands`.
+- **Interop (host, trusted):** `walk`, `readlines`, `writelines`, `tempfile`.
+- **CLI/Templates:** `pea openapi` alias, `pea quickstart`, `api` project template.
 
 ## Additional Batch Notes (v109)
 - **Builtins:** `has_path`, `set_path` (immutable), `map_values`, `map_keys`, `pick_by`, `omit_by`, `shuffle`, `product`, `median`, `parse_int`, `parse_float`, `strip_prefix`, `strip_suffix`, `sha256`, `url_encode`, `url_decode`, `html_escape`, `title_case`, `center`.

@@ -32,13 +32,16 @@ pea doctor
 | `pea dis <file.peac>` | Disassemble bytecode |
 | `pea vm <file.pea|.peac>` | Run via bytecode VM |
 | `pea analyze <file.json|csv> [--json] [--head N]` | Profile a JSON/CSV dataset (analysis) |
-| `pea web-openapi <file.pea> [--title T] [--version V]` | Extract OpenAPI from a file defining `app` |
+| `pea web-openapi` / `pea openapi <file.pea> [--title T] [--version V]` | Extract OpenAPI from a file defining `app` |
 | `pea hash <file> [--algo sha256]` | Compute file hash |
+| `pea tree [path]` | List `.pea` source files |
+| `pea version [--json]` | Print version (JSON supported) |
 | `pea typecheck <paths...>` | Optional type checking |
 | `pea semantic <paths...>` | Semantic analysis |
+| `pea quickstart` | Print quickstart commands |
 | `pea doctor` | Environment and dependency diagnostics |
 | `pea templates` | List project templates |
-| `pea init [path] [--name N] [--template T]` | Create a project (`default`, `webapp`, `analysis`, `library`, `interop`) |
+| `pea init [path] [--name N] [--template T]` | Create a project (`default`, `webapp`, `api`, `analysis`, `etl`, `library`, `interop`) |
 | `pea new [path] [--template T]` | Alias for `init` |
 | `pea serve-web <file.pea> [--host H] [--port P]` | Run a file and serve its exported `app` (best-effort) |
 | `pea project [path]` | Show project manifest info |
@@ -145,7 +148,7 @@ print spec
 
 Request fields commonly available: `method`, `path`, `headers`, `query`, `params`, `cookies`, `body`, `json`, `remote_addr`.
 
-Response/helpers: `web.json/html/text/redirect/error/file/sse/response`, `web.ok()`, `web.problem()`, `web.no_content()`, `web.created()`, `web.accepted()`, `web.bad_request()`, `web.unauthorized()`, `web.forbidden()`, `web.not_found()`, `web.method_not_allowed()`, `web.conflict()`, `web.gone()`, `web.unprocessable()`, `web.too_many_requests()`, `web.server_error()`, `web.not_modified()`, redirects (`moved_permanently`/`see_other`/`temporary_redirect`/`permanent_redirect`), `web.download()`, `web.status()`, `web.render_template()`, `web.set_cookie()`, `web.validate()`, `web.rate_limit()`, `web.bearer_auth()`, `web.parse_basic_auth()`, `web.request_id()`, `web.json_error()`, `web.etag()`, `web.cache_control()`, `web.basic_auth()`, `web.pagination()`, `web.security_headers()`, `web.parse_query()`/`web.build_query()`, `web.url_join()`. Apps also support `app.group()`, `patch/options`, and CORS (`app.enable_cors()`).
+Response/helpers: `web.json/html/text/redirect/error/file/sse/response`, `web.ok()`, `web.problem()`, `web.health()`, `web.envelope()`, `web.no_content()`, `web.created()`/`accepted()`, `web.bad_request()`/`unauthorized()`/`forbidden()`/`not_found()`/`method_not_allowed()`/`conflict()`/`gone()`/`unprocessable()`/`too_many_requests()`/`server_error()`/`validation_error()`, `web.not_modified()`, redirects, `web.download()`/`status()`/`negotiate()`, `web.render_template()`/`set_cookie()`/`with_links()`, `web.validate()`/`rate_limit()`/`bearer_auth()`/`api_key_auth()`/`parse_basic_auth()`/`request_id()`/`request_logger()`, `web.query_int()`/`query_bool()`/`method_is()`, `web.json_error()`/`etag()`/`cache_control()`/`security_headers()`/`content_type()`/`merge_headers()`/`parse_query()`/`build_query()`/`url_join()`/`pagination()`. Apps also support `app.group()`, `patch/options`, and CORS (`app.enable_cors()`).
 
 ## Data Analysis (`analysis` / `std.analysis`)
 
@@ -169,7 +172,7 @@ print analysis.to_csv(top)
 print analysis.bar_chart(data, "name", "score")
 ```
 
-Key functions include: `profile`, `describe`, `summary`, `shape`, `correlation`, `corr_matrix`, `quantile`/`percentile`, `outliers`, `isna`, `notna`, `clean_missing`, `fillna`, `ffill`, `bfill`, `dropna`, `impute`, `replace_values`, `drop_duplicates`, `rename`, `cast`/`astype`, `select`, `sort_by`, `filter_rows`, `query`, `group_by`, `pivot`, `pivot_wider`, `crosstab`, `one_hot`, `join`/`merge`, `concat`, `add_column`, `cumsum`, `cummax`/`cummin`/`cumprod`, `normalize`, `sample`, `unique`, `value_counts`, `nunique`, `count`, `duplicated`, `nlargest`, `nsmallest`, `head`, `tail`, `between`, `clip`, `mode`, `melt`, `transpose`, `explode`, `where`, `split_column`, `shift`/`lag`/`lead`, `rank`, `pct_change`, `diff`, `rolling_mean`, `zscore`, `histogram`, `cut`, `str_transform`/`str_lower`/`str_upper`/`str_strip`/`str_contains`/`str_replace`, `schema`, `from_csv`, `from_json`, `to_json`, `to_records`, `to_dict`, `to_csv`, `to_markdown`, `to_html`, `bar_chart`, `line_chart`.
+Key functions include: `profile`, `describe`, `summary`, `shape`, `correlation`/`corr`, `corr_matrix`, `mean_col`/`sum_col`/`min_col`/`max_col`/`median_col`, `quantile`/`percentile`, `variance`, `std`, `skew`, `kurtosis`, `covariance`, `outliers`, `isna`, `notna`, `clean_missing`, `fillna`, `ffill`, `bfill`, `dropna`, `impute`, `replace_values`, `drop_duplicates`, `rename`, `cast`/`astype`, `select`, `sort_by`, `filter_rows`, `query`, `group_by`, `pivot`, `pivot_wider`, `crosstab`, `one_hot`, `join`/`merge`, `concat`, `add_column`, `assign`, `drop_columns`/`keep_columns`, `round_col`/`abs_col`, `cumsum`, `cummax`/`cummin`/`cumprod`, `normalize`, `sample`, `unique`, `value_counts`, `nunique`, `count`, `duplicated`, `nlargest`/`nsmallest`, `idxmax`/`idxmin`, `head`/`tail`, `between`, `clip`, `mode`, `melt`, `transpose`, `explode`, `where`, `split_column`, `shift`/`lag`/`lead`, `rank`, `pct_change`, `diff`, `rolling_mean`, `expanding_mean`, `zscore`, `histogram`, `cut`, `str_transform`/`str_lower`/`str_upper`/`str_strip`/`str_contains`/`str_replace`, `schema`, `from_csv`, `from_json`/`from_jsonl`, `to_json`/`to_jsonl`, `to_records`, `to_dict`, `to_csv`, `to_markdown`, `to_html`, `bar_chart`, `line_chart`.
 
 ## Cross-Language Interop (`interop` / `std.interop`)
 
@@ -210,4 +213,4 @@ pea check .
 pea lint .
 ```
 
-Current experience-layer validation baseline in this workspace: **671 passed, 1 skipped** (see release notes/changelog for details).
+Current experience-layer validation baseline in this workspace: **686 passed, 1 skipped** (see release notes/changelog for details).

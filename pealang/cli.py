@@ -334,6 +334,10 @@ def main(argv=None):
                 print('`app` does not support serve()',file=sys.stderr); return 1
             print(f'Serving {a.file} on http://{a.host}:{a.port}'); app.serve(a.host,a.port); return 0
 
+        if c=='quickstart':
+            from .ux import quickstart
+            print(quickstart()); return 0
+
         if c=='doctor':
 
             from .ux import doctor
@@ -351,11 +355,14 @@ def main(argv=None):
             if a.file: src=Path(a.file).read_text(encoding='utf-8')
             if not src:print('Usage: pea eval -e "print 1+1" | pea eval -f file.pea',file=sys.stderr);return 2
             execute(src,source_name=a.file or '<eval>');return 0
-        if c in ('version','-v'):print(f'PeaLang {__version__}');return 0
+        if c in ('version','-v'):
+            if '--json' in argv[1:]: print(json.dumps({'version':__version__},indent=2))
+            else: print(f'PeaLang {__version__}')
+            return 0
         if c=='info':
             from .stdlib import stdlib_manifest
             sm=stdlib_manifest();mods=sm.get('modules',sm)
-            info={'version':__version__,'stdlib':list(mods.keys()) if isinstance(mods,dict) else mods,'commands':['run','eval','repl','check','lint','fmt','test','compile','vm','dis','init','new','serve-web','doctor','templates','info','project','serve','stdlib','typecheck','docs','analyze','web-openapi','hash']}
+            info={'version':__version__,'stdlib':list(mods.keys()) if isinstance(mods,dict) else mods,'commands':['run','eval','repl','check','lint','fmt','test','compile','vm','dis','init','new','serve-web','doctor','templates','info','project','serve','stdlib','typecheck','docs','analyze','web-openapi','openapi','hash','tree','quickstart']}
             print(json.dumps(info,indent=2));return 0
 
         if c=='project':print(json.dumps(project_info(argv[1] if len(argv)>1 else '.'),indent=2));return 0
@@ -406,7 +413,7 @@ def main(argv=None):
             result=_profile(data)
             print(json.dumps(result,indent=2,default=str) if a.json else json.dumps(result,indent=2,default=str));return 0
 
-        if c=='web-openapi':
+        if c in ('web-openapi','openapi'):
             p=argparse.ArgumentParser(prog='pea web-openapi');p.add_argument('file');p.add_argument('--title',default='PeaLang App');p.add_argument('--version',dest='ver',default='1.0.0');a=p.parse_args(argv[1:])
             from .interpreter import Interpreter
             from .parser import parse_source
@@ -430,6 +437,12 @@ def main(argv=None):
             with open(a.file,'rb') as f:
                 for chunk in iter(lambda:f.read(65536),b''): h.update(chunk)
             print(h.hexdigest()); return 0
+
+        if c=='tree':
+            p=argparse.ArgumentParser(prog='pea tree');p.add_argument('path',nargs='?',default='.');a=p.parse_args(argv[1:])
+            files=sorted(str(f) for f in discover_pea([a.path]))
+            for f in files: print(f)
+            print(f'{len(files)} .pea file(s)'); return 0
 
         if c=='run':
 
@@ -523,7 +536,7 @@ def main(argv=None):
 
         if allow:argv.remove('--allow-process')
 
-        if len(argv)!=1:print('Usage: pea [run|eval|repl|check|lint|fmt|test|compile|vm|dis|init|new|serve-web|doctor|templates|info|project|docs|analyze|web-openapi|hash|typecheck|stdlib] ...',file=sys.stderr);return 2
+        if len(argv)!=1:print('Usage: pea [run|eval|repl|check|lint|fmt|test|compile|vm|dis|init|new|serve-web|doctor|quickstart|templates|info|project|docs|analyze|web-openapi|hash|tree|typecheck|stdlib] ...',file=sys.stderr);return 2
 
         return run_file(argv[0],allow)
 

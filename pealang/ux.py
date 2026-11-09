@@ -61,5 +61,25 @@ def format_doctor(report: dict[str, Any]) -> str:
     return json.dumps(report, indent=2, default=str)
 
 
+
+
+def quickstart() -> str:
+    return "\n".join([
+        "PeaLang quickstart:",
+        "  pea doctor                     Check your environment",
+        "  pea init myapp --template webapp  Create a web app",
+        "  pea init mydata --template analysis  Create a data project",
+        "  pea run main.pea               Run a program",
+        "  pea check .                    Check source files",
+        "  pea analyze data.json          Profile a dataset",
+        "  pea web-openapi app.pea        Extract OpenAPI from a web app",
+        "  pea repl                       Start interactive REPL",
+    ])
+
+
+def commands() -> list[str]:
+    return ["run","eval","repl","check","lint","fmt","test","compile","vm","dis","analyze","web-openapi","hash",
+            "init","new","serve-web","doctor","templates","info","project","serve","stdlib","typecheck","docs"]
+
 def build_ux_namespace() -> dict[str, Any]:
-    return {"doctor": doctor, "explain": explain_error, "suggest": suggest}
+    return {"doctor": doctor, "explain": explain_error, "suggest": suggest, "quickstart": quickstart, "commands": commands}
