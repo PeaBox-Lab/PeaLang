@@ -53,9 +53,16 @@ This release delivers a broad, practical application-development surface on top 
 python -m pytest -q
 ```
 
-**Result:** 665 passed, 1 skipped.
+**Result:** 671 passed, 1 skipped.
 
-New/updated coverage includes: language ergonomics (comprehensions, `in`/`not in`, `**`, match/destructuring, helpers/builtins), web routing/groups/CORS/OpenAPI/validation/SSE/file/auth/cache/status helpers, analysis profiling/transforms/stats/IO/charts/melt/zscore/histogram/cut/shape/string/reshape, interop (Python/native/process/HTTP/JSON-RPC/env/files/paths/codegen), and CLI (`eval -e/-f`, `check/lint --json`, `analyze`, `info`, `new`, `serve-web`, templates/doctor).
+New/updated coverage includes: language ergonomics (comprehensions, `in`/`not in`, `**`, match/destructuring, helpers/builtins), web routing/groups/CORS/OpenAPI/validation/SSE/file/auth/cache/status/redirect/security helpers, analysis profiling/transforms/stats/IO/charts/melt/zscore/histogram/cut/shape/string/reshape/timeseries/encoding, interop (Python/native/process/HTTP/JSON-RPC/env/files/paths/copy/hash/codegen), and CLI (`eval -e/-f`, `check/lint --json`, `analyze`, `web-openapi`, `hash`, `info`, `new`, `serve-web`, templates/doctor).
+
+## Additional Batch Notes (v109)
+- **Builtins:** `has_path`, `set_path` (immutable), `map_values`, `map_keys`, `pick_by`, `omit_by`, `shuffle`, `product`, `median`, `parse_int`, `parse_float`, `strip_prefix`, `strip_suffix`, `sha256`, `url_encode`, `url_decode`, `html_escape`, `title_case`, `center`.
+- **Analysis:** `shift`, `lag`, `lead`, `cummax`, `cummin`, `cumprod`, `replace_values`, `one_hot`, `split_column`, `percentile` (alias).
+- **Web:** `bad_request`, `server_error`, `not_modified`, `moved_permanently`, `see_other`, `temporary_redirect`, `permanent_redirect`, `security_headers`, `parse_query`, `build_query`.
+- **Interop (host, trusted; `remove_file` destructive):** `copy_file`, `remove_file`, `list_dir`, `stat`, `hash_file`.
+- **CLI:** `pea web-openapi <file> [--title T] [--version V]`, `pea hash <file> [--algo sha256]`.
 
 ## Additional Batch Notes (v108)
 - **Builtins:** `is_empty`, `compact`, `defaults`, `invert`, `to_pairs`, `from_pairs`, `sum_by`, `avg`, `capitalize`, `snake_case`, `kebab_case`, `slugify`, `truncate`, `union`, `intersection`, `difference`.

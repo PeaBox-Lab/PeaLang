@@ -667,6 +667,53 @@ def status_response(status: int, body: Any = "", headers: dict[str, str] | None 
         return json_response(body, status=status, headers=headers)
     return WebResponse(body, status=status, headers=headers)
 
+
+def bad_request(message: str = "Bad Request") -> WebResponse:
+    return error_response(message, status=400)
+
+
+def server_error(message: str = "Internal Server Error") -> WebResponse:
+    return error_response(message, status=500)
+
+
+def not_modified(etag: str | None = None) -> WebResponse:
+    headers = {"ETag": etag} if etag else None
+    return WebResponse("", status=304, headers=headers)
+
+
+def moved_permanently(location: str) -> WebResponse:
+    return redirect(location, status=301)
+
+
+def see_other(location: str) -> WebResponse:
+    return redirect(location, status=303)
+
+
+def temporary_redirect(location: str) -> WebResponse:
+    return redirect(location, status=307)
+
+
+def permanent_redirect(location: str) -> WebResponse:
+    return redirect(location, status=308)
+
+
+def security_headers() -> dict[str, str]:
+    return {
+        "X-Content-Type-Options": "nosniff",
+        "X-Frame-Options": "DENY",
+        "Referrer-Policy": "no-referrer",
+        "Permissions-Policy": "geolocation=(), microphone=(), camera=()",
+    }
+
+
+def parse_query(text: str) -> dict[str, Any]:
+    parsed = urllib.parse.parse_qs(str(text).lstrip("?"), keep_blank_values=True)
+    return {k: (v[0] if len(v) == 1 else v) for k, v in parsed.items()}
+
+
+def build_query(params: dict[str, Any]) -> str:
+    return urllib.parse.urlencode(params or {}, doseq=True)
+
 def build_web_namespace(interpreter: Any) -> dict[str, Any]:
     def app():
         return PeaWebApp(interpreter if interpreter is not None else _CURRENT_INTERPRETER)
@@ -710,12 +757,22 @@ def build_web_namespace(interpreter: Any) -> dict[str, Any]:
         "url_join": url_join,
         "unauthorized": unauthorized,
         "forbidden": forbidden,
+        "bad_request": bad_request,
+        "server_error": server_error,
         "conflict": conflict,
         "too_many_requests": too_many_requests,
         "gone": gone,
         "unprocessable": unprocessable,
         "download": download_response,
         "status": status_response,
+        "not_modified": not_modified,
+        "moved_permanently": moved_permanently,
+        "see_other": see_other,
+        "temporary_redirect": temporary_redirect,
+        "permanent_redirect": permanent_redirect,
+        "security_headers": security_headers,
+        "parse_query": parse_query,
+        "build_query": build_query,
         "openapi": lambda app_obj, title="PeaLang App", version="1.0.0": app_obj.openapi(title, version),
         "serve": lambda app_obj, host="127.0.0.1", port=8000: app_obj.serve(host, port),
     }

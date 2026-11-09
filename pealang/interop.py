@@ -266,6 +266,45 @@ def platform_info() -> dict[str, str]:
     import platform
     return {"system": platform.system(), "release": platform.release(), "python": platform.python_version(), "machine": platform.machine()}
 
+
+def copy_file(src: str, dst: str) -> str:
+    import shutil
+    d = Path(dst); d.parent.mkdir(parents=True, exist_ok=True)
+    shutil.copy2(str(src), str(d))
+    return str(d)
+
+
+def remove_file(path: str) -> bool:
+    p = Path(path)
+    if p.is_file() or p.is_symlink():
+        p.unlink(); return True
+    if p.is_dir():
+        p.rmdir(); return True
+    return False
+
+
+def list_dir(path: str = ".") -> list[str]:
+    return sorted(p.name for p in Path(path).iterdir())
+
+
+def stat(path: str) -> dict[str, Any]:
+    p = Path(path)
+    try:
+        st = p.stat()
+        return {"path": str(p), "exists": True, "is_file": p.is_file(), "is_dir": p.is_dir(),
+                "size": st.st_size, "mtime": st.st_mtime}
+    except Exception:
+        return {"path": str(p), "exists": False}
+
+
+def hash_file(path: str, algo: str = "sha256") -> str:
+    import hashlib
+    h = hashlib.new(algo)
+    with open(path, "rb") as f:
+        for chunk in iter(lambda: f.read(65536), b""):
+            h.update(chunk)
+    return h.hexdigest()
+
 def build_interop_namespace() -> dict[str, Any]:
     return {
         "call_python": call_python,
@@ -297,6 +336,11 @@ def build_interop_namespace() -> dict[str, Any]:
         "abspath": abspath,
         "cwd": cwd,
         "platform": platform_info,
+        "copy_file": copy_file,
+        "remove_file": remove_file,
+        "list_dir": list_dir,
+        "stat": stat,
+        "hash_file": hash_file,
         "env": env_get,
         "generate_typescript": generate_typescript_client,
         "generate_java": generate_java_client,

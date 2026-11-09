@@ -30,8 +30,10 @@ pea doctor
 | `pea test [paths...]` | Run PeaLang/native tests (`--filter`, `--coverage`) |
 | `pea compile <file.pea>` | Compile to `.peac` bytecode |
 | `pea dis <file.peac>` | Disassemble bytecode |
-| `pea analyze <file.json|csv> [--json] [--head N]` | Profile a JSON/CSV dataset (analysis) |
 | `pea vm <file.pea|.peac>` | Run via bytecode VM |
+| `pea analyze <file.json|csv> [--json] [--head N]` | Profile a JSON/CSV dataset (analysis) |
+| `pea web-openapi <file.pea> [--title T] [--version V]` | Extract OpenAPI from a file defining `app` |
+| `pea hash <file> [--algo sha256]` | Compute file hash |
 | `pea typecheck <paths...>` | Optional type checking |
 | `pea semantic <paths...>` | Semantic analysis |
 | `pea doctor` | Environment and dependency diagnostics |
@@ -143,7 +145,7 @@ print spec
 
 Request fields commonly available: `method`, `path`, `headers`, `query`, `params`, `cookies`, `body`, `json`, `remote_addr`.
 
-Response/helpers: `web.json/html/text/redirect/error/file/sse/response`, `web.ok()`, `web.problem()`, `web.no_content()`, `web.created()`, `web.accepted()`, `web.unauthorized()`, `web.forbidden()`, `web.conflict()`, `web.too_many_requests()`, `web.gone()`, `web.unprocessable()`, `web.download()`, `web.status()`, `web.render_template()`, `web.set_cookie()`, `web.validate()`, `web.rate_limit()`, `web.bearer_auth()`, `web.parse_basic_auth()`, `web.request_id()`, `web.json_error()`, `web.etag()`, `web.cache_control()`, `web.basic_auth()`, `web.pagination()`. Apps also support `app.group()`, `patch/options`, and CORS (`app.enable_cors()`).
+Response/helpers: `web.json/html/text/redirect/error/file/sse/response`, `web.ok()`, `web.problem()`, `web.no_content()`, `web.created()`, `web.accepted()`, `web.bad_request()`, `web.unauthorized()`, `web.forbidden()`, `web.not_found()`, `web.method_not_allowed()`, `web.conflict()`, `web.gone()`, `web.unprocessable()`, `web.too_many_requests()`, `web.server_error()`, `web.not_modified()`, redirects (`moved_permanently`/`see_other`/`temporary_redirect`/`permanent_redirect`), `web.download()`, `web.status()`, `web.render_template()`, `web.set_cookie()`, `web.validate()`, `web.rate_limit()`, `web.bearer_auth()`, `web.parse_basic_auth()`, `web.request_id()`, `web.json_error()`, `web.etag()`, `web.cache_control()`, `web.basic_auth()`, `web.pagination()`, `web.security_headers()`, `web.parse_query()`/`web.build_query()`, `web.url_join()`. Apps also support `app.group()`, `patch/options`, and CORS (`app.enable_cors()`).
 
 ## Data Analysis (`analysis` / `std.analysis`)
 
@@ -167,7 +169,7 @@ print analysis.to_csv(top)
 print analysis.bar_chart(data, "name", "score")
 ```
 
-Key functions include: `profile`, `describe`, `summary`, `shape`, `correlation`, `corr_matrix`, `quantile`, `outliers`, `isna`, `notna`, `clean_missing`, `fillna`, `ffill`, `bfill`, `dropna`, `impute`, `drop_duplicates`, `rename`, `cast`/`astype`, `select`, `sort_by`, `filter_rows`, `query`, `group_by`, `pivot`, `pivot_wider`, `crosstab`, `join`/`merge`, `concat`, `add_column`, `cumsum`, `normalize`, `sample`, `unique`, `value_counts`, `nunique`, `count`, `duplicated`, `nlargest`, `nsmallest`, `head`, `tail`, `between`, `clip`, `mode`, `melt`, `transpose`, `explode`, `where`, `rank`, `pct_change`, `diff`, `rolling_mean`, `zscore`, `histogram`, `cut`, `str_transform`/`str_lower`/`str_upper`/`str_strip`/`str_contains`/`str_replace`, `schema`, `from_csv`, `from_json`, `to_json`, `to_records`, `to_dict`, `to_csv`, `to_markdown`, `to_html`, `bar_chart`, `line_chart`.
+Key functions include: `profile`, `describe`, `summary`, `shape`, `correlation`, `corr_matrix`, `quantile`/`percentile`, `outliers`, `isna`, `notna`, `clean_missing`, `fillna`, `ffill`, `bfill`, `dropna`, `impute`, `replace_values`, `drop_duplicates`, `rename`, `cast`/`astype`, `select`, `sort_by`, `filter_rows`, `query`, `group_by`, `pivot`, `pivot_wider`, `crosstab`, `one_hot`, `join`/`merge`, `concat`, `add_column`, `cumsum`, `cummax`/`cummin`/`cumprod`, `normalize`, `sample`, `unique`, `value_counts`, `nunique`, `count`, `duplicated`, `nlargest`, `nsmallest`, `head`, `tail`, `between`, `clip`, `mode`, `melt`, `transpose`, `explode`, `where`, `split_column`, `shift`/`lag`/`lead`, `rank`, `pct_change`, `diff`, `rolling_mean`, `zscore`, `histogram`, `cut`, `str_transform`/`str_lower`/`str_upper`/`str_strip`/`str_contains`/`str_replace`, `schema`, `from_csv`, `from_json`, `to_json`, `to_records`, `to_dict`, `to_csv`, `to_markdown`, `to_html`, `bar_chart`, `line_chart`.
 
 ## Cross-Language Interop (`interop` / `std.interop`)
 
@@ -180,7 +182,7 @@ print interop.which("python")
 print interop.env("PATH")
 ```
 
-Capabilities: Python module calls, ctypes/native library loading, process execution, JSON piping (`pipe_json`), HTTP GET/POST, JSON-RPC (`json_rpc`), environment lookup (`env`), `which`, host file/path helpers (`read_text`/`write_text`/`read_json`/`write_json`, `glob`, `exists`, `mkdir_p`, `tempdir`, `basename`, `dirname`, `join_path`, `extname`, `stem`, `is_file`, `is_dir`, `abspath`, `cwd`, `platform`, trusted contexts), and client stub generation for TypeScript/Java/Python.
+Capabilities: Python module calls, ctypes/native library loading, process execution, JSON piping (`pipe_json`), HTTP GET/POST, JSON-RPC (`json_rpc`), environment lookup (`env`), `which`, host file/path helpers (`read_text`/`write_text`/`read_json`/`write_json`, `copy_file`, `remove_file` destructive, `list_dir`, `stat`, `hash_file`, `glob`, `exists`, `mkdir_p`, `tempdir`, `basename`, `dirname`, `join_path`, `extname`, `stem`, `is_file`, `is_dir`, `abspath`, `cwd`, `platform`, trusted contexts), and client stub generation for TypeScript/Java/Python.
 
 Security note: interop functions can reach host capabilities. Use them only in trusted environments or behind explicit embedding/runtime controls.
 
@@ -208,4 +210,4 @@ pea check .
 pea lint .
 ```
 
-Current experience-layer validation baseline in this workspace: **665 passed, 1 skipped** (see release notes/changelog for details).
+Current experience-layer validation baseline in this workspace: **671 passed, 1 skipped** (see release notes/changelog for details).

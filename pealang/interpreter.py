@@ -207,12 +207,76 @@ class Interpreter:
         def _difference(a,b): bset=list(b); return [x for x in a if x not in bset]
 
 
+        def _has_path(obj, path):
+            _sentinel = object()
+            return _get_path(obj, path, _sentinel) is not _sentinel
+        def _set_path(obj, path, value):
+            import copy
+            parts=str(path).split('.')
+            if not parts: return value
+            root=copy.deepcopy(obj) if isinstance(obj,(dict,list)) else {}
+            cur=root
+            for part in parts[:-1]:
+                key=int(part) if isinstance(cur,list) and str(part).lstrip('-').isdigit() else part
+                if isinstance(cur,dict):
+                    if key not in cur or not isinstance(cur[key],(dict,list)): cur[key]={}
+                    cur=cur[key]
+                elif isinstance(cur,list):
+                    idx=int(part)
+                    while len(cur)<=idx: cur.append(None)
+                    if not isinstance(cur[idx],(dict,list)): cur[idx]={}
+                    cur=cur[idx]
+                else: return root
+            last=parts[-1]
+            if isinstance(cur,dict): cur[last]=value
+            elif isinstance(cur,list):
+                idx=int(last)
+                while len(cur)<=idx: cur.append(None)
+                cur[idx]=value
+            return root
+        def _map_values(d, fn):
+            if not isinstance(d,dict): return d
+            return {k:(self.invoke_user_function(fn,[v,k]) if isinstance(fn,UserFunction) else fn(v)) for k,v in d.items()}
+        def _map_keys(d, fn):
+            if not isinstance(d,dict): return d
+            return {(self.invoke_user_function(fn,[k,v]) if isinstance(fn,UserFunction) else fn(k)):v for k,v in d.items()}
+        def _pick_by(d, fn):
+            if not isinstance(d,dict): return {}
+            return {k:v for k,v in d.items() if (self.invoke_user_function(fn,[v,k]) if isinstance(fn,UserFunction) else fn(v))}
+        def _omit_by(d, fn):
+            if not isinstance(d,dict): return {}
+            return {k:v for k,v in d.items() if not (self.invoke_user_function(fn,[v,k]) if isinstance(fn,UserFunction) else fn(v))}
+        def _shuffle(seq):
+            import random; r=list(seq); random.shuffle(r); return r
+        def _product(seq):
+            p=1
+            for x in seq: p*=x
+            return p
+        def _median(seq):
+            s=sorted(list(seq)); n=len(s)
+            if not n: return None
+            m=n//2
+            return (s[m-1]+s[m])/2 if n%2==0 else s[m]
+        def _parse_int(x, default=None):
+            try: return int(float(str(x).strip()))
+            except Exception: return default
+        def _parse_float(x, default=None):
+            try: return float(str(x).strip())
+            except Exception: return default
+        def _strip_prefix(s, prefix): t=str(s); p=str(prefix); return t[len(p):] if t.startswith(p) else t
+        def _strip_suffix(s, suffix): t=str(s); p=str(suffix); return t[:-len(p)] if p and t.endswith(p) else t
+        def _sha256(s): import hashlib; return hashlib.sha256(str(s).encode()).hexdigest()
+        def _url_encode(s): import urllib.parse; return urllib.parse.quote(str(s), safe='')
+        def _url_decode(s): import urllib.parse; return urllib.parse.unquote(str(s))
+        def _html_escape(s): import html; return html.escape(str(s))
+        def _title_case(s): return str(s).title()
+        def _center(s, n, ch=' '): return str(s).center(int(n), str(ch)[:1] or ' ')
         def _safe(fn,default=None):
             try:
                 if isinstance(fn,UserFunction): return self.invoke_user_function(fn,[])
                 return fn()
             except Exception: return default
-        builtins={'range':lambda *a:list(range(*map(int,a))),'len':len,'str':lambda x:self.stringify(x),'bool':bool,'number':lambda x:float(x),'int':lambda x:int(float(x)),'float':lambda x:float(x),'type':lambda x:type(x).__name__,'upper':lambda x:str(x).upper(),'lower':lambda x:str(x).lower(),'trim':lambda x:str(x).strip(),'split':lambda x,s=None:str(x).split(s),'join':lambda s,x:str(s).join(map(str,x)),'replace':lambda s,a,b:str(s).replace(str(a),str(b)),'starts_with':lambda s,p:str(s).startswith(str(p)),'ends_with':lambda s,p:str(s).endswith(str(p)),'contains':_contains,'append':self._append,'push':_push,'pop':_pop,'get':_get,'has':_has,'merge':_merge,'slice':_slice,'keys':lambda d:list(d.keys()) if isinstance(d,dict) else list(range(len(d))),'values':lambda d:list(d.values()) if isinstance(d,dict) else list(d),'items':lambda d:[[k,v] for k,v in d.items()] if isinstance(d,dict) else _enumerate(d),'read':lambda p:Path(p).read_text(encoding='utf-8'),'write':self._write,'exists':os.path.exists,'sqrt':math.sqrt,'abs':abs,'round':round,'min':min,'max':max,'sum':lambda x,start=0:sum(x,start),'sleep':time.sleep,'enumerate':_enumerate,'zip':_zip,'sorted':_sorted,'reversed':_reversed,'map':_map,'filter':_filter,'any':_any,'all':_all,'list':lambda x=None:list(x) if x is not None else [],'dict':lambda x=None:dict(x) if x is not None else {},'json_parse':lambda s:json.loads(s),'json_dump':lambda x,indent=None:json.dumps(x,indent=indent,ensure_ascii=False,default=str),'safe':_safe,'now_ms':lambda:int(time.time()*1000),'chunk':_chunk,'flatten':_flatten,'uniq':_uniq,'pick':_pick,'omit':_omit,'clamp':_clamp,'uuid':_uuid,'randint':_randint,'b64encode':_b64e,'b64decode':_b64d,'now_iso':_now_iso,'coalesce':_coalesce,'repeat':_repeat,'times':_times,'find':_find,'find_index':_find_index,'pluck':_pluck,'index_by':_index_by,'sort_by':_sort_by,'is_null':_is_null,'is_list':_is_list,'is_dict':_is_dict,'is_string':_is_string,'is_number':_is_number,'is_bool':_is_bool,'identity':_identity,'tap':_tap,'pad_start':_pad_start,'pad_end':_pad_end,'lines':_lines,'words':_words,'floor':_floor,'ceil':_ceil,'log':_log,'exp':_exp,'pow':_pow,'get_path':_get_path,'deep_merge':_deep_merge,'take':_take,'drop':_drop,'partition':_partition,'count_by':_count_by,'first':_first,'last':_last,'is_empty':_is_empty,'compact':_compact,'defaults':_defaults,'invert':_invert,'to_pairs':_to_pairs,'from_pairs':_from_pairs,'sum_by':_sum_by,'avg':_avg,'capitalize':_capitalize,'snake_case':_snake_case,'kebab_case':_kebab_case,'slugify':_slugify,'truncate':_truncate,'union':_union,'intersection':_intersection,'difference':_difference}
+        builtins={'range':lambda *a:list(range(*map(int,a))),'len':len,'str':lambda x:self.stringify(x),'bool':bool,'number':lambda x:float(x),'int':lambda x:int(float(x)),'float':lambda x:float(x),'type':lambda x:type(x).__name__,'upper':lambda x:str(x).upper(),'lower':lambda x:str(x).lower(),'trim':lambda x:str(x).strip(),'split':lambda x,s=None:str(x).split(s),'join':lambda s,x:str(s).join(map(str,x)),'replace':lambda s,a,b:str(s).replace(str(a),str(b)),'starts_with':lambda s,p:str(s).startswith(str(p)),'ends_with':lambda s,p:str(s).endswith(str(p)),'contains':_contains,'append':self._append,'push':_push,'pop':_pop,'get':_get,'has':_has,'merge':_merge,'slice':_slice,'keys':lambda d:list(d.keys()) if isinstance(d,dict) else list(range(len(d))),'values':lambda d:list(d.values()) if isinstance(d,dict) else list(d),'items':lambda d:[[k,v] for k,v in d.items()] if isinstance(d,dict) else _enumerate(d),'read':lambda p:Path(p).read_text(encoding='utf-8'),'write':self._write,'exists':os.path.exists,'sqrt':math.sqrt,'abs':abs,'round':round,'min':min,'max':max,'sum':lambda x,start=0:sum(x,start),'sleep':time.sleep,'enumerate':_enumerate,'zip':_zip,'sorted':_sorted,'reversed':_reversed,'map':_map,'filter':_filter,'any':_any,'all':_all,'list':lambda x=None:list(x) if x is not None else [],'dict':lambda x=None:dict(x) if x is not None else {},'json_parse':lambda s:json.loads(s),'json_dump':lambda x,indent=None:json.dumps(x,indent=indent,ensure_ascii=False,default=str),'safe':_safe,'now_ms':lambda:int(time.time()*1000),'chunk':_chunk,'flatten':_flatten,'uniq':_uniq,'pick':_pick,'omit':_omit,'clamp':_clamp,'uuid':_uuid,'randint':_randint,'b64encode':_b64e,'b64decode':_b64d,'now_iso':_now_iso,'coalesce':_coalesce,'repeat':_repeat,'times':_times,'find':_find,'find_index':_find_index,'pluck':_pluck,'index_by':_index_by,'sort_by':_sort_by,'is_null':_is_null,'is_list':_is_list,'is_dict':_is_dict,'is_string':_is_string,'is_number':_is_number,'is_bool':_is_bool,'identity':_identity,'tap':_tap,'pad_start':_pad_start,'pad_end':_pad_end,'lines':_lines,'words':_words,'floor':_floor,'ceil':_ceil,'log':_log,'exp':_exp,'pow':_pow,'get_path':_get_path,'deep_merge':_deep_merge,'take':_take,'drop':_drop,'partition':_partition,'count_by':_count_by,'first':_first,'last':_last,'is_empty':_is_empty,'compact':_compact,'defaults':_defaults,'invert':_invert,'to_pairs':_to_pairs,'from_pairs':_from_pairs,'sum_by':_sum_by,'avg':_avg,'capitalize':_capitalize,'snake_case':_snake_case,'kebab_case':_kebab_case,'slugify':_slugify,'truncate':_truncate,'union':_union,'intersection':_intersection,'difference':_difference,'has_path':_has_path,'set_path':_set_path,'map_values':_map_values,'map_keys':_map_keys,'pick_by':_pick_by,'omit_by':_omit_by,'shuffle':_shuffle,'product':_product,'median':_median,'parse_int':_parse_int,'parse_float':_parse_float,'strip_prefix':_strip_prefix,'strip_suffix':_strip_suffix,'sha256':_sha256,'url_encode':_url_encode,'url_decode':_url_decode,'html_escape':_html_escape,'title_case':_title_case,'center':_center}
         for k,v in builtins.items():self.global_env.define(k,v,True)
         for k,v in build_standard_library(allow_process=allow_process,permissions=permissions).items():self.global_env.define(k,v,True)
         ai_ns,self.ai_service=build_ai_namespace();self.global_env.define('ai',ai_ns,True)

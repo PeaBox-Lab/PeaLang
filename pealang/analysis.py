@@ -965,6 +965,98 @@ def str_replace(data: Any, column: str, old: str, new: str) -> list[dict[str, An
         out.append(nr)
     return out
 
+
+def shift(data: Any, column: str, periods: int = 1, fill: Any = None) -> list[dict[str, Any]]:
+    rows = _rows(data); out = []; n = len(rows); p = int(periods)
+    for i, r in enumerate(rows):
+        nr = dict(r)
+        src = i - p
+        nr[column] = rows[src].get(column) if 0 <= src < n else fill
+        out.append(nr)
+    return out
+
+
+def lag(data: Any, column: str, periods: int = 1, fill: Any = None) -> list[dict[str, Any]]:
+    return shift(data, column, periods, fill)
+
+
+def lead(data: Any, column: str, periods: int = 1, fill: Any = None) -> list[dict[str, Any]]:
+    return shift(data, column, -int(periods), fill)
+
+
+def cummax(data: Any, column: str) -> list[dict[str, Any]]:
+    rows = _rows(data); m = None; out = []
+    for r in rows:
+        nr = dict(r); v = _numeric(r.get(column))
+        if v is not None: m = v if m is None else max(m, v)
+        nr[column + "_cummax"] = m
+        out.append(nr)
+    return out
+
+
+def cummin(data: Any, column: str) -> list[dict[str, Any]]:
+    rows = _rows(data); m = None; out = []
+    for r in rows:
+        nr = dict(r); v = _numeric(r.get(column))
+        if v is not None: m = v if m is None else min(m, v)
+        nr[column + "_cummin"] = m
+        out.append(nr)
+    return out
+
+
+def cumprod(data: Any, column: str) -> list[dict[str, Any]]:
+    rows = _rows(data); p = 1.0; started = False; out = []
+    for r in rows:
+        nr = dict(r); v = _numeric(r.get(column))
+        if v is not None:
+            if not started: p = v; started = True
+            else: p *= v
+            nr[column + "_cumprod"] = p
+        else:
+            nr[column + "_cumprod"] = p if started else None
+        out.append(nr)
+    return out
+
+
+def replace_values(data: Any, column: str, mapping: dict | None = None, old: Any = None, new: Any = None) -> list[dict[str, Any]]:
+    rows = _rows(data); mp = dict(mapping or {})
+    if old is not None or mapping is None and old is None and new is not None:
+        mp[old] = new
+    out = []
+    for r in rows:
+        nr = dict(r); v = nr.get(column)
+        if v in mp: nr[column] = mp[v]
+        out.append(nr)
+    return out
+
+
+def one_hot(data: Any, column: str, prefix: str | None = None, drop_original: bool = False) -> list[dict[str, Any]]:
+    rows = _rows(data); vals = unique(rows, column); pre = (prefix or column) + "_"
+    out = []
+    for r in rows:
+        nr = dict(r); v = r.get(column)
+        for val in vals:
+            nr[pre + str(val)] = 1 if v == val else 0
+        if drop_original: nr.pop(column, None)
+        out.append(nr)
+    return out
+
+
+def split_column(data: Any, column: str, sep: str = ",", names: list[str] | None = None, drop_original: bool = False) -> list[dict[str, Any]]:
+    rows = _rows(data); out = []
+    for r in rows:
+        nr = dict(r); v = nr.get(column)
+        parts = str(v).split(sep) if v is not None else []
+        if names:
+            for i, name in enumerate(names):
+                nr[name] = parts[i] if i < len(parts) else None
+        else:
+            for i, part in enumerate(parts):
+                nr[f"{column}_{i}"] = part
+        if drop_original: nr.pop(column, None)
+        out.append(nr)
+    return out
+
 def build_analysis_namespace() -> dict[str, Any]:
     return {
         "profile": profile,
@@ -1044,5 +1136,15 @@ def build_analysis_namespace() -> dict[str, Any]:
         "str_strip": lambda d,c: str_transform(d,c,"strip"),
         "str_contains": str_contains,
         "str_replace": str_replace,
+        "shift": shift,
+        "lag": lag,
+        "lead": lead,
+        "cummax": cummax,
+        "cummin": cummin,
+        "cumprod": cumprod,
+        "replace_values": replace_values,
+        "one_hot": one_hot,
+        "split_column": split_column,
+        "percentile": quantile,
     }
 

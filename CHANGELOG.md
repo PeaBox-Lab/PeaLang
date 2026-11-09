@@ -118,10 +118,24 @@
 - Added `pea check --json` / `pea lint --json` machine-readable output.
 - Added `pea analyze <file.json|csv> [--json] [--head N]` data profiling command.
 
+### Language and Runtime (v109 additions)
+- Added builtins/helpers: `has_path`, `set_path` (immutable), `map_values`, `map_keys`, `pick_by`, `omit_by`, `shuffle`, `product`, `median`, `parse_int`, `parse_float`, `strip_prefix`, `strip_suffix`, `sha256`, `url_encode`, `url_decode`, `html_escape`, `title_case`, `center`.
+
+### Data Analysis (v109 additions)
+- Added: `shift`, `lag`, `lead`, `cummax`, `cummin`, `cumprod`, `replace_values`, `one_hot`, `split_column`, `percentile` (alias).
+
+### Web (v109 additions)
+- Added: `bad_request`, `server_error`, `not_modified`, `moved_permanently`, `see_other`, `temporary_redirect`, `permanent_redirect`, `security_headers`, `parse_query`, `build_query`.
+
+### Interop and CLI (v109 additions)
+- Added interop helpers (host access; trusted contexts; `remove_file` is destructive): `copy_file`, `remove_file`, `list_dir`, `stat`, `hash_file`.
+- Added `pea web-openapi <file> [--title T] [--version V]` (extracts OpenAPI from a file defining `app`; suppresses `app.serve` during extraction).
+- Added `pea hash <file> [--algo sha256]`.
+
 ### Documentation and Quality
 - Updated `README.md`, `docs/USER_GUIDE.md`, `CHANGELOG.md`, and `docs/RELEASE_NOTES_1.0_EXPERIENCE.md`.
-- Added/expanded tests for v102–v108 features (language, analysis, web, interop, CLI).
-- Regression baseline: **665 passed, 1 skipped**.
+- Added/expanded tests for v102–v109 features (language, analysis, web, interop, CLI).
+- Regression baseline: **671 passed, 1 skipped**.
 
 ## 0.99.6 - 2026-10-27
 - Closed CodeQL high-severity findings in SFTP host verification, legacy HMAC trust storage, and type-system regular expressions.

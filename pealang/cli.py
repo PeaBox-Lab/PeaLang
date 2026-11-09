@@ -355,7 +355,7 @@ def main(argv=None):
         if c=='info':
             from .stdlib import stdlib_manifest
             sm=stdlib_manifest();mods=sm.get('modules',sm)
-            info={'version':__version__,'stdlib':list(mods.keys()) if isinstance(mods,dict) else mods,'commands':['run','eval','repl','check','lint','fmt','test','compile','vm','dis','init','new','serve-web','doctor','templates','info','project','serve','stdlib','typecheck','docs','analyze']}
+            info={'version':__version__,'stdlib':list(mods.keys()) if isinstance(mods,dict) else mods,'commands':['run','eval','repl','check','lint','fmt','test','compile','vm','dis','init','new','serve-web','doctor','templates','info','project','serve','stdlib','typecheck','docs','analyze','web-openapi','hash']}
             print(json.dumps(info,indent=2));return 0
 
         if c=='project':print(json.dumps(project_info(argv[1] if len(argv)>1 else '.'),indent=2));return 0
@@ -405,6 +405,31 @@ def main(argv=None):
             if a.head is not None: data=_head(data,a.head)
             result=_profile(data)
             print(json.dumps(result,indent=2,default=str) if a.json else json.dumps(result,indent=2,default=str));return 0
+
+        if c=='web-openapi':
+            p=argparse.ArgumentParser(prog='pea web-openapi');p.add_argument('file');p.add_argument('--title',default='PeaLang App');p.add_argument('--version',dest='ver',default='1.0.0');a=p.parse_args(argv[1:])
+            from .interpreter import Interpreter
+            from .parser import parse_source
+            from .web import PeaWebApp
+            src=Path(a.file).read_text(encoding='utf-8'); vm=Interpreter(base_dir=Path(a.file).resolve().parent)
+            _orig=PeaWebApp.serve
+            try:
+                PeaWebApp.serve=lambda self,*aa,**kk: None
+                vm.run(parse_source(src,str(Path(a.file).resolve())),str(Path(a.file).resolve()))
+            finally:
+                PeaWebApp.serve=_orig
+            app=vm.global_env.values.get('app') or vm.global_env.values.get('application')
+            if app is None or not hasattr(app,'openapi'):
+                print('No web app found (define `app = web.app()`)',file=sys.stderr); return 1
+            print(json.dumps(app.openapi(a.title,a.ver),indent=2,default=str)); return 0
+
+        if c=='hash':
+            p=argparse.ArgumentParser(prog='pea hash');p.add_argument('file');p.add_argument('--algo',default='sha256');a=p.parse_args(argv[1:])
+            import hashlib
+            h=hashlib.new(a.algo)
+            with open(a.file,'rb') as f:
+                for chunk in iter(lambda:f.read(65536),b''): h.update(chunk)
+            print(h.hexdigest()); return 0
 
         if c=='run':
 
@@ -498,7 +523,7 @@ def main(argv=None):
 
         if allow:argv.remove('--allow-process')
 
-        if len(argv)!=1:print('Usage: pea [run|eval|repl|check|lint|fmt|test|compile|vm|dis|init|new|serve-web|doctor|templates|info|project|docs|analyze|typecheck|stdlib] ...',file=sys.stderr);return 2
+        if len(argv)!=1:print('Usage: pea [run|eval|repl|check|lint|fmt|test|compile|vm|dis|init|new|serve-web|doctor|templates|info|project|docs|analyze|web-openapi|hash|typecheck|stdlib] ...',file=sys.stderr);return 2
 
         return run_file(argv[0],allow)
 
