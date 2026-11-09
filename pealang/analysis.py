@@ -654,6 +654,187 @@ def transpose(data: Any) -> list[dict[str, Any]]:
     return out
 
 
+
+def rank(data: Any, column: str, ascending: bool = True) -> list[dict[str, Any]]:
+    rows = _rows(data)
+    vals = [(i, _numeric(r.get(column))) for i, r in enumerate(rows)]
+    valid = [(i, v) for i, v in vals if v is not None]
+    valid.sort(key=lambda x: x[1], reverse=not ascending)
+    ranks = {i: r+1 for r, (i, _) in enumerate(valid)}
+    out = []
+    for i, r in enumerate(rows):
+        nr = dict(r); nr[column + "_rank"] = ranks.get(i); out.append(nr)
+    return out
+
+
+def pct_change(data: Any, column: str) -> list[dict[str, Any]]:
+    rows = _rows(data)
+    prev = None
+    out = []
+    for r in rows:
+        nr = dict(r); v = _numeric(r.get(column))
+        if v is not None and prev not in (None, 0):
+            nr[column + "_pct"] = (v - prev) / prev
+        else:
+            nr[column + "_pct"] = None
+        if v is not None: prev = v
+        out.append(nr)
+    return out
+
+
+def diff(data: Any, column: str) -> list[dict[str, Any]]:
+    rows = _rows(data)
+    prev = None
+    out = []
+    for r in rows:
+        nr = dict(r); v = _numeric(r.get(column))
+        nr[column + "_diff"] = (v - prev) if (v is not None and prev is not None) else None
+        if v is not None: prev = v
+        out.append(nr)
+    return out
+
+
+def rolling_mean(data: Any, column: str, window: int = 3) -> list[dict[str, Any]]:
+    rows = _rows(data)
+    vals = []
+    out = []
+    for r in rows:
+        nr = dict(r); v = _numeric(r.get(column))
+        if v is not None: vals.append(v)
+        w = vals[-int(window):]
+        nr[column + "_rolling_mean"] = mean(w) if w else None
+        out.append(nr)
+    return out
+
+
+def schema(data: Any) -> dict[str, str]:
+    rows = _rows(data)
+    cols = columns(rows)
+    out = {}
+    for c in cols:
+        types = set()
+        for r in rows:
+            v = r.get(c)
+            if v is None: types.add('null')
+            elif isinstance(v, bool): types.add('bool')
+            elif isinstance(v, int): types.add('int')
+            elif isinstance(v, float): types.add('number')
+            elif isinstance(v, str): types.add('string')
+            elif isinstance(v, list): types.add('list')
+            elif isinstance(v, dict): types.add('object')
+            else: types.add(type(v).__name__)
+        types.discard('null')
+        out[c] = '|'.join(sorted(types)) if types else 'null'
+    return out
+
+
+def zscore_col(data: Any, column: str) -> list[dict[str, Any]]:
+    rows = _rows(data)
+    vals = [v for v in (_numeric(r.get(column)) for r in rows) if v is not None]
+    if not vals: return [dict(r) for r in rows]
+    m = mean(vals); sd = (sum((x-m)**2 for x in vals)/len(vals))**0.5 or 1.0
+    out = []
+    for r in rows:
+        nr = dict(r); v = _numeric(r.get(column))
+        nr[column+"_z"] = (v-m)/sd if v is not None else None
+        out.append(nr)
+    return out
+
+
+def histogram(data: Any, column: str, bins: int = 10) -> list[dict[str, Any]]:
+    rows = _rows(data)
+    vals = [v for v in (_numeric(r.get(column)) for r in rows) if v is not None]
+    if not vals: return []
+    lo, hi = min(vals), max(vals)
+    if hi == lo: return [{"bin_start": lo, "bin_end": hi, "count": len(vals)}]
+    width = (hi-lo)/int(bins)
+    buckets = [{"bin_start": lo+i*width, "bin_end": lo+(i+1)*width, "count": 0} for i in range(int(bins))]
+    for v in vals:
+        i = min(int((v-lo)/width), int(bins)-1)
+        buckets[i]["count"] += 1
+    return buckets
+
+
+def cut(data: Any, column: str, bins: int = 4, labels: list[str] | None = None) -> list[dict[str, Any]]:
+    rows = _rows(data)
+    vals = [v for v in (_numeric(r.get(column)) for r in rows) if v is not None]
+    if not vals: return [dict(r) for r in rows]
+    lo, hi = min(vals), max(vals); width = (hi-lo)/int(bins) if hi!=lo else 1
+    out = []
+    for r in rows:
+        nr = dict(r); v = _numeric(r.get(column))
+        if v is None: nr[column+"_bin"] = None
+        else:
+            i = min(int((v-lo)/width), int(bins)-1) if hi!=lo else 0
+            nr[column+"_bin"] = labels[i] if labels and i < len(labels) else f"bin_{i}"
+        out.append(nr)
+    return out
+
+
+def ffill(data: Any, column: str | None = None) -> list[dict[str, Any]]:
+    rows = _rows(data); last = {}; out = []
+    for r in rows:
+        nr = dict(r)
+        for k, v in nr.items():
+            if column and k != column: continue
+            if v is None or v == "": nr[k] = last.get(k)
+            else: last[k] = v
+        out.append(nr)
+    return out
+
+
+def bfill(data: Any, column: str | None = None) -> list[dict[str, Any]]:
+    rows = _rows(data)
+    # simple reverse pass
+    cols = [column] if column else columns(rows)
+    nextv = {c: None for c in cols}
+    out = [dict(r) for r in rows]
+    for i in range(len(out)-1, -1, -1):
+        for c in cols:
+            v = out[i].get(c)
+            if v is None or v == "": out[i][c] = nextv[c]
+            else: nextv[c] = v
+    return out
+
+
+def dropna(data: Any, column: str | None = None) -> list[dict[str, Any]]:
+    rows = _rows(data)
+    if column: return [dict(r) for r in rows if r.get(column) is not None and r.get(column) != ""]
+    return clean_missing(rows, "drop")
+
+
+def cast(data: Any, column: str, dtype: str = "number") -> list[dict[str, Any]]:
+    rows = _rows(data); out = []
+    for r in rows:
+        nr = dict(r); v = nr.get(column)
+        try:
+            if dtype in ("int","integer"): nr[column] = int(float(v)) if v not in (None,"") else None
+            elif dtype in ("number","float"): nr[column] = float(v) if v not in (None,"") else None
+            elif dtype in ("str","string"): nr[column] = str(v) if v is not None else None
+            elif dtype in ("bool","boolean"): nr[column] = bool(v) if v not in (None,"") else None
+        except Exception: nr[column] = None
+        out.append(nr)
+    return out
+
+
+def crosstab(data: Any, row: str, col: str, value: str | None = None, agg: str = "count") -> dict[str, dict[str, Any]]:
+    rows = _rows(data)
+    table = {}
+    for r in rows:
+        rk = str(r.get(row)); ck = str(r.get(col))
+        table.setdefault(rk, {}).setdefault(ck, [])
+        table[rk][ck].append(r.get(value) if value else 1)
+    for rk in table:
+        for ck in table[rk]:
+            vals = table[rk][ck]
+            if agg == "count": table[rk][ck] = len(vals)
+            elif agg == "sum": table[rk][ck] = sum(_numeric(v) or 0 for v in vals)
+            elif agg == "mean":
+                nums=[_numeric(v) for v in vals]; nums=[n for n in nums if n is not None]
+                table[rk][ck] = mean(nums) if nums else None
+            else: table[rk][ck] = vals
+    return table
+
 def build_analysis_namespace() -> dict[str, Any]:
     return {
         "profile": profile,
@@ -702,5 +883,18 @@ def build_analysis_namespace() -> dict[str, Any]:
         "count": count,
         "melt": melt,
         "transpose": transpose,
+        "rank": rank,
+        "pct_change": pct_change,
+        "diff": diff,
+        "rolling_mean": rolling_mean,
+        "schema": schema,
+        "zscore": zscore_col,
+        "histogram": histogram,
+        "cut": cut,
+        "ffill": ffill,
+        "bfill": bfill,
+        "dropna": dropna,
+        "cast": cast,
+        "crosstab": crosstab,
     }
 

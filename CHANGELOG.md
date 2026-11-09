@@ -54,10 +54,48 @@
 - Added interop: `json_rpc`, `pipe_json`, `env`.
 - Added CLI: `pea eval -e`, `pea info` (and version/info improvements).
 
+### Language and Runtime (v104 additions)
+- Added builtins/helpers: `chunk`, `flatten`, `uniq`, `pick`, `omit`, `clamp`, `uuid`, `randint`, `b64encode`, `b64decode`, `now_iso`.
+
+### Data Analysis (v104 additions)
+- Added `rank`, `pct_change`, `diff`, `rolling_mean`, `schema`.
+
+### Web (v104 additions)
+- Added `web.request_id()` middleware factory, `web.json_error()`, `web.etag()`.
+
+### CLI (v104 additions)
+- Added `pea new` (alias for `init`) and `pea serve-web <file>` (best-effort: runs file, serves exported `app` if not already serving).
+
+### Language and Runtime (v105 additions)
+- Added builtins/helpers: `coalesce`, `repeat`, `times`, `find`, `find_index`, `pluck`, `index_by`, `sort_by` (list by key).
+
+### Data Analysis (v105 additions)
+- Added `zscore`, `histogram`, `cut`.
+
+### Web (v105 additions)
+- Added `cache_control`, `basic_auth`, `no_content`, `created`, `accepted`.
+
+### CLI (v105 additions)
+- Added `pea eval -f <file>`.
+
+### Language and Runtime (v106 additions)
+- Added type predicates: `is_null`, `is_list`, `is_dict`, `is_string`, `is_number`, `is_bool`.
+- Added helpers: `identity`, `tap`, `pad_start`, `pad_end`, `lines`, `words`, `floor`, `ceil`, `log`, `exp`, `pow`.
+
+### Data Analysis (v106 additions)
+- Added `ffill`, `bfill`, `dropna`, `cast`, `crosstab`.
+
+### Web (v106 additions)
+- Added `ok`, `problem` (application/problem+json), `pagination`, `parse_basic_auth`.
+
+### Interop and CLI (v106 additions)
+- Added interop file helpers: `read_text`, `write_text`, `read_json`, `write_json` (host-access; trusted contexts).
+- Added `pea test -k` filter alias.
+
 ### Documentation and Quality
 - Updated `README.md`, `docs/USER_GUIDE.md`, `CHANGELOG.md`, and `docs/RELEASE_NOTES_1.0_EXPERIENCE.md`.
-- Added/expanded tests for v102/v103 features (language, analysis, web, CLI).
-- Regression baseline: **644 passed, 1 skipped**.
+- Added/expanded tests for v102–v106 features (language, analysis, web, interop, CLI).
+- Regression baseline: **655 passed, 1 skipped**.
 
 ## 0.99.6 - 2026-10-27
 - Closed CodeQL high-severity findings in SFTP host verification, legacy HMAC trust storage, and type-system regular expressions.

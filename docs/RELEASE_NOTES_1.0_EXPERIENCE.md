@@ -39,7 +39,7 @@ This release delivers a broad, practical application-development surface on top 
 
 ### 5) UX, CLI, and Project Templates
 - `ux`/`std.ux`: `doctor`, `explain`, `suggest`.
-- CLI additions/improvements: `pea eval -e`, `pea lint`, `pea doctor`, `pea templates`, `pea info`, template-aware `pea init --template`.
+- CLI additions/improvements: `pea eval -e`, `pea lint`, `pea doctor`, `pea templates`, `pea info`, `pea new`, `pea serve-web`, template-aware `pea init --template`.
 - Templates: `default`, `webapp`, `analysis`, `library`, `interop`.
 
 ## Compatibility and Security Notes
@@ -53,9 +53,28 @@ This release delivers a broad, practical application-development surface on top 
 python -m pytest -q
 ```
 
-**Result:** 644 passed, 1 skipped.
+**Result:** 655 passed, 1 skipped.
 
-New/updated coverage includes: language ergonomics (comprehensions, `in`/`not in`, `**`, match/destructuring, helpers/builtins), web routing/groups/CORS/OpenAPI/validation/SSE/file helpers, analysis profiling/transforms/stats/IO/charts/melt, interop (Python/native/process/HTTP/JSON-RPC/env/codegen), and CLI (`eval`, `lint`, `info`, templates/doctor).
+New/updated coverage includes: language ergonomics (comprehensions, `in`/`not in`, `**`, match/destructuring, helpers/builtins), web routing/groups/CORS/OpenAPI/validation/SSE/file/auth/cache helpers, analysis profiling/transforms/stats/IO/charts/melt/zscore/histogram/cut, interop (Python/native/process/HTTP/JSON-RPC/env/codegen), and CLI (`eval -e/-f`, `lint`, `info`, `new`, `serve-web`, templates/doctor).
+
+## Additional Batch Notes (v106)
+- **Builtins:** type predicates (`is_null/is_list/is_dict/is_string/is_number/is_bool`), `identity`, `tap`, `pad_start`, `pad_end`, `lines`, `words`, `floor`, `ceil`, `log`, `exp`, `pow`.
+- **Analysis:** `ffill`, `bfill`, `dropna`, `cast`, `crosstab`.
+- **Web:** `ok`, `problem` (RFC7807-style), `pagination`, `parse_basic_auth`.
+- **Interop:** `read_text`, `write_text`, `read_json`, `write_json` (host access; use in trusted contexts).
+- **CLI:** `pea test -k` filter alias.
+
+## Additional Batch Notes (v105)
+- **Builtins:** `coalesce`, `repeat`, `times`, `find`, `find_index`, `pluck`, `index_by`, `sort_by` (list by key).
+- **Analysis:** `zscore`, `histogram`, `cut`.
+- **Web:** `cache_control`, `basic_auth`, `no_content`, `created`, `accepted`.
+- **CLI:** `pea eval -f <file>`.
+
+## Additional Batch Notes (v104)
+- **Builtins:** `chunk`, `flatten`, `uniq`, `pick`, `omit`, `clamp`, `uuid`, `randint`, `b64encode`, `b64decode`, `now_iso`.
+- **Analysis:** `rank`, `pct_change`, `diff`, `rolling_mean`, `schema`.
+- **Web:** `request_id` middleware, `json_error`, `etag`.
+- **CLI:** `pea new`, `pea serve-web <file>` (best-effort).
 
 ## Additional Batch Notes (v103)
 - **`**` power operator** added; `//` is intentionally kept as line-comment syntax for compatibility (use `int(a/b)` for floor division).

@@ -185,6 +185,26 @@ def env_get(name: str, default: Any = None) -> Any:
     return os.environ.get(str(name), default)
 
 
+
+def read_text(path: str, encoding: str = "utf-8") -> str:
+    return Path(path).read_text(encoding=encoding)
+
+
+def write_text(path: str, content: str, encoding: str = "utf-8") -> str:
+    p = Path(path); p.parent.mkdir(parents=True, exist_ok=True)
+    p.write_text(str(content), encoding=encoding)
+    return str(p)
+
+
+def read_json_file(path: str) -> Any:
+    return json.loads(Path(path).read_text(encoding='utf-8'))
+
+
+def write_json_file(path: str, data: Any, indent: int = 2) -> str:
+    p = Path(path); p.parent.mkdir(parents=True, exist_ok=True)
+    p.write_text(json.dumps(data, ensure_ascii=False, indent=indent, default=str), encoding='utf-8')
+    return str(p)
+
 def build_interop_namespace() -> dict[str, Any]:
     return {
         "call_python": call_python,
@@ -198,6 +218,10 @@ def build_interop_namespace() -> dict[str, Any]:
         "http_get": http_get,
         "http_post": http_post,
         "json_rpc": json_rpc,
+        "read_text": read_text,
+        "write_text": write_text,
+        "read_json": read_json_file,
+        "write_json": write_json_file,
         "env": env_get,
         "generate_typescript": generate_typescript_client,
         "generate_java": generate_java_client,

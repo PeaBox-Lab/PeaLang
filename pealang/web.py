@@ -531,6 +531,81 @@ def bearer_auth(header: str = "authorization", prefix: str = "Bearer "):
     return get_token
 
 
+
+def request_id_middleware(header: str = "x-request-id"):
+    import uuid as _u
+    def mw(request):
+        request.headers.setdefault(header, str(_u.uuid4()))
+        return request
+    return mw
+
+
+def json_error(message: str, status: int = 400, code: str | None = None) -> WebResponse:
+    body = {"error": str(message), "status": status}
+    if code: body["code"] = code
+    return json_response(body, status=status)
+
+
+def etag_response(body: Any, etag: str | None = None, status: int = 200) -> WebResponse:
+    import hashlib
+    raw = body if isinstance(body, (bytes, bytearray)) else (body.encode() if isinstance(body, str) else json.dumps(body, default=str).encode())
+    tag = etag or hashlib.sha256(raw).hexdigest()[:16]
+    return WebResponse(body, status=status, headers={"ETag": tag})
+
+
+def cache_control(max_age: int = 0, public: bool = False, no_store: bool = False) -> dict[str, str]:
+    parts = []
+    if no_store: parts.append('no-store')
+    else:
+        parts.append('public' if public else 'private')
+        parts.append(f'max-age={int(max_age)}')
+    return {"Cache-Control": ", ".join(parts)}
+
+
+def basic_auth_header(username: str, password: str) -> dict[str, str]:
+    import base64
+    token = base64.b64encode(f"{username}:{password}".encode()).decode()
+    return {"Authorization": f"Basic {token}"}
+
+
+def no_content() -> WebResponse:
+    return WebResponse("", status=204)
+
+
+def created(body: Any = "", location: str | None = None) -> WebResponse:
+    headers = {"Location": location} if location else None
+    return json_response(body, status=201, headers=headers)
+
+
+def accepted(body: Any = "") -> WebResponse:
+    return json_response(body, status=202)
+
+
+def parse_basic_auth(request) -> dict[str, str] | None:
+    h = request.headers.get('authorization','') if hasattr(request,'headers') else (request.get('headers',{}).get('authorization','') if isinstance(request,dict) else '')
+    if not h.startswith('Basic '): return None
+    import base64
+    try:
+        u,p = base64.b64decode(h[6:]).decode().split(':',1)
+        return {"username": u, "password": p}
+    except Exception: return None
+
+
+def json_ok(data: Any = None) -> WebResponse:
+    return json_response({"ok": True, "data": data})
+
+
+def problem(title: str, status: int = 400, detail: str | None = None, type_: str = "about:blank") -> WebResponse:
+    body = {"type": type_, "title": title, "status": status}
+    if detail: body["detail"] = detail
+    return WebResponse(body, status=status, headers={"Content-Type": "application/problem+json; charset=utf-8"})
+
+
+def pagination(page: int = 1, per_page: int = 20, total: int = 0) -> dict[str, Any]:
+    page = max(1, int(page)); per_page = max(1, min(100, int(per_page))); total = max(0, int(total))
+    pages = (total + per_page - 1) // per_page if per_page else 0
+    return {"page": page, "per_page": per_page, "total": total, "pages": pages, "has_next": page < pages, "has_prev": page > 1}
+
 def build_web_namespace(interpreter: Any) -> dict[str, Any]:
     def app():
         return PeaWebApp(interpreter if interpreter is not None else _CURRENT_INTERPRETER)
@@ -557,6 +632,18 @@ def build_web_namespace(interpreter: Any) -> dict[str, Any]:
         "validate": validate,
         "rate_limit": rate_limit_middleware,
         "bearer_auth": bearer_auth,
+        "request_id": request_id_middleware,
+        "json_error": json_error,
+        "etag": etag_response,
+        "cache_control": cache_control,
+        "basic_auth": basic_auth_header,
+        "no_content": no_content,
+        "created": created,
+        "accepted": accepted,
+        "parse_basic_auth": parse_basic_auth,
+        "ok": json_ok,
+        "problem": problem,
+        "pagination": pagination,
         "openapi": lambda app_obj, title="PeaLang App", version="1.0.0": app_obj.openapi(title, version),
         "serve": lambda app_obj, host="127.0.0.1", port=8000: app_obj.serve(host, port),
     }
