@@ -205,6 +205,67 @@ def write_json_file(path: str, data: Any, indent: int = 2) -> str:
     p.write_text(json.dumps(data, ensure_ascii=False, indent=indent, default=str), encoding='utf-8')
     return str(p)
 
+
+def glob_paths(pattern: str) -> list[str]:
+    from glob import glob
+    return sorted(glob(str(pattern), recursive=True))
+
+
+def path_exists(path: str) -> bool:
+    return Path(path).exists()
+
+
+def mkdir_p(path: str) -> str:
+    Path(path).mkdir(parents=True, exist_ok=True)
+    return str(path)
+
+
+def tempdir(prefix: str = "pealang_") -> str:
+    import tempfile
+    return tempfile.mkdtemp(prefix=prefix)
+
+
+def basename(path: str) -> str:
+    return Path(path).name
+
+
+def dirname(path: str) -> str:
+    return str(Path(path).parent)
+
+
+def join_path(*parts: str) -> str:
+    return str(Path(*[str(p) for p in parts]))
+
+
+def extname(path: str) -> str:
+    return Path(path).suffix
+
+
+def stem(path: str) -> str:
+    return Path(path).stem
+
+
+def is_file(path: str) -> bool:
+    return Path(path).is_file()
+
+
+def is_dir(path: str) -> bool:
+    return Path(path).is_dir()
+
+
+def abspath(path: str) -> str:
+    return str(Path(path).resolve())
+
+
+def cwd() -> str:
+    import os
+    return os.getcwd()
+
+
+def platform_info() -> dict[str, str]:
+    import platform
+    return {"system": platform.system(), "release": platform.release(), "python": platform.python_version(), "machine": platform.machine()}
+
 def build_interop_namespace() -> dict[str, Any]:
     return {
         "call_python": call_python,
@@ -222,6 +283,20 @@ def build_interop_namespace() -> dict[str, Any]:
         "write_text": write_text,
         "read_json": read_json_file,
         "write_json": write_json_file,
+        "glob": glob_paths,
+        "exists": path_exists,
+        "mkdir_p": mkdir_p,
+        "tempdir": tempdir,
+        "basename": basename,
+        "dirname": dirname,
+        "join_path": join_path,
+        "extname": extname,
+        "stem": stem,
+        "is_file": is_file,
+        "is_dir": is_dir,
+        "abspath": abspath,
+        "cwd": cwd,
+        "platform": platform_info,
         "env": env_get,
         "generate_typescript": generate_typescript_client,
         "generate_java": generate_java_client,

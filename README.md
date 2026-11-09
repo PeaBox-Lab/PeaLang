@@ -33,7 +33,7 @@ The objective is to improve security while preserving the existing PeaLang langu
 - Destructuring in `let` and `for`: `let [a,b]=pair`, `let {name}=user`, `for [k,v] in pairs { ... }`
 - Membership operators: `x in list`, `"sub" in "string"`, `x not in list`
 - Power operator: `**` (`2 ** 10`)
-- Rich builtins/helpers: `enumerate`, `zip`, `sorted`, `reversed`, `map`, `filter`, `sum`, `any`, `all`, `min`, `max`, `abs`, `items`, `get`, `has`, `merge`, `push`, `pop`, `slice`, `contains`, `trim`, `replace`, `starts_with`, `ends_with`, `json_parse`, `json_dump`, `safe`, `now_ms`, `chunk`, `flatten`, `uniq`, `pick`, `omit`, `clamp`, `uuid`, `randint`, `b64encode`, `b64decode`, `now_iso`, `coalesce`, `repeat`, `times`, `find`, `find_index`, `pluck`, `index_by`, `sort_by`, type predicates (`is_null/is_list/is_dict/is_string/is_number/is_bool`), `identity`, `tap`, `pad_start`, `pad_end`, `lines`, `words`, `floor`, `ceil`, `log`, `exp`, `pow`
+- Rich builtins/helpers: `enumerate`, `zip`, `sorted`, `reversed`, `map`, `filter`, `sum`, `any`, `all`, `min`, `max`, `abs`, `items`, `get`, `has`, `get_path`, `merge`, `deep_merge`, `push`, `pop`, `slice`, `take`, `drop`, `first`, `last`, `contains`, `trim`, `replace`, `starts_with`, `ends_with`, `json_parse`, `json_dump`, `safe`, `now_ms`, `chunk`, `flatten`, `uniq`, `compact`, `partition`, `count_by`, `pick`, `omit`, `defaults`, `invert`, `to_pairs`, `from_pairs`, `clamp`, `uuid`, `randint`, `b64encode`, `b64decode`, `now_iso`, `coalesce`, `repeat`, `times`, `find`, `find_index`, `pluck`, `index_by`, `sort_by`, `sum_by`, `avg`, type predicates (`is_null/is_list/is_dict/is_string/is_number/is_bool`, `is_empty`), `identity`, `tap`, `pad_start`, `pad_end`, `lines`, `words`, `capitalize`, `snake_case`, `kebab_case`, `slugify`, `truncate`, `union`, `intersection`, `difference`, `floor`, `ceil`, `log`, `exp`, `pow`
 
 ### Web Applications (`web` / `std.web`)
 - App/routing: `web.app()`, `app.get/post/put/delete/patch/options()`
@@ -41,7 +41,7 @@ The objective is to improve security while preserving the existing PeaLang langu
 - Route groups: `app.group("/api")`
 - Request helpers: query, params, headers, cookies, JSON/form body
 - Response helpers: `web.json/html/text/redirect/error/file/sse/response`, templates, cookies
-- Validation, rate limiting, and auth/helpers: `web.validate`, `web.rate_limit`, `web.bearer_auth`, `web.request_id`, `web.json_error`, `web.etag`, `web.cache_control`, `web.basic_auth`, `web.no_content`, `web.created`, `web.accepted`, `web.ok`, `web.problem`, `web.pagination`, `web.parse_basic_auth`
+- Validation, rate limiting, and auth/helpers: `web.validate`, `web.rate_limit`, `web.bearer_auth`, `web.request_id`, `web.json_error`, `web.etag`, `web.cache_control`, `web.basic_auth`, `web.no_content`, `web.created`, `web.accepted`, `web.ok`, `web.problem`, `web.pagination`, `web.parse_basic_auth`, `web.not_found`, `web.method_not_allowed`, `web.url_join`, `web.unauthorized`, `web.forbidden`, `web.conflict`, `web.too_many_requests`, `web.gone`, `web.unprocessable`, `web.download`, `web.status`
 - Static files, middleware, custom 404/error handlers
 - CORS support with preflight handling (`app.enable_cors()`)
 - OpenAPI 3.0 generation: `web.openapi(app, title, version)`
@@ -51,7 +51,7 @@ The objective is to improve security while preserving the existing PeaLang langu
 - Cleaning: `clean_missing`, `fillna`, `impute`, `drop_duplicates`, `rename`
 - Transform: `select`, `sort_by`, `filter_rows`, `query`, `group_by`, `pivot`, `join/merge`, `concat`, `add_column`, `cumsum`, `normalize`
 - Exploration: `head`, `tail`, `sample`, `unique`, `value_counts`, `top_values`, `columns`
-- I/O and extras: `from_csv`, `from_json`, `to_json`, `between`, `clip`, `mode`, `nunique`, `count`, `melt`, `transpose`, `rank`, `pct_change`, `diff`, `rolling_mean`, `schema`, `zscore`, `histogram`, `cut`, `ffill`, `bfill`, `dropna`, `cast`, `crosstab`
+- I/O and extras: `from_csv`, `from_json`, `to_json`, `to_records`, `to_dict`, `between`, `clip`, `mode`, `nunique`, `count`, `melt`, `transpose`, `rank`, `pct_change`, `diff`, `rolling_mean`, `schema`, `shape`, `isna`, `notna`, `zscore`, `histogram`, `cut`, `ffill`, `bfill`, `dropna`, `cast`/`astype`, `crosstab`, `duplicated`, `nlargest`, `nsmallest`, `pivot_wider`, `explode`, `where`, `str_transform`/`str_lower`/`str_upper`/`str_strip`/`str_contains`/`str_replace`
 - Output: `to_csv`, `to_markdown`, `to_html`, `bar_chart`, `line_chart`, `summary`
 
 ### Cross-Language Interop (`interop` / `std.interop`)
@@ -59,12 +59,12 @@ The objective is to improve security while preserving the existing PeaLang langu
 - Native: `load_library`, `call_native` (ctypes-based)
 - Process: `run`, `pipe_json`, `which`
 - HTTP: `http_get`, `http_post`, `json_rpc`
-- Environment/util/files: `env`, `pipe_json`, `read_text`/`write_text`, `read_json`/`write_json` (host access; trusted contexts)
+- Environment/util/files: `env`, `pipe_json`, `read_text`/`write_text`, `read_json`/`write_json`, `glob`, `exists`, `mkdir_p`, `tempdir`, `basename`, `dirname`, `join_path`, `extname`, `stem`, `is_file`, `is_dir`, `abspath`, `cwd`, `platform` (host access; trusted contexts)
 - Code generation: `generate_typescript`, `generate_java`, `generate_python_stub`
 
 ### Developer Experience (`ux` / `std.ux`, CLI)
 - `ux.doctor()`, `ux.explain()`, `ux.suggest()`
-- CLI: `pea run`, `eval -e`, `repl`, `check`, `lint`, `fmt`, `test`, `compile`, `vm`, `dis`, `init/new --template`, `serve-web`, `doctor`, `templates`, `info`, `project`, `serve`, `stdlib`, `typecheck`
+- CLI: `pea run`, `eval -e/-f`, `repl`, `check/lint [--json]`, `fmt`, `test`, `compile`, `vm`, `dis`, `analyze [--json]`, `init/new --template`, `serve-web`, `doctor`, `templates`, `info`, `project`, `serve`, `stdlib`, `typecheck`
 - Project templates: `default`, `webapp`, `analysis`, `library`, `interop`
 
 ## What's New in v0.99.6

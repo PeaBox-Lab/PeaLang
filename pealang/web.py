@@ -606,6 +606,67 @@ def pagination(page: int = 1, per_page: int = 20, total: int = 0) -> dict[str, A
     pages = (total + per_page - 1) // per_page if per_page else 0
     return {"page": page, "per_page": per_page, "total": total, "pages": pages, "has_next": page < pages, "has_prev": page > 1}
 
+
+def not_found_response(message: str = "Not Found") -> WebResponse:
+    return error_response(message, status=404)
+
+
+def method_not_allowed(allowed: list[str] | None = None) -> WebResponse:
+    headers = {"Allow": ", ".join(allowed)} if allowed else None
+    return json_response({"error": "Method Not Allowed"}, status=405, headers=headers)
+
+
+def url_join(*parts: str) -> str:
+    out = []
+    for i,p in enumerate(parts):
+        s = str(p)
+        if i>0: s = s.lstrip('/')
+        if i < len(parts)-1: s = s.rstrip('/')
+        out.append(s)
+    return '/'.join(out)
+
+
+def unauthorized(message: str = "Unauthorized") -> WebResponse:
+    return error_response(message, status=401)
+
+
+def forbidden(message: str = "Forbidden") -> WebResponse:
+    return error_response(message, status=403)
+
+
+def conflict(message: str = "Conflict") -> WebResponse:
+    return error_response(message, status=409)
+
+
+def too_many_requests(message: str = "Too Many Requests", retry_after: int | None = None) -> WebResponse:
+    headers = {"Retry-After": str(int(retry_after))} if retry_after is not None else None
+    return error_response(message, status=429, headers=headers)
+
+
+def gone(message: str = "Gone") -> WebResponse:
+    return error_response(message, status=410)
+
+
+def unprocessable(message: str = "Unprocessable Entity", errors: list | None = None) -> WebResponse:
+    body = {"error": str(message), "status": 422}
+    if errors is not None: body["errors"] = errors
+    return json_response(body, status=422)
+
+
+def download_response(path: str, filename: str | None = None) -> WebResponse:
+    p = Path(path)
+    name = filename or p.name
+    body = p.read_bytes() if p.exists() else b""
+    return WebResponse(body, status=200 if p.exists() else 404,
+                       headers={"Content-Type": _guess_content_type(p),
+                                "Content-Disposition": f'attachment; filename="{name}"'})
+
+
+def status_response(status: int, body: Any = "", headers: dict[str, str] | None = None) -> WebResponse:
+    if isinstance(body, (dict, list)):
+        return json_response(body, status=status, headers=headers)
+    return WebResponse(body, status=status, headers=headers)
+
 def build_web_namespace(interpreter: Any) -> dict[str, Any]:
     def app():
         return PeaWebApp(interpreter if interpreter is not None else _CURRENT_INTERPRETER)
@@ -644,6 +705,17 @@ def build_web_namespace(interpreter: Any) -> dict[str, Any]:
         "ok": json_ok,
         "problem": problem,
         "pagination": pagination,
+        "not_found": not_found_response,
+        "method_not_allowed": method_not_allowed,
+        "url_join": url_join,
+        "unauthorized": unauthorized,
+        "forbidden": forbidden,
+        "conflict": conflict,
+        "too_many_requests": too_many_requests,
+        "gone": gone,
+        "unprocessable": unprocessable,
+        "download": download_response,
+        "status": status_response,
         "openapi": lambda app_obj, title="PeaLang App", version="1.0.0": app_obj.openapi(title, version),
         "serve": lambda app_obj, host="127.0.0.1", port=8000: app_obj.serve(host, port),
     }

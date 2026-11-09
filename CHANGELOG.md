@@ -92,10 +92,36 @@
 - Added interop file helpers: `read_text`, `write_text`, `read_json`, `write_json` (host-access; trusted contexts).
 - Added `pea test -k` filter alias.
 
+### Language and Runtime (v107 additions)
+- Added builtins/helpers: `get_path`, `deep_merge`, `take`, `drop`, `partition`, `count_by`, `first`, `last`.
+
+### Data Analysis (v107 additions)
+- Added `duplicated`, `nlargest`, `nsmallest`, `pivot_wider`.
+
+### Web (v107 additions)
+- Added `not_found`, `method_not_allowed`, `url_join`.
+
+### Interop (v107 additions)
+- Added path/fs helpers (host access; trusted contexts): `glob`, `exists`, `mkdir_p`, `tempdir`, `basename`, `dirname`.
+
+### Language and Runtime (v108 additions)
+- Added builtins/helpers: `is_empty`, `compact`, `defaults`, `invert`, `to_pairs`, `from_pairs`, `sum_by`, `avg`, `capitalize`, `snake_case`, `kebab_case`, `slugify`, `truncate`, `union`, `intersection`, `difference`.
+
+### Data Analysis (v108 additions)
+- Added: `explode`, `where`, `shape`, `isna`, `notna`, `astype` (alias), `to_records`, `to_dict`, `str_transform`/`str_lower`/`str_upper`/`str_strip`/`str_contains`/`str_replace`.
+
+### Web (v108 additions)
+- Added status/response helpers: `unauthorized` (401), `forbidden` (403), `conflict` (409), `too_many_requests` (429), `gone` (410), `unprocessable` (422), `download`, `status`.
+
+### Interop and CLI (v108 additions)
+- Added interop path/OS helpers (host access; trusted contexts): `join_path`, `extname`, `stem`, `is_file`, `is_dir`, `abspath`, `cwd`, `platform`.
+- Added `pea check --json` / `pea lint --json` machine-readable output.
+- Added `pea analyze <file.json|csv> [--json] [--head N]` data profiling command.
+
 ### Documentation and Quality
 - Updated `README.md`, `docs/USER_GUIDE.md`, `CHANGELOG.md`, and `docs/RELEASE_NOTES_1.0_EXPERIENCE.md`.
-- Added/expanded tests for v102–v106 features (language, analysis, web, interop, CLI).
-- Regression baseline: **655 passed, 1 skipped**.
+- Added/expanded tests for v102–v108 features (language, analysis, web, interop, CLI).
+- Regression baseline: **665 passed, 1 skipped**.
 
 ## 0.99.6 - 2026-10-27
 - Closed CodeQL high-severity findings in SFTP host verification, legacy HMAC trust storage, and type-system regular expressions.

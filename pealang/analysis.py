@@ -835,6 +835,136 @@ def crosstab(data: Any, row: str, col: str, value: str | None = None, agg: str =
             else: table[rk][ck] = vals
     return table
 
+
+def duplicated(data: Any, subset: list[str] | None = None, keep: str = "first") -> list[dict[str, Any]]:
+    rows = _rows(data); seen = set(); out = []
+    for r in rows:
+        key = tuple(r.get(c) for c in subset) if subset else tuple(sorted((str(k),str(v)) for k,v in r.items()))
+        nr = dict(r); nr["_duplicated"] = key in seen
+        if key not in seen: seen.add(key)
+        out.append(nr)
+    return out
+
+
+def nlargest(data: Any, n: int, column: str) -> list[dict[str, Any]]:
+    rows = _rows(data)
+    return sorted(rows, key=lambda r: _numeric(r.get(column)) if _numeric(r.get(column)) is not None else float('-inf'), reverse=True)[:int(n)]
+
+
+def nsmallest(data: Any, n: int, column: str) -> list[dict[str, Any]]:
+    rows = _rows(data)
+    return sorted(rows, key=lambda r: _numeric(r.get(column)) if _numeric(r.get(column)) is not None else float('inf'))[:int(n)]
+
+
+def pivot_wider(data: Any, names_from: str, values_from: str, id_cols: list[str] | None = None) -> list[dict[str, Any]]:
+    rows = _rows(data); ids = id_cols or [c for c in columns(rows) if c not in (names_from, values_from)]
+    groups = {}
+    for r in rows:
+        key = tuple(r.get(c) for c in ids)
+        groups.setdefault(key, {c: r.get(c) for c in ids})
+        groups[key][str(r.get(names_from))] = r.get(values_from)
+    return list(groups.values())
+
+
+def explode(data: Any, column: str) -> list[dict[str, Any]]:
+    rows = _rows(data); out = []
+    for r in rows:
+        vals = r.get(column)
+        if isinstance(vals, list):
+            for v in vals:
+                nr = dict(r); nr[column] = v; out.append(nr)
+        else:
+            out.append(dict(r))
+    return out
+
+
+def where(data: Any, column: str, fn_or_value, other: Any = None) -> list[dict[str, Any]]:
+    rows = _rows(data); out = []
+    for r in rows:
+        nr = dict(r); v = nr.get(column)
+        try:
+            keep = fn_or_value(v) if callable(fn_or_value) else (v == fn_or_value)
+        except Exception:
+            keep = False
+        if not keep: nr[column] = other
+        out.append(nr)
+    return out
+
+
+def shape(data: Any) -> dict[str, int]:
+    rows = _rows(data)
+    return {"rows": len(rows), "columns": len(columns(rows))}
+
+
+def isna(data: Any, column: str | None = None) -> int | dict[str, int]:
+    rows = _rows(data)
+    if column:
+        return sum(1 for r in rows if r.get(column) is None or r.get(column) == "")
+    return {c: sum(1 for r in rows if r.get(c) is None or r.get(c) == "") for c in columns(rows)}
+
+
+def notna(data: Any, column: str | None = None) -> int | dict[str, int]:
+    rows = _rows(data)
+    if column:
+        return sum(1 for r in rows if r.get(column) is not None and r.get(column) != "")
+    na = isna(rows)
+    if isinstance(na, dict):
+        return {c: len(rows)-n for c,n in na.items()}
+    return len(rows)-na
+
+
+def to_records(data: Any) -> list[dict[str, Any]]:
+    return _rows(data)
+
+
+def to_dict_orient(data: Any, orient: str = "records") -> Any:
+    rows = _rows(data)
+    if orient == "records": return rows
+    if orient == "columns":
+        out = {c: [] for c in columns(rows)}
+        for r in rows:
+            for c in out: out[c].append(r.get(c))
+        return out
+    if orient == "list":
+        return [list(r.values()) for r in rows]
+    return rows
+
+
+def str_transform(data: Any, column: str, op: str = "lower") -> list[dict[str, Any]]:
+    rows = _rows(data); out = []
+    for r in rows:
+        nr = dict(r); v = nr.get(column)
+        if v is not None:
+            sv = str(v)
+            if op == "lower": nr[column] = sv.lower()
+            elif op == "upper": nr[column] = sv.upper()
+            elif op == "strip": nr[column] = sv.strip()
+            elif op == "title": nr[column] = sv.title()
+            elif op == "len": nr[column] = len(sv)
+        out.append(nr)
+    return out
+
+
+def str_contains(data: Any, column: str, pattern: str, case: bool = True) -> list[dict[str, Any]]:
+    rows = _rows(data); pat = str(pattern)
+    if not case: pat = pat.lower()
+    out = []
+    for r in rows:
+        v = r.get(column)
+        sv = str(v) if v is not None else ""
+        if not case: sv = sv.lower()
+        if pat in sv: out.append(dict(r))
+    return out
+
+
+def str_replace(data: Any, column: str, old: str, new: str) -> list[dict[str, Any]]:
+    rows = _rows(data); out = []
+    for r in rows:
+        nr = dict(r); v = nr.get(column)
+        if v is not None: nr[column] = str(v).replace(str(old), str(new))
+        out.append(nr)
+    return out
+
 def build_analysis_namespace() -> dict[str, Any]:
     return {
         "profile": profile,
@@ -896,5 +1026,23 @@ def build_analysis_namespace() -> dict[str, Any]:
         "dropna": dropna,
         "cast": cast,
         "crosstab": crosstab,
+        "duplicated": duplicated,
+        "nlargest": nlargest,
+        "nsmallest": nsmallest,
+        "pivot_wider": pivot_wider,
+        "explode": explode,
+        "where": where,
+        "shape": shape,
+        "isna": isna,
+        "notna": notna,
+        "astype": cast,
+        "to_records": to_records,
+        "to_dict": to_dict_orient,
+        "str_transform": str_transform,
+        "str_lower": lambda d,c: str_transform(d,c,"lower"),
+        "str_upper": lambda d,c: str_transform(d,c,"upper"),
+        "str_strip": lambda d,c: str_transform(d,c,"strip"),
+        "str_contains": str_contains,
+        "str_replace": str_replace,
     }
 

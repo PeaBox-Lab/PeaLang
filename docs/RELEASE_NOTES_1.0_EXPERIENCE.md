@@ -53,9 +53,22 @@ This release delivers a broad, practical application-development surface on top 
 python -m pytest -q
 ```
 
-**Result:** 655 passed, 1 skipped.
+**Result:** 665 passed, 1 skipped.
 
-New/updated coverage includes: language ergonomics (comprehensions, `in`/`not in`, `**`, match/destructuring, helpers/builtins), web routing/groups/CORS/OpenAPI/validation/SSE/file/auth/cache helpers, analysis profiling/transforms/stats/IO/charts/melt/zscore/histogram/cut, interop (Python/native/process/HTTP/JSON-RPC/env/codegen), and CLI (`eval -e/-f`, `lint`, `info`, `new`, `serve-web`, templates/doctor).
+New/updated coverage includes: language ergonomics (comprehensions, `in`/`not in`, `**`, match/destructuring, helpers/builtins), web routing/groups/CORS/OpenAPI/validation/SSE/file/auth/cache/status helpers, analysis profiling/transforms/stats/IO/charts/melt/zscore/histogram/cut/shape/string/reshape, interop (Python/native/process/HTTP/JSON-RPC/env/files/paths/codegen), and CLI (`eval -e/-f`, `check/lint --json`, `analyze`, `info`, `new`, `serve-web`, templates/doctor).
+
+## Additional Batch Notes (v108)
+- **Builtins:** `is_empty`, `compact`, `defaults`, `invert`, `to_pairs`, `from_pairs`, `sum_by`, `avg`, `capitalize`, `snake_case`, `kebab_case`, `slugify`, `truncate`, `union`, `intersection`, `difference`.
+- **Analysis:** `explode`, `where`, `shape`, `isna`, `notna`, `astype` (alias), `to_records`, `to_dict`, `str_transform`/`str_lower`/`str_upper`/`str_strip`/`str_contains`/`str_replace`.
+- **Web:** `unauthorized`, `forbidden`, `conflict`, `too_many_requests`, `gone`, `unprocessable`, `download`, `status`.
+- **Interop (host, trusted):** `join_path`, `extname`, `stem`, `is_file`, `is_dir`, `abspath`, `cwd`, `platform`.
+- **CLI:** `pea check --json` / `pea lint --json`, `pea analyze <file.json|csv> [--json] [--head N]`.
+
+## Additional Batch Notes (v107)
+- **Builtins:** `get_path`, `deep_merge`, `take`, `drop`, `partition`, `count_by`, `first`, `last`.
+- **Analysis:** `duplicated`, `nlargest`, `nsmallest`, `pivot_wider`.
+- **Web:** `not_found`, `method_not_allowed`, `url_join`.
+- **Interop (host, trusted):** `glob`, `exists`, `mkdir_p`, `tempdir`, `basename`, `dirname`.
 
 ## Additional Batch Notes (v106)
 - **Builtins:** type predicates (`is_null/is_list/is_dict/is_string/is_number/is_bool`), `identity`, `tap`, `pad_start`, `pad_end`, `lines`, `words`, `floor`, `ceil`, `log`, `exp`, `pow`.

@@ -355,7 +355,7 @@ def main(argv=None):
         if c=='info':
             from .stdlib import stdlib_manifest
             sm=stdlib_manifest();mods=sm.get('modules',sm)
-            info={'version':__version__,'stdlib':list(mods.keys()) if isinstance(mods,dict) else mods,'commands':['run','eval','repl','check','lint','fmt','test','compile','vm','dis','init','new','serve-web','doctor','templates','info','project','serve','stdlib','typecheck','docs']}
+            info={'version':__version__,'stdlib':list(mods.keys()) if isinstance(mods,dict) else mods,'commands':['run','eval','repl','check','lint','fmt','test','compile','vm','dis','init','new','serve-web','doctor','templates','info','project','serve','stdlib','typecheck','docs','analyze']}
             print(json.dumps(info,indent=2));return 0
 
         if c=='project':print(json.dumps(project_info(argv[1] if len(argv)>1 else '.'),indent=2));return 0
@@ -396,6 +396,16 @@ def main(argv=None):
 
             print(json.dumps(d.start(),indent=2,default=str));return 0
 
+        if c=='analyze':
+            p=argparse.ArgumentParser(prog='pea analyze');p.add_argument('path');p.add_argument('--json',action='store_true');p.add_argument('--head',type=int,default=None);a=p.parse_args(argv[1:])
+            from .analysis import profile as _profile, from_csv_text, from_json_text, head as _head
+            txt=Path(a.path).read_text(encoding='utf-8')
+            try: data=from_json_text(txt)
+            except Exception: data=from_csv_text(txt)
+            if a.head is not None: data=_head(data,a.head)
+            result=_profile(data)
+            print(json.dumps(result,indent=2,default=str) if a.json else json.dumps(result,indent=2,default=str));return 0
+
         if c=='run':
 
             p=argparse.ArgumentParser(prog='pea run');p.add_argument('file');p.add_argument('--allow-process',action='store_true');a=p.parse_args(argv[1:]);return run_file(a.file,a.allow_process)
@@ -416,13 +426,17 @@ def main(argv=None):
 
         if c in ('check','lint'):
 
-            p=argparse.ArgumentParser(prog=f'pea {c}');p.add_argument('paths',nargs='+');a=p.parse_args(argv[1:]);errors=warnings=0
+            p=argparse.ArgumentParser(prog=f'pea {c}');p.add_argument('paths',nargs='+');p.add_argument('--json',action='store_true');a=p.parse_args(argv[1:]);errors=warnings=0;items=[]
 
             for f in discover_pea(a.paths):
 
-                for d in check_source(f.read_text(encoding='utf-8'),str(f)):print(d.render(str(f)));errors+=d.severity=='error';warnings+=d.severity!='error'
+                for d in check_source(f.read_text(encoding='utf-8'),str(f)):
+                    if a.json: items.append({'file':str(f),'severity':d.severity,'message':getattr(d,'message',str(d)),'line':getattr(d,'line',None),'column':getattr(d,'col',getattr(d,'column',None))})
+                    else: print(d.render(str(f)))
+                    errors+=d.severity=='error';warnings+=d.severity!='error'
 
-            if c=='lint':print(f'Lint: {errors} error(s), {warnings} warning(s)')
+            if a.json: print(json.dumps({'ok':errors==0,'errors':errors,'warnings':warnings,'items':items},indent=2))
+            elif c=='lint':print(f'Lint: {errors} error(s), {warnings} warning(s)')
 
             return 1 if errors else 0
 
@@ -484,7 +498,7 @@ def main(argv=None):
 
         if allow:argv.remove('--allow-process')
 
-        if len(argv)!=1:print('Usage: pea [run|eval|repl|check|lint|fmt|test|compile|vm|dis|init|new|serve-web|doctor|templates|info|project|docs|typecheck|stdlib] ...',file=sys.stderr);return 2
+        if len(argv)!=1:print('Usage: pea [run|eval|repl|check|lint|fmt|test|compile|vm|dis|init|new|serve-web|doctor|templates|info|project|docs|analyze|typecheck|stdlib] ...',file=sys.stderr);return 2
 
         return run_file(argv[0],allow)
 

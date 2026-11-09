@@ -133,13 +133,86 @@ class Interpreter:
         def _log(x, base=None): import math as _m; return _m.log(x) if base is None else _m.log(x, base)
         def _exp(x): import math as _m; return _m.exp(x)
         def _pow(a,b): return a**b
+        def _get_path(obj, path, default=None):
+            cur = obj
+            for part in str(path).split('.'):
+                try:
+                    if isinstance(cur, dict): cur = cur[part] if part in cur else cur.get(int(part) if part.isdigit() else part, default)
+                    elif isinstance(cur, list): cur = cur[int(part)]
+                    else: return default
+                except Exception: return default
+            return cur
+        def _deep_merge(a, b):
+            if isinstance(a, dict) and isinstance(b, dict):
+                r = dict(a)
+                for k,v in b.items(): r[k] = _deep_merge(r[k], v) if k in r else v
+                return r
+            return b
+        def _take(seq, n): return list(seq)[:int(n)]
+        def _drop(seq, n): return list(seq)[int(n):]
+        def _partition(seq, fn):
+            a,b=[],[]
+            for x in seq:
+                ok = self.invoke_user_function(fn,[x]) if isinstance(fn,UserFunction) else fn(x)
+                (a if ok else b).append(x)
+            return [a,b]
+        def _count_by(seq, fn=None):
+            from collections import Counter
+            if fn is None: return dict(Counter(seq))
+            vals=[self.invoke_user_function(fn,[x]) if isinstance(fn,UserFunction) else (x.get(fn) if isinstance(x,dict) and isinstance(fn,str) else fn(x)) for x in seq]
+            return dict(Counter(vals))
+        def _first(seq, default=None): return list(seq)[0] if seq else default
+        def _last(seq, default=None): return list(seq)[-1] if seq else default
+        def _is_empty(x):
+            if x is None: return True
+            try: return len(x)==0
+            except Exception: return False
+        def _compact(seq): return [x for x in seq if x is not None and x is not False and x != '' and x != 0]
+        def _defaults(d, *defs):
+            r=dict(d) if isinstance(d,dict) else {}
+            for df in defs:
+                if isinstance(df,dict):
+                    for k,v in df.items():
+                        if k not in r or r[k] is None: r[k]=v
+            return r
+        def _invert(d): return {v:k for k,v in d.items()} if isinstance(d,dict) else {}
+        def _to_pairs(d): return [[k,v] for k,v in d.items()] if isinstance(d,dict) else list(d)
+        def _from_pairs(pairs): return {k:v for k,v in pairs}
+        def _sum_by(seq, key):
+            return sum((x.get(key) if isinstance(x,dict) else getattr(x,key,0)) or 0 for x in seq)
+        def _avg(seq):
+            s=list(seq); return (sum(s)/len(s)) if s else None
+        def _capitalize(s): t=str(s); return t[:1].upper()+t[1:] if t else t
+        def _snake_case(s):
+            import re as _re; t=str(s).replace('-',' ').replace(' ','_')
+            t=_re.sub(r'([a-z0-9])([A-Z])', r'\1_\2', t); return t.lower()
+        def _kebab_case(s): return _snake_case(s).replace('_','-')
+        def _slugify(s):
+            import re as _re
+            t=str(s)
+            t=_re.sub(r'([a-z0-9])([A-Z])', r'\1-\2', t)
+            t=t.lower()
+            t=_re.sub(r'[^a-z0-9]+','-', t)
+            return t.strip('-')
+        def _truncate(s, n, suffix='...'):
+            t=str(s); n=int(n)
+            return t if len(t)<=n else t[:max(0,n-len(suffix))]+suffix
+        def _union(*seqs):
+            out=[]
+            for seq in seqs:
+                for x in seq:
+                    if x not in out: out.append(x)
+            return out
+        def _intersection(a,b): bset=list(b); return [x for x in a if x in bset]
+        def _difference(a,b): bset=list(b); return [x for x in a if x not in bset]
+
 
         def _safe(fn,default=None):
             try:
                 if isinstance(fn,UserFunction): return self.invoke_user_function(fn,[])
                 return fn()
             except Exception: return default
-        builtins={'range':lambda *a:list(range(*map(int,a))),'len':len,'str':lambda x:self.stringify(x),'bool':bool,'number':lambda x:float(x),'int':lambda x:int(float(x)),'float':lambda x:float(x),'type':lambda x:type(x).__name__,'upper':lambda x:str(x).upper(),'lower':lambda x:str(x).lower(),'trim':lambda x:str(x).strip(),'split':lambda x,s=None:str(x).split(s),'join':lambda s,x:str(s).join(map(str,x)),'replace':lambda s,a,b:str(s).replace(str(a),str(b)),'starts_with':lambda s,p:str(s).startswith(str(p)),'ends_with':lambda s,p:str(s).endswith(str(p)),'contains':_contains,'append':self._append,'push':_push,'pop':_pop,'get':_get,'has':_has,'merge':_merge,'slice':_slice,'keys':lambda d:list(d.keys()) if isinstance(d,dict) else list(range(len(d))),'values':lambda d:list(d.values()) if isinstance(d,dict) else list(d),'items':lambda d:[[k,v] for k,v in d.items()] if isinstance(d,dict) else _enumerate(d),'read':lambda p:Path(p).read_text(encoding='utf-8'),'write':self._write,'exists':os.path.exists,'sqrt':math.sqrt,'abs':abs,'round':round,'min':min,'max':max,'sum':lambda x,start=0:sum(x,start),'sleep':time.sleep,'enumerate':_enumerate,'zip':_zip,'sorted':_sorted,'reversed':_reversed,'map':_map,'filter':_filter,'any':_any,'all':_all,'list':lambda x=None:list(x) if x is not None else [],'dict':lambda x=None:dict(x) if x is not None else {},'json_parse':lambda s:json.loads(s),'json_dump':lambda x,indent=None:json.dumps(x,indent=indent,ensure_ascii=False,default=str),'safe':_safe,'now_ms':lambda:int(time.time()*1000),'chunk':_chunk,'flatten':_flatten,'uniq':_uniq,'pick':_pick,'omit':_omit,'clamp':_clamp,'uuid':_uuid,'randint':_randint,'b64encode':_b64e,'b64decode':_b64d,'now_iso':_now_iso,'coalesce':_coalesce,'repeat':_repeat,'times':_times,'find':_find,'find_index':_find_index,'pluck':_pluck,'index_by':_index_by,'sort_by':_sort_by,'is_null':_is_null,'is_list':_is_list,'is_dict':_is_dict,'is_string':_is_string,'is_number':_is_number,'is_bool':_is_bool,'identity':_identity,'tap':_tap,'pad_start':_pad_start,'pad_end':_pad_end,'lines':_lines,'words':_words,'floor':_floor,'ceil':_ceil,'log':_log,'exp':_exp,'pow':_pow}
+        builtins={'range':lambda *a:list(range(*map(int,a))),'len':len,'str':lambda x:self.stringify(x),'bool':bool,'number':lambda x:float(x),'int':lambda x:int(float(x)),'float':lambda x:float(x),'type':lambda x:type(x).__name__,'upper':lambda x:str(x).upper(),'lower':lambda x:str(x).lower(),'trim':lambda x:str(x).strip(),'split':lambda x,s=None:str(x).split(s),'join':lambda s,x:str(s).join(map(str,x)),'replace':lambda s,a,b:str(s).replace(str(a),str(b)),'starts_with':lambda s,p:str(s).startswith(str(p)),'ends_with':lambda s,p:str(s).endswith(str(p)),'contains':_contains,'append':self._append,'push':_push,'pop':_pop,'get':_get,'has':_has,'merge':_merge,'slice':_slice,'keys':lambda d:list(d.keys()) if isinstance(d,dict) else list(range(len(d))),'values':lambda d:list(d.values()) if isinstance(d,dict) else list(d),'items':lambda d:[[k,v] for k,v in d.items()] if isinstance(d,dict) else _enumerate(d),'read':lambda p:Path(p).read_text(encoding='utf-8'),'write':self._write,'exists':os.path.exists,'sqrt':math.sqrt,'abs':abs,'round':round,'min':min,'max':max,'sum':lambda x,start=0:sum(x,start),'sleep':time.sleep,'enumerate':_enumerate,'zip':_zip,'sorted':_sorted,'reversed':_reversed,'map':_map,'filter':_filter,'any':_any,'all':_all,'list':lambda x=None:list(x) if x is not None else [],'dict':lambda x=None:dict(x) if x is not None else {},'json_parse':lambda s:json.loads(s),'json_dump':lambda x,indent=None:json.dumps(x,indent=indent,ensure_ascii=False,default=str),'safe':_safe,'now_ms':lambda:int(time.time()*1000),'chunk':_chunk,'flatten':_flatten,'uniq':_uniq,'pick':_pick,'omit':_omit,'clamp':_clamp,'uuid':_uuid,'randint':_randint,'b64encode':_b64e,'b64decode':_b64d,'now_iso':_now_iso,'coalesce':_coalesce,'repeat':_repeat,'times':_times,'find':_find,'find_index':_find_index,'pluck':_pluck,'index_by':_index_by,'sort_by':_sort_by,'is_null':_is_null,'is_list':_is_list,'is_dict':_is_dict,'is_string':_is_string,'is_number':_is_number,'is_bool':_is_bool,'identity':_identity,'tap':_tap,'pad_start':_pad_start,'pad_end':_pad_end,'lines':_lines,'words':_words,'floor':_floor,'ceil':_ceil,'log':_log,'exp':_exp,'pow':_pow,'get_path':_get_path,'deep_merge':_deep_merge,'take':_take,'drop':_drop,'partition':_partition,'count_by':_count_by,'first':_first,'last':_last,'is_empty':_is_empty,'compact':_compact,'defaults':_defaults,'invert':_invert,'to_pairs':_to_pairs,'from_pairs':_from_pairs,'sum_by':_sum_by,'avg':_avg,'capitalize':_capitalize,'snake_case':_snake_case,'kebab_case':_kebab_case,'slugify':_slugify,'truncate':_truncate,'union':_union,'intersection':_intersection,'difference':_difference}
         for k,v in builtins.items():self.global_env.define(k,v,True)
         for k,v in build_standard_library(allow_process=allow_process,permissions=permissions).items():self.global_env.define(k,v,True)
         ai_ns,self.ai_service=build_ai_namespace();self.global_env.define('ai',ai_ns,True)
