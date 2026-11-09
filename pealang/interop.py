@@ -361,6 +361,26 @@ def tail_file(path: str, n: int = 10, encoding: str = "utf-8") -> list[str]:
     lines = Path(path).read_text(encoding=encoding).splitlines()
     return lines[-int(n):] if n else []
 
+
+def cpu_count() -> int:
+    return os.cpu_count() or 1
+
+
+def hostname() -> str:
+    import socket
+    return socket.gethostname()
+
+
+def user() -> str:
+    try:
+        return os.getlogin()
+    except Exception:
+        return os.environ.get("USERNAME") or os.environ.get("USER") or ""
+
+
+def pid() -> int:
+    return os.getpid()
+
 def build_interop_namespace() -> dict[str, Any]:
     return {
         "call_python": call_python,
@@ -408,6 +428,10 @@ def build_interop_namespace() -> dict[str, Any]:
         "touch": touch,
         "head_file": head_file,
         "tail_file": tail_file,
+        "cpu_count": cpu_count,
+        "hostname": hostname,
+        "user": user,
+        "pid": pid,
         "generate_typescript": generate_typescript_client,
         "generate_java": generate_java_client,
         "generate_python_stub": generate_python_stub,

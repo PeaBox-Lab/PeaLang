@@ -362,7 +362,7 @@ def main(argv=None):
         if c=='info':
             from .stdlib import stdlib_manifest
             sm=stdlib_manifest();mods=sm.get('modules',sm)
-            info={'version':__version__,'stdlib':list(mods.keys()) if isinstance(mods,dict) else mods,'commands':['run','eval','repl','check','lint','fmt','test','compile','vm','dis','init','new','serve-web','doctor','templates','info','project','serve','stdlib','typecheck','docs','analyze','web-openapi','openapi','hash','tree','quickstart']}
+            info={'version':__version__,'stdlib':list(mods.keys()) if isinstance(mods,dict) else mods,'commands':['run','eval','repl','check','lint','fmt','test','compile','vm','dis','init','new','serve-web','doctor','templates','info','project','serve','stdlib','typecheck','docs','analyze','web-openapi','openapi','hash','tree','env','quickstart']}
             print(json.dumps(info,indent=2));return 0
 
         if c=='project':print(json.dumps(project_info(argv[1] if len(argv)>1 else '.'),indent=2));return 0
@@ -437,6 +437,18 @@ def main(argv=None):
             with open(a.file,'rb') as f:
                 for chunk in iter(lambda:f.read(65536),b''): h.update(chunk)
             print(h.hexdigest()); return 0
+
+        if c=='env':
+            p=argparse.ArgumentParser(prog='pea env');p.add_argument('name',nargs='?');p.add_argument('--keys',action='store_true');a=p.parse_args(argv[1:])
+            import os
+            if a.keys:
+                for k in sorted(os.environ.keys()): print(k)
+                return 0
+            if not a.name:
+                print('Usage: pea env <NAME> | pea env --keys', file=sys.stderr); return 2
+            v=os.environ.get(a.name)
+            if v is None: return 1
+            print(v); return 0
 
         if c=='tree':
             p=argparse.ArgumentParser(prog='pea tree');p.add_argument('path',nargs='?',default='.');a=p.parse_args(argv[1:])
@@ -536,7 +548,7 @@ def main(argv=None):
 
         if allow:argv.remove('--allow-process')
 
-        if len(argv)!=1:print('Usage: pea [run|eval|repl|check|lint|fmt|test|compile|vm|dis|init|new|serve-web|doctor|quickstart|templates|info|project|docs|analyze|web-openapi|hash|tree|typecheck|stdlib] ...',file=sys.stderr);return 2
+        if len(argv)!=1:print('Usage: pea [run|eval|repl|check|lint|fmt|test|compile|vm|dis|init|new|serve-web|doctor|quickstart|templates|info|project|docs|analyze|web-openapi|hash|tree|env|typecheck|stdlib] ...',file=sys.stderr);return 2
 
         return run_file(argv[0],allow)
 

@@ -163,10 +163,24 @@
 - Added CLI: `pea tree [path]`, `pea version --json`.
 - Added project template: `etl` (JSON load/transform/profile starter).
 
+### Language and Runtime (v112 additions)
+- Added builtins/helpers: `gcd`, `lcm`, `sign`, `is_even`, `is_odd`, `lerp`, `rotate`, `interleave`, `windows` (sliding), `dedupe_by`, `assoc`, `dissoc`, `rename_keys`, `format_number`, `between` (scalar).
+
+### Data Analysis (v112 additions)
+- Added: `rolling_std`, `expanding_sum`, `expanding_max`, `expanding_min`, `sample_frac`, `ewm_mean`, `standardize` (alias of `zscore`).
+
+### Web (v112 additions)
+- Added: `accepts`, `accepts_json`, `accepts_html`, `no_cache`, `vary`, `link_header`.
+
+### Interop, CLI, and Templates (v112 additions)
+- Added interop helpers (host access; trusted contexts): `cpu_count`, `hostname`, `user`, `pid`.
+- Added CLI: `pea env <NAME>` / `pea env --keys`.
+- Added project template: `automation`.
+
 ### Documentation and Quality
 - Updated `README.md`, `docs/USER_GUIDE.md`, `CHANGELOG.md`, and `docs/RELEASE_NOTES_1.0_EXPERIENCE.md`.
-- Added/expanded tests for v102–v111 features (language, analysis, web, interop/UX, CLI/templates).
-- Regression baseline: **686 passed, 1 skipped**.
+- Added/expanded tests for v102–v112 features (language, analysis, web, interop/UX, CLI/templates).
+- Regression baseline: **693 passed, 1 skipped**.
 
 ## 0.99.6 - 2026-10-27
 - Closed CodeQL high-severity findings in SFTP host verification, legacy HMAC trust storage, and type-system regular expressions.

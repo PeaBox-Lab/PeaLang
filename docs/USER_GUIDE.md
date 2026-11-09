@@ -35,13 +35,14 @@ pea doctor
 | `pea web-openapi` / `pea openapi <file.pea> [--title T] [--version V]` | Extract OpenAPI from a file defining `app` |
 | `pea hash <file> [--algo sha256]` | Compute file hash |
 | `pea tree [path]` | List `.pea` source files |
+| `pea env <NAME>` / `--keys` | Get an environment variable (or list names) |
 | `pea version [--json]` | Print version (JSON supported) |
 | `pea typecheck <paths...>` | Optional type checking |
 | `pea semantic <paths...>` | Semantic analysis |
 | `pea quickstart` | Print quickstart commands |
 | `pea doctor` | Environment and dependency diagnostics |
 | `pea templates` | List project templates |
-| `pea init [path] [--name N] [--template T]` | Create a project (`default`, `webapp`, `api`, `analysis`, `etl`, `library`, `interop`) |
+| `pea init [path] [--name N] [--template T]` | Create a project (`default`, `webapp`, `api`, `analysis`, `etl`, `automation`, `library`, `interop`) |
 | `pea new [path] [--template T]` | Alias for `init` |
 | `pea serve-web <file.pea> [--host H] [--port P]` | Run a file and serve its exported `app` (best-effort) |
 | `pea project [path]` | Show project manifest info |
@@ -172,7 +173,7 @@ print analysis.to_csv(top)
 print analysis.bar_chart(data, "name", "score")
 ```
 
-Key functions include: `profile`, `describe`, `summary`, `shape`, `correlation`/`corr`, `corr_matrix`, `mean_col`/`sum_col`/`min_col`/`max_col`/`median_col`, `quantile`/`percentile`, `variance`, `std`, `skew`, `kurtosis`, `covariance`, `outliers`, `isna`, `notna`, `clean_missing`, `fillna`, `ffill`, `bfill`, `dropna`, `impute`, `replace_values`, `drop_duplicates`, `rename`, `cast`/`astype`, `select`, `sort_by`, `filter_rows`, `query`, `group_by`, `pivot`, `pivot_wider`, `crosstab`, `one_hot`, `join`/`merge`, `concat`, `add_column`, `assign`, `drop_columns`/`keep_columns`, `round_col`/`abs_col`, `cumsum`, `cummax`/`cummin`/`cumprod`, `normalize`, `sample`, `unique`, `value_counts`, `nunique`, `count`, `duplicated`, `nlargest`/`nsmallest`, `idxmax`/`idxmin`, `head`/`tail`, `between`, `clip`, `mode`, `melt`, `transpose`, `explode`, `where`, `split_column`, `shift`/`lag`/`lead`, `rank`, `pct_change`, `diff`, `rolling_mean`, `expanding_mean`, `zscore`, `histogram`, `cut`, `str_transform`/`str_lower`/`str_upper`/`str_strip`/`str_contains`/`str_replace`, `schema`, `from_csv`, `from_json`/`from_jsonl`, `to_json`/`to_jsonl`, `to_records`, `to_dict`, `to_csv`, `to_markdown`, `to_html`, `bar_chart`, `line_chart`.
+Key functions include: `profile`, `describe`, `summary`, `shape`, `correlation`/`corr`, `corr_matrix`, `mean_col`/`sum_col`/`min_col`/`max_col`/`median_col`, `quantile`/`percentile`, `variance`, `std`, `skew`, `kurtosis`, `covariance`, `outliers`, `isna`, `notna`, `clean_missing`, `fillna`, `ffill`, `bfill`, `dropna`, `impute`, `replace_values`, `drop_duplicates`, `rename`, `cast`/`astype`, `select`, `sort_by`, `filter_rows`, `query`, `group_by`, `pivot`, `pivot_wider`, `crosstab`, `one_hot`, `join`/`merge`, `concat`, `add_column`, `assign`, `drop_columns`/`keep_columns`, `round_col`/`abs_col`, `cumsum`, `cummax`/`cummin`/`cumprod`, `normalize`, `sample`, `unique`, `value_counts`, `nunique`, `count`, `duplicated`, `nlargest`/`nsmallest`, `idxmax`/`idxmin`, `head`/`tail`, `between`, `clip`, `mode`, `melt`, `transpose`, `explode`, `where`, `split_column`, `shift`/`lag`/`lead`, `rank`, `pct_change`, `diff`, `rolling_mean`, `rolling_std`, `expanding_mean`/`expanding_sum`/`expanding_max`/`expanding_min`, `ewm_mean`, `zscore`, `histogram`, `cut`, `sample_frac`, `standardize`, `str_transform`/`str_lower`/`str_upper`/`str_strip`/`str_contains`/`str_replace`, `schema`, `from_csv`, `from_json`/`from_jsonl`, `to_json`/`to_jsonl`, `to_records`, `to_dict`, `to_csv`, `to_markdown`, `to_html`, `bar_chart`, `line_chart`.
 
 ## Cross-Language Interop (`interop` / `std.interop`)
 
@@ -213,4 +214,4 @@ pea check .
 pea lint .
 ```
 
-Current experience-layer validation baseline in this workspace: **686 passed, 1 skipped** (see release notes/changelog for details).
+Current experience-layer validation baseline in this workspace: **693 passed, 1 skipped** (see release notes/changelog for details).

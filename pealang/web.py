@@ -808,6 +808,33 @@ def method_is(request, *methods) -> bool:
         allowed = {str(x).upper() for x in list(methods)[0]}
     return str(m).upper() in allowed
 
+
+def accepts(request, mime: str) -> bool:
+    h = request.headers.get("accept","") if hasattr(request,"headers") else (request.get("headers") or {}).get("accept","") if isinstance(request,dict) else ""
+    h = str(h).lower(); m = str(mime).lower()
+    return m in h or "*/*" in h
+
+
+def accepts_json(request) -> bool:
+    return accepts(request, "application/json")
+
+
+def accepts_html(request) -> bool:
+    return accepts(request, "text/html")
+
+
+def no_cache() -> dict[str, str]:
+    return {"Cache-Control": "no-store, no-cache, must-revalidate, max-age=0", "Pragma": "no-cache"}
+
+
+def vary(*headers) -> dict[str, str]:
+    return {"Vary": ", ".join(str(h) for h in headers)}
+
+
+def link_header(links: dict[str, str]) -> dict[str, str]:
+    parts = [f'<{v}>; rel="{k}"' for k,v in (links or {}).items()]
+    return {"Link": ", ".join(parts)} if parts else {}
+
 def build_web_namespace(interpreter: Any) -> dict[str, Any]:
     def app():
         return PeaWebApp(interpreter if interpreter is not None else _CURRENT_INTERPRETER)
@@ -879,6 +906,12 @@ def build_web_namespace(interpreter: Any) -> dict[str, Any]:
         "query_bool": query_bool,
         "api_key_auth": api_key_auth,
         "method_is": method_is,
+        "accepts": accepts,
+        "accepts_json": accepts_json,
+        "accepts_html": accepts_html,
+        "no_cache": no_cache,
+        "vary": vary,
+        "link_header": link_header,
         "openapi": lambda app_obj, title="PeaLang App", version="1.0.0": app_obj.openapi(title, version),
         "serve": lambda app_obj, host="127.0.0.1", port=8000: app_obj.serve(host, port),
     }

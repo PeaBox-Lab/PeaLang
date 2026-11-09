@@ -338,12 +338,60 @@ class Interpreter:
             a=args if isinstance(args,list) else ([] if args is None else [args])
             return self.invoke_user_function(fn,a) if isinstance(fn,UserFunction) else fn(*a)
         def _pairs_to_dict(seq): return {k:v for k,v in seq}
+
+        def _gcd(a,b):
+            import math as _m; return _m.gcd(int(a), int(b))
+        def _lcm(a,b):
+            import math as _m; a,b=int(a),int(b)
+            return abs(a*b)//_m.gcd(a,b) if a and b else 0
+        def _sign(x):
+            try: x=float(x); return 0 if x==0 else (1 if x>0 else -1)
+            except Exception: return 0
+        def _is_even(x): return int(x) % 2 == 0
+        def _is_odd(x): return int(x) % 2 != 0
+        def _lerp(a,b,t): return a + (b-a)*float(t)
+        def _rotate(seq, n=1):
+            s=list(seq)
+            if not s: return s
+            n=int(n)%len(s); return s[-n:]+s[:-n] if n else s
+        def _interleave(*seqs):
+            out=[]
+            for items in zip(*seqs):
+                for x in items: out.append(x)
+            return out
+        def _window_list(seq, size, step=1):
+            s=list(seq); size=int(size); step=max(1,int(step)); out=[]
+            for i in range(0, max(0, len(s)-size+1), step): out.append(s[i:i+size])
+            return out
+        def _dedupe_by(seq, fn):
+            seen=set(); out=[]
+            for x in seq:
+                k = self.invoke_user_function(fn,[x]) if isinstance(fn,UserFunction) else (x.get(fn) if isinstance(x,dict) and isinstance(fn,str) else fn(x))
+                try: sk=k
+                except Exception: sk=str(k)
+                if sk not in seen: seen.add(sk); out.append(x)
+            return out
+        def _assoc(d, key, value):
+            r=dict(d) if isinstance(d,dict) else {}; r[key]=value; return r
+        def _dissoc(d, *keys):
+            r=dict(d) if isinstance(d,dict) else {}; 
+            for k in keys: r.pop(k,None)
+            return r
+        def _rename_keys(d, mapping):
+            if not isinstance(d,dict): return d
+            return { (mapping.get(k,k)): v for k,v in d.items() }
+        def _format_number(x, decimals=2):
+            try: return f"{float(x):.{int(decimals)}f}"
+            except Exception: return str(x)
+        def _between_val(x, lo, hi): 
+            try: x=float(x); return float(lo)<=x<=float(hi)
+            except Exception: return False
         def _safe(fn,default=None):
             try:
                 if isinstance(fn,UserFunction): return self.invoke_user_function(fn,[])
                 return fn()
             except Exception: return default
-        builtins={'range':lambda *a:list(range(*map(int,a))),'len':len,'str':lambda x:self.stringify(x),'bool':bool,'number':lambda x:float(x),'int':lambda x:int(float(x)),'float':lambda x:float(x),'type':lambda x:type(x).__name__,'upper':lambda x:str(x).upper(),'lower':lambda x:str(x).lower(),'trim':lambda x:str(x).strip(),'split':lambda x,s=None:str(x).split(s),'join':lambda s,x:str(s).join(map(str,x)),'replace':lambda s,a,b:str(s).replace(str(a),str(b)),'starts_with':lambda s,p:str(s).startswith(str(p)),'ends_with':lambda s,p:str(s).endswith(str(p)),'contains':_contains,'append':self._append,'push':_push,'pop':_pop,'get':_get,'has':_has,'merge':_merge,'slice':_slice,'keys':lambda d:list(d.keys()) if isinstance(d,dict) else list(range(len(d))),'values':lambda d:list(d.values()) if isinstance(d,dict) else list(d),'items':lambda d:[[k,v] for k,v in d.items()] if isinstance(d,dict) else _enumerate(d),'read':lambda p:Path(p).read_text(encoding='utf-8'),'write':self._write,'exists':os.path.exists,'sqrt':math.sqrt,'abs':abs,'round':round,'min':min,'max':max,'sum':lambda x,start=0:sum(x,start),'sleep':time.sleep,'enumerate':_enumerate,'zip':_zip,'sorted':_sorted,'reversed':_reversed,'map':_map,'filter':_filter,'any':_any,'all':_all,'list':lambda x=None:list(x) if x is not None else [],'dict':lambda x=None:dict(x) if x is not None else {},'json_parse':lambda s:json.loads(s),'json_dump':lambda x,indent=None:json.dumps(x,indent=indent,ensure_ascii=False,default=str),'safe':_safe,'now_ms':lambda:int(time.time()*1000),'chunk':_chunk,'flatten':_flatten,'uniq':_uniq,'pick':_pick,'omit':_omit,'clamp':_clamp,'uuid':_uuid,'randint':_randint,'b64encode':_b64e,'b64decode':_b64d,'now_iso':_now_iso,'coalesce':_coalesce,'repeat':_repeat,'times':_times,'find':_find,'find_index':_find_index,'pluck':_pluck,'index_by':_index_by,'sort_by':_sort_by,'is_null':_is_null,'is_list':_is_list,'is_dict':_is_dict,'is_string':_is_string,'is_number':_is_number,'is_bool':_is_bool,'identity':_identity,'tap':_tap,'pad_start':_pad_start,'pad_end':_pad_end,'lines':_lines,'words':_words,'floor':_floor,'ceil':_ceil,'log':_log,'exp':_exp,'pow':_pow,'get_path':_get_path,'deep_merge':_deep_merge,'take':_take,'drop':_drop,'partition':_partition,'count_by':_count_by,'first':_first,'last':_last,'is_empty':_is_empty,'compact':_compact,'defaults':_defaults,'invert':_invert,'to_pairs':_to_pairs,'from_pairs':_from_pairs,'sum_by':_sum_by,'avg':_avg,'capitalize':_capitalize,'snake_case':_snake_case,'kebab_case':_kebab_case,'slugify':_slugify,'truncate':_truncate,'union':_union,'intersection':_intersection,'difference':_difference,'has_path':_has_path,'set_path':_set_path,'map_values':_map_values,'map_keys':_map_keys,'pick_by':_pick_by,'omit_by':_omit_by,'shuffle':_shuffle,'product':_product,'median':_median,'parse_int':_parse_int,'parse_float':_parse_float,'strip_prefix':_strip_prefix,'strip_suffix':_strip_suffix,'sha256':_sha256,'url_encode':_url_encode,'url_decode':_url_decode,'html_escape':_html_escape,'title_case':_title_case,'center':_center,'min_by':_min_by,'max_by':_max_by,'without':_without,'xor':_xor,'zip_object':_zip_object,'ensure_list':_ensure_list,'ensure_dict':_ensure_dict,'size':_size,'random_choice':_random_choice,'sample_list':_sample_list,'clone':_clone,'deep_clone':_deep_clone,'deep_equal':_deep_equal,'nth':_nth,'initial':_initial,'rest':_rest,'group_by':_group_by,'frequencies':_count_by,'scan':_scan,'hex_encode':_hex_encode,'hex_decode':_hex_decode,'ensure_str':_ensure_str,'ensure_int':_ensure_int,'ensure_float':_ensure_float,'pipe':_pipe,'apply':_apply_fn}
+        builtins={'range':lambda *a:list(range(*map(int,a))),'len':len,'str':lambda x:self.stringify(x),'bool':bool,'number':lambda x:float(x),'int':lambda x:int(float(x)),'float':lambda x:float(x),'type':lambda x:type(x).__name__,'upper':lambda x:str(x).upper(),'lower':lambda x:str(x).lower(),'trim':lambda x:str(x).strip(),'split':lambda x,s=None:str(x).split(s),'join':lambda s,x:str(s).join(map(str,x)),'replace':lambda s,a,b:str(s).replace(str(a),str(b)),'starts_with':lambda s,p:str(s).startswith(str(p)),'ends_with':lambda s,p:str(s).endswith(str(p)),'contains':_contains,'append':self._append,'push':_push,'pop':_pop,'get':_get,'has':_has,'merge':_merge,'slice':_slice,'keys':lambda d:list(d.keys()) if isinstance(d,dict) else list(range(len(d))),'values':lambda d:list(d.values()) if isinstance(d,dict) else list(d),'items':lambda d:[[k,v] for k,v in d.items()] if isinstance(d,dict) else _enumerate(d),'read':lambda p:Path(p).read_text(encoding='utf-8'),'write':self._write,'exists':os.path.exists,'sqrt':math.sqrt,'abs':abs,'round':round,'min':min,'max':max,'sum':lambda x,start=0:sum(x,start),'sleep':time.sleep,'enumerate':_enumerate,'zip':_zip,'sorted':_sorted,'reversed':_reversed,'map':_map,'filter':_filter,'any':_any,'all':_all,'list':lambda x=None:list(x) if x is not None else [],'dict':lambda x=None:dict(x) if x is not None else {},'json_parse':lambda s:json.loads(s),'json_dump':lambda x,indent=None:json.dumps(x,indent=indent,ensure_ascii=False,default=str),'safe':_safe,'now_ms':lambda:int(time.time()*1000),'chunk':_chunk,'flatten':_flatten,'uniq':_uniq,'pick':_pick,'omit':_omit,'clamp':_clamp,'uuid':_uuid,'randint':_randint,'b64encode':_b64e,'b64decode':_b64d,'now_iso':_now_iso,'coalesce':_coalesce,'repeat':_repeat,'times':_times,'find':_find,'find_index':_find_index,'pluck':_pluck,'index_by':_index_by,'sort_by':_sort_by,'is_null':_is_null,'is_list':_is_list,'is_dict':_is_dict,'is_string':_is_string,'is_number':_is_number,'is_bool':_is_bool,'identity':_identity,'tap':_tap,'pad_start':_pad_start,'pad_end':_pad_end,'lines':_lines,'words':_words,'floor':_floor,'ceil':_ceil,'log':_log,'exp':_exp,'pow':_pow,'get_path':_get_path,'deep_merge':_deep_merge,'take':_take,'drop':_drop,'partition':_partition,'count_by':_count_by,'first':_first,'last':_last,'is_empty':_is_empty,'compact':_compact,'defaults':_defaults,'invert':_invert,'to_pairs':_to_pairs,'from_pairs':_from_pairs,'sum_by':_sum_by,'avg':_avg,'capitalize':_capitalize,'snake_case':_snake_case,'kebab_case':_kebab_case,'slugify':_slugify,'truncate':_truncate,'union':_union,'intersection':_intersection,'difference':_difference,'has_path':_has_path,'set_path':_set_path,'map_values':_map_values,'map_keys':_map_keys,'pick_by':_pick_by,'omit_by':_omit_by,'shuffle':_shuffle,'product':_product,'median':_median,'parse_int':_parse_int,'parse_float':_parse_float,'strip_prefix':_strip_prefix,'strip_suffix':_strip_suffix,'sha256':_sha256,'url_encode':_url_encode,'url_decode':_url_decode,'html_escape':_html_escape,'title_case':_title_case,'center':_center,'min_by':_min_by,'max_by':_max_by,'without':_without,'xor':_xor,'zip_object':_zip_object,'ensure_list':_ensure_list,'ensure_dict':_ensure_dict,'size':_size,'random_choice':_random_choice,'sample_list':_sample_list,'clone':_clone,'deep_clone':_deep_clone,'deep_equal':_deep_equal,'nth':_nth,'initial':_initial,'rest':_rest,'group_by':_group_by,'frequencies':_count_by,'scan':_scan,'hex_encode':_hex_encode,'hex_decode':_hex_decode,'ensure_str':_ensure_str,'ensure_int':_ensure_int,'ensure_float':_ensure_float,'pipe':_pipe,'apply':_apply_fn,'gcd':_gcd,'lcm':_lcm,'sign':_sign,'is_even':_is_even,'is_odd':_is_odd,'lerp':_lerp,'rotate':_rotate,'interleave':_interleave,'windows':_window_list,'dedupe_by':_dedupe_by,'assoc':_assoc,'dissoc':_dissoc,'rename_keys':_rename_keys,'format_number':_format_number,'between':_between_val}
         for k,v in builtins.items():self.global_env.define(k,v,True)
         for k,v in build_standard_library(allow_process=allow_process,permissions=permissions).items():self.global_env.define(k,v,True)
         ai_ns,self.ai_service=build_ai_namespace();self.global_env.define('ai',ai_ns,True)

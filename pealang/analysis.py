@@ -1195,6 +1195,68 @@ def from_jsonl(text: str) -> list[dict[str, Any]]:
         except Exception: pass
     return out
 
+
+def rolling_std(data: Any, column: str, window: int = 3) -> list[dict[str, Any]]:
+    rows=_rows(data); vals=[]; out=[]
+    for r in rows:
+        nr=dict(r); v=_numeric(r.get(column))
+        if v is not None: vals.append(v)
+        w=vals[-int(window):]
+        if len(w)>=2:
+            m=mean(w); nr[column+"_rolling_std"]=(sum((x-m)**2 for x in w)/(len(w)-1))**0.5
+        else:
+            nr[column+"_rolling_std"]=0.0 if len(w)==1 else None
+        out.append(nr)
+    return out
+
+
+def expanding_sum(data: Any, column: str) -> list[dict[str, Any]]:
+    rows=_rows(data); total=0.0; out=[]
+    for r in rows:
+        nr=dict(r); v=_numeric(r.get(column))
+        if v is not None: total+=v
+        nr[column+"_expanding_sum"]=total
+        out.append(nr)
+    return out
+
+
+def expanding_max(data: Any, column: str) -> list[dict[str, Any]]:
+    rows=_rows(data); m=None; out=[]
+    for r in rows:
+        nr=dict(r); v=_numeric(r.get(column))
+        if v is not None: m=v if m is None else max(m,v)
+        nr[column+"_expanding_max"]=m
+        out.append(nr)
+    return out
+
+
+def expanding_min(data: Any, column: str) -> list[dict[str, Any]]:
+    rows=_rows(data); m=None; out=[]
+    for r in rows:
+        nr=dict(r); v=_numeric(r.get(column))
+        if v is not None: m=v if m is None else min(m,v)
+        nr[column+"_expanding_min"]=m
+        out.append(nr)
+    return out
+
+
+def sample_frac(data: Any, frac: float = 0.5, seed: int | None = None) -> list[dict[str, Any]]:
+    import random
+    rows=_rows(data); n=max(0,min(len(rows), int(round(len(rows)*float(frac)))))
+    rng=random.Random(seed)
+    return [dict(x) for x in rng.sample(rows, n)] if n else []
+
+
+def ewm_mean(data: Any, column: str, alpha: float = 0.3) -> list[dict[str, Any]]:
+    rows=_rows(data); a=float(alpha); prev=None; out=[]
+    for r in rows:
+        nr=dict(r); v=_numeric(r.get(column))
+        if v is not None:
+            prev = v if prev is None else a*v + (1-a)*prev
+        nr[column+"_ewm"]=prev
+        out.append(nr)
+    return out
+
 def build_analysis_namespace() -> dict[str, Any]:
     return {
         "profile": profile,
@@ -1305,5 +1367,13 @@ def build_analysis_namespace() -> dict[str, Any]:
         "to_jsonl": to_jsonl,
         "from_jsonl": from_jsonl,
         "corr": correlation,
+        "rolling_std": rolling_std,
+        "expanding_sum": expanding_sum,
+        "expanding_max": expanding_max,
+        "expanding_min": expanding_min,
+        "expanding_count": lambda d,c=None: [{"_expanding_count": i+1, **dict(r)} for i,r in enumerate(_rows(d))],
+        "sample_frac": sample_frac,
+        "ewm_mean": ewm_mean,
+        "standardize": zscore_col,
     }
 

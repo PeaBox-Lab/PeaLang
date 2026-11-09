@@ -53,9 +53,16 @@ This release delivers a broad, practical application-development surface on top 
 python -m pytest -q
 ```
 
-**Result:** 686 passed, 1 skipped.
+**Result:** 693 passed, 1 skipped.
 
-New/updated coverage includes: language ergonomics (comprehensions, `in`/`not in`, `**`, match/destructuring, helpers/builtins), web routing/groups/CORS/OpenAPI/validation/SSE/file/auth/cache/status/redirect/security/health/envelope/validation helpers, analysis profiling/transforms/stats/IO/charts/melt/zscore/histogram/cut/shape/string/reshape/timeseries/encoding/columns/aggregates/jsonl, interop (Python/native/process/HTTP/JSON-RPC/env/files/paths/copy/hash/walk/temp/codegen), UX/templates, and CLI (`eval -e/-f`, `check/lint --json`, `analyze`, `web-openapi`/`openapi`, `hash`, `tree`, `version --json`, `quickstart`, `info`, `new`, `serve-web`, templates/doctor).
+New/updated coverage includes: language ergonomics (comprehensions, `in`/`not in`, `**`, match/destructuring, helpers/builtins), web routing/groups/CORS/OpenAPI/validation/SSE/file/auth/cache/status/redirect/security/health/envelope/validation/accepts helpers, analysis profiling/transforms/stats/IO/charts/melt/zscore/histogram/cut/shape/string/reshape/timeseries/encoding/columns/aggregates/jsonl/expanding, interop (Python/native/process/HTTP/JSON-RPC/env/files/paths/copy/hash/walk/temp/host-info/codegen), UX/templates, and CLI (`eval -e/-f`, `check/lint --json`, `analyze`, `web-openapi`/`openapi`, `hash`, `tree`, `env`, `version --json`, `quickstart`, `info`, `new`, `serve-web`, templates/doctor).
+
+## Additional Batch Notes (v112)
+- **Builtins:** `gcd`, `lcm`, `sign`, `is_even`/`is_odd`, `lerp`, `rotate`, `interleave`, `windows` (sliding), `dedupe_by`, `assoc`, `dissoc`, `rename_keys`, `format_number`, `between` (scalar).
+- **Analysis:** `rolling_std`, `expanding_sum`/`expanding_max`/`expanding_min`, `sample_frac`, `ewm_mean`, `standardize`.
+- **Web:** `accepts`, `accepts_json`, `accepts_html`, `no_cache`, `vary`, `link_header`.
+- **Interop (host, trusted):** `cpu_count`, `hostname`, `user`, `pid`.
+- **CLI/Templates:** `pea env <NAME>` / `--keys`, `automation` template.
 
 ## Additional Batch Notes (v111)
 - **Builtins:** `group_by` (list), `frequencies`, `scan`, `hex_encode`/`hex_decode`, `ensure_str`/`ensure_int`/`ensure_float`, `pipe`, `apply`.

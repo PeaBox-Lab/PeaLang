@@ -11,6 +11,7 @@ TEMPLATES={
  'analysis':'let data = [{"name": "Ada", "score": 91}, {"name": "Linus", "score": 84}, {"name": "Grace", "score": 97}]\nprint analysis.profile(data)\nprint analysis.describe(data, "score")\nprint "Top scores:"\nfor row in data { print row["name"] + ": " + row["score"] }\n',
  'library':'export function add(a, b) {\n    return a + b\n}\n\nexport function greet(name) {\n    return "Hello, " + name\n}\n',
  'interop':'let result = interop.run("python", ["--version"])\nprint result\n',
+ 'automation':'// Automation starter\nprint "cwd: " + interop.cwd()\nlet files = interop.walk(".")\nprint "files: " + str(len(files))\ninterop.write_text("report.txt", "ok")\nprint "done"\n',
  'etl':'// ETL starter: load -> transform -> output\nlet raw = analysis.from_json(interop.read_text("data.json"))\nprint "rows: " + str(len(raw))\nlet clean = analysis.dropna(raw)\nlet prof = analysis.profile(clean)\ninterop.write_json("profile.json", prof)\nprint analysis.summary(clean)\n',
 }
 
