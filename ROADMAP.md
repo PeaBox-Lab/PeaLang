@@ -84,6 +84,7 @@ Make PeaLang the default extension language for:
    - statistical inference, regression diagnostics and time-series analysis (v115)
    - generalized linear models, regularized regression, survival analysis and ARIMA (v116)
    - propensity scores, IPW/AIPW, matching, difference-in-differences, instrumental variables and regression discontinuity (v117)
+   - train/test splits, k-fold cross-validation, classification and regression metrics, ROC/AUC, calibration and feature preparation (v118)
 3. Cross-language experience
    - Python bridge: `interop.call_python`
    - native bridge: `interop.call_native`

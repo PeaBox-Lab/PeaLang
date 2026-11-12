@@ -23,6 +23,7 @@ Records remain ordinary lists of dictionaries, so results flow directly into
 | Predictive models | `statsmodels`, `scikit-learn` | custom | `stats.glm`, `stats.ridge_regression`, `stats.cox_proportional_hazards` |
 | Forecasting | `statsmodels`, `pmdarima` | custom | `stats.arima`, `stats.auto_arima` |
 | Causal effects | `statsmodels`, `DoWhy`, `EconML` | custom | `stats.ipw_ate`, `stats.difference_in_differences`, `stats.instrumental_variables` |
+| Model evaluation | `scikit-learn.metrics`, `model_selection` | custom | `stats.train_test_split`, `stats.k_fold`, `stats.roc_auc`, `stats.r2_score` |
 | Clustering / PCA | `scikit-learn` | custom | `stats.kmeans`, `stats.pca` |
 | Tabular transforms | pandas | custom | `analysis.*` |
 
@@ -272,6 +273,53 @@ let rdd = analysis.rdd_report(rows, "y", "running", 0.0, 0.8, 1)
 See [`docs/CAUSAL_INFERENCE.md`](CAUSAL_INFERENCE.md) for assumptions,
 diagnostics, and the full reference.
 
+## Model evaluation and feature preparation
+
+The evaluation layer answers how well a model generalizes: train/test splits,
+k-fold and stratified k-fold indices, classification and regression metrics,
+ROC/AUC, probability scoring, calibration, and feature encoders and transforms.
+
+```pea
+// deterministic train/test split, optionally stratified by label
+let split = stats.train_test_split(features, labels, 0.25, true, 7, labels)
+print split["n_train"]
+print split["n_test"]
+
+// fold indices for a manual cross-validation loop
+let folds = stats.k_fold(len(rows), 5, true, 3)
+let stratified = stats.stratified_k_fold(labels, 5, true, 3)
+
+// classification metrics
+print stats.accuracy_score(actual, predicted)
+print stats.balanced_accuracy(actual, predicted)
+print stats.precision_recall_fscore(actual, predicted)["per_class"]
+print stats.roc_auc(actual, scores)
+print stats.log_loss(actual, probabilities)
+print stats.calibration_curve(actual, probabilities, 10)["table"]
+
+// regression metrics
+print stats.mean_squared_error(actual, predicted)
+print stats.root_mean_squared_error(actual, predicted)
+print stats.r2_score(actual, predicted)
+
+// feature preparation
+print stats.polynomial_features([[2, 3]], 2)["names"]
+print stats.label_encode(["red", "green", "red"])["codes"]
+let scaled = stats.standardize_features(features)
+print stats.standardize_transform(new_features, scaled["means"], scaled["scales"])
+```
+
+Record-friendly wrappers:
+
+```pea
+let split = analysis.train_test_split(rows, 0.25, 7, "label")
+let quality = analysis.evaluate_classification(rows, "actual", "predicted", "score")
+let errors = analysis.evaluate_regression(rows, "actual", "predicted")
+let expanded = analysis.add_polynomial_features(rows, ["x1", "x2"], 2)
+```
+
+See [`docs/MODEL_EVALUATION.md`](MODEL_EVALUATION.md) for the full reference.
+
 ## Regression and modelling
 
 ```pea
@@ -382,6 +430,7 @@ analysis.write_json_file("summary.json", [summary])
 - `examples/use_cases/11_glm_survival.pea`
 - `examples/use_cases/12_arima_forecasting.pea`
 - `examples/use_cases/13_causal_inference.pea`
+- `examples/use_cases/14_model_evaluation.pea`
 
 Run them with:
 
@@ -394,6 +443,7 @@ pea run examples/use_cases/10_forecasting_pipeline.pea
 pea run examples/use_cases/11_glm_survival.pea
 pea run examples/use_cases/12_arima_forecasting.pea
 pea run examples/use_cases/13_causal_inference.pea
+pea run examples/use_cases/14_model_evaluation.pea
 ```
 
 ## Choosing the right namespace
@@ -428,3 +478,13 @@ pea run examples/use_cases/13_causal_inference.pea
   and balance before trusting an effect.
 - `ipw_ate` and `aipw_ate` use a propensity-refitting bootstrap (default 200
   samples, seed `0`); increase `samples` for publication-quality intervals.
+- `train_test_split` shuffles rows by default; use `shuffle = false` or split
+  by time for ordered data. `stratified_k_fold` raises when a class has fewer
+  than `k` samples.
+- `roc_auc` is tie-aware and uses mid-ranks. `log_loss` clips probabilities with
+  `epsilon` before taking logs.
+- Cross-validation is a loop over fold indices; PeaLang functions are not
+  passed to native code as callables, so there is no single-call estimator
+  protocol.
+- Fit feature scalers on training data only, then apply the learned `means` /
+  `scales` or `mins` / `ranges` to validation and test rows.

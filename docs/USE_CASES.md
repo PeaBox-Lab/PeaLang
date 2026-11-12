@@ -104,6 +104,11 @@ no third-party packages.
 | Weighting and matching | `stats.ipw_ate`, `stats.aipw_ate`, `stats.propensity_match` |
 | Quasi-experimental designs | `stats.difference_in_differences`, `stats.instrumental_variables`, `stats.regression_discontinuity` |
 | Causal wrappers | `analysis.causal_report`, `analysis.did_report`, `analysis.iv_report`, `analysis.rdd_report` |
+| Resampling | `stats.train_test_split`, `stats.k_fold`, `stats.stratified_k_fold` |
+| Classification metrics | `stats.accuracy_score`, `stats.balanced_accuracy`, `stats.precision_recall_fscore`, `stats.roc_auc`, `stats.log_loss` |
+| Regression metrics | `stats.mean_squared_error`, `stats.root_mean_squared_error`, `stats.mean_absolute_error`, `stats.r2_score` |
+| Feature preparation | `stats.polynomial_features`, `stats.label_encode`, `stats.standardize_features`, `stats.minmax_features` |
+| Evaluation wrappers | `analysis.train_test_split`, `analysis.evaluate_classification`, `analysis.evaluate_regression`, `analysis.add_polynomial_features` |
 
 ```pea
 let treatment = [72, 84, 91, 88, 79, 95]
@@ -196,6 +201,36 @@ let instrumented = analysis.iv_report(rows, "y", "x", "z")
 let discontinuity = analysis.rdd_report(rows, "y", "running", 0.0, 0.8, 1)
 ```
 
+Evaluation closes the loop: split, cross-validate, score, and prepare features.
+
+```pea
+let split = stats.train_test_split(features, labels, 0.25, true, 7, labels)
+print split["n_train"]
+print split["n_test"]
+
+let folds = stats.k_fold(len(rows), 5, true, 3)
+for fold in folds {
+    print fold["fold"] + ": " + str(fold["n_test"])
+}
+
+print stats.accuracy_score(actual, predicted)
+print stats.precision_recall_fscore(actual, predicted)["f1"]
+print stats.roc_auc(actual, scores)
+print stats.log_loss(actual, probabilities)
+print stats.r2_score(actual, predicted)
+print stats.root_mean_squared_error(actual, predicted)
+
+let expanded = stats.polynomial_features(features, 2)
+print expanded["names"]
+let scaled = stats.standardize_features(features)
+print scaled["means"]
+
+let holdout = analysis.train_test_split(rows, 0.25, 7, "label")
+let quality = analysis.evaluate_classification(rows, "actual", "predicted", "score")
+let errors = analysis.evaluate_regression(rows, "actual", "predicted")
+let enriched = analysis.add_polynomial_features(rows, ["x1", "x2"], 2)
+```
+
 Pair `stats` with the pandas-class helpers in `analysis` for end-to-end work:
 
 ```pea
@@ -214,11 +249,13 @@ Examples:
 - [`examples/use_cases/11_glm_survival.pea`](../examples/use_cases/11_glm_survival.pea)
 - [`examples/use_cases/12_arima_forecasting.pea`](../examples/use_cases/12_arima_forecasting.pea)
 - [`examples/use_cases/13_causal_inference.pea`](../examples/use_cases/13_causal_inference.pea)
+- [`examples/use_cases/14_model_evaluation.pea`](../examples/use_cases/14_model_evaluation.pea)
 
 See [`docs/DATA_SCIENCE.md`](DATA_SCIENCE.md),
 [`docs/STATISTICAL_INFERENCE.md`](STATISTICAL_INFERENCE.md),
-[`docs/ADVANCED_MODELING.md`](ADVANCED_MODELING.md), and
-[`docs/CAUSAL_INFERENCE.md`](CAUSAL_INFERENCE.md) for the full reference.
+[`docs/ADVANCED_MODELING.md`](ADVANCED_MODELING.md),
+[`docs/CAUSAL_INFERENCE.md`](CAUSAL_INFERENCE.md), and
+[`docs/MODEL_EVALUATION.md`](MODEL_EVALUATION.md) for the full reference.
 
 ## 3. Polyglot delivery (Python, Go, TypeScript, Java)
 

@@ -74,6 +74,10 @@ The objective is to improve security while preserving the existing PeaLang langu
 - Modeling wrappers: `analysis.glm_report`, `analysis.survival_report`, `analysis.arima_report`
 - Causal inference: `propensity_scores`, `covariate_balance`, `ipw_ate`, `aipw_ate`, `propensity_match`, `difference_in_differences`, `instrumental_variables`, `regression_discontinuity`
 - Causal wrappers: `analysis.causal_report`, `analysis.did_report`, `analysis.iv_report`, `analysis.rdd_report`
+- Evaluation: `train_test_split`, `k_fold`, `stratified_k_fold`, `accuracy_score`, `balanced_accuracy`, `precision_recall_fscore`, `roc_curve`, `roc_auc`, `log_loss`, `brier_score`, `calibration_curve`
+- Regression metrics: `mean_squared_error`, `root_mean_squared_error`, `mean_absolute_error`, `median_absolute_error`, `mean_absolute_percentage_error`, `r2_score`, `explained_variance_score`
+- Feature preparation: `polynomial_features`, `label_encode`, `ordinal_encode`, `standardize_features`, `standardize_transform`, `minmax_features`, `minmax_transform`
+- Evaluation wrappers: `analysis.train_test_split`, `analysis.evaluate_classification`, `analysis.evaluate_regression`, `analysis.add_polynomial_features`
 - Modelling: `linear_regression`, `multiple_regression`, `polyfit`, `polyval`, `r_squared`, `interpolate`, `linspace`, `arange`, `kmeans`, `pca`, `confusion_matrix`
 - Sampling: `random_uniform`, `random_normal`, `random_binomial`, `random_poisson`, `bootstrap`
 - Pure Python, dependency-free: no NumPy, SciPy, pandas, or gonum required
@@ -374,12 +378,21 @@ print ipw["ate"]
 
 let did = stats.difference_in_differences([1, 2, 3, 4, 2, 3, 6, 7], [0, 0, 0, 0, 1, 1, 1, 1], [0, 0, 1, 1, 0, 0, 1, 1])
 print did["att"]
+
+// model evaluation and feature preparation
+let split = stats.train_test_split([[1], [2], [3], [4], [5], [6], [7], [8]], [0, 0, 1, 1, 0, 1, 1, 1], 0.25, true, 7)
+print split["n_train"]
+print stats.accuracy_score([0, 0, 1, 1], [0, 1, 1, 1])
+print stats.roc_auc([0, 0, 1, 1], [0.1, 0.4, 0.35, 0.8])
+print stats.r2_score([1, 2, 3], [1, 2, 3])
+print stats.polynomial_features([[2, 3]], 2)["names"]
 ```
 
 See [`docs/DATA_SCIENCE.md`](docs/DATA_SCIENCE.md),
 [`docs/STATISTICAL_INFERENCE.md`](docs/STATISTICAL_INFERENCE.md),
-[`docs/ADVANCED_MODELING.md`](docs/ADVANCED_MODELING.md), and
-[`docs/CAUSAL_INFERENCE.md`](docs/CAUSAL_INFERENCE.md) for the full reference.
+[`docs/ADVANCED_MODELING.md`](docs/ADVANCED_MODELING.md),
+[`docs/CAUSAL_INFERENCE.md`](docs/CAUSAL_INFERENCE.md), and
+[`docs/MODEL_EVALUATION.md`](docs/MODEL_EVALUATION.md) for the full reference.
 
 ## Cross-Language Interop
 

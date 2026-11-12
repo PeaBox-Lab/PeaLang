@@ -2155,6 +2155,121 @@ def rdd_report(data: Any, outcome: str, running: str, cutoff: float = 0.0,
     )
 
 
+def train_test_split(data: Any, test_size: float = 0.25, seed: Any = 0,
+                     stratify: str | None = None,
+                     shuffle: bool = True) -> dict[str, Any]:
+    """Split records into train and test sets, optionally stratified by column."""
+    from .evaluation import train_test_split as _split
+
+    rows = _rows(data)
+    labels = [r.get(stratify) for r in rows] if stratify is not None else None
+    result = _split(rows, [0] * len(rows), test_size, shuffle, seed, labels)
+    return {
+        "train": [rows[i] for i in result["train_index"]],
+        "test": [rows[i] for i in result["test_index"]],
+        "train_index": result["train_index"],
+        "test_index": result["test_index"],
+        "n_train": result["n_train"],
+        "n_test": result["n_test"],
+        "stratified": result["stratified"],
+    }
+
+
+def evaluate_classification(data: Any, actual: str, predicted: str,
+                            scores: str | None = None,
+                            positive: Any = None) -> dict[str, Any]:
+    """Classification metrics from two label columns, with optional scores."""
+    from .evaluation import (accuracy_score, precision_recall_fscore,
+                             roc_auc, log_loss, brier_score)
+
+    rows = _rows(data)
+    labels = []
+    guesses = []
+    probabilities = []
+    for r in rows:
+        truth = r.get(actual)
+        guess = r.get(predicted)
+        if truth is None or guess is None:
+            continue
+        if scores is not None:
+            probability = _numeric(r.get(scores))
+            if probability is None:
+                continue
+            probabilities.append(probability)
+        labels.append(truth)
+        guesses.append(guess)
+    if not labels:
+        raise ValueError("no complete rows are available for evaluation")
+    result: dict[str, Any] = {"n": len(labels), "accuracy": accuracy_score(labels, guesses)}
+    result.update(precision_recall_fscore(labels, guesses, positive))
+    if scores is not None:
+        result["roc_auc"] = roc_auc(labels, probabilities, positive)
+        result["log_loss"] = log_loss(labels, probabilities, positive)
+        result["brier_score"] = brier_score(labels, probabilities, positive)
+    return result
+
+
+def evaluate_regression(data: Any, actual: str, predicted: str) -> dict[str, Any]:
+    """Regression metrics from two numeric columns."""
+    from .evaluation import (mean_squared_error, root_mean_squared_error,
+                             mean_absolute_error, median_absolute_error,
+                             r2_score, explained_variance_score)
+
+    rows = _rows(data)
+    truths = []
+    guesses = []
+    for r in rows:
+        truth = _numeric(r.get(actual))
+        guess = _numeric(r.get(predicted))
+        if truth is None or guess is None:
+            continue
+        truths.append(truth)
+        guesses.append(guess)
+    if not truths:
+        raise ValueError("no complete rows are available for evaluation")
+    return {
+        "n": len(truths),
+        "mse": mean_squared_error(truths, guesses),
+        "rmse": root_mean_squared_error(truths, guesses),
+        "mae": mean_absolute_error(truths, guesses),
+        "median_ae": median_absolute_error(truths, guesses),
+        "r2": r2_score(truths, guesses),
+        "explained_variance": explained_variance_score(truths, guesses),
+    }
+
+
+def add_polynomial_features(data: Any, columns: Any, degree: int = 2,
+                            interaction_only: bool = False,
+                            prefix: str = "") -> list[dict[str, Any]]:
+    """Add polynomial and interaction columns derived from numeric columns."""
+    from .evaluation import polynomial_features
+
+    rows = _rows(data)
+    names = [columns] if isinstance(columns, str) else list(columns)
+    usable = [
+        r for r in rows
+        if all(_numeric(r.get(name)) is not None for name in names)
+    ]
+    if not usable:
+        raise ValueError("no complete rows are available for polynomial features")
+    matrix = [[_numeric(r.get(name)) for name in names] for r in usable]
+    expanded = polynomial_features(matrix, degree, False, interaction_only, names)
+    out = []
+    position = 0
+    for r in rows:
+        if all(_numeric(r.get(name)) is not None for name in names):
+            record = dict(r)
+            for name, value in zip(expanded["names"], expanded["features"][position]):
+                if name in names:
+                    continue
+                record[prefix + name] = value
+            out.append(record)
+            position += 1
+        else:
+            out.append(dict(r))
+    return out
+
+
 def build_analysis_namespace() -> dict[str, Any]:
     return {
         "profile": profile,
@@ -2317,5 +2432,9 @@ def build_analysis_namespace() -> dict[str, Any]:
         "did_report": did_report,
         "iv_report": iv_report,
         "rdd_report": rdd_report,
+        "train_test_split": train_test_split,
+        "evaluate_classification": evaluate_classification,
+        "evaluate_regression": evaluate_regression,
+        "add_polynomial_features": add_polynomial_features,
     }
 

@@ -57,6 +57,15 @@ python -m pytest -q
 
 New/updated coverage includes: language ergonomics (comprehensions, `in`/`not in`, `**`, match/destructuring, helpers/builtins), web routing/groups/CORS/OpenAPI/validation/SSE/file/auth/cache/status/redirect/security/health/envelope/validation/accepts helpers, analysis profiling/transforms/stats/IO/charts/melt/zscore/histogram/cut/shape/string/reshape/timeseries/encoding/columns/aggregates/jsonl/expanding, interop (Python/native/process/HTTP/JSON-RPC/env/files/paths/copy/hash/walk/temp/host-info/codegen), UX/templates, and CLI (`eval -e/-f`, `check/lint --json`, `analyze`, `web-openapi`/`openapi`, `hash`, `tree`, `env`, `version --json`, `quickstart`, `info`, `new`, `serve-web`, templates/doctor).
 
+## Additional Batch Notes (v118)
+- **Evaluation:** `pealang/evaluation.py` adds deterministic `train_test_split` with stratification, `k_fold`, and `stratified_k_fold`.
+- **Metrics:** classification (`accuracy_score`, `balanced_accuracy`, `precision_recall_fscore`), ranking and probability (`roc_auc`, `roc_curve`, `log_loss`, `brier_score`, `calibration_curve`), and regression (`mean_squared_error`, `root_mean_squared_error`, `mean_absolute_error`, `median_absolute_error`, `mean_absolute_percentage_error`, `r2_score`, `explained_variance_score`).
+- **Feature preparation:** `polynomial_features`, `label_encode`, `ordinal_encode`, `standardize_features` / `standardize_transform`, and `minmax_features` / `minmax_transform`.
+- **Record wrappers:** `analysis.train_test_split`, `analysis.evaluate_classification`, `analysis.evaluate_regression`, and `analysis.add_polynomial_features`.
+- **Use case:** `examples/use_cases/14_model_evaluation.pea`.
+- **Docs:** `docs/MODEL_EVALUATION.md` and `help/EVALUATION.md`.
+- **Tests:** `tests/test_evaluation_v118.py` and `tests/test_use_cases_v118.py`.
+
 ## Additional Batch Notes (v117)
 - **Causal inference:** `pealang/causal.py` adds propensity scores (`propensity_scores`), balance diagnostics (`covariate_balance`), IPW and doubly robust effects (`ipw_ate`, `aipw_ate`), nearest-neighbour matching (`propensity_match`), difference-in-differences (`difference_in_differences`), two-stage least squares (`instrumental_variables`), and regression discontinuity (`regression_discontinuity`).
 - **Record wrappers:** `analysis.causal_report`, `analysis.did_report`, `analysis.iv_report`, and `analysis.rdd_report`.

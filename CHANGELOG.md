@@ -2,6 +2,19 @@
 
 ## 1.0.0-experience (ongoing) - 2026-11-08
 
+### Model evaluation and feature preparation (v118)
+- Added `pealang/evaluation.py`, a dependency-free assessment layer exposed through `stats` / `std.stats`.
+- Resampling: `train_test_split` with optional stratification by largest-remainder allocation, `k_fold`, and `stratified_k_fold` with clear validation when a class is smaller than the fold count.
+- Classification metrics: `accuracy_score`, `balanced_accuracy`, `precision_recall_fscore` with per-class and macro/weighted/micro summaries.
+- Ranking and probability metrics: tie-aware `roc_auc`, `roc_curve`, `log_loss`, `brier_score`, and `calibration_curve`.
+- Regression metrics: `mean_squared_error`, `root_mean_squared_error`, `mean_absolute_error`, `median_absolute_error`, `mean_absolute_percentage_error`, `r2_score`, and `explained_variance_score`.
+- Feature preparation: `polynomial_features` (powers, interactions, optional bias), `label_encode`, `ordinal_encode`, `standardize_features` / `standardize_transform`, and `minmax_features` / `minmax_transform`.
+- Added record-friendly wrappers `analysis.train_test_split`, `analysis.evaluate_classification`, `analysis.evaluate_regression`, and `analysis.add_polynomial_features`.
+- Added runnable use case `examples/use_cases/14_model_evaluation.pea` with holdout scoring, a manual five-fold loop, ROC/AUC, log loss, and feature preparation.
+- Added `docs/MODEL_EVALUATION.md` and `help/EVALUATION.md`; extended `docs/DATA_SCIENCE.md`, `docs/USE_CASES.md`, and the README.
+- Exported evaluation helpers from the Python package (`build_evaluation_namespace`, `stats_train_test_split`, `stats_k_fold`, `stats_accuracy`, `stats_roc_auc`, `stats_mse`, `stats_r2_score`, and related aliases).
+- Added regression coverage: `tests/test_evaluation_v118.py` and `tests/test_use_cases_v118.py`.
+
 ### Causal inference (v117)
 - Added `pealang/causal.py`, a dependency-free causal layer exposed through `stats` / `std.stats`.
 - Propensity scores: `propensity_scores` with fitted probabilities, logit scores, ATE/ATT weights, overlap diagnostics, and the underlying logistic coefficient table.

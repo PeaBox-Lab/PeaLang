@@ -1,0 +1,103 @@
+// Use case: model evaluation, cross-validation and feature preparation
+// Regression sample: y = 3 + 2*x + noise
+let rows = []
+for i in range(1, 41) {
+    let x = i / 4.0
+    let noise = ((i * 13) % 7 - 3) / 10.0
+    let y = 3 + 2 * x + noise
+    rows = rows + [{"x": x, "y": y}]
+}
+
+let holdout = analysis.train_test_split(rows, 0.25, 7, null)
+print "train/test: " + str(holdout["n_train"]) + "/" + str(holdout["n_test"])
+
+let train_x = []
+let train_y = []
+for r in holdout["train"] {
+    train_x = train_x + [[r["x"]]]
+    train_y = train_y + [r["y"]]
+}
+let test_x = []
+let test_y = []
+for r in holdout["test"] {
+    test_x = test_x + [[r["x"]]]
+    test_y = test_y + [r["y"]]
+}
+
+let fit = stats.ols(train_x, train_y)
+let predicted = stats.predict_ols(fit, test_x)["predicted"]
+let scored = []
+for i in range(0, len(test_y)) {
+    scored = scored + [{"actual": test_y[i], "predicted": predicted[i]}]
+}
+let metrics = analysis.evaluate_regression(scored, "actual", "predicted")
+print "holdout r2: " + str(round(metrics["r2"], 3))
+print "holdout rmse: " + str(round(metrics["rmse"], 3))
+
+// Five-fold cross-validation
+let folds = stats.k_fold(len(rows), 5, true, 3)
+let fold_scores = []
+for f in folds {
+    let fold_train_x = []
+    let fold_train_y = []
+    let fold_test_x = []
+    let fold_test_y = []
+    for i in f["train"] {
+        fold_train_x = fold_train_x + [[rows[i]["x"]]]
+        fold_train_y = fold_train_y + [rows[i]["y"]]
+    }
+    for i in f["test"] {
+        fold_test_x = fold_test_x + [[rows[i]["x"]]]
+        fold_test_y = fold_test_y + [rows[i]["y"]]
+    }
+    let model = stats.ols(fold_train_x, fold_train_y)
+    let guess = stats.predict_ols(model, fold_test_x)["predicted"]
+    fold_scores = fold_scores + [stats.r2_score(fold_test_y, guess)]
+}
+let cv_total = 0
+for value in fold_scores {
+    cv_total = cv_total + value
+}
+print "cv mean r2: " + str(round(cv_total / len(fold_scores), 3))
+
+// Classification sample with overlap between the classes
+let crows = []
+for i in range(1, 61) {
+    let x = ((i * 7) % 11) / 10.0
+    let noise = ((i * 3) % 5 - 2) / 10.0
+    let label = 0
+    if x + noise > 0.5 {
+        label = 1
+    }
+    crows = crows + [{"x": x, "label": label}]
+}
+let cx = []
+let cy = []
+for r in crows {
+    cx = cx + [[r["x"]]]
+    cy = cy + [r["label"]]
+}
+let classifier = stats.logistic_regression(cx, cy, ["x"])
+let scored_classes = []
+for i in range(0, len(crows)) {
+    let score = classifier["fitted"][i]
+    let guess = 0
+    if score >= 0.5 {
+        guess = 1
+    }
+    scored_classes = scored_classes + [{"actual": cy[i], "predicted": guess, "score": score}]
+}
+let quality = analysis.evaluate_classification(scored_classes, "actual", "predicted", "score")
+print "accuracy: " + str(round(quality["accuracy"], 3))
+print "precision: " + str(round(quality["precision"], 3))
+print "recall: " + str(round(quality["recall"], 3))
+print "roc auc: " + str(round(quality["roc_auc"], 3))
+print "log loss: " + str(round(quality["log_loss"], 3))
+
+// Feature preparation: polynomial expansion and encoding
+let expanded = analysis.add_polynomial_features([{"x1": 2, "x2": 3}], ["x1", "x2"], 2)
+print "x1*x2: " + str(expanded[0]["x1*x2"])
+let encoded = stats.label_encode(["red", "green", "red", "blue"])
+print "codes: " + str(encoded["codes"])
+let scaled = stats.standardize_features([[1], [2], [3]])
+print "scaled: " + str(scaled["features"])
