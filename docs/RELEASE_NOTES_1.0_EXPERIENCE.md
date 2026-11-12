@@ -57,6 +57,43 @@ python -m pytest -q
 
 New/updated coverage includes: language ergonomics (comprehensions, `in`/`not in`, `**`, match/destructuring, helpers/builtins), web routing/groups/CORS/OpenAPI/validation/SSE/file/auth/cache/status/redirect/security/health/envelope/validation/accepts helpers, analysis profiling/transforms/stats/IO/charts/melt/zscore/histogram/cut/shape/string/reshape/timeseries/encoding/columns/aggregates/jsonl/expanding, interop (Python/native/process/HTTP/JSON-RPC/env/files/paths/copy/hash/walk/temp/host-info/codegen), UX/templates, and CLI (`eval -e/-f`, `check/lint --json`, `analyze`, `web-openapi`/`openapi`, `hash`, `tree`, `env`, `version --json`, `quickstart`, `info`, `new`, `serve-web`, templates/doctor).
 
+## Additional Batch Notes (v117)
+- **Causal inference:** `pealang/causal.py` adds propensity scores (`propensity_scores`), balance diagnostics (`covariate_balance`), IPW and doubly robust effects (`ipw_ate`, `aipw_ate`), nearest-neighbour matching (`propensity_match`), difference-in-differences (`difference_in_differences`), two-stage least squares (`instrumental_variables`), and regression discontinuity (`regression_discontinuity`).
+- **Record wrappers:** `analysis.causal_report`, `analysis.did_report`, `analysis.iv_report`, and `analysis.rdd_report`.
+- **Use case:** `examples/use_cases/13_causal_inference.pea`.
+- **Docs:** `docs/CAUSAL_INFERENCE.md` and `help/CAUSAL.md`.
+- **Tests:** `tests/test_causal_v117.py` and `tests/test_use_cases_v117.py`.
+
+## Additional Batch Notes (v116)
+- **Predictive modeling:** `pealang/modeling.py` adds inferential generalized linear models (`glm`, `logistic_regression`, `poisson_regression`), regularized regression (`ridge_regression`, `lasso_regression`, `elastic_net`), survival analysis (`kaplan_meier`, `log_rank_test`, `cox_proportional_hazards`, `concordance_index`), and ARIMA forecasting (`arima`, `auto_arima`).
+- **Record wrappers:** `analysis.glm_report`, `analysis.survival_report`, and `analysis.arima_report`.
+- **Use cases:** `examples/use_cases/11_glm_survival.pea` and `12_arima_forecasting.pea`.
+- **Docs:** `docs/ADVANCED_MODELING.md` and `help/MODELING.md`.
+- **Tests:** `tests/test_modeling_v116.py`, `tests/test_survival_v116.py`, `tests/test_use_cases_v116.py`.
+
+## Additional Batch Notes (v115)
+- **Statistical inference:** `pealang/inference.py` adds confidence intervals (Student-t, Wilson, Welch, bootstrap), effect sizes and power, multiple-comparison correction (Bonferroni/Holm/BH), parametric and nonparametric tests, normality and permutation tests.
+- **Regression diagnostics:** `stats.ols` returns a full coefficient table with standard errors, t/p values, confidence intervals, R², adjusted R², F-test, AIC/BIC, Durbin-Watson and covariance; `predict_ols`, `variance_inflation_factors`, and `residual_diagnostics` complete the workflow.
+- **Time series:** `acf`, `pacf`, `ljung_box`, `difference_series`, `moving_average`, `simple_exponential_smoothing`, `holt_linear`, `holt_winters`, `seasonal_decompose`, `changepoint_cusum`, and `adf_test`, plus `analysis.regression_report` and `analysis.time_series_report`.
+- **Use cases:** `examples/use_cases/09_inference_report.pea` and `10_forecasting_pipeline.pea`.
+- **Docs:** `docs/STATISTICAL_INFERENCE.md` and `help/INFERENCE.md`.
+- **Tests:** `tests/test_inference_v115.py`, `tests/test_timeseries_v115.py`, `tests/test_use_cases_v115.py`.
+
+## Additional Batch Notes (v114)
+- **Native data science:** `pealang/numerics.py` exposes `stats` / `std.stats` with descriptive statistics, linear algebra, probability distributions, hypothesis tests, regression, k-means, PCA, interpolation, and resampling — all dependency-free.
+- **pandas-class analysis:** `analysis` gains `qcut`, `rolling_sum`/`min`/`max`/`median`/`var`, `expanding_std`/`var`/`median`, `interpolate`, `factorize`, `mask`, `select_dtypes`, `info`, `memory_usage`, `pivot_table`, `reset_index`/`set_index`, `agg`, `transform`, `group_by_multi`, `merge_multi`, `describe_all`, `missing_summary`, `winsorize`, `corr_spearman`, and `date_range`.
+- **Use cases:** `examples/use_cases/06_statistical_analysis.pea`, `07_matrix_regression.pea`, and `08_segmentation_clustering.pea` with regression coverage in `tests/test_use_cases_v114.py`.
+- **Docs:** `docs/DATA_SCIENCE.md` and `help/NUMERICS.md`.
+- **Tests:** `tests/test_numerics_v114.py`, `tests/test_analysis_v114.py`, `tests/test_stats_namespace_v114.py`.
+
+## Additional Batch Notes (v113)
+- **Data processing:** `analysis.sql` / `analysis.sql_value` run SQLite SQL (grouping, window functions, CTEs) over in-memory records; `analysis.read_csv_file`, `analysis.write_csv_file`, `analysis.read_json_file`, `analysis.write_json_file`, `analysis.read_jsonl_file`, `analysis.write_jsonl_file` provide file-based IO.
+- **Go interop:** `interop.go_run` compiles and runs Go source with graceful missing-toolchain handling; `interop.go_available`, `interop.go_version`, and `interop.generate_go` provide discovery and client generation.
+- **Templates:** `data` and `polyglot` project templates.
+- **Use cases:** runnable programs in `examples/use_cases/` (sales pipeline, analytics report, SQL analytics, polyglot bridge, web data API) with regression coverage in `tests/test_use_cases_v113.py`, `tests/test_analysis_sql_v113.py`, and `tests/test_go_interop_v113.py`.
+- **Docs:** `docs/USE_CASES.md`, `help/DATA_PIPELINES.md`, `help/POLYGLOT.md`.
+- **CLI:** `pea templates` now prints one template per line.
+
 ## Additional Batch Notes (v112)
 - **Builtins:** `gcd`, `lcm`, `sign`, `is_even`/`is_odd`, `lerp`, `rotate`, `interleave`, `windows` (sliding), `dedupe_by`, `assoc`, `dissoc`, `rename_keys`, `format_number`, `between` (scalar).
 - **Analysis:** `rolling_std`, `expanding_sum`/`expanding_max`/`expanding_min`, `sample_frac`, `ewm_mean`, `standardize`.

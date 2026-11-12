@@ -1,0 +1,20 @@
+// Use case: polyglot bridge
+// call Python directly and generate Go/TypeScript clients for the runtime service
+let py = interop.call_python("math", "sqrt", 169)
+print "python sqrt: " + str(py)
+
+let env = interop.platform()
+print "has host system: " + str(len(env["system"]) > 0)
+
+let go_client = interop.generate_go("http://127.0.0.1:8787")
+print "go has package: " + str(contains(go_client, "package pealangclient"))
+print "go has invoke: " + str(contains(go_client, "func (c *Client) Invoke"))
+
+let ts_client = interop.generate_typescript("http://127.0.0.1:8787")
+print "ts has invoke: " + str(contains(ts_client, "peaInvoke"))
+
+if interop.go_available() {
+    print "go available: true"
+} else {
+    print "go available: false"
+}

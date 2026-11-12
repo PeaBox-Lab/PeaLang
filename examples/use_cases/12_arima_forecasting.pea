@@ -1,0 +1,15 @@
+// Use case: ARIMA forecasting pipeline
+let demand = [10, 20, 30, 11, 21, 31, 12, 22, 32, 13, 23, 33, 14, 24, 34, 15, 25, 35]
+
+let fit = stats.arima(demand, 1, 1, 0, 2)
+print "order: " + str(fit["order"][0]) + "," + str(fit["order"][1]) + "," + str(fit["order"][2])
+print "forecast: " + str(round(fit["forecast"][0], 2)) + ", " + str(round(fit["forecast"][1], 2))
+
+let auto = stats.auto_arima(demand, 2, 2, 1, 2)
+print "selected: " + str(auto["order"][0]) + "," + str(auto["order"][1]) + "," + str(auto["order"][2])
+print "aic: " + str(round(auto["aic"], 2))
+print "auto forecast: " + str(round(auto["forecast"][0], 2)) + ", " + str(round(auto["forecast"][1], 2))
+
+let rows = [{"demand": 10}, {"demand": 20}, {"demand": 30}, {"demand": 11}, {"demand": 21}, {"demand": 31}, {"demand": 12}, {"demand": 22}, {"demand": 32}, {"demand": 13}, {"demand": 23}, {"demand": 33}, {"demand": 14}, {"demand": 24}, {"demand": 34}, {"demand": 15}, {"demand": 25}, {"demand": 35}]
+let report = analysis.arima_report(rows, "demand", [2, 1, 0], 3, 3, null, 2)
+print "report forecast: " + str(round(report["forecast"][0], 2)) + ", " + str(round(report["forecast"][1], 2))

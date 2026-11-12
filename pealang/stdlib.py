@@ -35,6 +35,7 @@ MODULES={
  'std.analysis':StdModuleSpec('std.analysis',description='Data analysis helpers'),
  'std.interop':StdModuleSpec('std.interop',description='Cross-language interoperability'),
  'std.ux':StdModuleSpec('std.ux',description='User-experience and diagnostics helpers'),
+ 'std.stats':StdModuleSpec('std.stats',description='Numerical, statistical and modelling toolkit'),
 }
 
 def stdlib_manifest():return {'version':STDLIB_VERSION,'modules':{k:{'stability':v.stability,'permissions':list(v.permissions),'description':v.description} for k,v in MODULES.items()}}
@@ -79,6 +80,7 @@ def _module_values():
  from .analysis import build_analysis_namespace
  from .interop import build_interop_namespace
  from .ux import build_ux_namespace
+ from .numerics import build_stats_namespace
  return {
  'std.collections':_ns(first=lambda x,d=None:x[0] if x else d,last=lambda x,d=None:x[-1] if x else d,unique=lambda x:list(dict.fromkeys(x)),contains=lambda x,v:v in x,sort=lambda x:sorted(x),reverse=lambda x:list(reversed(x)),flatten=lambda x:[v for a in x for v in a],keys=lambda d:list(d.keys()),values=lambda d:list(d.values())),
  'std.string':_ns(length=lambda s:len(str(s)),upper=lambda s:str(s).upper(),lower=lambda s:str(s).lower(),trim=lambda s:str(s).strip(),split=lambda s,sep=None:str(s).split(sep),join=lambda sep,x:str(sep).join(map(str,x)),starts_with=lambda s,p:str(s).startswith(str(p)),ends_with=lambda s,p:str(s).endswith(str(p)),replace=lambda s,a,b:str(s).replace(str(a),str(b))),
@@ -98,6 +100,7 @@ def _module_values():
  'std.analysis':build_analysis_namespace(),
  'std.interop':build_interop_namespace(),
  'std.ux':build_ux_namespace(),
+ 'std.stats':build_stats_namespace(),
  }
 def build_standard_library(allow_process=False,permissions=None):
  values=_module_values(); allowed=set(permissions or ())

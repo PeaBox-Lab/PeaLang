@@ -9,8 +9,45 @@ from .type_system import TypeChecker,TypeRef,Diagnostic,TypeCheckResult,Semantic
 from .embedding import (PeaRuntime,PeaModule,RuntimeOptions,ExecutionResult,
     PeaRuntimeError,PeaPermissionError,PeaResourceLimitError,to_pea,from_pea)
 from .web import (PeaWebApp,WebRequest,WebResponse,json_response,html_response,text_response,redirect,error_response,normalize_response)
-from .analysis import (profile as analyze_profile, describe as analyze_describe, columns as analyze_columns)
-from .interop import (call_python, run_command, load_native_library, call_native, http_get, http_post)
+from .analysis import (profile as analyze_profile, describe as analyze_describe, columns as analyze_columns,
+    sql as analyze_sql, sql_value as analyze_sql_value,
+    read_csv_file as analyze_read_csv, write_csv_file as analyze_write_csv,
+    read_json_file as analyze_read_json, write_json_file as analyze_write_json,
+    read_jsonl_file as analyze_read_jsonl, write_jsonl_file as analyze_write_jsonl)
+from .interop import (call_python, run_command, load_native_library, call_native, http_get, http_post,
+    generate_go_client, go_available, go_version, go_run)
+from .numerics import (build_stats_namespace,
+    linear_regression as stats_linear_regression, multiple_regression as stats_multiple_regression,
+    t_test_1samp as stats_t_test_1samp, t_test_ind as stats_t_test_ind, anova_oneway as stats_anova,
+    kmeans as stats_kmeans, pca as stats_pca, bootstrap as stats_bootstrap,
+    normal_ppf as stats_normal_ppf, normal_cdf as stats_normal_cdf,
+    pearson as stats_pearson, spearman as stats_spearman)
+from .inference import (build_inference_namespace,
+    confidence_interval_mean as stats_confidence_interval_mean,
+    confidence_interval_proportion as stats_confidence_interval_proportion,
+    cohens_d as stats_cohens_d, adjust_p_values as stats_adjust_p_values,
+    mann_whitney_u as stats_mann_whitney_u, wilcoxon_signed_rank as stats_wilcoxon,
+    kruskal_wallis as stats_kruskal_wallis, jarque_bera as stats_jarque_bera,
+    ols as stats_ols, predict_ols as stats_predict_ols,
+    acf as stats_acf, pacf as stats_pacf, ljung_box as stats_ljung_box,
+    holt_linear as stats_holt_linear, holt_winters as stats_holt_winters,
+    adf_test as stats_adf_test)
+from .modeling import (build_modeling_namespace,
+    glm as stats_glm, logistic_regression as stats_logistic_regression,
+    poisson_regression as stats_poisson_regression,
+    ridge_regression as stats_ridge_regression, lasso_regression as stats_lasso_regression,
+    elastic_net as stats_elastic_net,
+    kaplan_meier as stats_kaplan_meier, log_rank_test as stats_log_rank_test,
+    cox_proportional_hazards as stats_cox,
+    arima as stats_arima, auto_arima as stats_auto_arima)
+from .causal import (build_causal_namespace,
+    propensity_scores as stats_propensity_scores,
+    covariate_balance as stats_covariate_balance,
+    ipw_ate as stats_ipw_ate, aipw_ate as stats_aipw_ate,
+    propensity_match as stats_propensity_match,
+    difference_in_differences as stats_did,
+    instrumental_variables as stats_iv,
+    regression_discontinuity as stats_rdd)
 from .ux import doctor as ux_doctor, explain_error as ux_explain
 __version__ = "0.99.6"
 __all__=['BytecodeModule','CodeObject','Instruction','Op','Compiler','CompileError','compile_source_to_bytecode','VirtualMachine','VMError','AsyncSuspension','AsyncVirtualMachine','AsyncVMRuntime','AsyncVMModule','CancellationToken','VMRuntime','VMModule','disassemble','execute','compile_source','Interpreter','PeaError','PeaRuntime','PeaModule',

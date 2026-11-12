@@ -53,6 +53,30 @@ The objective is to improve security while preserving the existing PeaLang langu
 - Exploration: `head`, `tail`, `sample`, `unique`, `value_counts`, `top_values`, `columns`
 - Aggregates, I/O and extras: `mean_col`/`sum_col`/`min_col`/`max_col`/`median_col`, `corr`, `skew`, `kurtosis`, `expanding_mean`, `from_csv`, `from_json`/`from_jsonl`, `to_json`/`to_jsonl`, `to_records`, `to_dict`, `between`, `clip`, `mode`, `nunique`, `count`, `melt`, `transpose`, `rank`, `pct_change`, `diff`, `shift`/`lag`/`lead`, `rolling_mean`, `cummax`/`cummin`/`cumprod`, `schema`, `shape`, `isna`, `notna`, `zscore`, `histogram`, `cut`, `ffill`, `bfill`, `dropna`, `replace_values`, `cast`/`astype`, `crosstab`, `one_hot`, `duplicated`, `nlargest`, `nsmallest`, `pivot_wider`, `explode`, `where`, `split_column`, `drop_columns`, `keep_columns`, `assign`, `round_col`, `abs_col`, `variance`, `std`, `covariance`, `idxmax`, `idxmin`, `rolling_std`, `expanding_sum`/`expanding_max`/`expanding_min`, `sample_frac`, `ewm_mean`, `standardize`, `str_transform`/`str_lower`/`str_upper`/`str_strip`/`str_contains`/`str_replace`, `percentile`
 - Output: `to_csv`, `to_markdown`, `to_html`, `bar_chart`, `line_chart`, `summary`
+- SQL over records: `analysis.sql`, `analysis.sql_value` (in-memory SQLite; `GROUP BY`, window functions, CTEs)
+- File-based IO: `analysis.read_csv_file`, `analysis.write_csv_file`, `analysis.read_json_file`, `analysis.write_json_file`, `analysis.read_jsonl_file`, `analysis.write_jsonl_file`
+- pandas-class helpers: `qcut`, `rolling_sum`/`rolling_min`/`rolling_max`/`rolling_median`/`rolling_var`, `expanding_std`/`expanding_var`/`expanding_median`, `interpolate`, `factorize`, `mask`, `select_dtypes`, `info`, `memory_usage`, `pivot_table`, `reset_index`/`set_index`, `agg`, `transform`, `group_by_multi`, `merge_multi`, `describe_all`, `missing_summary`, `winsorize`, `corr_spearman`, `date_range`
+
+### Numerical and Statistical Computing (`stats` / `std.stats`)
+- Descriptive: `mean`, `median`, `mode`, `quantile`, `percentile`, `iqr`, `variance`, `std`, `skew`, `kurtosis`, `covariance`, `pearson`/`correlation`, `spearman`, `kendall`, `entropy`, `gini`, `describe`
+- Transforms: `zscore`, `minmax_scale`, `robust_scale`, `winsorize`, `cumsum`/`cumprod`/`cummax`/`cummin`, `diff`, `histogram`, `outliers_z`, `percentile_rank`
+- Linear algebra: `dot`, `norm`, `distance`, `angle`, `add`/`sub`/`mul`/`div`/`scale`, `outer`, `transpose`, `identity`, `matmul`, `trace`, `solve`, `determinant`, `inverse`
+- Distributions: `normal_pdf`/`normal_cdf`/`normal_ppf`/`normal_interval`, `uniform_*`, `exponential_*`, `binomial_*`, `poisson_*`, `t_pdf`/`t_cdf`/`t_ppf`, `f_cdf`/`f_ppf`, `chi2_cdf`/`chi2_ppf`
+- Hypothesis tests: `t_test_1samp`, `t_test_ind`, `welch_t_test`, `t_test_paired`, `chi_square_test`, `anova_oneway`
+- Inference: `confidence_interval_mean`, `confidence_interval_proportion`, `confidence_interval_diff_means`, `bootstrap_ci`, `cohens_d`, `hedges_g`, `eta_squared`, `power_t_test`, `sample_size_t_test`, `adjust_p_values`
+- More tests: `z_test_1samp`, `proportion_test`, `z_test_proportions`, `fisher_exact`, `chi_square_goodness_of_fit`, `mann_whitney_u`, `wilcoxon_signed_rank`, `kruskal_wallis`, `friedman_test`, `sign_test`, `jarque_bera`, `permutation_test`
+- Regression diagnostics: `ols`, `predict_ols`, `variance_inflation_factors`, `residual_diagnostics`
+- Time series: `acf`, `pacf`, `ljung_box`, `difference_series`, `moving_average`, `simple_exponential_smoothing`, `holt_linear`, `holt_winters`, `seasonal_decompose`, `changepoint_cusum`, `adf_test`
+- Record wrappers: `analysis.regression_report`, `analysis.time_series_report`
+- Predictive modeling: `glm`, `logistic_regression`, `poisson_regression`, `predict_glm`, `ridge_regression`, `lasso_regression`, `elastic_net`
+- Survival analysis: `kaplan_meier`, `log_rank_test`, `cox_proportional_hazards`, `concordance_index`
+- Forecasting: `arima`, `auto_arima`
+- Modeling wrappers: `analysis.glm_report`, `analysis.survival_report`, `analysis.arima_report`
+- Causal inference: `propensity_scores`, `covariate_balance`, `ipw_ate`, `aipw_ate`, `propensity_match`, `difference_in_differences`, `instrumental_variables`, `regression_discontinuity`
+- Causal wrappers: `analysis.causal_report`, `analysis.did_report`, `analysis.iv_report`, `analysis.rdd_report`
+- Modelling: `linear_regression`, `multiple_regression`, `polyfit`, `polyval`, `r_squared`, `interpolate`, `linspace`, `arange`, `kmeans`, `pca`, `confusion_matrix`
+- Sampling: `random_uniform`, `random_normal`, `random_binomial`, `random_poisson`, `bootstrap`
+- Pure Python, dependency-free: no NumPy, SciPy, pandas, or gonum required
 
 ### Cross-Language Interop (`interop` / `std.interop`)
 - Python: `call_python`, `import_python`
@@ -60,7 +84,8 @@ The objective is to improve security while preserving the existing PeaLang langu
 - Process: `run`, `pipe_json`, `which`
 - HTTP: `http_get`, `http_post`, `json_rpc`
 - Environment/util/files: `env`, `pipe_json`, `read_text`/`write_text`, `read_json`/`write_json`, `copy_file`, `remove_file` (destructive), `list_dir`, `stat`, `hash_file`, `walk`, `readlines`, `writelines`, `tempfile`, `touch`, `head_file`, `tail_file`, `env_all`, `expanduser`, `expandvars`, `glob`, `exists`, `mkdir_p`, `tempdir`, `basename`, `dirname`, `join_path`, `extname`, `stem`, `is_file`, `is_dir`, `abspath`, `cwd`, `platform`, `cpu_count`, `hostname`, `user`, `pid` (host access; trusted contexts)
-- Code generation: `generate_typescript`, `generate_java`, `generate_python_stub`
+- Go: `go_run` (compile/run Go source), `go_available`, `go_version`, `generate_go` (Go client)
+- Code generation: `generate_typescript`, `generate_java`, `generate_python_stub`, `generate_go`
 
 ### Developer Experience (`ux` / `std.ux`, CLI)
 - `ux.doctor()`, `ux.explain()`, `ux.suggest()`
@@ -288,6 +313,74 @@ print analysis.to_csv(top)
 print analysis.bar_chart(data, "name", "score")
 ```
 
+### Statistics and numerical computing
+
+`stats` provides the NumPy/SciPy/gonum-class layer in pure PeaLang.
+
+```pea
+let values = [72, 84, 91, 88, 79, 95]
+print stats.describe(values)
+print stats.pearson([1, 2, 3], [2, 4, 6])
+
+let fit = stats.linear_regression([1, 2, 3, 4], [2.1, 3.9, 6.2, 7.8])
+print fit["slope"]
+print fit["r_squared"]
+
+let test = stats.t_test_ind(values, [65, 70, 72, 68, 75, 71])
+print test["p_value"]
+
+let segments = stats.kmeans([{"spend": 10}, {"spend": 12}, {"spend": 80}], 2, 100, 42)
+print segments["labels"]
+
+// inference, regression diagnostics and forecasting
+let ci = stats.confidence_interval_mean(values)
+print ci["low"]
+print ci["high"]
+print stats.cohens_d(values, [65, 70, 72, 68, 75, 71])
+print stats.adjust_p_values([0.01, 0.04, 0.03], "bh")
+
+let model = analysis.regression_report([
+    {"a": 1, "b": 0, "y": 2},
+    {"a": 0, "b": 1, "y": 3},
+    {"a": 1, "b": 1, "y": 5}
+], "y")
+print model["table"]
+print stats.predict_ols(model, [[1, 1]])
+
+let forecast = stats.holt_winters([10, 20, 30, 11, 21, 31, 12, 22, 32], 3, 0.3, 0.1, 0.3, 2)
+print forecast["forecast"]
+
+// predictive modeling, survival analysis and ARIMA
+let logit = stats.logistic_regression([[1], [2], [3], [4], [5], [6], [7], [8]], [0, 1, 0, 1, 1, 0, 1, 1], ["x"])
+print logit["table"]
+print stats.predict_glm(logit, [[5]])["predicted"]
+
+let ridge = stats.ridge_regression([[1, 0], [0, 1], [1, 1]], [2, 3, 5], 0.5, ["a", "b"])
+print ridge["coefficients"]
+
+let km = stats.kaplan_meier([1, 2, 3, 4], [1, 1, 0, 1])
+print km["median_survival"]
+
+let arima = stats.arima([10, 20, 30, 11, 21, 31, 12, 22, 32], 1, 1, 0, 2)
+print arima["forecast"]
+
+// causal inference
+let treatment = [0, 1, 0, 1, 0, 1, 0, 1]
+let outcome = [1, 2, 3, 4, 5, 6, 7, 8]
+let ps = stats.propensity_scores([[1], [2], [3], [4], [5], [6], [7], [8]], treatment, ["x"])
+print ps["overlap"]
+let ipw = stats.ipw_ate([[1], [2], [3], [4], [5], [6], [7], [8]], treatment, outcome, 0.0, 0.95, 50, 1)
+print ipw["ate"]
+
+let did = stats.difference_in_differences([1, 2, 3, 4, 2, 3, 6, 7], [0, 0, 0, 0, 1, 1, 1, 1], [0, 0, 1, 1, 0, 0, 1, 1])
+print did["att"]
+```
+
+See [`docs/DATA_SCIENCE.md`](docs/DATA_SCIENCE.md),
+[`docs/STATISTICAL_INFERENCE.md`](docs/STATISTICAL_INFERENCE.md),
+[`docs/ADVANCED_MODELING.md`](docs/ADVANCED_MODELING.md), and
+[`docs/CAUSAL_INFERENCE.md`](docs/CAUSAL_INFERENCE.md) for the full reference.
+
 ## Cross-Language Interop
 
 ```pea
@@ -324,7 +417,60 @@ pea vm app.pea
 pea repl
 ```
 
-Namespaces: `web`/`std.web`, `analysis`/`std.analysis`, `interop`/`std.interop`, `ux`/`std.ux`.
+Namespaces: `web`/`std.web`, `analysis`/`std.analysis`, `stats`/`std.stats`, `interop`/`std.interop`, `ux`/`std.ux`.
+
+## Use Cases
+
+PeaLang is built to deliver complex programs across data, web, and polyglot
+workloads. Runnable examples live in `examples/use_cases/` and are covered by
+the regression suite. See [`docs/USE_CASES.md`](docs/USE_CASES.md) for the full
+map.
+
+### Data processing and analysis
+
+```pea
+let raw = analysis.read_csv_file("sales.csv")
+let clean = analysis.dropna(raw)
+let enriched = analysis.add_column(clean, "revenue", function(row) {
+    return row["units"] * row["price"]
+})
+let by_region = analysis.sql(enriched,
+    "SELECT region, SUM(revenue) AS revenue FROM data GROUP BY region ORDER BY revenue DESC")
+analysis.write_json_file("out/sales_report.json", by_region)
+print analysis.to_markdown(analysis.profile(enriched))
+```
+
+SQL runs over ordinary records in an in-memory SQLite database, so `GROUP BY`,
+window functions, and CTEs are available without a server. CSV, JSON, and JSONL
+file IO keeps pipelines portable.
+
+### Polyglot delivery (Python, Go, TypeScript, Java)
+
+```pea
+let root = interop.call_python("math", "sqrt", 169)
+if interop.go_available() {
+    let result = interop.go_run("package main\n\nimport \"fmt\"\n\nfunc main() { fmt.Println(42) }")
+    print result["stdout"]
+}
+interop.write_text("client.go", interop.generate_go("http://127.0.0.1:8787"))
+interop.write_text("client.ts", interop.generate_typescript("http://127.0.0.1:8787"))
+```
+
+`interop.go_run` compiles and runs Go source and degrades gracefully when the Go
+toolchain is missing. Generated Go, TypeScript, and Java clients target the
+PeaLang runtime HTTP service.
+
+### Web data APIs
+
+```pea
+let app = web.app()
+app.get("/summary", function(req) {
+    return web.json({"groups": analysis.group_by(data, "team", "score", "mean")})
+})
+```
+
+Scaffold related projects with `pea init mydata --template data` or
+`pea init mybridge --template polyglot`.
 
 ## Optional Static Typing
 

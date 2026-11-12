@@ -348,7 +348,7 @@ def main(argv=None):
 
             from .project import TEMPLATES
 
-            print('\\n'.join(sorted(TEMPLATES)));return 0
+            print('\n'.join(sorted(TEMPLATES)));return 0
         if c=='eval':
             p=argparse.ArgumentParser(prog='pea eval');p.add_argument('code',nargs='?');p.add_argument('-e','--expr');p.add_argument('-f','--file');a=p.parse_args(argv[1:])
             src=a.expr or a.code

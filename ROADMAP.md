@@ -80,6 +80,10 @@ Make PeaLang the default extension language for:
    - Markdown/HTML reporting
    - notebook-rich display hooks
    - SQL/dataframe interop
+   - native `stats` / `std.stats` numerics layer (v114)
+   - statistical inference, regression diagnostics and time-series analysis (v115)
+   - generalized linear models, regularized regression, survival analysis and ARIMA (v116)
+   - propensity scores, IPW/AIPW, matching, difference-in-differences, instrumental variables and regression discontinuity (v117)
 3. Cross-language experience
    - Python bridge: `interop.call_python`
    - native bridge: `interop.call_native`
@@ -94,6 +98,19 @@ Make PeaLang the default extension language for:
    - unit tests for every new namespace
    - conformance fixtures for web/data/interop
    - documentation and examples
+
+### Delivered (v114 - native data science toolkit)
+- `stats` / `std.stats`: dependency-free descriptive statistics, linear algebra, probability distributions, hypothesis tests, regression, k-means, PCA, interpolation, and resampling
+- pandas-class additions to `analysis`: quantile binning, rolling/expanding variants, interpolation, factorize, masking, dtype selection, frame introspection, pivot tables, index helpers, multi-key grouping/merging, missing summaries, winsorizing, Spearman correlation, and date ranges
+- Runnable use cases for statistical analysis, matrix regression, and customer segmentation
+- `docs/DATA_SCIENCE.md` and `help/NUMERICS.md` with a Python/Go/PeaLang capability map
+
+### Delivered (v113 - data and polyglot use cases)
+- SQL over in-memory records (`analysis.sql`, `analysis.sql_value`) including grouping and window functions
+- File-based data IO for CSV/JSON/JSONL (`analysis.read_*_file` / `analysis.write_*_file`)
+- Go interoperability and client generation (`interop.go_run`, `interop.go_available`, `interop.go_version`, `interop.generate_go`)
+- `data` and `polyglot` project templates
+- Runnable use cases in `examples/use_cases/` with regression coverage and `docs/USE_CASES.md`
 
 ### Exit criteria
 - New namespaces are exported and documented.

@@ -1,0 +1,21 @@
+// Use case: exploratory analytics report
+// profile -> descriptive stats -> correlation -> markdown report
+let data = [
+    {"name": "Ada", "score": 91, "hours": 8},
+    {"name": "Linus", "score": 84, "hours": 6},
+    {"name": "Grace", "score": 97, "hours": 9},
+    {"name": "Alan", "score": 72, "hours": 4},
+    {"name": "Edsger", "score": 88, "hours": 7}
+]
+
+let prof = analysis.profile(data)
+print "rows: " + str(prof["rows"])
+print "columns: " + str(prof["columns"])
+print "score mean: " + str(analysis.mean_col(data, "score"))
+print "score correlates with hours: " + str(analysis.corr(data, "score", "hours") > 0)
+print "outliers: " + str(len(analysis.outliers(data, "score")))
+print "roundtrip rows: " + str(len(analysis.from_jsonl(analysis.to_jsonl(data))))
+
+let md = analysis.to_markdown(prof)
+print "has profile heading: " + str(contains(md, "# Data Profile"))
+print md

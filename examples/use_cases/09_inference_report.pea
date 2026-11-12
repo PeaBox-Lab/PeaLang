@@ -1,0 +1,30 @@
+// Use case: statistical inference and a regression report
+// confidence interval -> effect size -> power -> multiple comparisons -> OLS
+let treatment = [72, 84, 91, 88, 79, 95, 67, 81]
+let control = [65, 70, 72, 68, 75, 71, 69, 73]
+
+let ci = stats.confidence_interval_mean(treatment)
+print "mean ci: " + str(round(ci["low"], 2)) + " .. " + str(round(ci["high"], 2))
+print "cohens d: " + str(round(stats.cohens_d(treatment, control), 3))
+print "power: " + str(round(stats.power_t_test(0.5, 64), 3))
+print "n per group: " + str(stats.sample_size_t_test(0.5, 0.8))
+
+let adjusted = stats.adjust_p_values([0.01, 0.04, 0.03], "bh")
+print "bh rejects first: " + str(adjusted["results"][0]["rejected"])
+print "bonferroni second: " + str(round(stats.adjust_p_values([0.01, 0.04, 0.03], "bonferroni")["results"][1]["adjusted"], 2))
+
+let rows = [
+    {"a": 1, "b": 0, "y": 2},
+    {"a": 0, "b": 1, "y": 3},
+    {"a": 1, "b": 1, "y": 5},
+    {"a": 2, "b": 2, "y": 9},
+    {"a": 3, "b": 1, "y": 10},
+    {"a": 2, "b": 3, "y": 11}
+]
+let model = analysis.regression_report(rows, "y", ["a", "b"])
+print "r2: " + str(round(model["r_squared"], 4))
+print "terms: " + str(len(model["table"]))
+print "a p: " + str(round(model["table"][1]["p_value"], 4))
+print "residual normality p: " + str(round(stats.residual_diagnostics(model["residuals"])["normality_p"], 3))
+let prediction = stats.predict_ols(model, [[1, 1]])
+print "predicted: " + str(round(prediction["predicted"][0], 3))

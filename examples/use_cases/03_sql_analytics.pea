@@ -1,0 +1,21 @@
+// Use case: SQL analytics over records
+// GROUP BY, window functions and scalar aggregates without a database server
+let orders = [
+    {"customer": "c1", "month": "2026-01", "amount": 120},
+    {"customer": "c1", "month": "2026-02", "amount": 80},
+    {"customer": "c2", "month": "2026-01", "amount": 200},
+    {"customer": "c3", "month": "2026-02", "amount": 50},
+    {"customer": "c2", "month": "2026-02", "amount": 300}
+]
+
+print "total: " + str(analysis.sql_value(orders, "SELECT SUM(amount) FROM data"))
+
+let monthly = analysis.sql(orders, "SELECT month, SUM(amount) AS revenue, COUNT(*) AS orders FROM data GROUP BY month ORDER BY month")
+print "months: " + str(len(monthly))
+print "jan revenue: " + str(monthly[0]["revenue"])
+
+let top = analysis.sql(orders, "SELECT customer, SUM(amount) AS revenue FROM data GROUP BY customer ORDER BY revenue DESC LIMIT 1")
+print "top customer: " + top[0]["customer"]
+
+let ranked = analysis.sql(orders, "SELECT customer, amount, RANK() OVER (PARTITION BY customer ORDER BY amount DESC) AS rnk FROM data")
+print "ranked rows: " + str(len(ranked))

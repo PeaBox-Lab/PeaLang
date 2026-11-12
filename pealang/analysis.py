@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from collections import Counter, defaultdict
+from pathlib import Path
 from statistics import mean, median
 from typing import Any, Iterable
 
@@ -1257,6 +1258,903 @@ def ewm_mean(data: Any, column: str, alpha: float = 0.3) -> list[dict[str, Any]]
         out.append(nr)
     return out
 
+def _quote_ident(name: Any) -> str:
+    return '"' + str(name).replace('"', '""') + '"'
+
+
+def _sqlite_type(values: Iterable[Any]) -> str:
+    for value in values:
+        if value is None or value == "":
+            continue
+        if isinstance(value, bool):
+            return "INTEGER"
+        if isinstance(value, int):
+            return "INTEGER"
+        if isinstance(value, float):
+            return "REAL"
+        return "TEXT"
+    return "TEXT"
+
+
+def sql(data: Any, query: str, table: str = "data") -> list[dict[str, Any]]:
+    """Run a SQL query over records using an in-memory SQLite database.
+
+    Nested values (dicts/lists) are stored as JSON text, which makes joins,
+    grouping, window functions and CTEs available without external services.
+    """
+    import json as _json
+    import sqlite3
+    rows = _rows(data)
+    cols = columns(rows)
+    if not cols:
+        return []
+    name = str(table or "data")
+    connection = sqlite3.connect(":memory:")
+    try:
+        connection.row_factory = sqlite3.Row
+        definitions = ", ".join(
+            f"{_quote_ident(col)} {_sqlite_type([row.get(col) for row in rows])}" for col in cols
+        )
+        connection.execute(f"CREATE TABLE {_quote_ident(name)} ({definitions})")
+        column_sql = ", ".join(_quote_ident(col) for col in cols)
+        placeholders = ", ".join("?" for _ in cols)
+
+        def encode(value: Any) -> Any:
+            if isinstance(value, bool):
+                return int(value)
+            if isinstance(value, (dict, list, tuple)):
+                return _json.dumps(value, ensure_ascii=False, default=str)
+            return value
+
+        connection.executemany(
+            f"INSERT INTO {_quote_ident(name)} ({column_sql}) VALUES ({placeholders})",
+            [tuple(encode(row.get(col)) for col in cols) for row in rows],
+        )
+        cursor = connection.execute(str(query))
+        return [dict(record) for record in cursor.fetchall()]
+    finally:
+        connection.close()
+
+
+def sql_value(data: Any, query: str, table: str = "data", default: Any = None) -> Any:
+    """Return the first column of the first row produced by a SQL query."""
+    rows = sql(data, query, table)
+    if not rows:
+        return default
+    return next(iter(rows[0].values()), default)
+
+
+def read_csv_file(path: str, delimiter: str = ",") -> list[dict[str, Any]]:
+    """Read a CSV file into records (BOM-aware UTF-8)."""
+    import csv
+    with open(Path(path).expanduser(), newline="", encoding="utf-8-sig") as handle:
+        return [dict(row) for row in csv.DictReader(handle, delimiter=str(delimiter))]
+
+
+def write_csv_file(path: str, data: Any, delimiter: str = ",") -> str:
+    """Write records to a CSV file, creating parent directories as needed."""
+    import csv
+    rows = _rows(data)
+    cols = columns(rows)
+    target = Path(path).expanduser()
+    target.parent.mkdir(parents=True, exist_ok=True)
+    with open(target, "w", newline="", encoding="utf-8") as handle:
+        writer = csv.DictWriter(handle, fieldnames=cols, delimiter=str(delimiter))
+        writer.writeheader()
+        writer.writerows(rows)
+    return str(target)
+
+
+def read_json_file(path: str) -> list[dict[str, Any]]:
+    """Read a JSON file (array of objects or column-oriented object) into records."""
+    import json
+    return _rows(json.loads(Path(path).expanduser().read_text(encoding="utf-8")))
+
+
+def write_json_file(path: str, data: Any, indent: int = 2) -> str:
+    """Write records to a JSON file, creating parent directories as needed."""
+    import json
+    target = Path(path).expanduser()
+    target.parent.mkdir(parents=True, exist_ok=True)
+    pretty = None if int(indent) == 0 else int(indent)
+    target.write_text(
+        json.dumps(_rows(data), ensure_ascii=False, indent=pretty, default=str),
+        encoding="utf-8",
+    )
+    return str(target)
+
+
+def read_jsonl_file(path: str) -> list[dict[str, Any]]:
+    """Read a newline-delimited JSON file into records."""
+    return from_jsonl(Path(path).expanduser().read_text(encoding="utf-8"))
+
+
+def write_jsonl_file(path: str, data: Any) -> str:
+    """Write records to a newline-delimited JSON file."""
+    target = Path(path).expanduser()
+    target.parent.mkdir(parents=True, exist_ok=True)
+    target.write_text(to_jsonl(data), encoding="utf-8")
+    return str(target)
+
+
+def _apply_fn(fn, *args):
+    try:
+        from .interpreter import CURRENT_INTERPRETER as _CI, UserFunction as _UF
+    except Exception:
+        _CI = None
+        _UF = None
+    if _UF is not None and isinstance(fn, _UF) and _CI is not None:
+        return _CI.invoke_user_function(fn, list(args))
+    return fn(*args)
+
+
+def _rolling_apply(data: Any, column: str, window: int, suffix: str, fn) -> list[dict[str, Any]]:
+    rows = _rows(data)
+    vals: list[float] = []
+    out = []
+    width = max(1, int(window))
+    for r in rows:
+        nr = dict(r)
+        v = _numeric(r.get(column))
+        if v is not None:
+            vals.append(v)
+        w = vals[-width:]
+        nr[column + "_" + suffix] = fn(w) if w else None
+        out.append(nr)
+    return out
+
+
+def rolling_sum(data: Any, column: str, window: int = 3) -> list[dict[str, Any]]:
+    return _rolling_apply(data, column, window, "rolling_sum", sum)
+
+
+def rolling_min(data: Any, column: str, window: int = 3) -> list[dict[str, Any]]:
+    return _rolling_apply(data, column, window, "rolling_min", min)
+
+
+def rolling_max(data: Any, column: str, window: int = 3) -> list[dict[str, Any]]:
+    return _rolling_apply(data, column, window, "rolling_max", max)
+
+
+def rolling_median(data: Any, column: str, window: int = 3) -> list[dict[str, Any]]:
+    return _rolling_apply(data, column, window, "rolling_median", median)
+
+
+def rolling_var(data: Any, column: str, window: int = 3) -> list[dict[str, Any]]:
+    def _var(w):
+        if len(w) < 2:
+            return None
+        m = mean(w)
+        return sum((x - m) ** 2 for x in w) / (len(w) - 1)
+
+    return _rolling_apply(data, column, window, "rolling_var", _var)
+
+
+def _expanding_apply(data: Any, column: str, suffix: str, fn) -> list[dict[str, Any]]:
+    rows = _rows(data)
+    vals: list[float] = []
+    out = []
+    for r in rows:
+        nr = dict(r)
+        v = _numeric(r.get(column))
+        if v is not None:
+            vals.append(v)
+        nr[column + "_" + suffix] = fn(vals) if vals else None
+        out.append(nr)
+    return out
+
+
+def expanding_std(data: Any, column: str) -> list[dict[str, Any]]:
+    def _std(w):
+        if len(w) < 2:
+            return None
+        m = mean(w)
+        return (sum((x - m) ** 2 for x in w) / (len(w) - 1)) ** 0.5
+
+    return _expanding_apply(data, column, "expanding_std", _std)
+
+
+def expanding_var(data: Any, column: str) -> list[dict[str, Any]]:
+    def _var(w):
+        if len(w) < 2:
+            return None
+        m = mean(w)
+        return sum((x - m) ** 2 for x in w) / (len(w) - 1)
+
+    return _expanding_apply(data, column, "expanding_var", _var)
+
+
+def expanding_median(data: Any, column: str) -> list[dict[str, Any]]:
+    return _expanding_apply(data, column, "expanding_median", median)
+
+
+def qcut(data: Any, column: str, q: int = 4, labels: list[Any] | None = None) -> list[dict[str, Any]]:
+    """Discretize a numeric column into equal-frequency buckets."""
+    from .numerics import quantile as _quantile
+
+    rows = _rows(data)
+    vals = [v for v in (_numeric(r.get(column)) for r in rows) if v is not None]
+    if not vals:
+        return [dict(r) for r in rows]
+    bins = max(1, int(q))
+    edges = [_quantile(vals, i / bins) for i in range(bins + 1)]
+    out = []
+    for r in rows:
+        nr = dict(r)
+        v = _numeric(r.get(column))
+        code = None
+        if v is not None:
+            code = bins - 1
+            for i in range(bins):
+                if v <= edges[i + 1]:
+                    code = i
+                    break
+        if labels is not None and code is not None and code < len(labels):
+            nr[column + "_qcut"] = labels[code]
+        else:
+            nr[column + "_qcut"] = code
+        out.append(nr)
+    return out
+
+
+def interpolate(data: Any, column: str, method: str = "linear") -> list[dict[str, Any]]:
+    from .numerics import interpolate as _interpolate
+
+    rows = _rows(data)
+    filled = _interpolate([r.get(column) for r in rows], method)
+    return [{**dict(r), column: filled[i]} for i, r in enumerate(rows)]
+
+
+def factorize(data: Any, column: str) -> dict[str, Any]:
+    """Encode a column as integer codes plus the distinct values seen."""
+    rows = _rows(data)
+    uniques: list[Any] = []
+    index: dict[Any, int] = {}
+    codes = []
+    for r in rows:
+        value = r.get(column)
+        if value not in index:
+            index[value] = len(uniques)
+            uniques.append(value)
+        codes.append(index[value])
+    return {"codes": codes, "uniques": uniques}
+
+
+def mask(data: Any, column: str, predicate, other: Any = None) -> list[dict[str, Any]]:
+    """Replace values where ``predicate`` is true with ``other``."""
+    rows = _rows(data)
+    out = []
+    for r in rows:
+        nr = dict(r)
+        try:
+            if _apply_fn(predicate, nr.get(column)):
+                nr[column] = other
+        except Exception:
+            pass
+        out.append(nr)
+    return out
+
+
+def _dtype_kinds(values: Iterable[Any]) -> set[str]:
+    kinds: set[str] = set()
+    for v in values:
+        if v is None:
+            continue
+        if isinstance(v, bool):
+            kinds.add("bool")
+        elif isinstance(v, (int, float)):
+            kinds.add("number")
+        elif isinstance(v, str):
+            kinds.add("string")
+        elif isinstance(v, (list, tuple)):
+            kinds.add("list")
+        elif isinstance(v, dict):
+            kinds.add("object")
+        else:
+            kinds.add(type(v).__name__)
+    return kinds
+
+
+def select_dtypes(data: Any, include: Any = "number", exclude: Any = None) -> list[dict[str, Any]]:
+    rows = _rows(data)
+    cols = columns(rows)
+    wanted = {include} if isinstance(include, str) else set(include or [])
+    dropped = {exclude} if isinstance(exclude, str) else set(exclude or [])
+    keep = [c for c in cols if (_dtype_kinds([r.get(c) for r in rows]) & wanted) and not (_dtype_kinds([r.get(c) for r in rows]) & dropped)]
+    return [{c: r.get(c) for c in keep} for r in rows]
+
+
+def info(data: Any) -> dict[str, Any]:
+    rows = _rows(data)
+    cols = columns(rows)
+    fields = []
+    for c in cols:
+        values = [r.get(c) for r in rows]
+        present = [v for v in values if v is not None]
+        kinds = _dtype_kinds(present)
+        fields.append({
+            "column": c,
+            "dtype": "|".join(sorted(kinds)) if kinds else "null",
+            "non_null": len(present),
+            "missing": len(values) - len(present),
+            "distinct": len({str(v) for v in present}),
+        })
+    return {"rows": len(rows), "columns": len(cols), "fields": fields}
+
+
+def memory_usage(data: Any) -> dict[str, Any]:
+    import sys
+
+    rows = _rows(data)
+    per: dict[str, int] = {}
+    for c in columns(rows):
+        per[c] = sum(sys.getsizeof(r.get(c)) for r in rows)
+    return {"bytes": sum(per.values()), "columns": per}
+
+
+def pivot_table(data: Any, index: Any, columns: str, values: str, agg: str = "mean") -> list[dict[str, Any]]:
+    """Pivot records into one row per index group, one column per pivot value."""
+    rows = _rows(data)
+    index_cols = [index] if isinstance(index, str) else list(index or [])
+    pivot_values: list[Any] = []
+    for r in rows:
+        pv = r.get(columns)
+        if pv not in pivot_values:
+            pivot_values.append(pv)
+
+    def reduce(items):
+        if agg == "count":
+            return len(items)
+        nums = [v for v in (_numeric(r.get(values)) for r in items) if v is not None]
+        if not nums:
+            return None
+        if agg == "sum":
+            return sum(nums)
+        if agg == "min":
+            return min(nums)
+        if agg == "max":
+            return max(nums)
+        if agg == "median":
+            return median(nums)
+        if agg == "std":
+            if len(nums) < 2:
+                return None
+            m = mean(nums)
+            return (sum((x - m) ** 2 for x in nums) / (len(nums) - 1)) ** 0.5
+        return mean(nums)
+
+    groups: dict[tuple, list[dict[str, Any]]] = defaultdict(list)
+    for r in rows:
+        groups[tuple(r.get(c) for c in index_cols)].append(r)
+    out = []
+    for key, items in groups.items():
+        record = {c: key[i] for i, c in enumerate(index_cols)}
+        for pv in pivot_values:
+            record[str(pv)] = reduce([r for r in items if r.get(columns) == pv])
+        out.append(record)
+    return out
+
+
+def reset_index(data: Any, name: str = "index") -> list[dict[str, Any]]:
+    return [{name: i, **dict(r)} for i, r in enumerate(_rows(data))]
+
+
+def set_index(data: Any, column: str, descending: bool = False) -> list[dict[str, Any]]:
+    rows = _rows(data)
+
+    def key(r):
+        v = r.get(column)
+        if v is None:
+            return (2, 0.0, "")
+        if isinstance(v, (int, float)) and not isinstance(v, bool):
+            return (0, float(v), "")
+        return (1, 0.0, str(v))
+
+    return [dict(r) for r in sorted(rows, key=key, reverse=bool(descending))]
+
+
+def agg(data: Any, column: str, funcs: list[str] | None = None) -> dict[str, Any]:
+    rows = _rows(data)
+    nums = [v for v in (_numeric(r.get(column)) for r in rows) if v is not None]
+    names = list(funcs or ["count", "mean", "min", "max"])
+    out: dict[str, Any] = {"column": column}
+    for name in names:
+        if name == "count":
+            out["count"] = len(nums)
+        elif name == "sum":
+            out["sum"] = sum(nums) if nums else None
+        elif name == "mean":
+            out["mean"] = mean(nums) if nums else None
+        elif name == "min":
+            out["min"] = min(nums) if nums else None
+        elif name == "max":
+            out["max"] = max(nums) if nums else None
+        elif name == "median":
+            out["median"] = median(nums) if nums else None
+        elif name in ("std", "var"):
+            if len(nums) < 2:
+                out[name] = None
+            else:
+                m = mean(nums)
+                var = sum((x - m) ** 2 for x in nums) / (len(nums) - 1)
+                out[name] = var ** 0.5 if name == "std" else var
+        elif name == "nunique":
+            out["nunique"] = len({str(r.get(column)) for r in rows})
+        else:
+            out[name] = None
+    return out
+
+
+def transform(data: Any, column: str, fn) -> list[dict[str, Any]]:
+    rows = _rows(data)
+    out = []
+    for r in rows:
+        nr = dict(r)
+        try:
+            nr[column] = _apply_fn(fn, r.get(column))
+        except Exception:
+            nr[column] = None
+        out.append(nr)
+    return out
+
+
+def group_by_multi(data: Any, group_columns: Any, value_column: str | None = None, agg: str = "count") -> list[dict[str, Any]]:
+    rows = _rows(data)
+    cols = [group_columns] if isinstance(group_columns, str) else list(group_columns or [])
+    groups: dict[tuple, list[dict[str, Any]]] = defaultdict(list)
+    for r in rows:
+        groups[tuple(r.get(c) for c in cols)].append(r)
+    out = []
+    for key, items in groups.items():
+        record = {c: key[i] for i, c in enumerate(cols)}
+        if value_column is None or agg == "count":
+            record["count"] = len(items)
+        else:
+            nums = [v for v in (_numeric(r.get(value_column)) for r in items) if v is not None]
+            if agg == "sum":
+                value = sum(nums) if nums else None
+            elif agg == "mean":
+                value = mean(nums) if nums else None
+            elif agg == "min":
+                value = min(nums) if nums else None
+            elif agg == "max":
+                value = max(nums) if nums else None
+            elif agg == "median":
+                value = median(nums) if nums else None
+            else:
+                value = len(items)
+            record[agg + "_" + value_column] = value
+        out.append(record)
+    return out
+
+
+def merge_multi(left: Any, right: Any, on: Any, how: str = "inner") -> list[dict[str, Any]]:
+    left_rows = _rows(left)
+    right_rows = _rows(right)
+    keys = [on] if isinstance(on, str) else list(on or [])
+
+    def key_of(row):
+        return tuple(row.get(k) for k in keys)
+
+    index: dict[tuple, list[dict[str, Any]]] = defaultdict(list)
+    for r in right_rows:
+        index[key_of(r)].append(r)
+    out = []
+    for l in left_rows:
+        matches = index.get(key_of(l), [])
+        if matches:
+            for r in matches:
+                merged = dict(l)
+                for k, v in r.items():
+                    if k in merged and k not in keys:
+                        merged["right_" + k] = v
+                    else:
+                        merged[k] = v
+                out.append(merged)
+        elif how in ("left", "outer"):
+            out.append(dict(l))
+    if how in ("right", "outer"):
+        matched = {key_of(r) for r in left_rows}
+        for r in right_rows:
+            if key_of(r) not in matched:
+                out.append(dict(r))
+    return out
+
+
+def describe_all(data: Any) -> dict[str, Any]:
+    return describe(_rows(data))
+
+
+def missing_summary(data: Any) -> list[dict[str, Any]]:
+    rows = _rows(data)
+    total = len(rows)
+    out = []
+    for c in columns(rows):
+        missing = sum(1 for r in rows if r.get(c) is None)
+        out.append({
+            "column": c,
+            "missing": missing,
+            "present": total - missing,
+            "missing_pct": (missing / total * 100.0) if total else 0.0,
+        })
+    return out
+
+
+def winsorize(data: Any, column: str, lower: float = 0.05, upper: float = 0.95) -> list[dict[str, Any]]:
+    from .numerics import winsorize as _winsorize
+
+    rows = _rows(data)
+    positions = [i for i, r in enumerate(rows) if _numeric(r.get(column)) is not None]
+    clipped = _winsorize([_numeric(rows[i].get(column)) for i in positions], lower, upper)
+    out = [dict(r) for r in rows]
+    for pos, value in zip(positions, clipped):
+        out[pos][column] = value
+    return out
+
+
+def corr_spearman(data: Any, x: str, y: str) -> float | None:
+    from .numerics import spearman
+
+    rows = _rows(data)
+    xs = [_numeric(r.get(x)) for r in rows]
+    ys = [_numeric(r.get(y)) for r in rows]
+    return spearman(xs, ys)
+
+
+def date_range(start: Any, end: Any, freq: str = "D", step: int = 1) -> list[str]:
+    from datetime import date, datetime, timedelta
+
+    def parse(value):
+        if isinstance(value, datetime):
+            return value
+        if isinstance(value, date):
+            return datetime.combine(value, datetime.min.time())
+        return datetime.fromisoformat(str(value).replace("Z", "+00:00"))
+
+    begin, finish = parse(start), parse(end)
+    n = max(1, int(step))
+    delta = {
+        "D": timedelta(days=n),
+        "H": timedelta(hours=n),
+        "W": timedelta(weeks=n),
+        "M": timedelta(days=30 * n),
+        "Y": timedelta(days=365 * n),
+    }.get(str(freq).upper(), timedelta(days=n))
+    out = []
+    current = begin
+    while current <= finish:
+        out.append(current.isoformat())
+        current += delta
+    return out
+
+
+def regression_report(data: Any, target: str, features: Any = None,
+                      confidence: float = 0.95) -> dict[str, Any]:
+    """Fit OLS on records, auto-selecting numeric predictors when omitted."""
+    from .inference import ols
+
+    rows = _rows(data)
+    if features is None:
+        feature_names = [
+            c for c in columns(rows)
+            if c != target and any(_numeric(r.get(c)) is not None for r in rows)
+        ]
+    elif isinstance(features, str):
+        feature_names = [features]
+    else:
+        feature_names = list(features)
+    if not feature_names:
+        raise ValueError("no numeric feature columns were found")
+    usable = []
+    for r in rows:
+        values = [_numeric(r.get(c)) for c in feature_names]
+        response = _numeric(r.get(target))
+        if response is not None and all(value is not None for value in values):
+            usable.append((values, response))
+    if not usable:
+        raise ValueError("no complete rows are available for regression")
+    design = [pair[0] for pair in usable]
+    response = [pair[1] for pair in usable]
+    return ols(design, response, names=feature_names, confidence=confidence)
+
+
+def time_series_report(data: Any, column: str, lags: int = 10,
+                       period: int | None = None) -> dict[str, Any]:
+    """ACF/PACF, Ljung-Box and optional seasonal decomposition for a column."""
+    from .inference import acf, pacf, ljung_box, seasonal_decompose
+
+    values = [v for v in (_numeric(r.get(column)) for r in _rows(data)) if v is not None]
+    if len(values) < 2:
+        raise ValueError("at least two numeric values are required")
+    result: dict[str, Any] = {
+        "n": len(values),
+        "acf": acf(values, lags),
+        "pacf": pacf(values, lags),
+    }
+    if len(values) > int(lags):
+        result["ljung_box"] = ljung_box(values, lags)
+    if period and len(values) >= 2 * int(period):
+        result["decomposition"] = seasonal_decompose(values, period)
+    return result
+
+
+def _feature_columns(rows: list[dict[str, Any]], target: str,
+                     features: Any) -> list[str]:
+    if features is None:
+        names = [
+            c for c in columns(rows)
+            if c != target and any(_numeric(r.get(c)) is not None for r in rows)
+        ]
+    elif isinstance(features, str):
+        names = [features]
+    else:
+        names = list(features)
+    if not names:
+        raise ValueError("no numeric feature columns were found")
+    return names
+
+
+def glm_report(data: Any, target: str, features: Any = None,
+               family: str = "binomial", confidence: float = 0.95) -> dict[str, Any]:
+    """Fit a GLM on records, auto-selecting numeric predictors when omitted."""
+    from .modeling import glm
+
+    rows = _rows(data)
+    feature_names = _feature_columns(rows, target, features)
+    usable = []
+    for r in rows:
+        values = [_numeric(r.get(c)) for c in feature_names]
+        raw = r.get(target)
+        if isinstance(raw, bool):
+            response = 1.0 if raw else 0.0
+        else:
+            response = _numeric(raw)
+        if response is not None and all(value is not None for value in values):
+            usable.append((values, response))
+    if not usable:
+        raise ValueError("no complete rows are available for the model")
+    return glm(
+        [pair[0] for pair in usable],
+        [pair[1] for pair in usable],
+        family,
+        names=feature_names,
+        confidence=confidence,
+    )
+
+
+def survival_report(data: Any, time: str, event: str | None = None,
+                    features: Any = None, confidence: float = 0.95) -> dict[str, Any]:
+    """Kaplan-Meier survival curve and an optional Cox proportional-hazards fit."""
+    from .modeling import kaplan_meier, cox_proportional_hazards
+
+    rows = _rows(data)
+    usable = []
+    for r in rows:
+        moment = _numeric(r.get(time))
+        if moment is None:
+            continue
+        if event is None:
+            flag = 1
+        else:
+            raw = r.get(event)
+            if isinstance(raw, bool):
+                flag = 1 if raw else 0
+            else:
+                value = _numeric(raw)
+                flag = 0 if value is None else int(value != 0)
+        usable.append((r, moment, flag))
+    if not usable:
+        raise ValueError("no rows with a numeric time column were found")
+    km = kaplan_meier([item[1] for item in usable], [item[2] for item in usable],
+                      confidence)
+    result: dict[str, Any] = {"kaplan_meier": km, "n": len(usable)}
+    if features is not None:
+        feature_names = _feature_columns(rows, time, features)
+        design = []
+        times = []
+        events = []
+        for r, moment, flag in usable:
+            values = [_numeric(r.get(c)) for c in feature_names]
+            if all(value is not None for value in values):
+                design.append(values)
+                times.append(moment)
+                events.append(flag)
+        if design:
+            result["cox"] = cox_proportional_hazards(
+                design, times, events, names=feature_names, confidence=confidence
+            )
+    return result
+
+
+def arima_report(data: Any, column: str, order: Any = None,
+                 max_p: int = 3, max_q: int = 3, d: int | None = None,
+                 periods: int = 1) -> dict[str, Any]:
+    """Fit an ARIMA model to a column, selecting the order by AIC when omitted."""
+    from .modeling import arima, auto_arima
+
+    values = [v for v in (_numeric(r.get(column)) for r in _rows(data)) if v is not None]
+    if len(values) < 8:
+        raise ValueError("at least eight numeric values are required")
+    if order is not None:
+        parts = list(order)
+        if len(parts) > 3:
+            raise ValueError("ARIMA order must have at most three components")
+        parts += [0] * (3 - len(parts))
+        return arima(values, int(parts[0]), int(parts[1]), int(parts[2]), periods)
+    return auto_arima(values, max_p, max_q, d, periods)
+
+
+def _causal_columns(rows: list[dict[str, Any]], exclude: list[str],
+                    features: Any) -> list[str]:
+    if features is None:
+        names = [
+            c for c in columns(rows)
+            if c not in exclude and any(_numeric(r.get(c)) is not None for r in rows)
+        ]
+    elif isinstance(features, str):
+        names = [features]
+    else:
+        names = list(features)
+    if not names:
+        raise ValueError("no numeric covariate columns were found")
+    return names
+
+
+def _binary(value: Any) -> int | None:
+    if isinstance(value, bool):
+        return 1 if value else 0
+    number = _numeric(value)
+    if number is None or number not in (0.0, 1.0):
+        return None
+    return int(number)
+
+
+def causal_report(data: Any, treatment: str, outcome: str,
+                  covariates: Any = None, method: str = "ipw",
+                  trim: float = 0.0, confidence: float = 0.95,
+                  caliper: float = 0.2, ratio: int = 1) -> dict[str, Any]:
+    """Estimate a treatment effect from records.
+
+    ``method`` is ``"ipw"`` (default), ``"aipw"`` (doubly robust), or
+    ``"matching"``. The result includes the effect estimate, interval, and
+    covariate-balance diagnostics.
+    """
+    from .causal import (ipw_ate, aipw_ate, propensity_match,
+                         covariate_balance)
+
+    rows = _rows(data)
+    feature_names = _causal_columns(rows, [treatment, outcome], covariates)
+    usable = []
+    for r in rows:
+        flag = _binary(r.get(treatment))
+        response = _numeric(r.get(outcome))
+        values = [_numeric(r.get(c)) for c in feature_names]
+        if flag is not None and response is not None and all(v is not None for v in values):
+            usable.append((values, flag, response))
+    if not usable:
+        raise ValueError("no complete rows are available for the causal model")
+    features = [item[0] for item in usable]
+    treated = [item[1] for item in usable]
+    response = [item[2] for item in usable]
+    key = str(method).lower()
+    if key in ("ipw", "ate", "weighting"):
+        result = ipw_ate(features, treated, response, trim, confidence)
+    elif key in ("aipw", "doubly_robust", "dr"):
+        result = aipw_ate(features, treated, response, trim, confidence)
+    elif key in ("matching", "match", "psm"):
+        result = propensity_match(features, treated, response, caliper, ratio)
+    else:
+        raise ValueError("unknown causal method: " + str(method))
+    result["method"] = key
+    result["features"] = feature_names
+    result["balance"] = covariate_balance(features, treated, feature_names)
+    weights = result.get("weights")
+    if weights is not None:
+        result["weighted_balance"] = covariate_balance(
+            features, treated, feature_names, weights
+        )
+    return result
+
+
+def did_report(data: Any, outcome: str, treated: str, post: str,
+               covariates: Any = None, cluster: Any = None,
+               confidence: float = 0.95) -> dict[str, Any]:
+    """Difference-in-differences from records with optional clustered errors."""
+    from .causal import difference_in_differences
+
+    rows = _rows(data)
+    if covariates is None:
+        feature_names: list[str] = []
+    else:
+        feature_names = _causal_columns(rows, [outcome, treated, post], covariates)
+    usable = []
+    indices = []
+    for index, r in enumerate(rows):
+        flag = _binary(r.get(treated))
+        period = _binary(r.get(post))
+        response = _numeric(r.get(outcome))
+        values = [_numeric(r.get(c)) for c in feature_names]
+        if (flag is not None and period is not None and response is not None
+                and all(v is not None for v in values)):
+            usable.append((values, flag, period, response))
+            indices.append(index)
+    if not usable:
+        raise ValueError("no complete rows are available for the DiD model")
+    cluster_values = None
+    if cluster is not None:
+        if isinstance(cluster, str):
+            cluster_values = [rows[i].get(cluster) for i in indices]
+        else:
+            cluster_values = [list(cluster)[i] for i in indices]
+    return difference_in_differences(
+        [item[3] for item in usable],
+        [item[1] for item in usable],
+        [item[2] for item in usable],
+        [item[0] for item in usable] if feature_names else None,
+        feature_names or None,
+        cluster_values,
+        confidence,
+    )
+
+
+def iv_report(data: Any, outcome: str, endogenous: str, instruments: Any,
+              controls: Any = None, confidence: float = 0.95) -> dict[str, Any]:
+    """Two-stage least squares from records."""
+    from .causal import instrumental_variables
+
+    rows = _rows(data)
+    if isinstance(instruments, str):
+        instrument_names = [instruments]
+    else:
+        instrument_names = list(instruments)
+    control_names = [] if controls is None else (
+        [controls] if isinstance(controls, str) else list(controls)
+    )
+    usable = []
+    for r in rows:
+        response = _numeric(r.get(outcome))
+        endo = _numeric(r.get(endogenous))
+        z_values = [_numeric(r.get(c)) for c in instrument_names]
+        c_values = [_numeric(r.get(c)) for c in control_names]
+        if (response is not None and endo is not None
+                and all(v is not None for v in z_values)
+                and all(v is not None for v in c_values)):
+            usable.append((z_values, endo, response, c_values))
+    if not usable:
+        raise ValueError("no complete rows are available for the IV model")
+    return instrumental_variables(
+        [item[0] for item in usable],
+        [item[1] for item in usable],
+        [item[2] for item in usable],
+        [item[3] for item in usable] if control_names else None,
+        control_names or None,
+        instrument_names,
+        confidence,
+    )
+
+
+def rdd_report(data: Any, outcome: str, running: str, cutoff: float = 0.0,
+               bandwidth: float | None = None, degree: int = 1,
+               confidence: float = 0.95) -> dict[str, Any]:
+    """Sharp regression-discontinuity estimate from records."""
+    from .causal import regression_discontinuity
+
+    rows = _rows(data)
+    running_values = []
+    outcome_values = []
+    for r in rows:
+        x = _numeric(r.get(running))
+        y = _numeric(r.get(outcome))
+        if x is not None and y is not None:
+            running_values.append(x)
+            outcome_values.append(y)
+    if not running_values:
+        raise ValueError("no complete rows are available for the RDD model")
+    return regression_discontinuity(
+        running_values, outcome_values, cutoff, bandwidth, degree, confidence
+    )
+
+
 def build_analysis_namespace() -> dict[str, Any]:
     return {
         "profile": profile,
@@ -1375,5 +2273,49 @@ def build_analysis_namespace() -> dict[str, Any]:
         "sample_frac": sample_frac,
         "ewm_mean": ewm_mean,
         "standardize": zscore_col,
+        "sql": sql,
+        "sql_value": sql_value,
+        "read_csv_file": read_csv_file,
+        "write_csv_file": write_csv_file,
+        "read_json_file": read_json_file,
+        "write_json_file": write_json_file,
+        "read_jsonl_file": read_jsonl_file,
+        "write_jsonl_file": write_jsonl_file,
+        "qcut": qcut,
+        "rolling_sum": rolling_sum,
+        "rolling_min": rolling_min,
+        "rolling_max": rolling_max,
+        "rolling_median": rolling_median,
+        "rolling_var": rolling_var,
+        "expanding_std": expanding_std,
+        "expanding_var": expanding_var,
+        "expanding_median": expanding_median,
+        "interpolate": interpolate,
+        "factorize": factorize,
+        "mask": mask,
+        "select_dtypes": select_dtypes,
+        "info": info,
+        "memory_usage": memory_usage,
+        "pivot_table": pivot_table,
+        "reset_index": reset_index,
+        "set_index": set_index,
+        "agg": agg,
+        "transform": transform,
+        "group_by_multi": group_by_multi,
+        "merge_multi": merge_multi,
+        "describe_all": describe_all,
+        "missing_summary": missing_summary,
+        "winsorize": winsorize,
+        "corr_spearman": corr_spearman,
+        "date_range": date_range,
+        "regression_report": regression_report,
+        "time_series_report": time_series_report,
+        "glm_report": glm_report,
+        "survival_report": survival_report,
+        "arima_report": arima_report,
+        "causal_report": causal_report,
+        "did_report": did_report,
+        "iv_report": iv_report,
+        "rdd_report": rdd_report,
     }
 

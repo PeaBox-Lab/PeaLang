@@ -399,10 +399,12 @@ class Interpreter:
         from .analysis import build_analysis_namespace
         from .interop import build_interop_namespace
         from .ux import build_ux_namespace
+        from .numerics import build_stats_namespace
         self.web_namespace=build_web_namespace(self);self.global_env.define('web',self.web_namespace,True)
         self.analysis_namespace=build_analysis_namespace();self.global_env.define('analysis',self.analysis_namespace,True)
         self.interop_namespace=build_interop_namespace();self.global_env.define('interop',self.interop_namespace,True)
         self.ux_namespace=build_ux_namespace();self.global_env.define('ux',self.ux_namespace,True)
+        self.stats_namespace=build_stats_namespace();self.global_env.define('stats',self.stats_namespace,True)
         self.tool_registry=ToolRegistry(self.invoke_user_function);self.agent_runtime=AgentRuntime(self.ai_service,self.tool_registry);self.global_env.define('tool',{'register':self.tool_registry.register,'list':self.tool_registry.list,'describe':self.tool_registry.describe,'call':self.tool_registry.call},True);self.global_env.define('agent',{'define':self.agent_runtime.define,'run':self.agent_runtime.run,'tool':self.agent_runtime.tool},True)
         self.skill_registry=SkillRegistry(self.base_dir);self.global_env.define('skill',{'load':self.skill_registry.load,'list':self.skill_registry.list,'get':self.skill_registry.get,'render':self.skill_registry.render},True)
     def _append(self,a,v):a.append(v);return a

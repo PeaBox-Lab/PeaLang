@@ -1,0 +1,29 @@
+// Use case: web API over analysis results
+// expose grouped analytics through a small HTTP application
+let app = web.app()
+app.enable_cors("*")
+
+let data = [
+    {"team": "a", "score": 91},
+    {"team": "a", "score": 84},
+    {"team": "b", "score": 77}
+]
+
+function health(req) {
+    return web.json({"status": "ok", "rows": len(data)})
+}
+
+function summary(req) {
+    let groups = analysis.group_by(data, "team", "score", "mean")
+    return web.json({"groups": groups})
+}
+
+app.get("/health", health)
+app.get("/summary", summary)
+
+let health_result = app.dispatch("GET", "/health")
+print health_result["status"]
+
+let summary_result = app.dispatch("GET", "/summary")
+print summary_result["status"]
+print "summary has groups: " + str(contains(summary_result["body"], "groups"))

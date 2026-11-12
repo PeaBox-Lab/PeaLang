@@ -13,6 +13,8 @@ TEMPLATES={
  'interop':'let result = interop.run("python", ["--version"])\nprint result\n',
  'automation':'// Automation starter\nprint "cwd: " + interop.cwd()\nlet files = interop.walk(".")\nprint "files: " + str(len(files))\ninterop.write_text("report.txt", "ok")\nprint "done"\n',
  'etl':'// ETL starter: load -> transform -> output\nlet raw = analysis.from_json(interop.read_text("data.json"))\nprint "rows: " + str(len(raw))\nlet clean = analysis.dropna(raw)\nlet prof = analysis.profile(clean)\ninterop.write_json("profile.json", prof)\nprint analysis.summary(clean)\n',
+ 'data':'// Data pipeline starter: profile -> clean -> SQL -> report\nlet raw = [\n    {"team": "a", "score": 91},\n    {"team": "a", "score": 84},\n    {"team": "b", "score": 77},\n    {"team": "b", "score": null}\n]\nlet clean = analysis.dropna(raw)\nprint analysis.summary(clean)\nlet totals = analysis.sql(clean, "SELECT team, COUNT(*) AS n, AVG(score) AS avg_score FROM data GROUP BY team ORDER BY team")\nprint totals\nanalysis.write_json_file("report.json", totals)\nprint "wrote report.json"\n',
+ 'polyglot':'// Polyglot starter: Python bridge + Go/TypeScript client generation\nlet root = interop.call_python("math", "sqrt", 144)\nprint "python sqrt: " + str(root)\nlet go_client = interop.generate_go("http://127.0.0.1:8787")\nprint "go client bytes: " + str(len(go_client))\nlet ts_client = interop.generate_typescript("http://127.0.0.1:8787")\nprint "ts client bytes: " + str(len(ts_client))\nif interop.go_available() {\n    print "go: " + interop.go_version()\n} else {\n    print "go toolchain not installed"\n}\n',
 }
 
 def load_manifest(start='.'):

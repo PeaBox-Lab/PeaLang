@@ -1,0 +1,38 @@
+// Use case: generalized linear models, regularization and survival analysis
+let x = [[1], [2], [3], [4], [5], [6], [7], [8], [9], [10], [11], [12]]
+let y = [0, 0, 1, 0, 1, 1, 0, 1, 1, 1, 0, 1]
+
+let logit = stats.logistic_regression(x, y, ["x"])
+print "logit slope: " + str(round(logit["coefficients"][1], 3))
+print "logit p: " + str(round(logit["p_values"][1], 3))
+print "logit aic: " + str(round(logit["aic"], 3))
+
+let counts = [1, 1, 2, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+let pois = stats.poisson_regression(x, counts, ["x"])
+print "poisson slope: " + str(round(pois["coefficients"][1], 3))
+print "poisson aic: " + str(round(pois["aic"], 3))
+
+let features = [[1, 0], [0, 1], [1, 1], [2, 2], [3, 1], [2, 3]]
+let target = [2, 3, 5, 9, 10, 11]
+let ridge = stats.ridge_regression(features, target, 0.5, ["a", "b"])
+let lasso = stats.lasso_regression(features, target, 10.0, ["a", "b"])
+print "ridge a: " + str(round(ridge["coefficients"][0], 3))
+print "lasso b: " + str(round(lasso["coefficients"][1], 3))
+
+let km = stats.kaplan_meier([1, 2, 3, 4, 5], [1, 1, 0, 1, 0])
+print "median survival: " + str(km["median_survival"])
+let lr = stats.log_rank_test([1, 2, 3, 4, 5], [1, 1, 1, 1, 1], [2, 3, 4, 5, 6], [1, 1, 1, 1, 1])
+print "log-rank p: " + str(round(lr["p_value"], 3))
+
+let cox = stats.cox_proportional_hazards([[0.1], [0.5], [1.0], [1.5], [2.0], [0.2], [0.7], [1.2], [1.7], [2.2]], [1, 2, 2, 3, 4, 5, 5, 6, 7, 8], [1, 1, 1, 1, 0, 1, 1, 0, 1, 1], ["x"])
+print "cox hr: " + str(round(cox["hazard_ratios"][0], 3))
+print "cox concordance: " + str(round(cox["concordance"], 3))
+
+let rows = [{"x": 1, "y": 0}, {"x": 2, "y": 0}, {"x": 3, "y": 1}, {"x": 4, "y": 0}, {"x": 5, "y": 1}, {"x": 6, "y": 1}, {"x": 7, "y": 0}, {"x": 8, "y": 1}, {"x": 9, "y": 1}, {"x": 10, "y": 1}, {"x": 11, "y": 0}, {"x": 12, "y": 1}]
+let report = analysis.glm_report(rows, "y", ["x"])
+print "glm slope: " + str(round(report["coefficients"][1], 3))
+
+let patients = [{"time": 1, "event": 1, "x": 0.1}, {"time": 2, "event": 1, "x": 0.5}, {"time": 2, "event": 1, "x": 1.0}, {"time": 3, "event": 1, "x": 1.5}, {"time": 4, "event": 0, "x": 2.0}, {"time": 5, "event": 1, "x": 0.2}, {"time": 5, "event": 1, "x": 0.7}, {"time": 6, "event": 0, "x": 1.2}, {"time": 7, "event": 1, "x": 1.7}, {"time": 8, "event": 1, "x": 2.2}]
+let survival = analysis.survival_report(patients, "time", "event", ["x"])
+print "survival rows: " + str(survival["n"])
+print "cox events: " + str(survival["cox"]["events"])

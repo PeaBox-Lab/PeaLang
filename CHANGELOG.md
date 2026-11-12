@@ -2,6 +2,74 @@
 
 ## 1.0.0-experience (ongoing) - 2026-11-08
 
+### Causal inference (v117)
+- Added `pealang/causal.py`, a dependency-free causal layer exposed through `stats` / `std.stats`.
+- Propensity scores: `propensity_scores` with fitted probabilities, logit scores, ATE/ATT weights, overlap diagnostics, and the underlying logistic coefficient table.
+- Balance diagnostics: `covariate_balance` with standardized mean differences and weighted SMDs for assessing covariate balance before and after weighting.
+- Weighting estimators: `ipw_ate` (Hajek IPW for the ATE and ATT) and `aipw_ate` (doubly robust augmented IPW), both with propensity-refitting bootstrap standard errors and confidence intervals.
+- Matching: `propensity_match` with nearest-neighbour matching on the logit propensity score, configurable caliper, ratio, and replacement.
+- Difference-in-differences: `difference_in_differences` with an interaction term, covariates, and optional cluster-robust standard errors.
+- Instrumental variables: `instrumental_variables` with two-stage least squares, first-stage F statistic, and a Sargan overidentification test.
+- Regression discontinuity: `regression_discontinuity` with separate local polynomials, bandwidth selection, and a sharp jump estimate.
+- Added record-friendly wrappers `analysis.causal_report`, `analysis.did_report`, `analysis.iv_report`, and `analysis.rdd_report`.
+- Added runnable use case `examples/use_cases/13_causal_inference.pea`.
+- Added `docs/CAUSAL_INFERENCE.md` and `help/CAUSAL.md`; extended `docs/DATA_SCIENCE.md`, `docs/USE_CASES.md`, and the README.
+- Exported causal helpers from the Python package (`build_causal_namespace`, `stats_propensity_scores`, `stats_covariate_balance`, `stats_ipw_ate`, `stats_aipw_ate`, `stats_propensity_match`, `stats_did`, `stats_iv`, `stats_rdd`).
+- Added regression coverage: `tests/test_causal_v117.py` and `tests/test_use_cases_v117.py`.
+
+### Predictive modeling and survival analysis (v116)
+- Added `pealang/modeling.py`, a dependency-free modeling layer exposed through `stats` / `std.stats`.
+- Generalized linear models: `glm` with Gaussian, binomial (logit), and Poisson (log) families, fitted by iteratively reweighted least squares; convenience wrappers `logistic_regression` and `poisson_regression`; prediction with `predict_glm`.
+- GLM results include a coefficient table with standard errors, z-statistics, p-values, confidence intervals, deviance, null deviance, pseudo-R², AIC/BIC, covariance, fitted values, and convergence status.
+- Regularized regression: `ridge_regression` (closed form), `lasso_regression` (coordinate descent), and `elastic_net`.
+- Survival analysis: `kaplan_meier` (Greenwood confidence bands), `log_rank_test`, `cox_proportional_hazards` (Newton-Raphson, Breslow ties, hazard ratios, concordance), and `concordance_index`.
+- Time-series forecasting: `arima` (ARIMA(p, d, q) by conditional least squares with integrated forecasts) and `auto_arima` (AIC order selection with optional ADF differencing).
+- Added record-friendly wrappers `analysis.glm_report`, `analysis.survival_report`, and `analysis.arima_report`.
+- Added runnable use cases: GLM/survival report and ARIMA forecasting.
+- Added `docs/ADVANCED_MODELING.md` and `help/MODELING.md`; extended `docs/DATA_SCIENCE.md`, `docs/USE_CASES.md`, and the README.
+- Exported modeling helpers from the Python package (`build_modeling_namespace`, `stats_glm`, `stats_logistic_regression`, `stats_poisson_regression`, `stats_ridge_regression`, `stats_lasso_regression`, `stats_kaplan_meier`, `stats_cox`, `stats_arima`, `stats_auto_arima`, and related names).
+- Added regression coverage: `tests/test_modeling_v116.py`, `tests/test_survival_v116.py`, `tests/test_use_cases_v116.py`.
+
+### Statistical inference and time series (v115)
+- Added `pealang/inference.py`, a dependency-free inference, regression-diagnostics and time-series engine layered onto `stats` / `std.stats`.
+- Estimation: `standard_error`, `confidence_interval_mean` (Student-t), `confidence_interval_proportion` (Wilson), `confidence_interval_diff_means` (Welch), `margin_of_error`, `bootstrap_ci` (percentile bootstrap).
+- Effect size and power: `cohens_d`, `hedges_g`, `eta_squared`, `power_t_test`, `sample_size_t_test`.
+- Multiple comparisons: `adjust_p_values` / `multiple_comparison` with Bonferroni, Holm, and Benjamini-Hochberg methods.
+- Parametric tests: `z_test_1samp`, `proportion_test`, `z_test_proportions`, `fisher_exact`, `chi_square_goodness_of_fit`.
+- Nonparametric tests: `mann_whitney_u`, `wilcoxon_signed_rank`, `kruskal_wallis`, `friedman_test`, `sign_test`, all with tie handling where applicable.
+- Normality and resampling: `jarque_bera`, `normality_test`, `permutation_test`.
+- Regression diagnostics: `ols` (coefficient table, standard errors, t/p values, confidence intervals, R², adjusted R², F-test, AIC/BIC, Durbin-Watson, covariance), `predict_ols` (prediction intervals), `variance_inflation_factors`, `residual_diagnostics`.
+- Time series: `acf`, `pacf` (Durbin-Levinson), `ljung_box`, `difference_series` (regular and seasonal), `moving_average`, `simple_exponential_smoothing`, `holt_linear`, `holt_winters`, `seasonal_decompose`, `changepoint_cusum`, `adf_test`.
+- Added inverse distributions `t_ppf`, `chi2_ppf`, and `f_ppf` to `stats`.
+- Added record-friendly wrappers `analysis.regression_report` and `analysis.time_series_report`.
+- Added runnable use cases: statistical inference report and forecasting pipeline.
+- Added `docs/STATISTICAL_INFERENCE.md` and `help/INFERENCE.md`; extended `docs/DATA_SCIENCE.md`, `docs/USE_CASES.md`, and the README.
+- Exported inference helpers from the Python package (`build_inference_namespace`, `stats_confidence_interval_mean`, `stats_cohens_d`, `stats_ols`, `stats_acf`, `stats_holt_winters`, `stats_adf_test`, and related names).
+- Added regression coverage: `tests/test_inference_v115.py`, `tests/test_timeseries_v115.py`, `tests/test_use_cases_v115.py`.
+
+### Native data science toolkit (v114)
+- Added `pealang/numerics.py`, a dependency-free numerical, statistical and modelling engine exposed as the first-class `stats` namespace and the stable `std.stats` module.- Descriptive statistics: `mean`, `median`, `mode`, `quantile`, `percentile`, `iqr`, `variance`, `std`, `skew`, `kurtosis`, `covariance`, `pearson`/`correlation`, `spearman`, `kendall`, `entropy`, `gini`, `describe`.
+- Transforms and sampling: `zscore`, `minmax_scale`, `robust_scale`, `winsorize`, `cumsum`/`cumprod`/`cummax`/`cummin`, `diff`, `histogram`, `outliers_z`, `percentile_rank`, `random_uniform`/`normal`/`binomial`/`poisson`, `bootstrap`.
+- Linear algebra: `dot`, `norm`, `distance`, `angle`, elementwise arithmetic, `outer`, `transpose`, `identity`, `matmul`, `trace`, `solve`, `determinant`, `inverse`.
+- Probability distributions: normal, uniform, exponential, binomial, Poisson, Student's t, F, and chi-square PDFs/CDFs plus `normal_ppf` and `normal_interval`.
+- Hypothesis tests: one-sample/independent/Welch/paired t-tests, chi-square, and one-way ANOVA, each returning statistic, degrees of freedom, and p-value.
+- Modelling: `linear_regression`, `multiple_regression`, `polyfit`/`polyval`, `r_squared`, `interpolate`, `linspace`, `arange`, k-means (k-means++), PCA, and `confusion_matrix`.
+- Extended `analysis` with pandas-class helpers: `qcut`, `rolling_sum`/`min`/`max`/`median`/`var`, `expanding_std`/`var`/`median`, `interpolate`, `factorize`, `mask`, `select_dtypes`, `info`, `memory_usage`, `pivot_table`, `reset_index`/`set_index`, `agg`, `transform`, `group_by_multi`, `merge_multi`, `describe_all`, `missing_summary`, `winsorize`, `corr_spearman`, `date_range`.
+- Added runnable use cases: statistical analysis, matrix regression, and customer segmentation.
+- Added `docs/DATA_SCIENCE.md` and `help/NUMERICS.md`.
+- Exported stats helpers from the Python package (`build_stats_namespace`, `stats_linear_regression`, `stats_kmeans`, `stats_pca`, and related names).
+- Added regression coverage: `tests/test_numerics_v114.py`, `tests/test_analysis_v114.py`, `tests/test_stats_namespace_v114.py`, `tests/test_use_cases_v114.py`.
+
+### Data processing and polyglot delivery (v113)
+- Added `analysis.sql` and `analysis.sql_value`: run SQL (including `GROUP BY`, window functions and CTEs) over in-memory records via SQLite, returning records in the same shape as the rest of the analysis namespace.
+- Added file-based data IO: `analysis.read_csv_file`, `analysis.write_csv_file`, `analysis.read_json_file`, `analysis.write_json_file`, `analysis.read_jsonl_file`, `analysis.write_jsonl_file`.
+- Added Go interoperability: `interop.go_run` (compile/run Go source with graceful missing-toolchain handling), `interop.go_available`, `interop.go_version`, and `interop.generate_go` (dependency-free Go client for the runtime service).
+- Added `data` and `polyglot` project templates (`pea init --template data|polyglot`).
+- Added runnable use-case programs under `examples/use_cases/`: sales pipeline, analytics report, SQL analytics, polyglot bridge, and web data API.
+- Added `docs/USE_CASES.md` plus `help/DATA_PIPELINES.md` and `help/POLYGLOT.md`.
+- Exported the new analysis and Go helpers from the Python package (`analyze_sql`, `analyze_read_csv`, `generate_go_client`, `go_run`, and related names).
+- Added regression coverage: `tests/test_analysis_sql_v113.py`, `tests/test_go_interop_v113.py`, `tests/test_use_cases_v113.py`.
+
 ### Language and Runtime
 - Added list comprehensions with filters and destructuring patterns.
 - Added dict comprehensions with destructuring patterns.

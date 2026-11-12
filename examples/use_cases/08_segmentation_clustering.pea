@@ -1,0 +1,20 @@
+// Use case: customer segmentation with k-means and PCA
+let customers = [
+    {"spend": 10, "visits": 2},
+    {"spend": 12, "visits": 3},
+    {"spend": 11, "visits": 2},
+    {"spend": 80, "visits": 12},
+    {"spend": 85, "visits": 11},
+    {"spend": 78, "visits": 13}
+]
+
+let km = stats.kmeans(customers, 2, 100, 42)
+print "clusters: " + str(km["k"])
+print "labels: " + str(len(km["labels"]))
+print "inertia positive: " + str(km["inertia"] > 0)
+print "centers: " + str(len(km["centers"]))
+
+let pc = stats.pca(customers, 2)
+print "components: " + str(len(pc["components"]))
+print "explained: " + str(round(pc["explained_variance_ratio"][0], 3))
+print "projected rows: " + str(len(pc["projected"]))

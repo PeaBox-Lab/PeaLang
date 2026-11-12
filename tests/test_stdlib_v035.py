@@ -1,7 +1,7 @@
 import pytest
 from pealang import execute
 from pealang.stdlib import MODULES,STDLIB_VERSION,stdlib_manifest,build_standard_library
-EXPECTED={'std.collections','std.string','std.math','std.datetime','std.json','std.csv','std.regex','std.file','std.path','std.http','std.crypto','std.logging','std.testing','std.concurrent','std.web','std.analysis','std.interop','std.ux'}
+EXPECTED={'std.collections','std.string','std.math','std.datetime','std.json','std.csv','std.regex','std.file','std.path','std.http','std.crypto','std.logging','std.testing','std.concurrent','std.web','std.analysis','std.interop','std.ux','std.stats'}
 def test_manifest_complete():assert set(MODULES)==EXPECTED and STDLIB_VERSION=='1.0'
 def test_all_stable():assert all(x.stability=='Stable' for x in MODULES.values())
 def test_collections():

@@ -1,0 +1,77 @@
+// Use case: causal inference from observational and panel data
+// Build an observational sample with confounding and a true effect of 1.5.
+let rows = []
+for i in range(1, 61) {
+    let x1 = (i % 17) / 4.0 - 2.0
+    let x2 = (i % 11) / 3.0 - 1.5
+    let e = ((i * 19) % 13 - 6) / 1.5
+    let t = 0
+    if 0.8 * x1 - 0.4 * x2 + e > 0 {
+        t = 1
+    }
+    let noise = ((i * 37) % 11 - 5) / 10.0
+    let y = 2 + 1.5 * t + 0.8 * x1 + 0.4 * x2 + noise
+    rows = rows + [{"x1": x1, "x2": x2, "t": t, "y": y}]
+}
+
+let ipw = analysis.causal_report(rows, "t", "y", ["x1", "x2"], "ipw", 0.0, 0.95)
+print "ipw ate: " + str(round(ipw["ate"], 3))
+print "ipw ci: " + str(round(ipw["ci_low"], 3)) + " to " + str(round(ipw["ci_high"], 3))
+print "ipw max smd: " + str(round(ipw["balance"]["max_abs_smd"], 3))
+print "ipw adjusted smd: " + str(round(ipw["weighted_balance"]["max_abs_weighted_smd"], 3))
+
+let aipw = analysis.causal_report(rows, "t", "y", ["x1", "x2"], "aipw", 0.0, 0.95)
+print "aipw ate: " + str(round(aipw["ate"], 3))
+print "aipw ci: " + str(round(aipw["ci_low"], 3)) + " to " + str(round(aipw["ci_high"], 3))
+
+let matched = analysis.causal_report(rows, "t", "y", ["x1", "x2"], "matching", 0.0, 0.95, 0.5, 1)
+print "matching att: " + str(round(matched["att"], 3))
+print "matched: " + str(matched["n_matched"]) + " of " + str(matched["n_treated"])
+
+// Two-period panel: outcome = 1 + 2*treated + 3*post + 4*treated*post + noise
+let panel = []
+for g in range(0, 2) {
+    for p in range(0, 2) {
+        for k in range(1, 11) {
+            let noise = ((k * 7) % 5 - 2) / 10.0
+            let y = 1 + 2 * g + 3 * p + 4 * g * p + noise
+            panel = panel + [{"treated": g, "post": p, "y": y}]
+        }
+    }
+}
+
+let did = analysis.did_report(panel, "y", "treated", "post")
+print "did att: " + str(round(did["att"], 3))
+print "did ci: " + str(round(did["ci_low"], 3)) + " to " + str(round(did["ci_high"], 3))
+
+// Instrumental variables: x is endogenous, z shifts x but not y directly.
+let ivrows = []
+for i in range(1, 61) {
+    let z = (i % 9) - 4
+    let v = ((i * 13) % 7 - 3) / 4.0
+    let x = 0.8 * z + v
+    let u = ((i * 17) % 5 - 2) / 4.0
+    let y = 1 + 2 * x + u
+    ivrows = ivrows + [{"z": z, "x": x, "y": y}]
+}
+
+let iv = analysis.iv_report(ivrows, "y", "x", "z")
+print "iv effect: " + str(round(iv["endogenous_coefficient"], 3))
+print "first-stage F: " + str(round(iv["first_stage"]["f_statistic"], 1))
+
+// Regression discontinuity: a jump of 1.0 at zero.
+let rdrows = []
+for i in range(1, 81) {
+    let x = (i - 40.5) / 20.0
+    let jump = 0
+    if x >= 0 {
+        jump = 1
+    }
+    let noise = ((i * 11) % 7 - 3) / 50.0
+    let y = 0.5 + jump + 0.3 * x + noise
+    rdrows = rdrows + [{"x": x, "y": y}]
+}
+
+let rdd = analysis.rdd_report(rdrows, "y", "x", 0.0, 0.8, 1)
+print "rdd jump: " + str(round(rdd["estimate"], 3))
+print "rdd ci: " + str(round(rdd["ci_low"], 3)) + " to " + str(round(rdd["ci_high"], 3))

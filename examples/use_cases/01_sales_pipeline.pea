@@ -1,0 +1,28 @@
+// Use case: sales data pipeline
+// clean -> enrich -> aggregate with SQL -> export a report
+let raw = [
+    {"region": "North", "product": "A", "units": 10, "price": 5.0},
+    {"region": "North", "product": "B", "units": 4, "price": 12.0},
+    {"region": "South", "product": "A", "units": 7, "price": 5.0},
+    {"region": "South", "product": "B", "units": 2, "price": 12.0},
+    {"region": "East", "product": "A", "units": null, "price": 5.0}
+]
+
+// 1. Drop rows with missing measures
+let clean = analysis.dropna(raw)
+print "clean rows: " + str(len(clean))
+
+// 2. Derive a revenue column from each row
+let enriched = analysis.add_column(clean, "revenue", function(row) {
+    return row["units"] * row["price"]
+})
+print "total revenue: " + str(analysis.sum_col(enriched, "revenue"))
+
+// 3. Aggregate by region with a SQL query over the in-memory records
+let by_region = analysis.sql(enriched, "SELECT region, SUM(revenue) AS revenue, SUM(units) AS units FROM data GROUP BY region ORDER BY revenue DESC")
+print "regions: " + str(len(by_region))
+print "top region: " + by_region[0]["region"]
+
+// 4. Export the aggregate for downstream consumers
+analysis.write_json_file("out/sales_report.json", by_region)
+print "wrote out/sales_report.json"

@@ -1,0 +1,23 @@
+// Use case: time-series diagnostics and forecasting pipeline
+// ACF/PACF -> stationarity -> smoothing -> forecast -> change point
+let demand = [10, 20, 30, 11, 21, 31, 12, 22, 32, 13, 23, 33]
+
+print "acf1: " + str(round(stats.acf(demand, 3)[1], 3))
+print "pacf1: " + str(round(stats.pacf(demand, 3)[1], 3))
+let lb = stats.ljung_box(demand, 3)
+print "ljung-box p: " + str(round(lb["p_value"], 4))
+
+let seasonal_diff = stats.difference_series(demand, 1, 3)
+print "seasonal diff length: " + str(len(seasonal_diff))
+
+let hw = stats.holt_winters(demand, 3, 0.3, 0.1, 0.3, 2)
+print "forecast: " + str(round(hw["forecast"][0], 2)) + ", " + str(round(hw["forecast"][1], 2))
+
+let decomp = stats.seasonal_decompose(demand, 3)
+print "seasonal pattern: " + str(round(decomp["pattern"][0], 2)) + ", " + str(round(decomp["pattern"][2], 2))
+
+let shift = [1, 1, 1, 1, 10, 10, 10, 10]
+print "changepoint: " + str(stats.changepoint_cusum(shift, 0.5)["changepoint"])
+
+let adf = stats.adf_test([1, 2, 4, 3, 6, 5, 8, 7, 10, 9, 12, 11], 1)
+print "adf stationary: " + str(adf["stationary"])

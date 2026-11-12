@@ -1,0 +1,20 @@
+// Use case: statistical analysis
+// descriptive stats -> hypothesis test -> bootstrap confidence interval
+let scores = [72, 84, 91, 88, 79, 95, 67, 81]
+let baseline = [65, 70, 72, 68, 75, 71, 69, 73]
+
+print "mean: " + str(stats.mean(scores))
+print "median: " + str(stats.median(scores))
+print "std: " + str(round(stats.std(scores), 2))
+print "iqr: " + str(stats.iqr(scores))
+
+let test = stats.t_test_ind(scores, baseline)
+print "t: " + str(round(test["t"], 2))
+print "p: " + str(round(test["p_value"], 4))
+print "significant: " + str(test["p_value"] < 0.05)
+
+let summary = stats.describe(scores)
+print "skew: " + str(round(summary["skew"], 2))
+
+let boot = stats.bootstrap(scores, "mean", 200, 42)
+print "ci: " + str(round(boot["ci_low"], 2)) + " .. " + str(round(boot["ci_high"], 2))
