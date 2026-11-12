@@ -27,6 +27,7 @@ Records remain ordinary lists of dictionaries, so results flow directly into
 | Trees and forests | `DecisionTree*`, `RandomForest*` | custom | `stats.decision_tree`, `stats.random_forest`, `stats.predict_tree`, `stats.predict_forest` |
 | Gradient boosting | `GradientBoosting*`, `HistGradientBoosting*` | custom | `stats.gradient_boosting`, `stats.predict_boosting`, `stats.boosting_feature_importance` |
 | Model selection | `cross_val_score`, `GridSearchCV`, `RandomizedSearchCV` | custom | `stats.cross_validate`, `stats.grid_search`, `stats.random_search` |
+| Model interpretation | `permutation_importance`, `PartialDependenceDisplay` | custom | `stats.permutation_importance`, `stats.partial_dependence` |
 | Clustering / PCA | `scikit-learn` | custom | `stats.kmeans`, `stats.pca` |
 | Tabular transforms | pandas | custom | `analysis.*` |
 
@@ -436,6 +437,37 @@ print tuned["best_model"]["importance"][0]["feature"]
 Error and loss metrics (`mse`, `rmse`, `mae`, `log_loss`) rank lower-is-better.
 See [`docs/MODEL_SELECTION.md`](MODEL_SELECTION.md) for the full reference.
 
+## Model interpretation
+
+Split-gain importance is fast but biased toward high-cardinality features.
+Permutation importance measures the metric drop when a column is shuffled, and
+partial dependence traces how the average prediction moves across a feature's
+range.
+
+```pea
+// permutation importance
+let report = stats.permutation_importance(model, features, target, "regression", 5, 0, "r2", ["x1", "x2"])
+print report["baseline"]
+print report["importances"][0]["feature"]
+print report["importances"][0]["mean"]
+
+// partial dependence
+let curves = stats.partial_dependence(model, features, ["x1"], 10, "regression", ["x1", "x2"])["curves"]
+print curves[0]["values"]
+print curves[0]["average"]
+
+// record-friendly wrapper
+let explained = analysis.interpret_report(rows, "y", ["x1", "x2"], "boosting", "regression", {"n_estimators": 100, "learning_rate": 0.1}, 5, 10, 0, "r2")
+print explained["permutation_importance"][0]["feature"]
+print explained["partial_dependence"][0]["average"]
+```
+
+For classification the curves carry `classes` and per-class `probabilities`;
+`average` is the last class's probability, which is the positive class for
+binary problems. See
+[`docs/MODEL_INTERPRETATION.md`](MODEL_INTERPRETATION.md) for the full
+reference.
+
 ## Regression and modelling
 
 ```pea
@@ -550,6 +582,7 @@ analysis.write_json_file("summary.json", [summary])
 - `examples/use_cases/15_trees_forests.pea`
 - `examples/use_cases/16_gradient_boosting.pea`
 - `examples/use_cases/17_model_selection.pea`
+- `examples/use_cases/18_model_interpretation.pea`
 
 Run them with:
 
@@ -566,6 +599,7 @@ pea run examples/use_cases/14_model_evaluation.pea
 pea run examples/use_cases/15_trees_forests.pea
 pea run examples/use_cases/16_gradient_boosting.pea
 pea run examples/use_cases/17_model_selection.pea
+pea run examples/use_cases/18_model_interpretation.pea
 ```
 
 ## Choosing the right namespace
@@ -625,3 +659,6 @@ pea run examples/use_cases/17_model_selection.pea
   estimators, by name rather than by passing a function. `best_score` is
   optimistic because the winner is refit on all rows; keep a final holdout when
   you need an unbiased estimate.
+- Permutation importance breaks feature correlations and is measured on the
+  rows you pass in. Use a holdout set for a realistic ranking, and treat
+  partial dependence as a summary of the model rather than a causal effect.

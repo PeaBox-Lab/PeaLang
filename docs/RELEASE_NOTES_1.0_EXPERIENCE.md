@@ -57,6 +57,15 @@ python -m pytest -q
 
 New/updated coverage includes: language ergonomics (comprehensions, `in`/`not in`, `**`, match/destructuring, helpers/builtins), web routing/groups/CORS/OpenAPI/validation/SSE/file/auth/cache/status/redirect/security/health/envelope/validation/accepts helpers, analysis profiling/transforms/stats/IO/charts/melt/zscore/histogram/cut/shape/string/reshape/timeseries/encoding/columns/aggregates/jsonl/expanding, interop (Python/native/process/HTTP/JSON-RPC/env/files/paths/copy/hash/walk/temp/host-info/codegen), UX/templates, and CLI (`eval -e/-f`, `check/lint --json`, `analyze`, `web-openapi`/`openapi`, `hash`, `tree`, `env`, `version --json`, `quickstart`, `info`, `new`, `serve-web`, templates/doctor).
 
+## Additional Batch Notes (v122)
+- **Interpretation:** `pealang/interpret.py` adds `permutation_importance` and `partial_dependence` for fitted tree, forest and boosting models.
+- **Permutation importance:** scores the untouched data as a baseline, shuffles each column `n_repeats` times with a seeded order, and reports the metric drop with mean and spread, ranked best-first.
+- **Partial dependence:** sweeps selected features over an evenly spaced grid between their observed min and max and averages predictions. Classification curves add `classes` and per-class `probabilities`; `average` is the last (positive for binary) class.
+- **Record wrapper:** `analysis.interpret_report` fits `"tree"`, `"forest"` or `"boosting"` from records and adds `features`, split-gain `importance`, `permutation_importance`, `partial_dependence`, `baseline`, `scoring` and `n_used`.
+- **Use case:** `examples/use_cases/18_model_interpretation.pea` with boosted regression, signal-versus-noise ranking and probability curves.
+- **Docs:** `docs/MODEL_INTERPRETATION.md` and `help/INTERPRETATION.md`.
+- **Tests:** `tests/test_interpret_v122.py` and `tests/test_use_cases_v122.py`.
+
 ## Additional Batch Notes (v121)
 - **Selection:** `pealang/selection.py` adds `cross_validate`, `grid_search` and `random_search` for `"tree"`, `"forest"` and `"boosting"` estimators, selected by name.
 - **Cross-validation:** stratified folds for classification when every class has at least `folds` samples, plain k-fold otherwise; results include per-fold scores, `mean`, `std` and `higher_is_better`.

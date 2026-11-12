@@ -2,6 +2,16 @@
 
 ## 1.0.0-experience (ongoing) - 2026-11-08
 
+### Model interpretation (v122)
+- Added `pealang/interpret.py`, a dependency-free explanation layer for fitted tree, forest and boosting models, exposed through `stats` / `std.stats`.
+- Added `permutation_importance`, which scores the baseline, shuffles each feature `n_repeats` times, and reports the metric drop with mean and spread, ranked best-first.
+- Added `partial_dependence`, which sweeps selected features over an evenly spaced grid and averages predictions, with per-class probability curves for classification.
+- Added record-friendly wrapper `analysis.interpret_report`, which fits `"tree"`, `"forest"` or `"boosting"` from records and adds split-gain importance, permutation importance, partial dependence curves, baseline and scoring.
+- Added runnable use case `examples/use_cases/18_model_interpretation.pea` covering boosted regression, signal-versus-noise ranking and probability curves.
+- Added `docs/MODEL_INTERPRETATION.md` and `help/INTERPRETATION.md`; extended `docs/DATA_SCIENCE.md`, `docs/USE_CASES.md`, the README and the roadmap.
+- Exported interpretation helpers from the Python package (`build_interpret_namespace`, `stats_permutation_importance`, `stats_partial_dependence`).
+- Added regression coverage: `tests/test_interpret_v122.py` and `tests/test_use_cases_v122.py`.
+
 ### Model selection (v121)
 - Added `pealang/selection.py`, a dependency-free tuning layer exposed through `stats` / `std.stats`.
 - Added `cross_validate`, which scores `"tree"`, `"forest"` or `"boosting"` estimators with k-fold cross-validation, stratified folds for classification, per-fold scores and mean/standard deviation.

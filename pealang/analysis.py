@@ -2479,6 +2479,47 @@ def random_tune(data: Any, target: str, features: Any = None,
     return _annotate_search(result, names, len(outcomes))
 
 
+def interpret_report(data: Any, target: str, features: Any = None,
+                     estimator: str = "forest", task: str = "auto",
+                     params: Any = None, n_repeats: int = 5,
+                     grid_size: int = 10, seed: Any = 0,
+                     scoring: Any = "auto", columns: Any = None) -> dict[str, Any]:
+    """Fit an estimator from records and explain it.
+
+    Adds permutation importance, split-gain importance and partial dependence
+    curves to the fitted model record.
+    """
+    from .interpret import partial_dependence, permutation_importance
+    from .selection import _fit
+
+    rows = _rows(data)
+    names, matrix, outcomes, kind = _tree_inputs(rows, target, features, task)
+    model = _fit(estimator, matrix, outcomes, kind, dict(params or {}))
+    report = permutation_importance(
+        model, matrix, outcomes, kind, n_repeats, seed, scoring, names
+    )
+    curves = partial_dependence(
+        model, matrix, columns, grid_size, kind, names
+    )
+    from .boosting import boosting_feature_importance
+    from .trees import forest_feature_importance, tree_feature_importance
+
+    key = str(estimator or "").lower()
+    if key in ("tree", "decision_tree"):
+        model["importance"] = tree_feature_importance(model, names)
+    elif key in ("forest", "random_forest"):
+        model["importance"] = forest_feature_importance(model, names)
+    else:
+        model["importance"] = boosting_feature_importance(model, names)
+    model["features"] = names
+    model["permutation_importance"] = report["importances"]
+    model["partial_dependence"] = curves["curves"]
+    model["baseline"] = report["baseline"]
+    model["scoring"] = report["scoring"]
+    model["n_used"] = len(outcomes)
+    return model
+
+
 def build_analysis_namespace() -> dict[str, Any]:
     return {
         "profile": profile,
@@ -2650,5 +2691,6 @@ def build_analysis_namespace() -> dict[str, Any]:
         "boosting_report": boosting_report,
         "tune_model": tune_model,
         "random_tune": random_tune,
+        "interpret_report": interpret_report,
     }
 

@@ -113,6 +113,7 @@ no third-party packages.
 | Tree importance | `stats.tree_feature_importance`, `stats.forest_feature_importance` |
 | Gradient boosting | `stats.gradient_boosting`, `stats.predict_boosting`, `stats.boosting_feature_importance` |
 | Model selection | `stats.cross_validate`, `stats.grid_search`, `stats.random_search` |
+| Model interpretation | `stats.permutation_importance`, `stats.partial_dependence` |
 | Tree wrappers | `analysis.tree_report`, `analysis.forest_report`, `analysis.boosting_report` |
 
 ```pea
@@ -291,6 +292,23 @@ let tuned = analysis.tune_model(rows, "label", ["x1", "x2"], "forest", "auto", {
 print tuned["best_model"]["importance"][0]["feature"]
 ```
 
+Explain what the model learned with permutation importance and partial
+dependence:
+
+```pea
+let report = stats.permutation_importance(model, features, target, "regression", 5, 0, "r2", ["x1", "x2"])
+print report["importances"][0]["feature"]
+print report["importances"][0]["mean"]
+
+let curves = stats.partial_dependence(model, features, ["x1"], 10, "regression", ["x1", "x2"])["curves"]
+print curves[0]["values"]
+print curves[0]["average"]
+
+let explained = analysis.interpret_report(rows, "y", ["x1", "x2"], "boosting", "regression", {"n_estimators": 100, "learning_rate": 0.1}, 5, 10, 0, "r2")
+print explained["permutation_importance"][0]["feature"]
+print explained["partial_dependence"][0]["average"]
+```
+
 Pair `stats` with the pandas-class helpers in `analysis` for end-to-end work:
 
 ```pea
@@ -313,6 +331,7 @@ Examples:
 - [`examples/use_cases/15_trees_forests.pea`](../examples/use_cases/15_trees_forests.pea)
 - [`examples/use_cases/16_gradient_boosting.pea`](../examples/use_cases/16_gradient_boosting.pea)
 - [`examples/use_cases/17_model_selection.pea`](../examples/use_cases/17_model_selection.pea)
+- [`examples/use_cases/18_model_interpretation.pea`](../examples/use_cases/18_model_interpretation.pea)
 
 See [`docs/DATA_SCIENCE.md`](DATA_SCIENCE.md),
 [`docs/STATISTICAL_INFERENCE.md`](STATISTICAL_INFERENCE.md),
@@ -321,7 +340,9 @@ See [`docs/DATA_SCIENCE.md`](DATA_SCIENCE.md),
 [`docs/MODEL_EVALUATION.md`](MODEL_EVALUATION.md),
 [`docs/TREE_MODELS.md`](TREE_MODELS.md), and
 [`docs/GRADIENT_BOOSTING.md`](GRADIENT_BOOSTING.md), and
-[`docs/MODEL_SELECTION.md`](MODEL_SELECTION.md) for the full reference.
+[`docs/MODEL_SELECTION.md`](MODEL_SELECTION.md), and
+[`docs/MODEL_INTERPRETATION.md`](MODEL_INTERPRETATION.md) for the full
+reference.
 
 ## 3. Polyglot delivery (Python, Go, TypeScript, Java)
 

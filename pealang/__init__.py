@@ -82,6 +82,9 @@ from .selection import (build_selection_namespace,
     cross_validate as stats_cross_validate,
     grid_search as stats_grid_search,
     random_search as stats_random_search)
+from .interpret import (build_interpret_namespace,
+    permutation_importance as stats_permutation_importance,
+    partial_dependence as stats_partial_dependence)
 from .ux import doctor as ux_doctor, explain_error as ux_explain
 __version__ = "0.99.6"
 __all__=['BytecodeModule','CodeObject','Instruction','Op','Compiler','CompileError','compile_source_to_bytecode','VirtualMachine','VMError','AsyncSuspension','AsyncVirtualMachine','AsyncVMRuntime','AsyncVMModule','CancellationToken','VMRuntime','VMModule','disassemble','execute','compile_source','Interpreter','PeaError','PeaRuntime','PeaModule',

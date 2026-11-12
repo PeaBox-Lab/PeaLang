@@ -88,6 +88,7 @@ Make PeaLang the default extension language for:
    - CART decision trees and bagged random forests with feature importance and out-of-bag scoring (v119)
    - gradient boosted trees for regression, binary and multiclass classification, with shrinkage and subsampling (v120)
    - cross-validation, grid search and random search over tree, forest and boosting estimators (v121)
+   - permutation importance and partial dependence for fitted tree, forest and boosting models (v122)
 3. Cross-language experience
    - Python bridge: `interop.call_python`
    - native bridge: `interop.call_native`
