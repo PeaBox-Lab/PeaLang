@@ -2270,6 +2270,112 @@ def add_polynomial_features(data: Any, columns: Any, degree: int = 2,
     return out
 
 
+def _model_columns(rows: list[dict[str, Any]], target: str,
+                   features: Any) -> list[str]:
+    if features is None:
+        names = [
+            name for name in columns(rows)
+            if name != target and any(_numeric(r.get(name)) is not None for r in rows)
+        ]
+    elif isinstance(features, str):
+        names = [features]
+    else:
+        names = list(features)
+    if not names:
+        raise ValueError("no numeric feature columns were found")
+    return names
+
+
+def _infer_task(values: list[Any]) -> str:
+    if all(isinstance(value, bool) for value in values):
+        return "classification"
+    numbers = [_numeric(value) for value in values]
+    if all(value is not None and value in (0.0, 1.0) for value in numbers):
+        return "classification"
+    return "regression"
+
+
+def _tree_inputs(rows: list[dict[str, Any]], target: str, features: Any,
+                 task: str) -> tuple[list[str], list[list[float]], list[Any], str]:
+    from .trees import _task
+
+    names = _model_columns(rows, target, features)
+    usable = []
+    for r in rows:
+        values = [_numeric(r.get(name)) for name in names]
+        outcome = r.get(target)
+        if outcome is None or any(value is None for value in values):
+            continue
+        usable.append((values, outcome))
+    if not usable:
+        raise ValueError("no complete rows are available for the tree model")
+    kind = _infer_task([item[1] for item in usable]) if str(task).lower() == "auto" else _task(task)
+    matrix = [item[0] for item in usable]
+    if kind == "regression":
+        outcomes = [_numeric(item[1]) for item in usable]
+    else:
+        outcomes = [item[1] for item in usable]
+    return names, matrix, outcomes, kind
+
+
+def tree_report(data: Any, target: str, features: Any = None,
+                task: str = "auto", max_depth: int | None = None,
+                min_samples_split: int = 2,
+                min_samples_leaf: int = 1) -> dict[str, Any]:
+    """Fit a decision tree from records and score it on the training rows."""
+    from .trees import (decision_tree, predict_tree,
+                        tree_feature_importance)
+    from .evaluation import (r2_score, root_mean_squared_error,
+                             accuracy_score)
+
+    rows = _rows(data)
+    names, matrix, outcomes, kind = _tree_inputs(rows, target, features, task)
+    model = decision_tree(
+        matrix, outcomes, kind, max_depth, min_samples_split, min_samples_leaf
+    )
+    predictions = predict_tree(model, matrix)
+    model["features"] = names
+    model["importance"] = tree_feature_importance(model, names)
+    model["train_predictions"] = predictions["predicted"]
+    if kind == "regression":
+        model["train_r2"] = r2_score(outcomes, predictions["predicted"])
+        model["train_rmse"] = root_mean_squared_error(outcomes, predictions["predicted"])
+    else:
+        model["train_accuracy"] = accuracy_score(outcomes, predictions["predicted"])
+    model["n_used"] = len(outcomes)
+    return model
+
+
+def forest_report(data: Any, target: str, features: Any = None,
+                  task: str = "auto", n_estimators: int = 100,
+                  max_depth: int | None = None, min_samples_split: int = 2,
+                  min_samples_leaf: int = 1, max_features: Any = "sqrt",
+                  bootstrap: bool = True, seed: Any = 0) -> dict[str, Any]:
+    """Fit a random forest from records with out-of-bag scoring."""
+    from .trees import (random_forest, predict_forest,
+                        forest_feature_importance)
+    from .evaluation import (r2_score, root_mean_squared_error,
+                             accuracy_score)
+
+    rows = _rows(data)
+    names, matrix, outcomes, kind = _tree_inputs(rows, target, features, task)
+    model = random_forest(
+        matrix, outcomes, kind, n_estimators, max_depth, min_samples_split,
+        min_samples_leaf, max_features, bootstrap, seed,
+    )
+    predictions = predict_forest(model, matrix)
+    model["features"] = names
+    model["importance"] = forest_feature_importance(model, names)
+    model["train_predictions"] = predictions["predicted"]
+    if kind == "regression":
+        model["train_r2"] = r2_score(outcomes, predictions["predicted"])
+        model["train_rmse"] = root_mean_squared_error(outcomes, predictions["predicted"])
+    else:
+        model["train_accuracy"] = accuracy_score(outcomes, predictions["predicted"])
+    model["n_used"] = len(outcomes)
+    return model
+
+
 def build_analysis_namespace() -> dict[str, Any]:
     return {
         "profile": profile,
@@ -2436,5 +2542,7 @@ def build_analysis_namespace() -> dict[str, Any]:
         "evaluate_classification": evaluate_classification,
         "evaluate_regression": evaluate_regression,
         "add_polynomial_features": add_polynomial_features,
+        "tree_report": tree_report,
+        "forest_report": forest_report,
     }
 

@@ -67,6 +67,13 @@ from .evaluation import (build_evaluation_namespace,
     standardize_transform as stats_standardize_transform,
     minmax_features as stats_minmax_features,
     minmax_transform as stats_minmax_transform)
+from .trees import (build_tree_namespace,
+    decision_tree as stats_decision_tree,
+    predict_tree as stats_predict_tree,
+    tree_feature_importance as stats_tree_importance,
+    random_forest as stats_random_forest,
+    predict_forest as stats_predict_forest,
+    forest_feature_importance as stats_forest_importance)
 from .ux import doctor as ux_doctor, explain_error as ux_explain
 __version__ = "0.99.6"
 __all__=['BytecodeModule','CodeObject','Instruction','Op','Compiler','CompileError','compile_source_to_bytecode','VirtualMachine','VMError','AsyncSuspension','AsyncVirtualMachine','AsyncVMRuntime','AsyncVMModule','CancellationToken','VMRuntime','VMModule','disassemble','execute','compile_source','Interpreter','PeaError','PeaRuntime','PeaModule',
