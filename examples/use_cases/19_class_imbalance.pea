@@ -1,0 +1,54 @@
+// Use case: class imbalance with SMOTE and random resampling
+// Build a rare-class classification problem
+let rows = []
+for k in range(0, 150) {
+    let a = (k % 15) / 7.0 - 1.0
+    let b = ((k * 7) % 13) / 6.0 - 1.0
+    let noise = ((k * 11) % 17) / 17.0
+    let label = 0
+    if a * a + b * b > 1.1 {
+        label = 1
+    }
+    rows = rows + [{"a": a, "b": b, "noise": noise, "label": label}]
+}
+
+let x = [[r["a"], r["b"], r["noise"]] for r in rows]
+let y = [r["label"] for r in rows]
+let parts = stats.train_test_split(x, y, 0.3, true, 5, y)
+
+let train_rows = []
+for i in range(0, len(parts["X_train"])) {
+    let row = parts["X_train"][i]
+    train_rows = train_rows + [{"a": row[0], "b": row[1], "noise": row[2], "label": parts["y_train"][i]}]
+}
+
+let before = stats.class_balance(parts["y_train"])
+print "train counts: " + str([entry["count"] for entry in before["counts"]])
+print "train ratio: " + str(round(before["imbalance_ratio"], 2))
+
+// Baseline forest ignores the rare class
+let base = stats.random_forest(parts["X_train"], parts["y_train"], "classification", 25, 4, 2, 1, "sqrt", true, 7)
+let base_pred = stats.predict_forest(base, parts["X_test"])["predicted"]
+print "base accuracy: " + str(round(stats.accuracy_score(parts["y_test"], base_pred), 3))
+print "base balanced: " + str(round(stats.balanced_accuracy(parts["y_test"], base_pred), 3))
+print "base recall: " + str(round(stats.precision_recall_fscore(parts["y_test"], base_pred, 1)["recall"], 3))
+
+// SMOTE synthesizes minority rows before fitting
+let balanced = analysis.balance_classes(train_rows, "label", ["a", "b", "noise"], "smote", 5, 3)
+print "smote added: " + str(balanced["added"])
+print "smote counts: " + str([entry["count"] for entry in balanced["after"]])
+print "smote ratio: " + str(round(balanced["imbalance_ratio_after"], 2))
+
+let balanced_x = [[r["a"], r["b"], r["noise"]] for r in balanced["rows"]]
+let balanced_y = [r["label"] for r in balanced["rows"]]
+let model = stats.random_forest(balanced_x, balanced_y, "classification", 25, 4, 2, 1, "sqrt", true, 7)
+let tuned_pred = stats.predict_forest(model, parts["X_test"])["predicted"]
+print "smote accuracy: " + str(round(stats.accuracy_score(parts["y_test"], tuned_pred), 3))
+print "smote balanced: " + str(round(stats.balanced_accuracy(parts["y_test"], tuned_pred), 3))
+print "smote recall: " + str(round(stats.precision_recall_fscore(parts["y_test"], tuned_pred, 1)["recall"], 3))
+
+// Random oversampling and undersampling are cheaper alternatives
+let over = stats.random_oversample(parts["X_train"], parts["y_train"], 1)
+print "over rows: " + str(over["n"])
+let under = stats.random_undersample(parts["X_train"], parts["y_train"], 1)
+print "under rows: " + str(under["n"])

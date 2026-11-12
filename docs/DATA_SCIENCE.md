@@ -28,6 +28,7 @@ Records remain ordinary lists of dictionaries, so results flow directly into
 | Gradient boosting | `GradientBoosting*`, `HistGradientBoosting*` | custom | `stats.gradient_boosting`, `stats.predict_boosting`, `stats.boosting_feature_importance` |
 | Model selection | `cross_val_score`, `GridSearchCV`, `RandomizedSearchCV` | custom | `stats.cross_validate`, `stats.grid_search`, `stats.random_search` |
 | Model interpretation | `permutation_importance`, `PartialDependenceDisplay` | custom | `stats.permutation_importance`, `stats.partial_dependence` |
+| Class imbalance | `imblearn` resamplers, `class_weight` | custom | `stats.class_balance`, `stats.smote`, `stats.random_oversample`, `stats.random_undersample` |
 | Clustering / PCA | `scikit-learn` | custom | `stats.kmeans`, `stats.pca` |
 | Tabular transforms | pandas | custom | `analysis.*` |
 
@@ -468,6 +469,37 @@ binary problems. See
 [`docs/MODEL_INTERPRETATION.md`](MODEL_INTERPRETATION.md) for the full
 reference.
 
+## Class imbalance
+
+Rare events make accuracy misleading: a model can ignore the minority class and
+still score well. Report the imbalance, then resample the training rows before
+fitting.
+
+```pea
+// measure
+let balance = stats.class_balance(labels)
+print balance["imbalance_ratio"]
+print balance["counts"]
+
+// random resampling
+let over = stats.random_oversample(features, labels, 1)
+let under = stats.random_undersample(features, labels, 1)
+
+// SMOTE synthesis
+let synthetic = stats.smote(features, labels, 5, 7)
+print synthetic["n"]
+print synthetic["added"]
+
+// record-friendly wrapper
+let balanced = analysis.balance_classes(rows, "label", ["x1", "x2"], "smote", 5, 0)
+print balanced["before"]
+print balanced["after"]
+let model = analysis.forest_report(balanced["rows"], "label", ["x1", "x2"], "classification")
+```
+
+Resample the training split only and score on the untouched test rows. See
+[`docs/CLASS_IMBALANCE.md`](CLASS_IMBALANCE.md) for the full reference.
+
 ## Regression and modelling
 
 ```pea
@@ -583,6 +615,7 @@ analysis.write_json_file("summary.json", [summary])
 - `examples/use_cases/16_gradient_boosting.pea`
 - `examples/use_cases/17_model_selection.pea`
 - `examples/use_cases/18_model_interpretation.pea`
+- `examples/use_cases/19_class_imbalance.pea`
 
 Run them with:
 
@@ -600,6 +633,7 @@ pea run examples/use_cases/15_trees_forests.pea
 pea run examples/use_cases/16_gradient_boosting.pea
 pea run examples/use_cases/17_model_selection.pea
 pea run examples/use_cases/18_model_interpretation.pea
+pea run examples/use_cases/19_class_imbalance.pea
 ```
 
 ## Choosing the right namespace
@@ -662,3 +696,7 @@ pea run examples/use_cases/18_model_interpretation.pea
 - Permutation importance breaks feature correlations and is measured on the
   rows you pass in. Use a holdout set for a realistic ranking, and treat
   partial dependence as a summary of the model rather than a causal effect.
+- Resampling changes the class prior, so probabilities are no longer calibrated
+  to the original population. SMOTE interpolates numeric columns only and can
+  create points in regions where the minority class does not occur. Resample
+  the training split, never the test set.

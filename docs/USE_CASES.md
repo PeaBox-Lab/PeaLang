@@ -114,6 +114,7 @@ no third-party packages.
 | Gradient boosting | `stats.gradient_boosting`, `stats.predict_boosting`, `stats.boosting_feature_importance` |
 | Model selection | `stats.cross_validate`, `stats.grid_search`, `stats.random_search` |
 | Model interpretation | `stats.permutation_importance`, `stats.partial_dependence` |
+| Class imbalance | `stats.class_balance`, `stats.smote`, `stats.random_oversample`, `stats.random_undersample` |
 | Tree wrappers | `analysis.tree_report`, `analysis.forest_report`, `analysis.boosting_report` |
 
 ```pea
@@ -309,6 +310,28 @@ print explained["permutation_importance"][0]["feature"]
 print explained["partial_dependence"][0]["average"]
 ```
 
+Rare classes need resampling before fitting:
+
+```pea
+let balance = stats.class_balance(labels)
+print balance["imbalance_ratio"]
+print balance["counts"]
+
+let synthetic = stats.smote(features, labels, 5, 7)
+print synthetic["n"]
+print synthetic["added"]
+
+let over = stats.random_oversample(features, labels, 1)
+let under = stats.random_undersample(features, labels, 1)
+print over["n"]
+print under["n"]
+
+let balanced = analysis.balance_classes(rows, "label", ["x1", "x2"], "smote", 5, 0)
+print balanced["after"]
+let model = analysis.forest_report(balanced["rows"], "label", ["x1", "x2"], "classification")
+print model["train_accuracy"]
+```
+
 Pair `stats` with the pandas-class helpers in `analysis` for end-to-end work:
 
 ```pea
@@ -332,6 +355,7 @@ Examples:
 - [`examples/use_cases/16_gradient_boosting.pea`](../examples/use_cases/16_gradient_boosting.pea)
 - [`examples/use_cases/17_model_selection.pea`](../examples/use_cases/17_model_selection.pea)
 - [`examples/use_cases/18_model_interpretation.pea`](../examples/use_cases/18_model_interpretation.pea)
+- [`examples/use_cases/19_class_imbalance.pea`](../examples/use_cases/19_class_imbalance.pea)
 
 See [`docs/DATA_SCIENCE.md`](DATA_SCIENCE.md),
 [`docs/STATISTICAL_INFERENCE.md`](STATISTICAL_INFERENCE.md),
@@ -341,8 +365,8 @@ See [`docs/DATA_SCIENCE.md`](DATA_SCIENCE.md),
 [`docs/TREE_MODELS.md`](TREE_MODELS.md), and
 [`docs/GRADIENT_BOOSTING.md`](GRADIENT_BOOSTING.md), and
 [`docs/MODEL_SELECTION.md`](MODEL_SELECTION.md), and
-[`docs/MODEL_INTERPRETATION.md`](MODEL_INTERPRETATION.md) for the full
-reference.
+[`docs/MODEL_INTERPRETATION.md`](MODEL_INTERPRETATION.md), and
+[`docs/CLASS_IMBALANCE.md`](CLASS_IMBALANCE.md) for the full reference.
 
 ## 3. Polyglot delivery (Python, Go, TypeScript, Java)
 

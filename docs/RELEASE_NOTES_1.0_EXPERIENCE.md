@@ -57,6 +57,16 @@ python -m pytest -q
 
 New/updated coverage includes: language ergonomics (comprehensions, `in`/`not in`, `**`, match/destructuring, helpers/builtins), web routing/groups/CORS/OpenAPI/validation/SSE/file/auth/cache/status/redirect/security/health/envelope/validation/accepts helpers, analysis profiling/transforms/stats/IO/charts/melt/zscore/histogram/cut/shape/string/reshape/timeseries/encoding/columns/aggregates/jsonl/expanding, interop (Python/native/process/HTTP/JSON-RPC/env/files/paths/copy/hash/walk/temp/host-info/codegen), UX/templates, and CLI (`eval -e/-f`, `check/lint --json`, `analyze`, `web-openapi`/`openapi`, `hash`, `tree`, `env`, `version --json`, `quickstart`, `info`, `new`, `serve-web`, templates/doctor).
 
+## Additional Batch Notes (v123)
+- **Imbalance:** `pealang/imbalance.py` adds `class_balance`, `random_oversample`, `random_undersample` and `smote`.
+- **Reporting:** `class_balance` returns class counts, shares, majority/minority classes and the imbalance ratio.
+- **Resampling:** random oversampling duplicates minority rows to the majority count; random undersampling drops majority rows to the minority count; both are seeded and preserve original row order.
+- **SMOTE:** synthesizes minority rows by interpolating between a base row and one of its `k` nearest same-class neighbors, handles multiclass targets, and duplicates single-row classes.
+- **Record wrapper:** `analysis.balance_classes` accepts `"smote"`, `"oversample"` or `"undersample"` and adds before/after counts, row counts and imbalance ratios.
+- **Use case:** `examples/use_cases/19_class_imbalance.pea` showing the recall and balanced-accuracy gain from resampling training rows only.
+- **Docs:** `docs/CLASS_IMBALANCE.md` and `help/IMBALANCE.md`.
+- **Tests:** `tests/test_imbalance_v123.py` and `tests/test_use_cases_v123.py`.
+
 ## Additional Batch Notes (v122)
 - **Interpretation:** `pealang/interpret.py` adds `permutation_importance` and `partial_dependence` for fitted tree, forest and boosting models.
 - **Permutation importance:** scores the untouched data as a baseline, shuffles each column `n_repeats` times with a seeded order, and reports the metric drop with mean and spread, ranked best-first.

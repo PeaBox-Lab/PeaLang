@@ -2520,6 +2520,53 @@ def interpret_report(data: Any, target: str, features: Any = None,
     return model
 
 
+def balance_classes(data: Any, target: str, features: Any = None,
+                    method: str = "smote", k: int = 5,
+                    seed: Any = 0) -> dict[str, Any]:
+    """Rebalance classification records with SMOTE or random resampling.
+
+    Returns a record with the resampled ``rows`` plus before/after class counts.
+    Pass ``result["rows"]`` to any ``analysis`` model wrapper.
+    """
+    from .imbalance import (class_balance, random_oversample,
+                            random_undersample, smote)
+
+    rows = _rows(data)
+    names, matrix, outcomes, _ = _tree_inputs(
+        rows, target, features, "classification"
+    )
+    key = str(method or "smote").lower()
+    if key == "smote":
+        result = smote(matrix, outcomes, k, seed)
+    elif key in ("oversample", "over", "random_oversample"):
+        result = random_oversample(matrix, outcomes, seed)
+    elif key in ("undersample", "under", "random_undersample"):
+        result = random_undersample(matrix, outcomes, seed)
+    else:
+        raise ValueError("method must be 'smote', 'oversample' or 'undersample'")
+    resampled = []
+    for values, label in zip(result["features"], result["target"]):
+        record = {name: value for name, value in zip(names, values)}
+        record[target] = label
+        resampled.append(record)
+    before = class_balance(outcomes)
+    after = class_balance(result["target"])
+    return {
+        "rows": resampled,
+        "method": result["method"],
+        "features": names,
+        "n_used": len(outcomes),
+        "n": result["n"],
+        "added": result["added"],
+        "removed": result["removed"],
+        "before": before["counts"],
+        "after": after["counts"],
+        "imbalance_ratio_before": before["imbalance_ratio"],
+        "imbalance_ratio_after": after["imbalance_ratio"],
+        "seed": seed,
+    }
+
+
 def build_analysis_namespace() -> dict[str, Any]:
     return {
         "profile": profile,
@@ -2692,5 +2739,6 @@ def build_analysis_namespace() -> dict[str, Any]:
         "tune_model": tune_model,
         "random_tune": random_tune,
         "interpret_report": interpret_report,
+        "balance_classes": balance_classes,
     }
 

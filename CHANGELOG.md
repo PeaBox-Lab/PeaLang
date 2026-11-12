@@ -2,6 +2,17 @@
 
 ## 1.0.0-experience (ongoing) - 2026-11-08
 
+### Class imbalance (v123)
+- Added `pealang/imbalance.py`, a dependency-free resampling layer exposed through `stats` / `std.stats`.
+- Added `class_balance`, reporting class counts, shares, majority/minority classes and the imbalance ratio.
+- Added seeded `random_oversample` and `random_undersample`, which balance classes by duplicating minority rows or dropping majority rows.
+- Added seeded `smote`, which synthesizes minority rows by interpolating between a base row and one of its `k` nearest same-class neighbors; it handles multiclass targets and duplicates single-row classes.
+- Added record-friendly wrapper `analysis.balance_classes`, with before/after counts, row counts and imbalance ratios.
+- Added runnable use case `examples/use_cases/19_class_imbalance.pea` showing the recall and balanced-accuracy gain from resampling only the training rows.
+- Added `docs/CLASS_IMBALANCE.md` and `help/IMBALANCE.md`; extended `docs/DATA_SCIENCE.md`, `docs/USE_CASES.md`, the README and the roadmap.
+- Exported imbalance helpers from the Python package (`build_imbalance_namespace`, `stats_class_balance`, `stats_random_oversample`, `stats_random_undersample`, `stats_smote`).
+- Added regression coverage: `tests/test_imbalance_v123.py` and `tests/test_use_cases_v123.py`.
+
 ### Model interpretation (v122)
 - Added `pealang/interpret.py`, a dependency-free explanation layer for fitted tree, forest and boosting models, exposed through `stats` / `std.stats`.
 - Added `permutation_importance`, which scores the baseline, shuffles each feature `n_repeats` times, and reports the metric drop with mean and spread, ranked best-first.

@@ -82,9 +82,11 @@ The objective is to improve security while preserving the existing PeaLang langu
 - Gradient boosting: `gradient_boosting`, `predict_boosting`, `boosting_feature_importance`
 - Model selection: `cross_validate`, `grid_search`, `random_search`
 - Model interpretation: `permutation_importance`, `partial_dependence`
+- Class imbalance: `class_balance`, `smote`, `random_oversample`, `random_undersample`
 - Tree wrappers: `analysis.tree_report`, `analysis.forest_report`, `analysis.boosting_report`
 - Tuning wrappers: `analysis.tune_model`, `analysis.random_tune`
 - Interpretation wrapper: `analysis.interpret_report`
+- Imbalance wrapper: `analysis.balance_classes`
 - Modelling: `linear_regression`, `multiple_regression`, `polyfit`, `polyval`, `r_squared`, `interpolate`, `linspace`, `arange`, `kmeans`, `pca`, `confusion_matrix`
 - Sampling: `random_uniform`, `random_normal`, `random_binomial`, `random_poisson`, `bootstrap`
 - Pure Python, dependency-free: no NumPy, SciPy, pandas, or gonum required
@@ -416,6 +418,12 @@ let explained = stats.permutation_importance(boosted, [[0], [1], [2], [3], [4], 
 print explained["importances"][0]["feature"]
 let curve = stats.partial_dependence(boosted, [[0], [1], [2], [3], [4], [5]], ["x"], 3, "classification", ["x"])["curves"][0]
 print curve["average"]
+
+// class imbalance
+print stats.class_balance([0, 0, 0, 0, 1])["imbalance_ratio"]
+let balanced = stats.smote([[0], [1], [2], [3], [4], [5]], [0, 0, 0, 0, 0, 1], 2, 0)
+print balanced["n"]
+print balanced["added"]
 ```
 
 See [`docs/DATA_SCIENCE.md`](docs/DATA_SCIENCE.md),
@@ -425,8 +433,9 @@ See [`docs/DATA_SCIENCE.md`](docs/DATA_SCIENCE.md),
 [`docs/MODEL_EVALUATION.md`](docs/MODEL_EVALUATION.md),
 [`docs/TREE_MODELS.md`](docs/TREE_MODELS.md),
 [`docs/GRADIENT_BOOSTING.md`](docs/GRADIENT_BOOSTING.md),
-[`docs/MODEL_SELECTION.md`](docs/MODEL_SELECTION.md), and
-[`docs/MODEL_INTERPRETATION.md`](docs/MODEL_INTERPRETATION.md) for the full reference.
+[`docs/MODEL_SELECTION.md`](docs/MODEL_SELECTION.md),
+[`docs/MODEL_INTERPRETATION.md`](docs/MODEL_INTERPRETATION.md), and
+[`docs/CLASS_IMBALANCE.md`](docs/CLASS_IMBALANCE.md) for the full reference.
 
 ## Cross-Language Interop
 
