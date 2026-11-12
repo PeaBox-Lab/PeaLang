@@ -2,6 +2,18 @@
 
 ## 1.0.0-experience (ongoing) - 2026-11-08
 
+### Decision trees and random forests (v119)
+- Added `pealang/trees.py`, a dependency-free CART and random-forest layer exposed through `stats` / `std.stats`.
+- Trees: `decision_tree` for regression (squared error) and classification (Gini), with `max_depth`, `min_samples_split`, `min_samples_leaf`, seeded `max_features`, and `predict_tree` returning predictions, class probabilities and class order.
+- Forests: `random_forest` with bootstrap sampling, per-split feature subsets, averaged regression or probability predictions, and out-of-bag scoring (`oob_score`, `oob_predictions`).
+- Importance: `tree_feature_importance` and `forest_feature_importance` return sorted `{feature, importance}` tables from accumulated split gain.
+- Added record-friendly wrappers `analysis.tree_report` and `analysis.forest_report`, with automatic task inference for boolean and 0/1 targets, in-sample diagnostics, and feature selection from numeric columns.
+- Fixed regression out-of-bag prediction to report `null` for rows that were never out of bag instead of dividing by zero.
+- Added runnable use case `examples/use_cases/15_trees_forests.pea` covering nonlinear regression, OOB R², two-feature classification and feature importance.
+- Added `docs/TREE_MODELS.md` and `help/TREES.md`; extended `docs/DATA_SCIENCE.md`, `docs/USE_CASES.md`, the README and the roadmap.
+- Exported tree helpers from the Python package (`build_tree_namespace`, `stats_decision_tree`, `stats_random_forest`, `stats_predict_tree`, `stats_predict_forest`, `stats_tree_importance`, `stats_forest_importance`).
+- Added regression coverage: `tests/test_trees_v119.py` and `tests/test_use_cases_v119.py`.
+
 ### Model evaluation and feature preparation (v118)
 - Added `pealang/evaluation.py`, a dependency-free assessment layer exposed through `stats` / `std.stats`.
 - Resampling: `train_test_split` with optional stratification by largest-remainder allocation, `k_fold`, and `stratified_k_fold` with clear validation when a class is smaller than the fold count.

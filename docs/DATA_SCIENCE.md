@@ -24,6 +24,7 @@ Records remain ordinary lists of dictionaries, so results flow directly into
 | Forecasting | `statsmodels`, `pmdarima` | custom | `stats.arima`, `stats.auto_arima` |
 | Causal effects | `statsmodels`, `DoWhy`, `EconML` | custom | `stats.ipw_ate`, `stats.difference_in_differences`, `stats.instrumental_variables` |
 | Model evaluation | `scikit-learn.metrics`, `model_selection` | custom | `stats.train_test_split`, `stats.k_fold`, `stats.roc_auc`, `stats.r2_score` |
+| Trees and forests | `DecisionTree*`, `RandomForest*` | custom | `stats.decision_tree`, `stats.random_forest`, `stats.predict_tree`, `stats.predict_forest` |
 | Clustering / PCA | `scikit-learn` | custom | `stats.kmeans`, `stats.pca` |
 | Tabular transforms | pandas | custom | `analysis.*` |
 
@@ -320,6 +321,48 @@ let expanded = analysis.add_polynomial_features(rows, ["x1", "x2"], 2)
 
 See [`docs/MODEL_EVALUATION.md`](MODEL_EVALUATION.md) for the full reference.
 
+## Decision trees and random forests
+
+Trees handle nonlinear relationships and feature interactions that linear
+models miss. PeaLang provides CART regression and classification trees plus
+bagged random forests with out-of-bag scoring.
+
+```pea
+// classification tree
+let tree = stats.decision_tree(features, labels, "classification", 4, 2, 1)
+print tree["classes"]
+print tree["feature_importances"]
+
+let result = stats.predict_tree(tree, new_features)
+print result["predicted"]
+print result["probabilities"]
+
+// regression tree
+let reg = stats.decision_tree(features, target, "regression", 4)
+
+// random forest with OOB scoring
+let forest = stats.random_forest(features, labels, "classification", 100, 6, 2, 1, "sqrt", true, 7)
+print forest["oob_score"]
+print stats.predict_forest(forest, new_features)["predicted"]
+
+// feature importance tables
+print stats.tree_feature_importance(tree, ["x1", "x2"])
+print stats.forest_feature_importance(forest, ["x1", "x2"])
+```
+
+Record-friendly wrappers:
+
+```pea
+let report = analysis.tree_report(rows, "label", ["x1", "x2"], "auto", 4)
+let forest = analysis.forest_report(rows, "label", null, "auto", 100, 6, 2, 1, "sqrt", true, 7)
+print report["train_accuracy"]
+print forest["oob_score"]
+```
+
+`task = "auto"` treats boolean and numeric `0`/`1` targets as classification
+and everything else as regression. See
+[`docs/TREE_MODELS.md`](TREE_MODELS.md) for the full reference.
+
 ## Regression and modelling
 
 ```pea
@@ -431,6 +474,7 @@ analysis.write_json_file("summary.json", [summary])
 - `examples/use_cases/12_arima_forecasting.pea`
 - `examples/use_cases/13_causal_inference.pea`
 - `examples/use_cases/14_model_evaluation.pea`
+- `examples/use_cases/15_trees_forests.pea`
 
 Run them with:
 
@@ -444,6 +488,7 @@ pea run examples/use_cases/11_glm_survival.pea
 pea run examples/use_cases/12_arima_forecasting.pea
 pea run examples/use_cases/13_causal_inference.pea
 pea run examples/use_cases/14_model_evaluation.pea
+pea run examples/use_cases/15_trees_forests.pea
 ```
 
 ## Choosing the right namespace
@@ -488,3 +533,8 @@ pea run examples/use_cases/14_model_evaluation.pea
   protocol.
 - Fit feature scalers on training data only, then apply the learned `means` /
   `scales` or `mins` / `ranges` to validation and test rows.
+- Trees split on numeric thresholds only; encode categorical predictors first.
+  Split-gain importance is biased toward high-cardinality features, so treat it
+  as a ranking rather than a causal statement.
+- `max_depth = null` grows until pure or the internal cap of `100`. OOB scores
+  are noisy on small samples and with few trees.

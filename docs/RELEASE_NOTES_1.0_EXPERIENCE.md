@@ -57,6 +57,15 @@ python -m pytest -q
 
 New/updated coverage includes: language ergonomics (comprehensions, `in`/`not in`, `**`, match/destructuring, helpers/builtins), web routing/groups/CORS/OpenAPI/validation/SSE/file/auth/cache/status/redirect/security/health/envelope/validation/accepts helpers, analysis profiling/transforms/stats/IO/charts/melt/zscore/histogram/cut/shape/string/reshape/timeseries/encoding/columns/aggregates/jsonl/expanding, interop (Python/native/process/HTTP/JSON-RPC/env/files/paths/copy/hash/walk/temp/host-info/codegen), UX/templates, and CLI (`eval -e/-f`, `check/lint --json`, `analyze`, `web-openapi`/`openapi`, `hash`, `tree`, `env`, `version --json`, `quickstart`, `info`, `new`, `serve-web`, templates/doctor).
 
+## Additional Batch Notes (v119)
+- **Trees:** `pealang/trees.py` adds CART `decision_tree` for regression (squared error) and classification (Gini), with `max_depth`, `min_samples_split`, `min_samples_leaf`, seeded `max_features`, and `predict_tree` returning predictions plus class probabilities.
+- **Forests:** `random_forest` bagging with bootstrap sampling, per-split feature subsets, averaged predictions, and out-of-bag scoring (`oob_score`, `oob_predictions`).
+- **Importance:** `tree_feature_importance` and `forest_feature_importance` return sorted `{feature, importance}` tables from accumulated split gain.
+- **Record wrappers:** `analysis.tree_report` and `analysis.forest_report` with automatic task inference and in-sample diagnostics.
+- **Use case:** `examples/use_cases/15_trees_forests.pea`.
+- **Docs:** `docs/TREE_MODELS.md` and `help/TREES.md`.
+- **Tests:** `tests/test_trees_v119.py` and `tests/test_use_cases_v119.py`.
+
 ## Additional Batch Notes (v118)
 - **Evaluation:** `pealang/evaluation.py` adds deterministic `train_test_split` with stratification, `k_fold`, and `stratified_k_fold`.
 - **Metrics:** classification (`accuracy_score`, `balanced_accuracy`, `precision_recall_fscore`), ranking and probability (`roc_auc`, `roc_curve`, `log_loss`, `brier_score`, `calibration_curve`), and regression (`mean_squared_error`, `root_mean_squared_error`, `mean_absolute_error`, `median_absolute_error`, `mean_absolute_percentage_error`, `r2_score`, `explained_variance_score`).

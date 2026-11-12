@@ -78,6 +78,8 @@ The objective is to improve security while preserving the existing PeaLang langu
 - Regression metrics: `mean_squared_error`, `root_mean_squared_error`, `mean_absolute_error`, `median_absolute_error`, `mean_absolute_percentage_error`, `r2_score`, `explained_variance_score`
 - Feature preparation: `polynomial_features`, `label_encode`, `ordinal_encode`, `standardize_features`, `standardize_transform`, `minmax_features`, `minmax_transform`
 - Evaluation wrappers: `analysis.train_test_split`, `analysis.evaluate_classification`, `analysis.evaluate_regression`, `analysis.add_polynomial_features`
+- Trees and forests: `decision_tree`, `predict_tree`, `tree_feature_importance`, `random_forest`, `predict_forest`, `forest_feature_importance`
+- Tree wrappers: `analysis.tree_report`, `analysis.forest_report`
 - Modelling: `linear_regression`, `multiple_regression`, `polyfit`, `polyval`, `r_squared`, `interpolate`, `linspace`, `arange`, `kmeans`, `pca`, `confusion_matrix`
 - Sampling: `random_uniform`, `random_normal`, `random_binomial`, `random_poisson`, `bootstrap`
 - Pure Python, dependency-free: no NumPy, SciPy, pandas, or gonum required
@@ -386,13 +388,21 @@ print stats.accuracy_score([0, 0, 1, 1], [0, 1, 1, 1])
 print stats.roc_auc([0, 0, 1, 1], [0.1, 0.4, 0.35, 0.8])
 print stats.r2_score([1, 2, 3], [1, 2, 3])
 print stats.polynomial_features([[2, 3]], 2)["names"]
+
+// decision trees and random forests
+let tree = stats.decision_tree([[0], [1], [2], [3], [4], [5]], [0, 0, 0, 1, 1, 1], "classification", 3)
+print stats.predict_tree(tree, [[0], [5]])["predicted"]
+let forest = stats.random_forest([[0], [1], [2], [3], [4], [5]], [0, 0, 0, 1, 1, 1], "classification", 25, 4, 2, 1, "sqrt", true, 7)
+print forest["oob_score"]
+print stats.forest_feature_importance(forest, ["x"])[0]["importance"]
 ```
 
 See [`docs/DATA_SCIENCE.md`](docs/DATA_SCIENCE.md),
 [`docs/STATISTICAL_INFERENCE.md`](docs/STATISTICAL_INFERENCE.md),
 [`docs/ADVANCED_MODELING.md`](docs/ADVANCED_MODELING.md),
-[`docs/CAUSAL_INFERENCE.md`](docs/CAUSAL_INFERENCE.md), and
-[`docs/MODEL_EVALUATION.md`](docs/MODEL_EVALUATION.md) for the full reference.
+[`docs/CAUSAL_INFERENCE.md`](docs/CAUSAL_INFERENCE.md),
+[`docs/MODEL_EVALUATION.md`](docs/MODEL_EVALUATION.md), and
+[`docs/TREE_MODELS.md`](docs/TREE_MODELS.md) for the full reference.
 
 ## Cross-Language Interop
 

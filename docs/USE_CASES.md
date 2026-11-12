@@ -109,6 +109,9 @@ no third-party packages.
 | Regression metrics | `stats.mean_squared_error`, `stats.root_mean_squared_error`, `stats.mean_absolute_error`, `stats.r2_score` |
 | Feature preparation | `stats.polynomial_features`, `stats.label_encode`, `stats.standardize_features`, `stats.minmax_features` |
 | Evaluation wrappers | `analysis.train_test_split`, `analysis.evaluate_classification`, `analysis.evaluate_regression`, `analysis.add_polynomial_features` |
+| Trees and forests | `stats.decision_tree`, `stats.predict_tree`, `stats.random_forest`, `stats.predict_forest` |
+| Tree importance | `stats.tree_feature_importance`, `stats.forest_feature_importance` |
+| Tree wrappers | `analysis.tree_report`, `analysis.forest_report` |
 
 ```pea
 let treatment = [72, 84, 91, 88, 79, 95]
@@ -231,6 +234,25 @@ let errors = analysis.evaluate_regression(rows, "actual", "predicted")
 let enriched = analysis.add_polynomial_features(rows, ["x1", "x2"], 2)
 ```
 
+Tree models cover nonlinear targets and feature interactions:
+
+```pea
+let tree = stats.decision_tree(features, labels, "classification", 4, 2, 1)
+print tree["classes"]
+print stats.predict_tree(tree, new_features)["probabilities"]
+print stats.tree_feature_importance(tree, ["x1", "x2"])
+
+let forest = stats.random_forest(features, labels, "classification", 100, 6, 2, 1, "sqrt", true, 7)
+print forest["oob_score"]
+print stats.predict_forest(forest, new_features)["predicted"]
+print stats.forest_feature_importance(forest, ["x1", "x2"])
+
+let report = analysis.tree_report(rows, "label", ["x1", "x2"], "auto", 4)
+let forest_report = analysis.forest_report(rows, "label", null, "auto", 100, 6, 2, 1, "sqrt", true, 7)
+print report["train_accuracy"]
+print forest_report["oob_score"]
+```
+
 Pair `stats` with the pandas-class helpers in `analysis` for end-to-end work:
 
 ```pea
@@ -250,12 +272,14 @@ Examples:
 - [`examples/use_cases/12_arima_forecasting.pea`](../examples/use_cases/12_arima_forecasting.pea)
 - [`examples/use_cases/13_causal_inference.pea`](../examples/use_cases/13_causal_inference.pea)
 - [`examples/use_cases/14_model_evaluation.pea`](../examples/use_cases/14_model_evaluation.pea)
+- [`examples/use_cases/15_trees_forests.pea`](../examples/use_cases/15_trees_forests.pea)
 
 See [`docs/DATA_SCIENCE.md`](DATA_SCIENCE.md),
 [`docs/STATISTICAL_INFERENCE.md`](STATISTICAL_INFERENCE.md),
 [`docs/ADVANCED_MODELING.md`](ADVANCED_MODELING.md),
-[`docs/CAUSAL_INFERENCE.md`](CAUSAL_INFERENCE.md), and
-[`docs/MODEL_EVALUATION.md`](MODEL_EVALUATION.md) for the full reference.
+[`docs/CAUSAL_INFERENCE.md`](CAUSAL_INFERENCE.md),
+[`docs/MODEL_EVALUATION.md`](MODEL_EVALUATION.md), and
+[`docs/TREE_MODELS.md`](TREE_MODELS.md) for the full reference.
 
 ## 3. Polyglot delivery (Python, Go, TypeScript, Java)
 
