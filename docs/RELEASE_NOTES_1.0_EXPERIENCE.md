@@ -57,6 +57,17 @@ python -m pytest -q
 
 New/updated coverage includes: language ergonomics (comprehensions, `in`/`not in`, `**`, match/destructuring, helpers/builtins), web routing/groups/CORS/OpenAPI/validation/SSE/file/auth/cache/status/redirect/security/health/envelope/validation/accepts helpers, analysis profiling/transforms/stats/IO/charts/melt/zscore/histogram/cut/shape/string/reshape/timeseries/encoding/columns/aggregates/jsonl/expanding, interop (Python/native/process/HTTP/JSON-RPC/env/files/paths/copy/hash/walk/temp/host-info/codegen), UX/templates, and CLI (`eval -e/-f`, `check/lint --json`, `analyze`, `web-openapi`/`openapi`, `hash`, `tree`, `env`, `version --json`, `quickstart`, `info`, `new`, `serve-web`, templates/doctor).
 
+## Additional Batch Notes (v124)
+- **Pipelines:** `pealang/pipeline.py` adds composable `impute`, `encode` and `scale` steps, applied in order.
+- **Imputation:** `auto` uses means for numeric columns and modes for categorical ones; explicit `mean`, `median`, `mode`, `constant` and `zero` are available.
+- **Encoding:** one-hot produces `name=level` columns, with missing values as a `null` level; ordinal produces level indices. Unseen categories become all-zero one-hot rows or `-1`.
+- **Scaling:** standard z-scores and min-max scaling store their centers and scales for reuse.
+- **Fit and transform:** `fit_pipeline` returns fitted steps, transformed rows, output names and input names; `transform_pipeline` reapplies the transformer to new rows.
+- **Model wrappers:** `analysis.model_pipeline` fits a pipeline and estimator from records and stores the `preprocessor`, `output_features`, `importance` and training diagnostics; `analysis.predict_pipeline` scores records or a raw matrix.
+- **Use case:** `examples/use_cases/20_feature_pipeline.pea` with categorical churn features, missing numeric values, an unseen region and a missing tenure.
+- **Docs:** `docs/FEATURE_PIPELINES.md` and `help/PIPELINES.md`.
+- **Tests:** `tests/test_pipeline_v124.py` and `tests/test_use_cases_v124.py`.
+
 ## Additional Batch Notes (v123)
 - **Imbalance:** `pealang/imbalance.py` adds `class_balance`, `random_oversample`, `random_undersample` and `smote`.
 - **Reporting:** `class_balance` returns class counts, shares, majority/minority classes and the imbalance ratio.

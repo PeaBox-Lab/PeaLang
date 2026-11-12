@@ -29,6 +29,7 @@ Records remain ordinary lists of dictionaries, so results flow directly into
 | Model selection | `cross_val_score`, `GridSearchCV`, `RandomizedSearchCV` | custom | `stats.cross_validate`, `stats.grid_search`, `stats.random_search` |
 | Model interpretation | `permutation_importance`, `PartialDependenceDisplay` | custom | `stats.permutation_importance`, `stats.partial_dependence` |
 | Class imbalance | `imblearn` resamplers, `class_weight` | custom | `stats.class_balance`, `stats.smote`, `stats.random_oversample`, `stats.random_undersample` |
+| Feature pipelines | `Pipeline`, `ColumnTransformer`, `SimpleImputer`, `OneHotEncoder`, `StandardScaler` | custom | `stats.fit_pipeline`, `stats.transform_pipeline`, `analysis.model_pipeline` |
 | Clustering / PCA | `scikit-learn` | custom | `stats.kmeans`, `stats.pca` |
 | Tabular transforms | pandas | custom | `analysis.*` |
 
@@ -500,6 +501,37 @@ let model = analysis.forest_report(balanced["rows"], "label", ["x1", "x2"], "cla
 Resample the training split only and score on the untouched test rows. See
 [`docs/CLASS_IMBALANCE.md`](CLASS_IMBALANCE.md) for the full reference.
 
+## Feature pipelines
+
+Real tables mix numbers, categories and missing values. Pipelines turn them
+into the numeric matrix the estimators expect, and store the learned fill
+values, levels and scales for later rows.
+
+```pea
+let steps = [
+    {"op": "impute", "method": "auto"},
+    {"op": "encode", "method": "onehot"},
+    {"op": "scale", "method": "standard"}
+]
+
+let fitted = stats.fit_pipeline(steps, features, ["region", "plan", "spend"])
+print fitted["names"]        // output column names
+print fitted["features"]     // transformed training rows
+print fitted["steps"][0]["missing"]
+
+let new = stats.transform_pipeline(fitted, new_features)
+
+// fit a model from raw records and score new ones
+let model = analysis.model_pipeline(rows, "churn", ["region", "plan", "spend"], null, "forest", "auto", {"n_estimators": 100})
+print model["output_features"]
+print analysis.predict_pipeline(model, new_rows)["predicted"]
+```
+
+`impute` supports `auto`, `mean`, `median`, `mode`, `constant` and `zero`.
+`encode` supports `onehot` and `ordinal`. `scale` supports `standard` and
+`minmax`. See [`docs/FEATURE_PIPELINES.md`](FEATURE_PIPELINES.md) for the full
+reference.
+
 ## Regression and modelling
 
 ```pea
@@ -616,6 +648,7 @@ analysis.write_json_file("summary.json", [summary])
 - `examples/use_cases/17_model_selection.pea`
 - `examples/use_cases/18_model_interpretation.pea`
 - `examples/use_cases/19_class_imbalance.pea`
+- `examples/use_cases/20_feature_pipeline.pea`
 
 Run them with:
 
@@ -634,6 +667,7 @@ pea run examples/use_cases/16_gradient_boosting.pea
 pea run examples/use_cases/17_model_selection.pea
 pea run examples/use_cases/18_model_interpretation.pea
 pea run examples/use_cases/19_class_imbalance.pea
+pea run examples/use_cases/20_feature_pipeline.pea
 ```
 
 ## Choosing the right namespace
@@ -700,3 +734,7 @@ pea run examples/use_cases/19_class_imbalance.pea
   to the original population. SMOTE interpolates numeric columns only and can
   create points in regions where the minority class does not occur. Resample
   the training split, never the test set.
+- Pipelines detect categorical columns automatically and do not fail on unseen
+  categories: one-hot rows become all zeros and ordinal codes become `-1`.
+  Interpolation-based imputation, target encoding and column subsetting are not
+  part of the pipeline layer.

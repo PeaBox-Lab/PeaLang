@@ -1,0 +1,46 @@
+// Use case: preprocessing pipeline for mixed and incomplete records
+let rows = []
+for k in range(0, 120) {
+    let region = "north"
+    if k % 3 == 1 { region = "south" }
+    if k % 3 == 2 { region = "east" }
+    let plan = "basic"
+    if k % 4 == 0 { plan = "pro" }
+    let tenure = (k * 7) % 24 + 1
+    let spend = ((k * 13) % 70) + 20.0
+    let churn = 0
+    if spend < 55.0 { churn = 1 }
+    if plan == "pro" { churn = 0 }
+    if tenure < 5 { churn = 1 }
+    if k % 11 == 5 { tenure = null }
+    if k % 13 == 7 { spend = null }
+    rows = rows + [{"region": region, "plan": plan, "tenure": tenure, "spend": spend, "churn": churn}]
+}
+
+// One call fits imputation, one-hot encoding, scaling and the model
+let names = ["region", "plan", "tenure", "spend"]
+let model = analysis.model_pipeline(rows, "churn", names, null, "forest", "auto", {"n_estimators": 25, "max_depth": 4})
+print "task: " + model["task"]
+print "used: " + str(model["n_used"])
+print "outputs: " + str(model["output_features"])
+print "train accuracy: " + str(round(model["train_accuracy"], 3))
+print "top: " + model["importance"][0]["feature"]
+
+// Score new records, including a missing value and an unseen category
+let probes = [
+    {"region": "north", "plan": "basic", "tenure": 2, "spend": 30.0},
+    {"region": "west", "plan": "pro", "tenure": 20, "spend": 90.0},
+    {"region": "south", "plan": "basic", "tenure": null, "spend": 45.0}
+]
+let scored = analysis.predict_pipeline(model, probes)
+print "probes: " + str(scored["predicted"])
+print "positive: " + str([round(row[1], 3) for row in scored["probabilities"]])
+
+// The same steps work directly on a feature matrix
+let steps = [{"op": "impute", "method": "auto"}, {"op": "encode", "method": "onehot"}, {"op": "scale", "method": "standard"}]
+let matrix = [[r["region"], r["plan"], r["tenure"], r["spend"]] for r in rows]
+let fitted = stats.fit_pipeline(steps, matrix, names)
+print "columns: " + str(len(fitted["names"]))
+print "imputed: " + str(fitted["steps"][0]["missing"])
+print "categorical: " + str(len(fitted["steps"][1]["columns"]))
+print "encoded names: " + str(fitted["names"])

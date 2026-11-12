@@ -90,6 +90,9 @@ from .imbalance import (build_imbalance_namespace,
     random_oversample as stats_random_oversample,
     random_undersample as stats_random_undersample,
     smote as stats_smote)
+from .pipeline import (build_pipeline_namespace,
+    fit_pipeline as stats_fit_pipeline,
+    transform_pipeline as stats_transform_pipeline)
 from .ux import doctor as ux_doctor, explain_error as ux_explain
 __version__ = "0.99.6"
 __all__=['BytecodeModule','CodeObject','Instruction','Op','Compiler','CompileError','compile_source_to_bytecode','VirtualMachine','VMError','AsyncSuspension','AsyncVirtualMachine','AsyncVMRuntime','AsyncVMModule','CancellationToken','VMRuntime','VMModule','disassemble','execute','compile_source','Interpreter','PeaError','PeaRuntime','PeaModule',

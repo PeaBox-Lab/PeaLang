@@ -2567,6 +2567,127 @@ def balance_classes(data: Any, target: str, features: Any = None,
     }
 
 
+def _raw_columns(rows: list[dict[str, Any]], target: str,
+                 features: Any) -> list[str]:
+    if features is None:
+        names = [name for name in columns(rows) if name != target]
+    elif isinstance(features, str):
+        names = [features]
+    else:
+        names = list(features)
+    if not names:
+        raise ValueError("no feature columns were found")
+    return [str(name) for name in names]
+
+
+def _importance_table(estimator: str, model: dict[str, Any],
+                      names: list[str]) -> list[dict[str, Any]]:
+    from .boosting import boosting_feature_importance
+    from .trees import forest_feature_importance, tree_feature_importance
+
+    key = str(estimator or "").lower()
+    if key in ("tree", "decision_tree"):
+        return tree_feature_importance(model, names)
+    if key in ("forest", "random_forest"):
+        return forest_feature_importance(model, names)
+    return boosting_feature_importance(model, names)
+
+
+def model_pipeline(data: Any, target: str, features: Any = None,
+                   steps: Any = None, estimator: str = "forest",
+                   task: str = "auto",
+                   params: Any = None) -> dict[str, Any]:
+    """Fit a preprocessing pipeline and a model from raw records.
+
+    ``steps`` defaults to impute, one-hot encode and standardize. The returned
+    model record stores the fitted ``preprocessor`` plus the transformed
+    ``output_features``, so :func:`predict_pipeline` can score new records.
+    """
+    from .evaluation import (accuracy_score, log_loss, r2_score,
+                             root_mean_squared_error)
+    from .pipeline import _numeric_rows, fit_pipeline
+    from .selection import _fit, _predict
+    from .trees import _task
+
+    rows = _rows(data)
+    names = _raw_columns(rows, target, features)
+    usable = []
+    for row in rows:
+        outcome = row.get(target)
+        if outcome is None:
+            continue
+        usable.append(([row.get(name) for name in names], outcome))
+    if not usable:
+        raise ValueError("no rows with a target are available")
+    kind = (
+        _infer_task([item[1] for item in usable])
+        if str(task).lower() == "auto" else _task(task)
+    )
+    matrix = [item[0] for item in usable]
+    if kind == "regression":
+        outcomes = []
+        for _, outcome in usable:
+            value = _numeric(outcome)
+            if value is None:
+                raise ValueError("target must be numeric for regression")
+            outcomes.append(value)
+    else:
+        outcomes = [item[1] for item in usable]
+    plan = steps if steps is not None else [
+        {"op": "impute", "method": "auto"},
+        {"op": "encode", "method": "onehot"},
+        {"op": "scale", "method": "standard"},
+    ]
+    fitted = fit_pipeline(plan, matrix, names)
+    transformed = _numeric_rows(fitted["features"])
+    model = _fit(estimator, transformed, outcomes, kind,
+                 dict(params or {}))
+    model["preprocessor"] = {
+        key: value for key, value in fitted.items() if key != "features"
+    }
+    model["features"] = names
+    model["output_features"] = fitted["names"]
+    model["importance"] = _importance_table(estimator, model, fitted["names"])
+    model["n_used"] = len(outcomes)
+    predictions = _predict(estimator, model, transformed)
+    model["train_predictions"] = predictions["predicted"]
+    if kind == "regression":
+        model["train_r2"] = r2_score(outcomes, predictions["predicted"])
+        model["train_rmse"] = root_mean_squared_error(
+            outcomes, predictions["predicted"]
+        )
+    else:
+        model["train_accuracy"] = accuracy_score(
+            outcomes, predictions["predicted"]
+        )
+        if len(model["classes"]) == 2:
+            model["train_log_loss"] = log_loss(
+                outcomes,
+                [row[1] for row in predictions["probabilities"]],
+                model["classes"][1],
+            )
+    return model
+
+
+def predict_pipeline(model: dict[str, Any], data: Any) -> dict[str, Any]:
+    """Score records or a raw matrix with a model built by ``model_pipeline``."""
+    from .pipeline import _numeric_rows, transform_pipeline
+    from .selection import _predict
+
+    if not isinstance(model, dict) or "preprocessor" not in model:
+        raise ValueError("model must be fitted by model_pipeline")
+    if isinstance(data, list) and data and isinstance(data[0], (list, tuple)):
+        matrix = [list(row) for row in data]
+    else:
+        rows = _rows(data)
+        names = model.get("features") or []
+        matrix = [[row.get(name) for name in names] for row in rows]
+    transformed = _numeric_rows(
+        transform_pipeline(model["preprocessor"], matrix)["features"]
+    )
+    return _predict(model["estimator"], model, transformed)
+
+
 def build_analysis_namespace() -> dict[str, Any]:
     return {
         "profile": profile,
@@ -2740,5 +2861,7 @@ def build_analysis_namespace() -> dict[str, Any]:
         "random_tune": random_tune,
         "interpret_report": interpret_report,
         "balance_classes": balance_classes,
+        "model_pipeline": model_pipeline,
+        "predict_pipeline": predict_pipeline,
     }
 

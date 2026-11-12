@@ -1355,6 +1355,7 @@ def build_stats_namespace() -> dict[str, Any]:
     from .selection import build_selection_namespace
     from .interpret import build_interpret_namespace
     from .imbalance import build_imbalance_namespace
+    from .pipeline import build_pipeline_namespace
 
     namespace.update(build_inference_namespace())
     namespace.update(build_modeling_namespace())
@@ -1365,4 +1366,5 @@ def build_stats_namespace() -> dict[str, Any]:
     namespace.update(build_selection_namespace())
     namespace.update(build_interpret_namespace())
     namespace.update(build_imbalance_namespace())
+    namespace.update(build_pipeline_namespace())
     return namespace

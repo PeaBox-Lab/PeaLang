@@ -2,6 +2,17 @@
 
 ## 1.0.0-experience (ongoing) - 2026-11-08
 
+### Feature pipelines (v124)
+- Added `pealang/pipeline.py`, a dependency-free preprocessing layer exposed through `stats` / `std.stats`.
+- Added ordered steps for imputation (`auto`, `mean`, `median`, `mode`, `constant`, `zero`), encoding (`onehot`, `ordinal` / `label`) and scaling (`standard`, `minmax`).
+- Added `fit_pipeline`, which learns fill values, category levels, centers and scales and returns the transformed training rows with output column names.
+- Added `transform_pipeline`, which reapplies a fitted transformer to new rows; unseen categories become all-zero one-hot rows or `-1` ordinal codes.
+- Added model wrappers `analysis.model_pipeline` and `analysis.predict_pipeline`, which fit a pipeline and estimator from raw records and score new records end to end.
+- Added runnable use case `examples/use_cases/20_feature_pipeline.pea` with categorical churn features, missing numeric values and unseen-category scoring.
+- Added `docs/FEATURE_PIPELINES.md` and `help/PIPELINES.md`; extended `docs/DATA_SCIENCE.md`, `docs/USE_CASES.md`, the README and the roadmap.
+- Exported pipeline helpers from the Python package (`build_pipeline_namespace`, `stats_fit_pipeline`, `stats_transform_pipeline`).
+- Added regression coverage: `tests/test_pipeline_v124.py` and `tests/test_use_cases_v124.py`.
+
 ### Class imbalance (v123)
 - Added `pealang/imbalance.py`, a dependency-free resampling layer exposed through `stats` / `std.stats`.
 - Added `class_balance`, reporting class counts, shares, majority/minority classes and the imbalance ratio.

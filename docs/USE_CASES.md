@@ -115,6 +115,7 @@ no third-party packages.
 | Model selection | `stats.cross_validate`, `stats.grid_search`, `stats.random_search` |
 | Model interpretation | `stats.permutation_importance`, `stats.partial_dependence` |
 | Class imbalance | `stats.class_balance`, `stats.smote`, `stats.random_oversample`, `stats.random_undersample` |
+| Feature pipelines | `stats.fit_pipeline`, `stats.transform_pipeline`, `analysis.model_pipeline` |
 | Tree wrappers | `analysis.tree_report`, `analysis.forest_report`, `analysis.boosting_report` |
 
 ```pea
@@ -332,6 +333,21 @@ let model = analysis.forest_report(balanced["rows"], "label", ["x1", "x2"], "cla
 print model["train_accuracy"]
 ```
 
+Mixed and incomplete tables go through a pipeline before fitting:
+
+```pea
+let steps = [{"op": "impute", "method": "auto"}, {"op": "encode", "method": "onehot"}, {"op": "scale", "method": "standard"}]
+let fitted = stats.fit_pipeline(steps, features, ["region", "plan", "spend"])
+print fitted["names"]
+print fitted["steps"][0]["missing"]
+let new = stats.transform_pipeline(fitted, new_features)
+
+let model = analysis.model_pipeline(rows, "churn", ["region", "plan", "spend"], null, "forest", "auto", {"n_estimators": 100})
+print model["output_features"]
+print model["train_accuracy"]
+print analysis.predict_pipeline(model, new_rows)["predicted"]
+```
+
 Pair `stats` with the pandas-class helpers in `analysis` for end-to-end work:
 
 ```pea
@@ -356,6 +372,7 @@ Examples:
 - [`examples/use_cases/17_model_selection.pea`](../examples/use_cases/17_model_selection.pea)
 - [`examples/use_cases/18_model_interpretation.pea`](../examples/use_cases/18_model_interpretation.pea)
 - [`examples/use_cases/19_class_imbalance.pea`](../examples/use_cases/19_class_imbalance.pea)
+- [`examples/use_cases/20_feature_pipeline.pea`](../examples/use_cases/20_feature_pipeline.pea)
 
 See [`docs/DATA_SCIENCE.md`](DATA_SCIENCE.md),
 [`docs/STATISTICAL_INFERENCE.md`](STATISTICAL_INFERENCE.md),
@@ -366,7 +383,8 @@ See [`docs/DATA_SCIENCE.md`](DATA_SCIENCE.md),
 [`docs/GRADIENT_BOOSTING.md`](GRADIENT_BOOSTING.md), and
 [`docs/MODEL_SELECTION.md`](MODEL_SELECTION.md), and
 [`docs/MODEL_INTERPRETATION.md`](MODEL_INTERPRETATION.md), and
-[`docs/CLASS_IMBALANCE.md`](CLASS_IMBALANCE.md) for the full reference.
+[`docs/CLASS_IMBALANCE.md`](CLASS_IMBALANCE.md), and
+[`docs/FEATURE_PIPELINES.md`](FEATURE_PIPELINES.md) for the full reference.
 
 ## 3. Polyglot delivery (Python, Go, TypeScript, Java)
 
