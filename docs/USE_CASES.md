@@ -111,7 +111,8 @@ no third-party packages.
 | Evaluation wrappers | `analysis.train_test_split`, `analysis.evaluate_classification`, `analysis.evaluate_regression`, `analysis.add_polynomial_features` |
 | Trees and forests | `stats.decision_tree`, `stats.predict_tree`, `stats.random_forest`, `stats.predict_forest` |
 | Tree importance | `stats.tree_feature_importance`, `stats.forest_feature_importance` |
-| Tree wrappers | `analysis.tree_report`, `analysis.forest_report` |
+| Gradient boosting | `stats.gradient_boosting`, `stats.predict_boosting`, `stats.boosting_feature_importance` |
+| Tree wrappers | `analysis.tree_report`, `analysis.forest_report`, `analysis.boosting_report` |
 
 ```pea
 let treatment = [72, 84, 91, 88, 79, 95]
@@ -253,6 +254,24 @@ print report["train_accuracy"]
 print forest_report["oob_score"]
 ```
 
+Gradient boosting is the strongest general-purpose tabular model:
+
+```pea
+let boosted = stats.gradient_boosting(features, target, "regression", 100, 0.1, 3)
+print stats.predict_boosting(boosted, new_features)["predicted"]
+
+let classifier = stats.gradient_boosting(features, labels, "classification", 100, 0.1, 3)
+print classifier["classes"]
+print stats.predict_boosting(classifier, new_features)["probabilities"]
+
+let stochastic = stats.gradient_boosting(features, target, "regression", 100, 0.1, 3, 2, 1, 0.8)
+print stats.boosting_feature_importance(stochastic, ["x1", "x2"])
+
+let boosted_report = analysis.boosting_report(rows, "label", ["x1", "x2"], "auto", 100, 0.1, 3)
+print boosted_report["train_accuracy"]
+print boosted_report["importance"][0]["feature"]
+```
+
 Pair `stats` with the pandas-class helpers in `analysis` for end-to-end work:
 
 ```pea
@@ -273,13 +292,15 @@ Examples:
 - [`examples/use_cases/13_causal_inference.pea`](../examples/use_cases/13_causal_inference.pea)
 - [`examples/use_cases/14_model_evaluation.pea`](../examples/use_cases/14_model_evaluation.pea)
 - [`examples/use_cases/15_trees_forests.pea`](../examples/use_cases/15_trees_forests.pea)
+- [`examples/use_cases/16_gradient_boosting.pea`](../examples/use_cases/16_gradient_boosting.pea)
 
 See [`docs/DATA_SCIENCE.md`](DATA_SCIENCE.md),
 [`docs/STATISTICAL_INFERENCE.md`](STATISTICAL_INFERENCE.md),
 [`docs/ADVANCED_MODELING.md`](ADVANCED_MODELING.md),
 [`docs/CAUSAL_INFERENCE.md`](CAUSAL_INFERENCE.md),
-[`docs/MODEL_EVALUATION.md`](MODEL_EVALUATION.md), and
-[`docs/TREE_MODELS.md`](TREE_MODELS.md) for the full reference.
+[`docs/MODEL_EVALUATION.md`](MODEL_EVALUATION.md),
+[`docs/TREE_MODELS.md`](TREE_MODELS.md), and
+[`docs/GRADIENT_BOOSTING.md`](GRADIENT_BOOSTING.md) for the full reference.
 
 ## 3. Polyglot delivery (Python, Go, TypeScript, Java)
 

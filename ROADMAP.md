@@ -86,6 +86,7 @@ Make PeaLang the default extension language for:
    - propensity scores, IPW/AIPW, matching, difference-in-differences, instrumental variables and regression discontinuity (v117)
    - train/test splits, k-fold cross-validation, classification and regression metrics, ROC/AUC, calibration and feature preparation (v118)
    - CART decision trees and bagged random forests with feature importance and out-of-bag scoring (v119)
+   - gradient boosted trees for regression, binary and multiclass classification, with shrinkage and subsampling (v120)
 3. Cross-language experience
    - Python bridge: `interop.call_python`
    - native bridge: `interop.call_native`

@@ -2287,10 +2287,27 @@ def _model_columns(rows: list[dict[str, Any]], target: str,
 
 
 def _infer_task(values: list[Any]) -> str:
+    """Infer classification for discrete targets and regression otherwise.
+
+    Boolean and non-numeric targets are classification. Numeric targets are
+    classification when they are all 0/1, or when every value is an integer
+    with at most 20 distinct values; otherwise they are regression. Pass an
+    explicit ``task`` to override the heuristic.
+    """
     if all(isinstance(value, bool) for value in values):
         return "classification"
     numbers = [_numeric(value) for value in values]
-    if all(value is not None and value in (0.0, 1.0) for value in numbers):
+    if any(value is None for value in numbers):
+        return "classification"
+    distinct: list[float] = []
+    for value in numbers:
+        if value not in distinct:
+            distinct.append(value)
+    if len(distinct) < 2:
+        return "classification"
+    if all(value in (0.0, 1.0) for value in numbers):
+        return "classification"
+    if len(distinct) <= 20 and all(abs(value - round(value)) < 1e-9 for value in numbers):
         return "classification"
     return "regression"
 
@@ -2372,6 +2389,43 @@ def forest_report(data: Any, target: str, features: Any = None,
         model["train_rmse"] = root_mean_squared_error(outcomes, predictions["predicted"])
     else:
         model["train_accuracy"] = accuracy_score(outcomes, predictions["predicted"])
+    model["n_used"] = len(outcomes)
+    return model
+
+
+def boosting_report(data: Any, target: str, features: Any = None,
+                    task: str = "auto", n_estimators: int = 100,
+                    learning_rate: float = 0.1, max_depth: int | None = 3,
+                    min_samples_split: int = 2, min_samples_leaf: int = 1,
+                    subsample: float = 1.0, max_features: Any = None,
+                    seed: Any = 0) -> dict[str, Any]:
+    """Fit a gradient boosted ensemble from records and score the training rows."""
+    from .boosting import (gradient_boosting, predict_boosting,
+                           boosting_feature_importance)
+    from .evaluation import (r2_score, root_mean_squared_error,
+                             accuracy_score, log_loss)
+
+    rows = _rows(data)
+    names, matrix, outcomes, kind = _tree_inputs(rows, target, features, task)
+    model = gradient_boosting(
+        matrix, outcomes, kind, n_estimators, learning_rate, max_depth,
+        min_samples_split, min_samples_leaf, subsample, max_features, seed,
+    )
+    predictions = predict_boosting(model, matrix)
+    model["features"] = names
+    model["importance"] = boosting_feature_importance(model, names)
+    model["train_predictions"] = predictions["predicted"]
+    if kind == "regression":
+        model["train_r2"] = r2_score(outcomes, predictions["predicted"])
+        model["train_rmse"] = root_mean_squared_error(outcomes, predictions["predicted"])
+    else:
+        model["train_accuracy"] = accuracy_score(outcomes, predictions["predicted"])
+        if len(model["classes"]) == 2:
+            model["train_log_loss"] = log_loss(
+                outcomes,
+                [row[1] for row in predictions["probabilities"]],
+                model["classes"][1],
+            )
     model["n_used"] = len(outcomes)
     return model
 
@@ -2544,5 +2598,6 @@ def build_analysis_namespace() -> dict[str, Any]:
         "add_polynomial_features": add_polynomial_features,
         "tree_report": tree_report,
         "forest_report": forest_report,
+        "boosting_report": boosting_report,
     }
 

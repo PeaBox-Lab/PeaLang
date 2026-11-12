@@ -2,6 +2,17 @@
 
 ## 1.0.0-experience (ongoing) - 2026-11-08
 
+### Gradient boosted trees (v120)
+- Added `pealang/boosting.py`, a dependency-free gradient boosting layer exposed through `stats` / `std.stats`.
+- Regression uses squared-error boosting with a mean base prediction. Binary classification uses logistic loss with a log-odds base and Newton leaf updates. Multiclass classification uses softmax loss with one tree per class per round and the Friedman `(K - 1) / K` leaf multiplier.
+- Added `gradient_boosting`, `predict_boosting` and `boosting_feature_importance`, with `learning_rate`, `max_depth`, `min_samples_split`, `min_samples_leaf`, seeded row `subsample` and `max_features`.
+- Added record-friendly wrapper `analysis.boosting_report`, with automatic task inference, in-sample diagnostics and binary log loss.
+- Improved `analysis._infer_task`: `auto` now treats non-numeric and low-cardinality integer targets as classification, so multiclass tables work without an explicit task.
+- Added runnable use case `examples/use_cases/16_gradient_boosting.pea` covering holdout regression, nonlinear binary classification and overlapping multiclass classification.
+- Added `docs/GRADIENT_BOOSTING.md` and `help/BOOSTING.md`; extended `docs/DATA_SCIENCE.md`, `docs/USE_CASES.md`, the README and the roadmap.
+- Exported boosting helpers from the Python package (`build_boosting_namespace`, `stats_gradient_boosting`, `stats_predict_boosting`, `stats_boosting_importance`).
+- Added regression coverage: `tests/test_boosting_v120.py` and `tests/test_use_cases_v120.py`.
+
 ### Decision trees and random forests (v119)
 - Added `pealang/trees.py`, a dependency-free CART and random-forest layer exposed through `stats` / `std.stats`.
 - Trees: `decision_tree` for regression (squared error) and classification (Gini), with `max_depth`, `min_samples_split`, `min_samples_leaf`, seeded `max_features`, and `predict_tree` returning predictions, class probabilities and class order.

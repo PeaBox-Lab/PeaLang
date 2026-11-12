@@ -57,6 +57,15 @@ python -m pytest -q
 
 New/updated coverage includes: language ergonomics (comprehensions, `in`/`not in`, `**`, match/destructuring, helpers/builtins), web routing/groups/CORS/OpenAPI/validation/SSE/file/auth/cache/status/redirect/security/health/envelope/validation/accepts helpers, analysis profiling/transforms/stats/IO/charts/melt/zscore/histogram/cut/shape/string/reshape/timeseries/encoding/columns/aggregates/jsonl/expanding, interop (Python/native/process/HTTP/JSON-RPC/env/files/paths/copy/hash/walk/temp/host-info/codegen), UX/templates, and CLI (`eval -e/-f`, `check/lint --json`, `analyze`, `web-openapi`/`openapi`, `hash`, `tree`, `env`, `version --json`, `quickstart`, `info`, `new`, `serve-web`, templates/doctor).
 
+## Additional Batch Notes (v120)
+- **Boosting:** `pealang/boosting.py` adds `gradient_boosting` for regression (squared error), binary classification (logistic loss) and multiclass classification (softmax), with `learning_rate`, shallow base trees, seeded row `subsample` and `max_features`.
+- **Leaf updates:** binary and multiclass stages use Newton leaf values; multiclass applies the Friedman `(K - 1) / K` multiplier and fits one tree per class per round.
+- **Prediction and importance:** `predict_boosting` returns predictions, class probabilities and class order; `boosting_feature_importance` averages per-tree split gain.
+- **Record wrapper:** `analysis.boosting_report` with automatic task inference, in-sample diagnostics and binary log loss. `auto` now recognizes non-numeric and low-cardinality integer targets as classification.
+- **Use case:** `examples/use_cases/16_gradient_boosting.pea` with holdout regression, binary classification and overlapping multiclass classification.
+- **Docs:** `docs/GRADIENT_BOOSTING.md` and `help/BOOSTING.md`.
+- **Tests:** `tests/test_boosting_v120.py` and `tests/test_use_cases_v120.py`.
+
 ## Additional Batch Notes (v119)
 - **Trees:** `pealang/trees.py` adds CART `decision_tree` for regression (squared error) and classification (Gini), with `max_depth`, `min_samples_split`, `min_samples_leaf`, seeded `max_features`, and `predict_tree` returning predictions plus class probabilities.
 - **Forests:** `random_forest` bagging with bootstrap sampling, per-split feature subsets, averaged predictions, and out-of-bag scoring (`oob_score`, `oob_predictions`).

@@ -1,0 +1,99 @@
+// Use case: gradient boosted trees for regression and classification
+// Regression: a cubic target with deterministic noise
+let rows = []
+for i in range(0, 61) {
+    let x = (i - 30) / 10.0
+    let noise = ((i * 7) % 5 - 2) / 10.0
+    let y = x * x * x - x + noise
+    rows = rows + [{"x": x, "y": y}]
+}
+
+let holdout = analysis.train_test_split(rows, 0.25, 7)
+let model = analysis.boosting_report(holdout["train"], "y", ["x"], "regression", 40, 0.15, 3, 2, 1, 1.0, null, 7)
+let test_x = []
+for r in holdout["test"] {
+    test_x = test_x + [[r["x"]]]
+}
+let preds = stats.predict_boosting(model, test_x)["predicted"]
+let scored = []
+for i in range(0, len(holdout["test"])) {
+    scored = scored + [{"y": holdout["test"][i]["y"], "p": preds[i]}]
+}
+let metrics = analysis.evaluate_regression(scored, "y", "p")
+print "reg train r2: " + str(round(model["train_r2"], 3))
+print "reg test r2: " + str(round(metrics["r2"], 3))
+print "reg test rmse: " + str(round(metrics["rmse"], 3))
+print "reg top: " + model["importance"][0]["feature"]
+
+// Binary classification on a nonlinear region
+let crows = []
+for i in range(0, 80) {
+    let a = (i % 10) / 10.0 - 0.5
+    let b = ((i * 7) % 11) / 11.0 - 0.5
+    let label = 0
+    if a * a + b * b > 0.18 {
+        label = 1
+    }
+    crows = crows + [{"a": a, "b": b, "label": label}]
+}
+
+let bholdout = analysis.train_test_split(crows, 0.25, 11)
+let binary = analysis.boosting_report(bholdout["train"], "label", ["a", "b"], "auto", 40, 0.2, 3, 2, 1, 1.0, null, 7)
+let btest_x = []
+for r in bholdout["test"] {
+    btest_x = btest_x + [[r["a"], r["b"]]]
+}
+let bpred = stats.predict_boosting(binary, btest_x)
+let bscored = []
+for i in range(0, len(bholdout["test"])) {
+    let probability = bpred["probabilities"][i][1]
+    let guess = 0
+    if probability >= 0.5 {
+        guess = 1
+    }
+    bscored = bscored + [{"actual": bholdout["test"][i]["label"], "predicted": guess, "score": probability}]
+}
+let quality = analysis.evaluate_classification(bscored, "actual", "predicted", "score")
+print "binary accuracy: " + str(round(quality["accuracy"], 3))
+print "binary auc: " + str(round(quality["roc_auc"], 3))
+print "binary log loss: " + str(round(quality["log_loss"], 3))
+print "binary top: " + binary["importance"][0]["feature"]
+let guess = stats.predict_boosting(binary, [[0.0, 0.0], [0.9, 0.9]])
+print "binary guess: " + str(guess["predicted"])
+
+// Multiclass classification with overlapping regions
+let mrows = []
+for i in range(0, 90) {
+    let a = (i % 9) / 8.0 - 0.5
+    let b = ((i * 5) % 10) / 9.0 - 0.5
+    let noise = ((i * 3) % 7 - 3) / 20.0
+    let score = a + b + noise
+    let label = 0
+    if score > -0.15 {
+        label = 1
+    }
+    if score > 0.15 {
+        label = 2
+    }
+    mrows = mrows + [{"a": a, "b": b, "label": label}]
+}
+
+let mholdout = analysis.train_test_split(mrows, 0.25, 13)
+let multi = analysis.boosting_report(mholdout["train"], "label", ["a", "b"], "auto", 40, 0.2, 3, 2, 1, 1.0, null, 7)
+let mtest_x = []
+for r in mholdout["test"] {
+    mtest_x = mtest_x + [[r["a"], r["b"]]]
+}
+let mpred = stats.predict_boosting(multi, mtest_x)["predicted"]
+let mscored = []
+for i in range(0, len(mholdout["test"])) {
+    mscored = mscored + [{"actual": mholdout["test"][i]["label"], "predicted": mpred[i]}]
+}
+let mquality = analysis.evaluate_classification(mscored, "actual", "predicted")
+print "multi train accuracy: " + str(round(multi["train_accuracy"], 3))
+print "multi test accuracy: " + str(round(mquality["accuracy"], 3))
+print "multi classes: " + str(multi["classes"])
+print "multi top: " + multi["importance"][0]["feature"]
+let mguess = stats.predict_boosting(multi, [[-0.4, -0.4], [0.4, -0.4], [0.4, 0.4]])
+print "multi guess: " + str(mguess["predicted"])
+print "multi top prob: " + str(round(mguess["probabilities"][0][0], 3))

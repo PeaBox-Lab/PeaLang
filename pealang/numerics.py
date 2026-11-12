@@ -1351,10 +1351,12 @@ def build_stats_namespace() -> dict[str, Any]:
     from .causal import build_causal_namespace
     from .evaluation import build_evaluation_namespace
     from .trees import build_tree_namespace
+    from .boosting import build_boosting_namespace
 
     namespace.update(build_inference_namespace())
     namespace.update(build_modeling_namespace())
     namespace.update(build_causal_namespace())
     namespace.update(build_evaluation_namespace())
     namespace.update(build_tree_namespace())
+    namespace.update(build_boosting_namespace())
     return namespace

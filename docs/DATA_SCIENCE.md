@@ -25,6 +25,7 @@ Records remain ordinary lists of dictionaries, so results flow directly into
 | Causal effects | `statsmodels`, `DoWhy`, `EconML` | custom | `stats.ipw_ate`, `stats.difference_in_differences`, `stats.instrumental_variables` |
 | Model evaluation | `scikit-learn.metrics`, `model_selection` | custom | `stats.train_test_split`, `stats.k_fold`, `stats.roc_auc`, `stats.r2_score` |
 | Trees and forests | `DecisionTree*`, `RandomForest*` | custom | `stats.decision_tree`, `stats.random_forest`, `stats.predict_tree`, `stats.predict_forest` |
+| Gradient boosting | `GradientBoosting*`, `HistGradientBoosting*` | custom | `stats.gradient_boosting`, `stats.predict_boosting`, `stats.boosting_feature_importance` |
 | Clustering / PCA | `scikit-learn` | custom | `stats.kmeans`, `stats.pca` |
 | Tabular transforms | pandas | custom | `analysis.*` |
 
@@ -359,9 +360,44 @@ print report["train_accuracy"]
 print forest["oob_score"]
 ```
 
-`task = "auto"` treats boolean and numeric `0`/`1` targets as classification
-and everything else as regression. See
+`task = "auto"` treats boolean, non-numeric and low-cardinality integer targets
+as classification and everything else as regression. See
 [`docs/TREE_MODELS.md`](TREE_MODELS.md) for the full reference.
+
+## Gradient boosting
+
+Boosting fits shallow trees in sequence, each correcting the ensemble's
+residuals. It is the strongest general-purpose model in the stack for tabular
+data.
+
+```pea
+// regression
+let reg = stats.gradient_boosting(features, target, "regression", 100, 0.1, 3)
+print stats.predict_boosting(reg, new_features)["predicted"]
+
+// binary classification
+let binary = stats.gradient_boosting(features, labels, "classification", 100, 0.1, 3)
+print binary["classes"]
+print stats.predict_boosting(binary, new_features)["probabilities"]
+
+// multiclass classification
+let multi = stats.gradient_boosting(features, labels, "classification", 100, 0.1, 3)
+print stats.predict_boosting(multi, new_features)["predicted"]
+
+// stochastic boosting and feature importance
+let stochastic = stats.gradient_boosting(features, target, "regression", 100, 0.1, 3, 2, 1, 0.8)
+print stats.boosting_feature_importance(stochastic, ["x1", "x2"])
+```
+
+Record-friendly wrapper:
+
+```pea
+let report = analysis.boosting_report(rows, "label", ["x1", "x2"], "auto", 100, 0.1, 3)
+print report["train_accuracy"]
+print report["importance"][0]["feature"]
+```
+
+See [`docs/GRADIENT_BOOSTING.md`](GRADIENT_BOOSTING.md) for the full reference.
 
 ## Regression and modelling
 
@@ -475,6 +511,7 @@ analysis.write_json_file("summary.json", [summary])
 - `examples/use_cases/13_causal_inference.pea`
 - `examples/use_cases/14_model_evaluation.pea`
 - `examples/use_cases/15_trees_forests.pea`
+- `examples/use_cases/16_gradient_boosting.pea`
 
 Run them with:
 
@@ -489,6 +526,7 @@ pea run examples/use_cases/12_arima_forecasting.pea
 pea run examples/use_cases/13_causal_inference.pea
 pea run examples/use_cases/14_model_evaluation.pea
 pea run examples/use_cases/15_trees_forests.pea
+pea run examples/use_cases/16_gradient_boosting.pea
 ```
 
 ## Choosing the right namespace
@@ -538,3 +576,9 @@ pea run examples/use_cases/15_trees_forests.pea
   as a ranking rather than a causal statement.
 - `max_depth = null` grows until pure or the internal cap of `100`. OOB scores
   are noisy on small samples and with few trees.
+- Gradient boosting has no early stopping or validation-based stage selection.
+  Choose `n_estimators`, `learning_rate` and `max_depth` with a holdout or
+  cross-validation loop. Smaller learning rates with more trees generalize
+  better but cost more time.
+- Multiclass boosting fits one tree per class per round, so training cost grows
+  linearly with the number of classes.
