@@ -89,6 +89,7 @@ The objective is to improve security while preserving the existing PeaLang langu
 - Interpretation wrapper: `analysis.interpret_report`
 - Imbalance wrapper: `analysis.balance_classes`
 - Pipeline wrappers: `analysis.model_pipeline`, `analysis.predict_pipeline`
+- Model persistence: `save_model`, `load_model`, `export_model`, `import_model`, `model_summary`
 - Modelling: `linear_regression`, `multiple_regression`, `polyfit`, `polyval`, `r_squared`, `interpolate`, `linspace`, `arange`, `kmeans`, `pca`, `confusion_matrix`
 - Sampling: `random_uniform`, `random_normal`, `random_binomial`, `random_poisson`, `bootstrap`
 - Pure Python, dependency-free: no NumPy, SciPy, pandas, or gonum required
@@ -432,6 +433,11 @@ let steps = [{"op": "impute", "method": "auto"}, {"op": "encode", "method": "one
 let fitted = stats.fit_pipeline(steps, [["red", 1.0], [null, 2.0], ["blue", 3.0]], ["color", "x"])
 print fitted["names"]
 print fitted["features"]
+
+// model persistence: save, reload and score
+stats.save_model("model.json", fitted)
+let loaded = stats.load_model("model.json")
+print stats.model_summary(loaded)["steps"]
 ```
 
 See [`docs/DATA_SCIENCE.md`](docs/DATA_SCIENCE.md),
@@ -443,8 +449,9 @@ See [`docs/DATA_SCIENCE.md`](docs/DATA_SCIENCE.md),
 [`docs/GRADIENT_BOOSTING.md`](docs/GRADIENT_BOOSTING.md),
 [`docs/MODEL_SELECTION.md`](docs/MODEL_SELECTION.md),
 [`docs/MODEL_INTERPRETATION.md`](docs/MODEL_INTERPRETATION.md),
-[`docs/CLASS_IMBALANCE.md`](docs/CLASS_IMBALANCE.md), and
-[`docs/FEATURE_PIPELINES.md`](docs/FEATURE_PIPELINES.md) for the full reference.
+[`docs/CLASS_IMBALANCE.md`](docs/CLASS_IMBALANCE.md),
+[`docs/FEATURE_PIPELINES.md`](docs/FEATURE_PIPELINES.md), and
+[`docs/MODEL_PERSISTENCE.md`](docs/MODEL_PERSISTENCE.md) for the full reference.
 
 ## Cross-Language Interop
 

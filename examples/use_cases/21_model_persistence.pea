@@ -1,0 +1,47 @@
+// Use case: save a fitted model, reload it and score with it
+let rows = []
+for k in range(0, 80) {
+    let region = "north"
+    if k % 3 == 1 { region = "south" }
+    if k % 3 == 2 { region = "east" }
+    let plan = "basic"
+    if k % 5 == 0 { plan = "pro" }
+    let spend = ((k * 17) % 90) + 15.0
+    let churn = 0
+    if spend < 60.0 { churn = 1 }
+    if plan == "pro" { churn = 0 }
+    rows = rows + [{"region": region, "plan": plan, "spend": spend, "churn": churn}]
+}
+
+// Fit the preprocessing pipeline and the forest in one call
+let model = analysis.model_pipeline(rows, "churn", ["region", "plan", "spend"], null, "forest", "auto", {"n_estimators": 15, "max_depth": 3, "seed": 11})
+print "top: " + model["importance"][0]["feature"]
+
+// Save the fitted pipeline and forest as one JSON document
+let target = "churn_model.json"
+stats.save_model(target, model)
+let loaded = stats.load_model(target)
+let summary = stats.model_summary(loaded)
+print "estimator: " + summary["estimator"]
+print "task: " + summary["task"]
+print "features: " + str(summary["n_features"])
+print "outputs: " + str(len(summary["output_features"]))
+print "has preprocessor: " + str(summary["has_preprocessor"])
+print "accuracy: " + str(round(summary["metrics"]["train_accuracy"], 3))
+
+// The reloaded model scores new records exactly like the original
+let probes = [
+    {"region": "north", "plan": "basic", "spend": 25.0},
+    {"region": "west", "plan": "pro", "spend": 95.0},
+    {"region": "south", "plan": "basic", "spend": 70.0}
+]
+let before = analysis.predict_pipeline(model, probes)
+let after = analysis.predict_pipeline(loaded, probes)
+print "probes: " + str(before["predicted"])
+print "same: " + str(before == after)
+
+// Compact documents drop training predictions but keep scoring intact
+let full = stats.export_model(model)
+let small = stats.export_model(model, true)
+print "compact: " + str(len(str(small)) < len(str(full)))
+print "kept payload: " + str("train_predictions" in full["payload"])

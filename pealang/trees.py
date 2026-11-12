@@ -239,6 +239,22 @@ def _collect_importance(node: dict[str, Any], accum: list[float]) -> None:
     _collect_importance(node["right"], accum)
 
 
+def _class_slots(tree: dict[str, Any], classes: list[Any]) -> list[int]:
+    """Map the ensemble classes to each tree's local class positions.
+
+    A bootstrap sample can miss a rare class, so a tree may know fewer classes
+    than the forest. Missing classes get slot ``-1`` and contribute nothing.
+    """
+    local = list(tree.get("classes") or [])
+    slots: list[int] = []
+    for label in classes:
+        try:
+            slots.append(local.index(label))
+        except ValueError:
+            slots.append(-1)
+    return slots
+
+
 # ---------------------------------------------------------------------------
 # Decision tree
 # ---------------------------------------------------------------------------
@@ -394,6 +410,7 @@ def random_forest(features: Any, target: Iterable[Any], task: str = "regression"
         if not bootstrap:
             continue
         in_bag = set(sample)
+        slots = [] if regression else _class_slots(tree, classes)
         for index in range(n):
             if index in in_bag:
                 continue
@@ -402,8 +419,9 @@ def random_forest(features: Any, target: Iterable[Any], task: str = "regression"
             if regression:
                 oob_sum[index] += float(leaf["value"])
             else:
-                for position, label in enumerate(classes):
-                    oob_votes[index][position] += leaf["probabilities"][position]
+                for position, local in enumerate(slots):
+                    if local >= 0:
+                        oob_votes[index][position] += leaf["probabilities"][local]
     total_importance = sum(importance)
     if total_importance > 0.0:
         importance = [value / total_importance for value in importance]
@@ -467,14 +485,16 @@ def predict_forest(model: dict[str, Any], features: Any) -> dict[str, Any]:
         raise ValueError("the forest has no trees")
     if model.get("task") == "classification":
         classes = model["classes"]
+        slots = [_class_slots(tree, classes) for tree in trees]
         probabilities = []
         predicted = []
         for row in rows:
             totals = [0.0] * len(classes)
-            for tree in trees:
+            for tree, tree_slots in zip(trees, slots):
                 leaf = _walk(tree["tree"], row)
-                for position in range(len(classes)):
-                    totals[position] += leaf["probabilities"][position]
+                for position, local in enumerate(tree_slots):
+                    if local >= 0:
+                        totals[position] += leaf["probabilities"][local]
             averaged = [value / len(trees) for value in totals]
             probabilities.append(averaged)
             position = max(

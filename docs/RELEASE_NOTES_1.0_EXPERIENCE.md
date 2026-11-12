@@ -57,6 +57,18 @@ python -m pytest -q
 
 New/updated coverage includes: language ergonomics (comprehensions, `in`/`not in`, `**`, match/destructuring, helpers/builtins), web routing/groups/CORS/OpenAPI/validation/SSE/file/auth/cache/status/redirect/security/health/envelope/validation/accepts helpers, analysis profiling/transforms/stats/IO/charts/melt/zscore/histogram/cut/shape/string/reshape/timeseries/encoding/columns/aggregates/jsonl/expanding, interop (Python/native/process/HTTP/JSON-RPC/env/files/paths/copy/hash/walk/temp/host-info/codegen), UX/templates, and CLI (`eval -e/-f`, `check/lint --json`, `analyze`, `web-openapi`/`openapi`, `hash`, `tree`, `env`, `version --json`, `quickstart`, `info`, `new`, `serve-web`, templates/doctor).
 
+## Additional Batch Notes (v125)
+- **Persistence:** `pealang/persistence.py` saves fitted estimators and pipeline transformers as versioned JSON — no pickle, no third-party libraries.
+- **Files:** `stats.save_model(path, model, indent, compact)` writes a `{format, version, kind, payload}` document and creates parent directories; `stats.load_model(path)` returns the fitted record ready for scoring.
+- **In-memory:** `stats.export_model` and `stats.import_model` do the same without touching the filesystem.
+- **Compact saves:** `compact = true` drops `train_predictions` and `oob_predictions` while keeping trees, classes, importance, metrics and the preprocessor.
+- **Summaries:** `stats.model_summary` reports estimator, task, features, classes, metrics, top importances and preprocessor presence, or the step and column layout of a transformer.
+- **Validation:** wrong formats, versions, kinds and payloads, non-finite numbers, non-string keys and non-JSON objects raise clear errors.
+- **Bug fix:** random forests now align each tree's local classes with the ensemble classes, so bootstrap samples that miss a rare class no longer raise `IndexError` in out-of-bag scoring or forest predict.
+- **Use case:** `examples/use_cases/21_model_persistence.pea` saves a forest, reloads it and compares predictions.
+- **Docs:** `docs/MODEL_PERSISTENCE.md` and `help/PERSISTENCE.md`.
+- **Tests:** `tests/test_persistence_v125.py` and `tests/test_use_cases_v125.py`.
+
 ## Additional Batch Notes (v124)
 - **Pipelines:** `pealang/pipeline.py` adds composable `impute`, `encode` and `scale` steps, applied in order.
 - **Imputation:** `auto` uses means for numeric columns and modes for categorical ones; explicit `mean`, `median`, `mode`, `constant` and `zero` are available.

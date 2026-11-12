@@ -2,6 +2,18 @@
 
 ## 1.0.0-experience (ongoing) - 2026-11-08
 
+### Model persistence (v125)
+- Added `pealang/persistence.py`, a dependency-free JSON persistence layer exposed through `stats` / `std.stats`.
+- Added `save_model` and `load_model`, which write and read fitted estimators and pipeline transformers as versioned documents with a `format`, `version`, `kind` and `payload`.
+- Added `export_model` / `import_model` for in-memory documents, with validation of formats, versions, kinds and JSON-safe payloads.
+- Added `model_summary`, which reports estimator, task, features, classes, metrics, top importances and preprocessor presence, or the step and column layout of a pipeline transformer.
+- Added a `compact` save option that drops training and out-of-bag predictions while keeping scoring intact.
+- Fixed random forests whose bootstrap trees miss a rare class: out-of-bag votes and forest probabilities now align each tree's local classes with the ensemble classes instead of raising `IndexError` or misranking probabilities.
+- Added runnable use case `examples/use_cases/21_model_persistence.pea`, which saves a forest, reloads it and compares predictions.
+- Added `docs/MODEL_PERSISTENCE.md` and `help/PERSISTENCE.md`; extended `docs/DATA_SCIENCE.md`, `docs/USE_CASES.md`, the README and the roadmap.
+- Exported persistence helpers from the Python package (`build_persistence_namespace`, `stats_save_model`, `stats_load_model`, `stats_export_model`, `stats_import_model`, `stats_model_summary`).
+- Added regression coverage: `tests/test_persistence_v125.py` and `tests/test_use_cases_v125.py`.
+
 ### Feature pipelines (v124)
 - Added `pealang/pipeline.py`, a dependency-free preprocessing layer exposed through `stats` / `std.stats`.
 - Added ordered steps for imputation (`auto`, `mean`, `median`, `mode`, `constant`, `zero`), encoding (`onehot`, `ordinal` / `label`) and scaling (`standard`, `minmax`).

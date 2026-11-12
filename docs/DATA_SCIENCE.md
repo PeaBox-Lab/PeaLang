@@ -30,6 +30,7 @@ Records remain ordinary lists of dictionaries, so results flow directly into
 | Model interpretation | `permutation_importance`, `PartialDependenceDisplay` | custom | `stats.permutation_importance`, `stats.partial_dependence` |
 | Class imbalance | `imblearn` resamplers, `class_weight` | custom | `stats.class_balance`, `stats.smote`, `stats.random_oversample`, `stats.random_undersample` |
 | Feature pipelines | `Pipeline`, `ColumnTransformer`, `SimpleImputer`, `OneHotEncoder`, `StandardScaler` | custom | `stats.fit_pipeline`, `stats.transform_pipeline`, `analysis.model_pipeline` |
+| Model persistence | joblib, `pickle`, ONNX | custom | `stats.save_model`, `stats.load_model`, `stats.model_summary` |
 | Clustering / PCA | `scikit-learn` | custom | `stats.kmeans`, `stats.pca` |
 | Tabular transforms | pandas | custom | `analysis.*` |
 
@@ -532,6 +533,34 @@ print analysis.predict_pipeline(model, new_rows)["predicted"]
 `minmax`. See [`docs/FEATURE_PIPELINES.md`](FEATURE_PIPELINES.md) for the full
 reference.
 
+## Model persistence
+
+Fitted models and transformers are plain records, so they save as versioned
+JSON without pickle. A saved document keeps everything scoring needs,
+including the fitted preprocessor.
+
+```pea
+let model = analysis.model_pipeline(
+    rows, "churn", ["region", "plan", "spend"],
+    null, "forest", "auto", {"n_estimators": 100}
+)
+
+stats.save_model("churn_model.json", model)
+let loaded = stats.load_model("churn_model.json")
+
+let summary = stats.model_summary(loaded)
+print summary["estimator"]
+print summary["metrics"]["train_accuracy"]
+print summary["top_features"][0]["feature"]
+
+print analysis.predict_pipeline(loaded, new_rows)["predicted"]
+```
+
+`stats.export_model(model, compact)` returns the document without writing a
+file, and `stats.import_model(document)` validates one from memory. Pass
+`compact = true` to drop training and out-of-bag predictions. See
+[`docs/MODEL_PERSISTENCE.md`](MODEL_PERSISTENCE.md) for the full reference.
+
 ## Regression and modelling
 
 ```pea
@@ -649,6 +678,7 @@ analysis.write_json_file("summary.json", [summary])
 - `examples/use_cases/18_model_interpretation.pea`
 - `examples/use_cases/19_class_imbalance.pea`
 - `examples/use_cases/20_feature_pipeline.pea`
+- `examples/use_cases/21_model_persistence.pea`
 
 Run them with:
 
@@ -668,6 +698,7 @@ pea run examples/use_cases/17_model_selection.pea
 pea run examples/use_cases/18_model_interpretation.pea
 pea run examples/use_cases/19_class_imbalance.pea
 pea run examples/use_cases/20_feature_pipeline.pea
+pea run examples/use_cases/21_model_persistence.pea
 ```
 
 ## Choosing the right namespace
@@ -738,3 +769,7 @@ pea run examples/use_cases/20_feature_pipeline.pea
   categories: one-hot rows become all zeros and ordinal codes become `-1`.
   Interpolation-based imputation, target encoding and column subsetting are not
   part of the pipeline layer.
+- Saved models are versioned JSON, not pickle. There is no checksum or
+  signature, a newer format version is rejected, and feature names and column
+  order must match at scoring time. Use the `compact` option to drop training
+  predictions from large forests.
