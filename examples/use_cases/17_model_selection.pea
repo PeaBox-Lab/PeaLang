@@ -1,0 +1,42 @@
+// Use case: cross-validation and hyperparameter search
+// Regression: tune a boosted model on a cubic target
+let rows = []
+for i in range(0, 61) {
+    let x = (i - 30) / 10.0
+    let noise = ((i * 7) % 5 - 2) / 10.0
+    let y = x * x * x - x + noise
+    rows = rows + [{"x": x, "y": y}]
+}
+
+let grid = {"n_estimators": [10, 20], "learning_rate": [0.1, 0.2], "max_depth": [2, 3]}
+let search = analysis.tune_model(rows, "y", ["x"], "boosting", "regression", grid, 3, 7, "r2")
+print "reg best: " + str(search["best_params"])
+print "reg score: " + str(round(search["best_score"], 3))
+print "reg candidates: " + str(search["n_candidates"])
+print "reg features: " + str(search["features"])
+
+let cv = stats.cross_validate("boosting", [[r["x"]] for r in rows], [r["y"] for r in rows], "regression", search["best_params"], 3, 7, "r2")
+print "reg cv: " + str(round(cv["mean"], 3)) + " +/- " + str(round(cv["std"], 3))
+
+// Classification: random search over a forest on a nonlinear region
+let crows = []
+for i in range(0, 80) {
+    let a = (i % 10) / 10.0 - 0.5
+    let b = ((i * 7) % 11) / 11.0 - 0.5
+    let label = 0
+    if a * a + b * b > 0.18 {
+        label = 1
+    }
+    crows = crows + [{"a": a, "b": b, "label": label}]
+}
+
+let cgrid = {"n_estimators": [5, 10], "max_depth": [2, 3]}
+let csearch = analysis.random_tune(crows, "label", ["a", "b"], "forest", "auto", cgrid, 4, 3, 11, "accuracy")
+print "cls best: " + str(csearch["best_params"])
+print "cls score: " + str(round(csearch["best_score"], 3))
+print "cls candidates: " + str(csearch["n_candidates"])
+print "cls task: " + csearch["task"]
+print "cls top: " + csearch["best_model"]["importance"][0]["feature"]
+
+let scored = stats.predict_forest(csearch["best_model"], [[0.0, 0.0], [0.9, 0.9]])
+print "cls guess: " + str(scored["predicted"])

@@ -2430,6 +2430,55 @@ def boosting_report(data: Any, target: str, features: Any = None,
     return model
 
 
+def _annotate_search(result: dict[str, Any], names: list[str],
+                     count: int) -> dict[str, Any]:
+    from .boosting import boosting_feature_importance
+    from .trees import forest_feature_importance, tree_feature_importance
+
+    model = result["best_model"]
+    model["features"] = names
+    if result["estimator"] == "tree":
+        model["importance"] = tree_feature_importance(model, names)
+    elif result["estimator"] == "forest":
+        model["importance"] = forest_feature_importance(model, names)
+    else:
+        model["importance"] = boosting_feature_importance(model, names)
+    result["features"] = names
+    result["n_used"] = count
+    return result
+
+
+def tune_model(data: Any, target: str, features: Any = None,
+               estimator: str = "forest", task: str = "auto",
+               param_grid: Any = None, folds: int = 5, seed: Any = 0,
+               scoring: Any = "auto") -> dict[str, Any]:
+    """Grid-search an estimator from records and refit the best candidate."""
+    from .selection import grid_search
+
+    rows = _rows(data)
+    names, matrix, outcomes, kind = _tree_inputs(rows, target, features, task)
+    result = grid_search(
+        estimator, matrix, outcomes, kind, param_grid, folds, seed, scoring
+    )
+    return _annotate_search(result, names, len(outcomes))
+
+
+def random_tune(data: Any, target: str, features: Any = None,
+                estimator: str = "forest", task: str = "auto",
+                param_grid: Any = None, n_iter: int = 10, folds: int = 5,
+                seed: Any = 0, scoring: Any = "auto") -> dict[str, Any]:
+    """Random-search an estimator from records and refit the best candidate."""
+    from .selection import random_search
+
+    rows = _rows(data)
+    names, matrix, outcomes, kind = _tree_inputs(rows, target, features, task)
+    result = random_search(
+        estimator, matrix, outcomes, kind, param_grid, n_iter, folds, seed,
+        scoring,
+    )
+    return _annotate_search(result, names, len(outcomes))
+
+
 def build_analysis_namespace() -> dict[str, Any]:
     return {
         "profile": profile,
@@ -2599,5 +2648,7 @@ def build_analysis_namespace() -> dict[str, Any]:
         "tree_report": tree_report,
         "forest_report": forest_report,
         "boosting_report": boosting_report,
+        "tune_model": tune_model,
+        "random_tune": random_tune,
     }
 

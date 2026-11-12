@@ -80,7 +80,9 @@ The objective is to improve security while preserving the existing PeaLang langu
 - Evaluation wrappers: `analysis.train_test_split`, `analysis.evaluate_classification`, `analysis.evaluate_regression`, `analysis.add_polynomial_features`
 - Trees and forests: `decision_tree`, `predict_tree`, `tree_feature_importance`, `random_forest`, `predict_forest`, `forest_feature_importance`
 - Gradient boosting: `gradient_boosting`, `predict_boosting`, `boosting_feature_importance`
+- Model selection: `cross_validate`, `grid_search`, `random_search`
 - Tree wrappers: `analysis.tree_report`, `analysis.forest_report`, `analysis.boosting_report`
+- Tuning wrappers: `analysis.tune_model`, `analysis.random_tune`
 - Modelling: `linear_regression`, `multiple_regression`, `polyfit`, `polyval`, `r_squared`, `interpolate`, `linspace`, `arange`, `kmeans`, `pca`, `confusion_matrix`
 - Sampling: `random_uniform`, `random_normal`, `random_binomial`, `random_poisson`, `bootstrap`
 - Pure Python, dependency-free: no NumPy, SciPy, pandas, or gonum required
@@ -401,6 +403,11 @@ print stats.forest_feature_importance(forest, ["x"])[0]["importance"]
 let boosted = stats.gradient_boosting([[0], [1], [2], [3], [4], [5]], [0, 0, 0, 1, 1, 1], "classification", 40, 0.1, 3)
 print stats.predict_boosting(boosted, [[0], [5]])["predicted"]
 print stats.boosting_feature_importance(boosted, ["x"])[0]["importance"]
+
+// cross-validation and hyperparameter search
+let tuned = stats.grid_search("boosting", [[0], [1], [2], [3], [4], [5]], [0, 0, 0, 1, 1, 1], "classification", {"n_estimators": [10, 20], "max_depth": [2, 3]}, 3, 1, "accuracy")
+print tuned["best_params"]
+print tuned["best_score"]
 ```
 
 See [`docs/DATA_SCIENCE.md`](docs/DATA_SCIENCE.md),
@@ -408,8 +415,9 @@ See [`docs/DATA_SCIENCE.md`](docs/DATA_SCIENCE.md),
 [`docs/ADVANCED_MODELING.md`](docs/ADVANCED_MODELING.md),
 [`docs/CAUSAL_INFERENCE.md`](docs/CAUSAL_INFERENCE.md),
 [`docs/MODEL_EVALUATION.md`](docs/MODEL_EVALUATION.md),
-[`docs/TREE_MODELS.md`](docs/TREE_MODELS.md), and
-[`docs/GRADIENT_BOOSTING.md`](docs/GRADIENT_BOOSTING.md) for the full reference.
+[`docs/TREE_MODELS.md`](docs/TREE_MODELS.md),
+[`docs/GRADIENT_BOOSTING.md`](docs/GRADIENT_BOOSTING.md), and
+[`docs/MODEL_SELECTION.md`](docs/MODEL_SELECTION.md) for the full reference.
 
 ## Cross-Language Interop
 

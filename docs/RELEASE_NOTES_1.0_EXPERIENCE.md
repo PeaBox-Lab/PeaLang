@@ -57,6 +57,16 @@ python -m pytest -q
 
 New/updated coverage includes: language ergonomics (comprehensions, `in`/`not in`, `**`, match/destructuring, helpers/builtins), web routing/groups/CORS/OpenAPI/validation/SSE/file/auth/cache/status/redirect/security/health/envelope/validation/accepts helpers, analysis profiling/transforms/stats/IO/charts/melt/zscore/histogram/cut/shape/string/reshape/timeseries/encoding/columns/aggregates/jsonl/expanding, interop (Python/native/process/HTTP/JSON-RPC/env/files/paths/copy/hash/walk/temp/host-info/codegen), UX/templates, and CLI (`eval -e/-f`, `check/lint --json`, `analyze`, `web-openapi`/`openapi`, `hash`, `tree`, `env`, `version --json`, `quickstart`, `info`, `new`, `serve-web`, templates/doctor).
 
+## Additional Batch Notes (v121)
+- **Selection:** `pealang/selection.py` adds `cross_validate`, `grid_search` and `random_search` for `"tree"`, `"forest"` and `"boosting"` estimators, selected by name.
+- **Cross-validation:** stratified folds for classification when every class has at least `folds` samples, plain k-fold otherwise; results include per-fold scores, `mean`, `std` and `higher_is_better`.
+- **Search:** grid search evaluates every combination; random search samples `n_iter` distinct seeded candidates. Both rank candidates, return `best_params`/`best_score`/`best_std`, and refit the winner on all rows.
+- **Scoring:** `"auto"` picks `r2` or `accuracy`; regression also supports `explained_variance`, `mse`, `rmse`, `mae`, and classification supports `balanced_accuracy`, `f1`, `roc_auc`, `log_loss`, with lower-is-better ranking for error and loss metrics.
+- **Record wrappers:** `analysis.tune_model` and `analysis.random_tune` add `features`, `n_used` and a `best_model.importance` table.
+- **Use case:** `examples/use_cases/17_model_selection.pea` with boosted-regression grid search and forest random search.
+- **Docs:** `docs/MODEL_SELECTION.md` and `help/SELECTION.md`.
+- **Tests:** `tests/test_selection_v121.py` and `tests/test_use_cases_v121.py`.
+
 ## Additional Batch Notes (v120)
 - **Boosting:** `pealang/boosting.py` adds `gradient_boosting` for regression (squared error), binary classification (logistic loss) and multiclass classification (softmax), with `learning_rate`, shallow base trees, seeded row `subsample` and `max_features`.
 - **Leaf updates:** binary and multiclass stages use Newton leaf values; multiclass applies the Friedman `(K - 1) / K` multiplier and fits one tree per class per round.

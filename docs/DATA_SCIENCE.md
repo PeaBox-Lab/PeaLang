@@ -26,6 +26,7 @@ Records remain ordinary lists of dictionaries, so results flow directly into
 | Model evaluation | `scikit-learn.metrics`, `model_selection` | custom | `stats.train_test_split`, `stats.k_fold`, `stats.roc_auc`, `stats.r2_score` |
 | Trees and forests | `DecisionTree*`, `RandomForest*` | custom | `stats.decision_tree`, `stats.random_forest`, `stats.predict_tree`, `stats.predict_forest` |
 | Gradient boosting | `GradientBoosting*`, `HistGradientBoosting*` | custom | `stats.gradient_boosting`, `stats.predict_boosting`, `stats.boosting_feature_importance` |
+| Model selection | `cross_val_score`, `GridSearchCV`, `RandomizedSearchCV` | custom | `stats.cross_validate`, `stats.grid_search`, `stats.random_search` |
 | Clustering / PCA | `scikit-learn` | custom | `stats.kmeans`, `stats.pca` |
 | Tabular transforms | pandas | custom | `analysis.*` |
 
@@ -399,6 +400,42 @@ print report["importance"][0]["feature"]
 
 See [`docs/GRADIENT_BOOSTING.md`](GRADIENT_BOOSTING.md) for the full reference.
 
+## Model selection
+
+Cross-validation and hyperparameter search pick settings that generalize
+instead of trusting a single train/test split. Estimators are named by string:
+`"tree"`, `"forest"` or `"boosting"`.
+
+```pea
+// k-fold cross-validation
+let cv = stats.cross_validate("boosting", features, target, "regression", {"n_estimators": 100, "learning_rate": 0.1}, 5, 0, "r2")
+print cv["mean"]
+print cv["std"]
+
+// exhaustive grid search
+let grid = {"max_depth": [2, 3, 4], "min_samples_leaf": [1, 2]}
+let search = stats.grid_search("forest", features, labels, "classification", grid, 5, 0, "accuracy")
+print search["best_params"]
+print search["best_score"]
+print stats.predict_forest(search["best_model"], new_features)["predicted"]
+
+// seeded random search over a large grid
+let sampled = stats.random_search("boosting", features, target, "regression", {"n_estimators": [50, 100, 200], "learning_rate": [0.05, 0.1, 0.2], "max_depth": [2, 3, 4]}, 10, 5, 7, "r2")
+print sampled["best_params"]
+```
+
+Record-friendly wrapper:
+
+```pea
+let tuned = analysis.tune_model(rows, "label", ["x1", "x2"], "forest", "auto", {"n_estimators": [50, 100], "max_depth": [2, 3]}, 5, 0, "accuracy")
+print tuned["best_params"]
+print tuned["best_model"]["importance"][0]["feature"]
+```
+
+`scoring = "auto"` uses `r2` for regression and `accuracy` for classification.
+Error and loss metrics (`mse`, `rmse`, `mae`, `log_loss`) rank lower-is-better.
+See [`docs/MODEL_SELECTION.md`](MODEL_SELECTION.md) for the full reference.
+
 ## Regression and modelling
 
 ```pea
@@ -512,6 +549,7 @@ analysis.write_json_file("summary.json", [summary])
 - `examples/use_cases/14_model_evaluation.pea`
 - `examples/use_cases/15_trees_forests.pea`
 - `examples/use_cases/16_gradient_boosting.pea`
+- `examples/use_cases/17_model_selection.pea`
 
 Run them with:
 
@@ -527,6 +565,7 @@ pea run examples/use_cases/13_causal_inference.pea
 pea run examples/use_cases/14_model_evaluation.pea
 pea run examples/use_cases/15_trees_forests.pea
 pea run examples/use_cases/16_gradient_boosting.pea
+pea run examples/use_cases/17_model_selection.pea
 ```
 
 ## Choosing the right namespace
@@ -582,3 +621,7 @@ pea run examples/use_cases/16_gradient_boosting.pea
   better but cost more time.
 - Multiclass boosting fits one tree per class per round, so training cost grows
   linearly with the number of classes.
+- Model selection only searches the built-in tree, forest and boosting
+  estimators, by name rather than by passing a function. `best_score` is
+  optimistic because the winner is refit on all rows; keep a final holdout when
+  you need an unbiased estimate.

@@ -2,6 +2,17 @@
 
 ## 1.0.0-experience (ongoing) - 2026-11-08
 
+### Model selection (v121)
+- Added `pealang/selection.py`, a dependency-free tuning layer exposed through `stats` / `std.stats`.
+- Added `cross_validate`, which scores `"tree"`, `"forest"` or `"boosting"` estimators with k-fold cross-validation, stratified folds for classification, per-fold scores and mean/standard deviation.
+- Added `grid_search` and seeded `random_search`, both returning ranked candidate tables, `best_params`, `best_score`, `best_std` and a `best_model` refit on all rows.
+- Added scoring selection with `"auto"` plus `r2`, `explained_variance`, `mse`, `rmse`, `mae`, `accuracy`, `balanced_accuracy`, `f1`, `roc_auc` and `log_loss`, including lower-is-better ranking for error and loss metrics.
+- Added record-friendly wrappers `analysis.tune_model` and `analysis.random_tune`, with `features`, `n_used` and a `best_model.importance` table.
+- Added runnable use case `examples/use_cases/17_model_selection.pea` covering boosted-regression grid search and forest random search.
+- Added `docs/MODEL_SELECTION.md` and `help/SELECTION.md`; extended `docs/DATA_SCIENCE.md`, `docs/USE_CASES.md`, the README and the roadmap.
+- Exported selection helpers from the Python package (`build_selection_namespace`, `stats_cross_validate`, `stats_grid_search`, `stats_random_search`).
+- Added regression coverage: `tests/test_selection_v121.py` and `tests/test_use_cases_v121.py`.
+
 ### Gradient boosted trees (v120)
 - Added `pealang/boosting.py`, a dependency-free gradient boosting layer exposed through `stats` / `std.stats`.
 - Regression uses squared-error boosting with a mean base prediction. Binary classification uses logistic loss with a log-odds base and Newton leaf updates. Multiclass classification uses softmax loss with one tree per class per round and the Friedman `(K - 1) / K` leaf multiplier.

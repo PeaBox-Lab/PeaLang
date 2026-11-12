@@ -112,6 +112,7 @@ no third-party packages.
 | Trees and forests | `stats.decision_tree`, `stats.predict_tree`, `stats.random_forest`, `stats.predict_forest` |
 | Tree importance | `stats.tree_feature_importance`, `stats.forest_feature_importance` |
 | Gradient boosting | `stats.gradient_boosting`, `stats.predict_boosting`, `stats.boosting_feature_importance` |
+| Model selection | `stats.cross_validate`, `stats.grid_search`, `stats.random_search` |
 | Tree wrappers | `analysis.tree_report`, `analysis.forest_report`, `analysis.boosting_report` |
 
 ```pea
@@ -272,6 +273,24 @@ print boosted_report["train_accuracy"]
 print boosted_report["importance"][0]["feature"]
 ```
 
+Model selection picks settings that generalize:
+
+```pea
+let cv = stats.cross_validate("boosting", features, target, "regression", {"n_estimators": 100, "learning_rate": 0.1}, 5, 0, "r2")
+print cv["mean"]
+print cv["std"]
+
+let search = stats.grid_search("forest", features, labels, "classification", {"n_estimators": [50, 100], "max_depth": [2, 3]}, 5, 0, "accuracy")
+print search["best_params"]
+print search["best_score"]
+
+let sampled = stats.random_search("boosting", features, target, "regression", {"n_estimators": [50, 100, 200], "learning_rate": [0.05, 0.1, 0.2]}, 6, 5, 7, "r2")
+print sampled["best_params"]
+
+let tuned = analysis.tune_model(rows, "label", ["x1", "x2"], "forest", "auto", {"n_estimators": [50, 100], "max_depth": [2, 3]}, 5, 0, "accuracy")
+print tuned["best_model"]["importance"][0]["feature"]
+```
+
 Pair `stats` with the pandas-class helpers in `analysis` for end-to-end work:
 
 ```pea
@@ -293,6 +312,7 @@ Examples:
 - [`examples/use_cases/14_model_evaluation.pea`](../examples/use_cases/14_model_evaluation.pea)
 - [`examples/use_cases/15_trees_forests.pea`](../examples/use_cases/15_trees_forests.pea)
 - [`examples/use_cases/16_gradient_boosting.pea`](../examples/use_cases/16_gradient_boosting.pea)
+- [`examples/use_cases/17_model_selection.pea`](../examples/use_cases/17_model_selection.pea)
 
 See [`docs/DATA_SCIENCE.md`](DATA_SCIENCE.md),
 [`docs/STATISTICAL_INFERENCE.md`](STATISTICAL_INFERENCE.md),
@@ -300,7 +320,8 @@ See [`docs/DATA_SCIENCE.md`](DATA_SCIENCE.md),
 [`docs/CAUSAL_INFERENCE.md`](CAUSAL_INFERENCE.md),
 [`docs/MODEL_EVALUATION.md`](MODEL_EVALUATION.md),
 [`docs/TREE_MODELS.md`](TREE_MODELS.md), and
-[`docs/GRADIENT_BOOSTING.md`](GRADIENT_BOOSTING.md) for the full reference.
+[`docs/GRADIENT_BOOSTING.md`](GRADIENT_BOOSTING.md), and
+[`docs/MODEL_SELECTION.md`](MODEL_SELECTION.md) for the full reference.
 
 ## 3. Polyglot delivery (Python, Go, TypeScript, Java)
 
