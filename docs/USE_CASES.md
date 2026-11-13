@@ -117,6 +117,7 @@ no third-party packages.
 | Class imbalance | `stats.class_balance`, `stats.smote`, `stats.random_oversample`, `stats.random_undersample` |
 | Feature pipelines | `stats.fit_pipeline`, `stats.transform_pipeline`, `analysis.model_pipeline` |
 | Model persistence | `stats.save_model`, `stats.load_model`, `stats.model_summary` |
+| Date features | `stats.date_parts`, `stats.calendar_features`, `analysis.date_features` |
 | Tree wrappers | `analysis.tree_report`, `analysis.forest_report`, `analysis.boosting_report` |
 
 ```pea
@@ -362,6 +363,22 @@ print stats.model_summary(loaded)["metrics"]["train_accuracy"]
 print analysis.predict_pipeline(loaded, new_rows)["predicted"]
 ```
 
+Date strings become numeric calendar columns, either as a matrix or directly in
+records:
+
+```pea
+let matrix = stats.calendar_features(dates, ["year", "month", "weekday", "epoch_day"])
+print matrix["names"]
+
+let expanded = analysis.date_features(rows, "when", ["month", "weekday"], null, true)
+print expanded[0]
+
+// or as a pipeline step
+let steps = [{"op": "impute", "method": "auto"}, {"op": "date", "parts": ["year", "month", "weekday"]}, {"op": "scale", "method": "standard"}]
+let fitted = stats.fit_pipeline(steps, features, ["when", "spend"])
+print fitted["names"]
+```
+
 Pair `stats` with the pandas-class helpers in `analysis` for end-to-end work:
 
 ```pea
@@ -388,6 +405,7 @@ Examples:
 - [`examples/use_cases/19_class_imbalance.pea`](../examples/use_cases/19_class_imbalance.pea)
 - [`examples/use_cases/20_feature_pipeline.pea`](../examples/use_cases/20_feature_pipeline.pea)
 - [`examples/use_cases/21_model_persistence.pea`](../examples/use_cases/21_model_persistence.pea)
+- [`examples/use_cases/22_date_features.pea`](../examples/use_cases/22_date_features.pea)
 
 See [`docs/DATA_SCIENCE.md`](DATA_SCIENCE.md),
 [`docs/STATISTICAL_INFERENCE.md`](STATISTICAL_INFERENCE.md),
@@ -400,7 +418,8 @@ See [`docs/DATA_SCIENCE.md`](DATA_SCIENCE.md),
 [`docs/MODEL_INTERPRETATION.md`](MODEL_INTERPRETATION.md), and
 [`docs/CLASS_IMBALANCE.md`](CLASS_IMBALANCE.md),
 [`docs/FEATURE_PIPELINES.md`](FEATURE_PIPELINES.md) and
-[`docs/MODEL_PERSISTENCE.md`](MODEL_PERSISTENCE.md) for the full reference.
+[`docs/MODEL_PERSISTENCE.md`](MODEL_PERSISTENCE.md) and
+[`docs/DATE_FEATURES.md`](DATE_FEATURES.md) for the full reference.
 
 ## 3. Polyglot delivery (Python, Go, TypeScript, Java)
 

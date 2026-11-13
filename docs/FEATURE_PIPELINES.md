@@ -2,10 +2,10 @@
 
 PeaLang's pipeline layer turns raw, mixed and incomplete records into the
 numeric matrices that [trees](TREE_MODELS.md) and [boosting](GRADIENT_BOOSTING.md)
-expect. It composes imputation, encoding and scaling into one fitted transformer
-and reapplies the learned values to new rows. It is pure Python with no
-third-party dependencies and replaces the scikit-learn `Pipeline` +
-`ColumnTransformer` + `SimpleImputer` + `OneHotEncoder` + `StandardScaler`
+expect. It composes imputation, date expansion, encoding and scaling into one
+fitted transformer and reapplies the learned values to new rows. It is pure
+Python with no third-party dependencies and replaces the scikit-learn `Pipeline`
++ `ColumnTransformer` + `SimpleImputer` + `OneHotEncoder` + `StandardScaler`
 stack.
 
 Everything is exposed through:
@@ -21,6 +21,7 @@ A pipeline is a list of step records, applied in order:
 ```pea
 let steps = [
     {"op": "impute", "method": "auto"},
+    {"op": "date", "parts": ["year", "month", "weekday"]},
     {"op": "encode", "method": "onehot"},
     {"op": "scale", "method": "standard"}
 ]
@@ -29,10 +30,12 @@ let steps = [
 | Step | Methods | Effect |
 |---|---|---|
 | `impute` | `auto`, `mean`, `median`, `mode`, `constant`, `zero` | Replaces missing values per column |
+| `date` | `parts`, `required` | Expands date-like columns into calendar columns |
 | `encode` | `onehot`, `ordinal` (alias `label`) | Converts categorical columns to numbers |
 | `scale` | `standard`, `minmax` | Centers and scales numeric columns |
 
-Aliases: `fillna` for `impute`, `standardize` for `scale`.
+Aliases: `fillna` for `impute`, `standardize` for `scale`, `calendar` for
+`date`.
 
 ## Imputation
 
@@ -51,6 +54,25 @@ print fitted["steps"][0]["missing"]
 
 Each fitted fill stores `{name, method, value, missing}` so the same values are
 reused on new rows.
+
+## Dates
+
+```pea
+let fitted = stats.fit_pipeline(
+    [{"op": "date", "parts": ["year", "month", "weekday", "epoch_day"]}],
+    features,
+    ["when", "region", "spend"],
+)
+print fitted["names"]
+```
+
+Columns whose observed values all parse as dates are replaced by one
+`name=part` column per part; other columns pass through. `parts` defaults to
+`year`, `month`, `day`, `weekday`, `quarter` and `is_weekend`. Missing dates
+must be imputed first. An explicit date step raises when it finds no date
+column; add `"required": false` to make it a no-op, which is what
+`analysis.model_pipeline` uses. See
+[`docs/DATE_FEATURES.md`](DATE_FEATURES.md) for every part and format.
 
 ## Encoding
 
@@ -106,13 +128,14 @@ print new["names"]
 
 `fit_pipeline(steps, features, names)` returns the fitted transformer with the
 training rows already transformed. `transform_pipeline(transformer, features)`
-applies the stored fill values, levels, centers and scales to new rows. The
-input width must match the fitted `input_names`. `names` defaults to `x1`,
-`x2`, ...
+applies the stored fill values, levels, date parts, centers and scales to new
+rows. The input width must match the fitted `input_names`. `names` defaults to
+`x1`, `x2`, ...
 
-Step order matters. A typical order is impute, then encode, then scale. Scaling
-before encoding fails on categorical columns, and encoding before imputing can
-turn missing values into a separate `null` category.
+Step order matters. A typical order is impute, then date, then encode, then
+scale. Scaling before encoding fails on categorical columns, encoding before
+imputing can turn missing values into a separate `null` category, and imputing
+after date expansion cannot fill a calendar column back into a date.
 
 ## Model wrapper
 
@@ -136,7 +159,7 @@ print scored["probabilities"]
 `analysis.model_pipeline(data, target, features, steps, estimator, task, params)`
 builds the raw matrix from records, fits the pipeline, fits the estimator and
 returns the model record with a stored `preprocessor`. `steps = null` uses
-impute, one-hot encoding and standardization.
+impute, date expansion, one-hot encoding and standardization.
 
 `analysis.predict_pipeline(model, data)` accepts records or a raw matrix,
 transforms it with the stored preprocessor and returns the estimator's
@@ -174,11 +197,15 @@ matrix.
   ordinal codes. Monitor this on production data.
 - Interpolated imputation is not supported: there is no forward fill, linear
   interpolation or model-based imputation in this layer.
-- There is no column subsetting step, target encoding, interaction expansion or
-  date parsing. Use `analysis` helpers or `stats.polynomial_features` before
-  the pipeline when you need those.
-- The fitted transformer stores levels, fills and scales, not the training rows.
-  It is safe to keep alongside the model, but its input column order must be
-  preserved.
+- There is no column subsetting step, target encoding or interaction expansion.
+  Use `analysis` helpers or `stats.polynomial_features` before the pipeline
+  when you need those.
+- Date detection is a heuristic: only the date component is used and an
+  eight-digit string that happens to be a valid date is treated as one. Use
+  explicit steps without a date step to opt out. See
+  [`docs/DATE_FEATURES.md`](DATE_FEATURES.md).
+- The fitted transformer stores levels, fills, date parts and scales, not the
+  training rows. It is safe to keep alongside the model, but its input column
+  order must be preserved.
 - `model_pipeline` drops rows with a missing target but keeps rows with missing
   features, relying on the impute step.

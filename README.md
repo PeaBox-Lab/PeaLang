@@ -84,6 +84,7 @@ The objective is to improve security while preserving the existing PeaLang langu
 - Model interpretation: `permutation_importance`, `partial_dependence`
 - Class imbalance: `class_balance`, `smote`, `random_oversample`, `random_undersample`
 - Feature pipelines: `fit_pipeline`, `transform_pipeline`
+- Date features: `is_date`, `date_parts`, `calendar_features`, `analysis.date_features`
 - Tree wrappers: `analysis.tree_report`, `analysis.forest_report`, `analysis.boosting_report`
 - Tuning wrappers: `analysis.tune_model`, `analysis.random_tune`
 - Interpretation wrapper: `analysis.interpret_report`
@@ -438,6 +439,11 @@ print fitted["features"]
 stats.save_model("model.json", fitted)
 let loaded = stats.load_model("model.json")
 print stats.model_summary(loaded)["steps"]
+
+// date features: calendar parts from strings
+let matrix = stats.calendar_features(["2024-01-05", "2024-02-10"], ["year", "month", "weekday"])
+print matrix["names"]
+print matrix["features"]
 ```
 
 See [`docs/DATA_SCIENCE.md`](docs/DATA_SCIENCE.md),
@@ -450,8 +456,9 @@ See [`docs/DATA_SCIENCE.md`](docs/DATA_SCIENCE.md),
 [`docs/MODEL_SELECTION.md`](docs/MODEL_SELECTION.md),
 [`docs/MODEL_INTERPRETATION.md`](docs/MODEL_INTERPRETATION.md),
 [`docs/CLASS_IMBALANCE.md`](docs/CLASS_IMBALANCE.md),
-[`docs/FEATURE_PIPELINES.md`](docs/FEATURE_PIPELINES.md), and
-[`docs/MODEL_PERSISTENCE.md`](docs/MODEL_PERSISTENCE.md) for the full reference.
+[`docs/FEATURE_PIPELINES.md`](docs/FEATURE_PIPELINES.md),
+[`docs/MODEL_PERSISTENCE.md`](docs/MODEL_PERSISTENCE.md), and
+[`docs/DATE_FEATURES.md`](docs/DATE_FEATURES.md) for the full reference.
 
 ## Cross-Language Interop
 

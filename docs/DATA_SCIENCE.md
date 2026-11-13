@@ -31,6 +31,7 @@ Records remain ordinary lists of dictionaries, so results flow directly into
 | Class imbalance | `imblearn` resamplers, `class_weight` | custom | `stats.class_balance`, `stats.smote`, `stats.random_oversample`, `stats.random_undersample` |
 | Feature pipelines | `Pipeline`, `ColumnTransformer`, `SimpleImputer`, `OneHotEncoder`, `StandardScaler` | custom | `stats.fit_pipeline`, `stats.transform_pipeline`, `analysis.model_pipeline` |
 | Model persistence | joblib, `pickle`, ONNX | custom | `stats.save_model`, `stats.load_model`, `stats.model_summary` |
+| Date features | pandas `.dt` accessor | custom | `stats.date_parts`, `stats.calendar_features`, `analysis.date_features` |
 | Clustering / PCA | `scikit-learn` | custom | `stats.kmeans`, `stats.pca` |
 | Tabular transforms | pandas | custom | `analysis.*` |
 
@@ -533,6 +534,49 @@ print analysis.predict_pipeline(model, new_rows)["predicted"]
 `minmax`. See [`docs/FEATURE_PIPELINES.md`](FEATURE_PIPELINES.md) for the full
 reference.
 
+## Date features
+
+Real tables store timestamps as strings. Date features turn them into numbers
+and connect them to the rest of the modelling stack.
+
+```pea
+print stats.is_date("2024-02-29")
+print stats.date_parts("2024-03-09", ["weekday", "epoch_day"])
+
+let matrix = stats.calendar_features(
+    ["2024-01-05", "2024-02-10"],
+    ["year", "month", "weekday", "month_sin"]
+)
+print matrix["names"]
+print matrix["features"]
+
+let rows = [{"when": "2024-01-05", "sales": 10.0}]
+let expanded = analysis.date_features(rows, "when", ["month", "weekday"])
+print expanded[0]["when_month"]
+```
+
+The `date` pipeline step expands date-like columns in place, and
+`analysis.model_pipeline` includes it by default:
+
+```pea
+let steps = [
+    {"op": "impute", "method": "auto"},
+    {"op": "date", "parts": ["epoch_day", "month", "weekday"]},
+    {"op": "encode", "method": "onehot"},
+    {"op": "scale", "method": "standard"}
+]
+let fitted = stats.fit_pipeline(steps, features, ["when", "region", "spend"])
+print fitted["names"]
+
+let model = analysis.model_pipeline(rows, "sales", ["when", "region"], null, "forest", "regression", {"n_estimators": 50})
+print model["output_features"]
+```
+
+Available parts include `year`, `month`, `day`, `weekday`, `quarter`,
+`day_of_year`, `week`, `is_weekend`, `is_month_start`, `is_month_end`,
+`epoch_day`, `month_sin`, `month_cos`, `weekday_sin` and `weekday_cos`. See
+[`docs/DATE_FEATURES.md`](DATE_FEATURES.md) for the full reference.
+
 ## Model persistence
 
 Fitted models and transformers are plain records, so they save as versioned
@@ -679,6 +723,7 @@ analysis.write_json_file("summary.json", [summary])
 - `examples/use_cases/19_class_imbalance.pea`
 - `examples/use_cases/20_feature_pipeline.pea`
 - `examples/use_cases/21_model_persistence.pea`
+- `examples/use_cases/22_date_features.pea`
 
 Run them with:
 
@@ -699,6 +744,7 @@ pea run examples/use_cases/18_model_interpretation.pea
 pea run examples/use_cases/19_class_imbalance.pea
 pea run examples/use_cases/20_feature_pipeline.pea
 pea run examples/use_cases/21_model_persistence.pea
+pea run examples/use_cases/22_date_features.pea
 ```
 
 ## Choosing the right namespace
@@ -773,3 +819,7 @@ pea run examples/use_cases/21_model_persistence.pea
   signature, a newer format version is rejected, and feature names and column
   order must match at scoring time. Use the `compact` option to drop training
   predictions from large forests.
+- Date detection is a heuristic that uses only the date component. Eight-digit
+  strings that happen to be valid dates are expanded as dates, so pass explicit
+  steps without a date step to opt out. Time-of-day and timezone features are
+  not implemented.

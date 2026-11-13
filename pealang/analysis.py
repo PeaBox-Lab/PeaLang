@@ -2599,9 +2599,10 @@ def model_pipeline(data: Any, target: str, features: Any = None,
                    params: Any = None) -> dict[str, Any]:
     """Fit a preprocessing pipeline and a model from raw records.
 
-    ``steps`` defaults to impute, one-hot encode and standardize. The returned
-    model record stores the fitted ``preprocessor`` plus the transformed
-    ``output_features``, so :func:`predict_pipeline` can score new records.
+    ``steps`` defaults to impute, date expansion, one-hot encode and
+    standardize. The returned model record stores the fitted ``preprocessor``
+    plus the transformed ``output_features``, so :func:`predict_pipeline` can
+    score new records.
     """
     from .evaluation import (accuracy_score, log_loss, r2_score,
                              root_mean_squared_error)
@@ -2635,6 +2636,7 @@ def model_pipeline(data: Any, target: str, features: Any = None,
         outcomes = [item[1] for item in usable]
     plan = steps if steps is not None else [
         {"op": "impute", "method": "auto"},
+        {"op": "date", "required": False},
         {"op": "encode", "method": "onehot"},
         {"op": "scale", "method": "standard"},
     ]
@@ -2686,6 +2688,48 @@ def predict_pipeline(model: dict[str, Any], data: Any) -> dict[str, Any]:
         transform_pipeline(model["preprocessor"], matrix)["features"]
     )
     return _predict(model["estimator"], model, transformed)
+
+
+def date_features(data: Any, column: str, parts: Any = None,
+                  prefix: Any = None,
+                  drop_original: bool = False) -> list[dict[str, Any]]:
+    """Expand a date column into numeric calendar columns.
+
+    New columns are named ``<column>_<part>`` unless ``prefix`` is given. A
+    value that cannot be parsed raises with its row index, so impute or drop
+    missing dates first.
+    """
+    from .dates import date_parts, normalize_parts
+
+    rows = _rows(data)
+    if not rows:
+        raise ValueError("data is required")
+    if column not in columns(rows):
+        raise ValueError("unknown column: " + str(column))
+    resolved = normalize_parts(parts)
+    label = str(column)
+    if prefix is not None:
+        label = str(prefix).strip()
+        if not label:
+            raise ValueError("prefix must not be empty")
+    out: list[dict[str, Any]] = []
+    for index, row in enumerate(rows):
+        value = row.get(column)
+        try:
+            parts_record = date_parts(value, resolved)
+        except ValueError:
+            raise ValueError(
+                "cannot parse date in row " + str(index) + " of column "
+                + str(column) + ": " + repr(value)
+            ) from None
+        record = {
+            key: item for key, item in row.items()
+            if not (drop_original and key == column)
+        }
+        for part in resolved:
+            record[label + "_" + part] = parts_record[part]
+        out.append(record)
+    return out
 
 
 def build_analysis_namespace() -> dict[str, Any]:
@@ -2863,5 +2907,6 @@ def build_analysis_namespace() -> dict[str, Any]:
         "balance_classes": balance_classes,
         "model_pipeline": model_pipeline,
         "predict_pipeline": predict_pipeline,
+        "date_features": date_features,
     }
 

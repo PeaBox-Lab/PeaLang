@@ -1,4 +1,4 @@
-"""Feature engineering pipelines: impute, encode and scale in order.
+"""Feature engineering pipelines: impute, date, encode and scale in order.
 
 This module composes preprocessing steps into a fitted transformer that can be
 reapplied to new rows. It is pure Python and dependency-free, and fills the gap
@@ -9,12 +9,13 @@ Steps are plain records, so they work naturally in PeaLang::
 
     let steps = [
         {"op": "impute", "method": "auto"},
+        {"op": "date", "parts": ["year", "month", "weekday"]},
         {"op": "encode", "method": "onehot"},
         {"op": "scale", "method": "standard"}
     ]
 
 A pipeline is fitted once with :func:`fit_pipeline`; the returned transformer
-stores every learned fill value, category level, mean and scale, and
+stores every learned fill value, category level, date part, mean and scale, and
 :func:`transform_pipeline` reapplies them to new data.
 """
 
@@ -24,6 +25,7 @@ import math
 from typing import Any, Iterable
 
 from .trees import _classes
+from .dates import date_parts, is_date, normalize_parts
 
 
 # ---------------------------------------------------------------------------
@@ -61,6 +63,17 @@ def _numeric_column(values: list[Any]) -> bool:
         if _missing(value):
             continue
         if isinstance(value, bool) or not isinstance(value, (int, float)):
+            return False
+        seen = True
+    return seen
+
+
+def _date_column(values: list[Any]) -> bool:
+    seen = False
+    for value in values:
+        if _missing(value):
+            continue
+        if not is_date(value):
             return False
         seen = True
     return seen
@@ -278,12 +291,64 @@ def _fit_scale(step: dict[str, Any], rows: list[list[Any]],
     }, transformed
 
 
+def _fit_date(step: dict[str, Any], rows: list[list[Any]],
+              names: list[str]) -> tuple[dict[str, Any], list[list[Any]]]:
+    parts = normalize_parts(step.get("parts"))
+    required = step.get("required", True)
+    width = len(names)
+    columns: list[dict[str, Any]] = []
+    found = 0
+    for index, name in enumerate(names):
+        column = [row[index] for row in rows]
+        if _date_column(column):
+            if any(_missing(value) for value in column):
+                raise ValueError(
+                    "date step requires complete dates; impute missing "
+                    "values before it: " + name
+                )
+            columns.append({"name": name, "date": True, "parts": list(parts)})
+            found += 1
+        else:
+            columns.append({"name": name, "date": False, "parts": []})
+    if not found and required:
+        raise ValueError("date step found no date columns")
+    output: list[str] = []
+    for entry in columns:
+        if entry["date"]:
+            output.extend(
+                entry["name"] + "=" + part for part in entry["parts"]
+            )
+        else:
+            output.append(entry["name"])
+    transformed: list[list[Any]] = []
+    for row in rows:
+        record: list[Any] = []
+        for index, entry in enumerate(columns):
+            if not entry["date"]:
+                record.append(row[index])
+                continue
+            record.extend(
+                date_parts(row[index], entry["parts"])[part]
+                for part in entry["parts"]
+            )
+        transformed.append(record)
+    return {
+        "op": "date",
+        "parts": list(parts),
+        "columns": columns,
+        "names": output,
+        "input_names": list(names),
+    }, transformed
+
+
 _FITTERS = {
     "impute": _fit_impute,
     "fillna": _fit_impute,
     "encode": _fit_encode,
     "scale": _fit_scale,
     "standardize": _fit_scale,
+    "date": _fit_date,
+    "calendar": _fit_date,
 }
 
 
@@ -316,7 +381,7 @@ def fit_pipeline(steps: Iterable[Any], features: Any,
         if op not in _FITTERS:
             raise ValueError(
                 "unknown step op: " + repr(step.get("op")) +
-                " (expected impute, encode or scale)"
+                " (expected impute, date, encode or scale)"
             )
         record, rows = _FITTERS[op](step, rows, output_names)
         output_names = record.get("names", output_names)
@@ -404,6 +469,36 @@ def _apply_scale(step: dict[str, Any], rows: list[list[Any]],
     ]
 
 
+def _apply_date(step: dict[str, Any], rows: list[list[Any]],
+                width: int) -> tuple[list[list[Any]], int]:
+    columns = step.get("columns") or []
+    if len(columns) != width:
+        raise ValueError("transformer does not match the number of features")
+    transformed: list[list[Any]] = []
+    for row in rows:
+        record: list[Any] = []
+        for index, entry in enumerate(columns):
+            if not entry.get("date"):
+                record.append(row[index])
+                continue
+            value = row[index]
+            if _missing(value):
+                raise ValueError(
+                    "date step requires complete dates; impute missing "
+                    "values before it: " + entry["name"]
+                )
+            try:
+                parts = date_parts(value, entry["parts"])
+            except ValueError:
+                raise ValueError(
+                    "cannot parse date in column " + entry["name"] + ": "
+                    + repr(value)
+                ) from None
+            record.extend(parts[part] for part in entry["parts"])
+        transformed.append(record)
+    return transformed, len(step.get("names") or [])
+
+
 def transform_pipeline(transformer: dict[str, Any],
                        features: Any) -> dict[str, Any]:
     """Apply a fitted transformer to new rows.
@@ -424,6 +519,8 @@ def transform_pipeline(transformer: dict[str, Any],
             rows = _apply_impute(step, rows, width)
         elif op == "encode":
             rows, width = _apply_encode(step, rows, width)
+        elif op == "date":
+            rows, width = _apply_date(step, rows, width)
         elif op == "scale":
             rows = _apply_scale(step, rows, width)
         else:

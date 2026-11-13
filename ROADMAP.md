@@ -92,6 +92,7 @@ Make PeaLang the default extension language for:
    - class-balance reporting, random oversampling/undersampling and SMOTE (v123)
    - composable imputation, encoding and scaling pipelines with end-to-end model wrappers (v124)
    - versioned JSON model persistence with summaries and compact documents (v125)
+   - calendar feature extraction and a pipeline date step (v126)
 3. Cross-language experience
    - Python bridge: `interop.call_python`
    - native bridge: `interop.call_native`

@@ -57,6 +57,18 @@ python -m pytest -q
 
 New/updated coverage includes: language ergonomics (comprehensions, `in`/`not in`, `**`, match/destructuring, helpers/builtins), web routing/groups/CORS/OpenAPI/validation/SSE/file/auth/cache/status/redirect/security/health/envelope/validation/accepts helpers, analysis profiling/transforms/stats/IO/charts/melt/zscore/histogram/cut/shape/string/reshape/timeseries/encoding/columns/aggregates/jsonl/expanding, interop (Python/native/process/HTTP/JSON-RPC/env/files/paths/copy/hash/walk/temp/host-info/codegen), UX/templates, and CLI (`eval -e/-f`, `check/lint --json`, `analyze`, `web-openapi`/`openapi`, `hash`, `tree`, `env`, `version --json`, `quickstart`, `info`, `new`, `serve-web`, templates/doctor).
 
+## Additional Batch Notes (v126)
+- **Date features:** `pealang/dates.py` parses common date strings and expands them into numeric calendar features, dependency-free.
+- **Helpers:** `stats.is_date`, `stats.date_parts(value, parts)` and `stats.calendar_features(values, parts, prefix)`.
+- **Parts:** year, month, day, weekday (Monday `0`), quarter, day of year, ISO week, weekend and month boundaries, `epoch_day`, and cyclic month/weekday sin/cos encodings.
+- **Records:** `analysis.date_features(data, column, parts, prefix, drop_original)` adds `<column>_<part>` columns and keeps the other fields.
+- **Pipeline:** a `date` step (alias `calendar`) detects date-like columns and replaces each with `name=part` columns; `required: false` makes it a no-op.
+- **Default model pipeline:** `analysis.model_pipeline` now runs impute, date, encode and scale when `steps` is null.
+- **Persistence:** fitted date steps save and load with `stats.save_model` / `stats.load_model`.
+- **Use case:** `examples/use_cases/22_date_features.pea` with two years of daily sales, default and explicit parts, and future-date scoring.
+- **Docs:** `docs/DATE_FEATURES.md` and `help/DATES.md`, plus pipeline documentation updates.
+- **Tests:** `tests/test_dates_v126.py` and `tests/test_use_cases_v126.py`.
+
 ## Additional Batch Notes (v125)
 - **Persistence:** `pealang/persistence.py` saves fitted estimators and pipeline transformers as versioned JSON — no pickle, no third-party libraries.
 - **Files:** `stats.save_model(path, model, indent, compact)` writes a `{format, version, kind, payload}` document and creates parent directories; `stats.load_model(path)` returns the fitted record ready for scoring.

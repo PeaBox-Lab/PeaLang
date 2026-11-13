@@ -2,6 +2,19 @@
 
 ## 1.0.0-experience (ongoing) - 2026-11-08
 
+### Date features (v126)
+- Added `pealang/dates.py`, a dependency-free calendar feature layer exposed through `stats` / `std.stats`.
+- Added `is_date`, `date_parts` and `calendar_features`, parsing `YYYY-MM-DD`, `YYYY/MM/DD`, `YYYY.MM.DD`, `YYYYMMDD`, optional time suffixes and Python date/datetime values.
+- Added parts for year, month, day, weekday, quarter, day of year, ISO week, weekend and month boundaries, epoch-day trend, and cyclic month/weekday encodings.
+- Added `analysis.date_features`, which expands a date column in records into `<column>_<part>` columns, with an optional prefix and source-column dropping.
+- Added a `date` pipeline step (alias `calendar`) that detects date-like columns and replaces each with `name=part` columns; `required: false` makes it a no-op.
+- `analysis.model_pipeline` now runs impute, date expansion, encoding and scaling by default, so date strings are expanded automatically without affecting datasets that have no dates.
+- Date steps persist through `stats.save_model` / `stats.load_model` and reapply to new rows through `stats.transform_pipeline`.
+- Added runnable use case `examples/use_cases/22_date_features.pea`, covering single values, matrices, record columns, default and explicit pipeline parts, and future-date scoring.
+- Added `docs/DATE_FEATURES.md` and `help/DATES.md`; extended `docs/FEATURE_PIPELINES.md`, `docs/DATA_SCIENCE.md`, `docs/USE_CASES.md`, the README and the roadmap.
+- Exported date helpers from the Python package (`build_dates_namespace`, `stats_is_date`, `stats_date_parts`, `stats_calendar_features`).
+- Added regression coverage: `tests/test_dates_v126.py` and `tests/test_use_cases_v126.py`.
+
 ### Model persistence (v125)
 - Added `pealang/persistence.py`, a dependency-free JSON persistence layer exposed through `stats` / `std.stats`.
 - Added `save_model` and `load_model`, which write and read fitted estimators and pipeline transformers as versioned documents with a `format`, `version`, `kind` and `payload`.
