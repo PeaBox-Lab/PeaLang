@@ -61,6 +61,7 @@ The objective is to improve security while preserving the existing PeaLang langu
 - Document processing & OCR (v130): `read_document`, `read_csv`, `read_json`, `read_jsonl`, `read_xml`, `read_html`, `read_docx`, `read_xlsx`, `read_pdf`, `ocr_available`, `ocr_extract_text`, `ocr_extract_data`, `detect_format`, `strip_html`
 - Data visualization (v131): `bar_chart_svg`, `line_chart_svg`, `scatter_plot_svg`, `histogram_svg`, `ascii_bar_chart`, `ascii_line_chart`, `chart_to_file`
 - Data validation (v132): `build_schema`, `validate_record`, `validate_records`, `check_type`, `data_quality_report`, `missing_summary`, `duplicate_rows`, `infer_schema`
+- Conformance & quality gates (v133): `run_conformance_suite`, `check_api_stability`, `check_doc_coverage`, `environment_check`, `generate_quality_report`, `hash_source_tree`
 
 ### Numerical and Statistical Computing (`stats` / `std.stats`)
 - Descriptive: `mean`, `median`, `mode`, `quantile`, `percentile`, `iqr`, `variance`, `std`, `skew`, `kurtosis`, `covariance`, `pearson`/`correlation`, `spearman`, `kendall`, `entropy`, `gini`, `describe`

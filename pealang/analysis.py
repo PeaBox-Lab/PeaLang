@@ -42,6 +42,12 @@ from .validation import (validate_record as _val_validate_record,
     build_schema as _val_build_schema,
     missing_value_summary as _val_missing_summary,
     duplicate_rows as _val_duplicate_rows)
+from .conformance_quality import (run_conformance_suite as _cq_run_suite,
+    check_api_stability as _cq_check_api,
+    check_documentation_coverage as _cq_check_docs,
+    environment_check as _cq_env_check,
+    generate_quality_report as _cq_gen_report,
+    hash_source_tree as _cq_hash_tree)
 
 
 def _rows(data: Any) -> list[dict[str, Any]]:
@@ -3210,5 +3216,11 @@ def build_analysis_namespace() -> dict[str, Any]:
         "build_schema": _val_build_schema,
         "missing_value_summary": _val_missing_summary,
         "duplicate_rows": _val_duplicate_rows,
+        "run_conformance_suite": _cq_run_suite,
+        "check_api_stability": _cq_check_api,
+        "check_doc_coverage": _cq_check_docs,
+        "environment_check": _cq_env_check,
+        "generate_quality_report": _cq_gen_report,
+        "hash_source_tree": _cq_hash_tree,
     }
 

@@ -227,6 +227,13 @@ from .validation import (build_validation_namespace,
     data_quality_report as validation_data_quality_report,
     infer_schema as validation_infer_schema,
     check_type as validation_check_type)
+from .conformance_quality import (build_conformance_namespace,
+    run_conformance_suite as cq_run_conformance_suite,
+    check_api_stability as cq_check_api_stability,
+    check_documentation_coverage as cq_check_doc_coverage,
+    environment_check as cq_environment_check,
+    generate_quality_report as cq_generate_quality_report,
+    hash_source_tree as cq_hash_source_tree)
 from .model_interop import ModelInteropError,TensorSpec,TensorBridge,ONNXModel,QueryPolicy,QueryPlan,GovernedQueryPlanner
 from .agent_governance import AuditEvent,GovernanceAuditStore,AuditedApprovalGate,approval_request_id
 from .hardening import SecurityProbe,ProbeResult,AdversarialAgentSuite,PublicAPIGate,ReleaseThresholds,ReleaseHardeningGate,sha256_manifest

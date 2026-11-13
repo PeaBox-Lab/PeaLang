@@ -2,6 +2,15 @@
 
 ## 1.0.0-experience (ongoing) - 2026-11-08
 
+### Conformance and quality gates (v133)
+- Added `pealang/conformance_quality.py` with dependency-free conformance and quality-gate helpers.
+- Added `run_conformance_suite`, `check_api_stability`, `check_documentation_coverage`, `environment_check`, `generate_quality_report`, `hash_source_tree`.
+- Registered in `analysis` and `stats`/`std.stats` namespaces.
+- Added `tests/test_conformance_v133.py` (8 tests) and `tests/test_use_cases_v133.py` (1 test).
+- Added `docs/CONFORMANCE.md` and `help/CONFORMANCE.md`.
+- Added `examples/use_cases/29_conformance.pea`.
+- Updated `README.md`, `ROADMAP.md`, `docs/USE_CASES.md`.
+
 ### Data validation and schema enforcement (v132)
 - Added `pealang/validation.py` with dependency-free schema definition, validation and data-quality tools.
 - Added `FieldSpec`, `Schema`, `build_schema`, `check_type`, `validate_record`, `validate_records`, `data_quality_report`, `missing_summary`, `duplicate_rows`, `infer_schema`.

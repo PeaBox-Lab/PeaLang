@@ -1,0 +1,10 @@
+// v133 conformance and quality gates example
+let checks = analysis.environment_check()
+print "Python OK: " + str(checks["python_ok"])
+
+let stability = analysis.check_api_stability(["a", "b", "c", "d"], ["a", "b", "c"])
+print "API stable: " + str(stability["stable"])
+print "Added: " + str(len(stability["added"]))
+
+let docs = analysis.check_doc_coverage(["a", "b", "c"], ["a", "b"])
+print "Doc coverage: " + str(docs["coverage_pct"]) + "%"

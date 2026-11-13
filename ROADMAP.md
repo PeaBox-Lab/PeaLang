@@ -99,6 +99,7 @@ Make PeaLang the default extension language for:
 - Multi-format document processing and OCR (v130)
 - Data visualization: SVG charts, histograms, ASCII plots (v131)
 - Data validation and schema enforcement (v132)
+- Conformance and quality gates for 1.0 release certification (v133)
 3. Cross-language experience
    - Python bridge: `interop.call_python`
    - native bridge: `interop.call_native`
