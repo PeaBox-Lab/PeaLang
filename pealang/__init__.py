@@ -103,6 +103,9 @@ from .dates import (build_dates_namespace,
     calendar_features as stats_calendar_features,
     date_parts as stats_date_parts,
     is_date as stats_is_date)
+from .target_encoding import (build_target_namespace,
+    target_apply as stats_target_apply,
+    target_encode as stats_target_encode)
 from .ux import doctor as ux_doctor, explain_error as ux_explain
 __version__ = "0.99.6"
 __all__=['BytecodeModule','CodeObject','Instruction','Op','Compiler','CompileError','compile_source_to_bytecode','VirtualMachine','VMError','AsyncSuspension','AsyncVirtualMachine','AsyncVMRuntime','AsyncVMModule','CancellationToken','VMRuntime','VMModule','disassemble','execute','compile_source','Interpreter','PeaError','PeaRuntime','PeaModule',

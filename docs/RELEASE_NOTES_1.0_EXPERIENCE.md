@@ -57,6 +57,18 @@ python -m pytest -q
 
 New/updated coverage includes: language ergonomics (comprehensions, `in`/`not in`, `**`, match/destructuring, helpers/builtins), web routing/groups/CORS/OpenAPI/validation/SSE/file/auth/cache/status/redirect/security/health/envelope/validation/accepts helpers, analysis profiling/transforms/stats/IO/charts/melt/zscore/histogram/cut/shape/string/reshape/timeseries/encoding/columns/aggregates/jsonl/expanding, interop (Python/native/process/HTTP/JSON-RPC/env/files/paths/copy/hash/walk/temp/host-info/codegen), UX/templates, and CLI (`eval -e/-f`, `check/lint --json`, `analyze`, `web-openapi`/`openapi`, `hash`, `tree`, `env`, `version --json`, `quickstart`, `info`, `new`, `serve-web`, templates/doctor).
 
+## Additional Batch Notes (v127)
+- **Target encoding:** `pealang/target_encoding.py` replaces high-cardinality categories with smoothed target means, dependency-free.
+- **Helpers:** `stats.target_encode(values, target, smoothing, min_count)` and `stats.target_apply(encoder, values)`.
+- **Smoothing:** `encoded = (count * mean + smoothing * prior) / (count + smoothing)`; levels below `min_count` and unseen categories use the prior.
+- **Targets:** numeric targets are used as-is; two-class labels map to `0`/`1` in sorted order and are reported in `classes`.
+- **Pipeline:** a `target` step (alias `target_encode`) supports `columns`, `smoothing`, `min_count` and `required`, and stays one column wide.
+- **Fitting:** `stats.fit_pipeline(steps, features, names, target)` takes the target as a fourth argument; `analysis.model_pipeline` passes training outcomes automatically.
+- **Persistence:** fitted target steps save and load with `stats.save_model` / `stats.load_model`.
+- **Use case:** `examples/use_cases/23_target_encoding.pea` compares target and one-hot encoding, smoothing, unseen categories and reload.
+- **Docs:** `docs/TARGET_ENCODING.md` and `help/TARGET_ENCODING.md`, plus pipeline documentation updates.
+- **Tests:** `tests/test_target_encoding_v127.py` and `tests/test_use_cases_v127.py`.
+
 ## Additional Batch Notes (v126)
 - **Date features:** `pealang/dates.py` parses common date strings and expands them into numeric calendar features, dependency-free.
 - **Helpers:** `stats.is_date`, `stats.date_parts(value, parts)` and `stats.calendar_features(values, parts, prefix)`.

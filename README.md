@@ -84,6 +84,7 @@ The objective is to improve security while preserving the existing PeaLang langu
 - Model interpretation: `permutation_importance`, `partial_dependence`
 - Class imbalance: `class_balance`, `smote`, `random_oversample`, `random_undersample`
 - Feature pipelines: `fit_pipeline`, `transform_pipeline`
+- Target encoding: `target_encode`, `target_apply`
 - Date features: `is_date`, `date_parts`, `calendar_features`, `analysis.date_features`
 - Tree wrappers: `analysis.tree_report`, `analysis.forest_report`, `analysis.boosting_report`
 - Tuning wrappers: `analysis.tune_model`, `analysis.random_tune`
@@ -435,6 +436,10 @@ let fitted = stats.fit_pipeline(steps, [["red", 1.0], [null, 2.0], ["blue", 3.0]
 print fitted["names"]
 print fitted["features"]
 
+// target encoding: compress high-cardinality categories
+let encoder = stats.target_encode(["a", "a", "b", "b"], [1.0, 3.0, 10.0, 14.0], 10.0, 1)
+print stats.target_apply(encoder, ["a", "b", "unseen"])
+
 // model persistence: save, reload and score
 stats.save_model("model.json", fitted)
 let loaded = stats.load_model("model.json")
@@ -457,6 +462,7 @@ See [`docs/DATA_SCIENCE.md`](docs/DATA_SCIENCE.md),
 [`docs/MODEL_INTERPRETATION.md`](docs/MODEL_INTERPRETATION.md),
 [`docs/CLASS_IMBALANCE.md`](docs/CLASS_IMBALANCE.md),
 [`docs/FEATURE_PIPELINES.md`](docs/FEATURE_PIPELINES.md),
+[`docs/TARGET_ENCODING.md`](docs/TARGET_ENCODING.md),
 [`docs/MODEL_PERSISTENCE.md`](docs/MODEL_PERSISTENCE.md), and
 [`docs/DATE_FEATURES.md`](docs/DATE_FEATURES.md) for the full reference.
 

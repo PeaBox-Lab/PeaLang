@@ -2602,7 +2602,8 @@ def model_pipeline(data: Any, target: str, features: Any = None,
     ``steps`` defaults to impute, date expansion, one-hot encode and
     standardize. The returned model record stores the fitted ``preprocessor``
     plus the transformed ``output_features``, so :func:`predict_pipeline` can
-    score new records.
+    score new records. A ``target`` step receives the training outcomes
+    automatically.
     """
     from .evaluation import (accuracy_score, log_loss, r2_score,
                              root_mean_squared_error)
@@ -2640,7 +2641,7 @@ def model_pipeline(data: Any, target: str, features: Any = None,
         {"op": "encode", "method": "onehot"},
         {"op": "scale", "method": "standard"},
     ]
-    fitted = fit_pipeline(plan, matrix, names)
+    fitted = fit_pipeline(plan, matrix, names, outcomes)
     transformed = _numeric_rows(fitted["features"])
     model = _fit(estimator, transformed, outcomes, kind,
                  dict(params or {}))

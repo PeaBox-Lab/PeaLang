@@ -116,6 +116,7 @@ no third-party packages.
 | Model interpretation | `stats.permutation_importance`, `stats.partial_dependence` |
 | Class imbalance | `stats.class_balance`, `stats.smote`, `stats.random_oversample`, `stats.random_undersample` |
 | Feature pipelines | `stats.fit_pipeline`, `stats.transform_pipeline`, `analysis.model_pipeline` |
+| Target encoding | `stats.target_encode`, `stats.target_apply` |
 | Model persistence | `stats.save_model`, `stats.load_model`, `stats.model_summary` |
 | Date features | `stats.date_parts`, `stats.calendar_features`, `analysis.date_features` |
 | Tree wrappers | `analysis.tree_report`, `analysis.forest_report`, `analysis.boosting_report` |
@@ -379,6 +380,24 @@ let fitted = stats.fit_pipeline(steps, features, ["when", "spend"])
 print fitted["names"]
 ```
 
+High-cardinality categories can be target encoded, which keeps the column one
+feature wide:
+
+```pea
+let encoder = stats.target_encode(stores, sales, 10.0, 1)
+print encoder["prior"]
+print stats.target_apply(encoder, ["alpha", "unseen"])
+
+let steps = [
+    {"op": "target", "columns": ["store"], "smoothing": 10.0},
+    {"op": "encode", "method": "onehot"},
+    {"op": "scale", "method": "standard"}
+]
+let fitted = stats.fit_pipeline(steps, features, ["store", "region", "spend"], target)
+let model = analysis.model_pipeline(rows, "sales", ["store", "region"], steps, "tree", "regression", {"max_depth": 5})
+print model["output_features"]
+```
+
 Pair `stats` with the pandas-class helpers in `analysis` for end-to-end work:
 
 ```pea
@@ -406,6 +425,7 @@ Examples:
 - [`examples/use_cases/20_feature_pipeline.pea`](../examples/use_cases/20_feature_pipeline.pea)
 - [`examples/use_cases/21_model_persistence.pea`](../examples/use_cases/21_model_persistence.pea)
 - [`examples/use_cases/22_date_features.pea`](../examples/use_cases/22_date_features.pea)
+- [`examples/use_cases/23_target_encoding.pea`](../examples/use_cases/23_target_encoding.pea)
 
 See [`docs/DATA_SCIENCE.md`](DATA_SCIENCE.md),
 [`docs/STATISTICAL_INFERENCE.md`](STATISTICAL_INFERENCE.md),
@@ -418,6 +438,7 @@ See [`docs/DATA_SCIENCE.md`](DATA_SCIENCE.md),
 [`docs/MODEL_INTERPRETATION.md`](MODEL_INTERPRETATION.md), and
 [`docs/CLASS_IMBALANCE.md`](CLASS_IMBALANCE.md),
 [`docs/FEATURE_PIPELINES.md`](FEATURE_PIPELINES.md) and
+[`docs/TARGET_ENCODING.md`](TARGET_ENCODING.md) and
 [`docs/MODEL_PERSISTENCE.md`](MODEL_PERSISTENCE.md) and
 [`docs/DATE_FEATURES.md`](DATE_FEATURES.md) for the full reference.
 

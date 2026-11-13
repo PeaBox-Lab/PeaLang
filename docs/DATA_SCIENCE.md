@@ -30,6 +30,7 @@ Records remain ordinary lists of dictionaries, so results flow directly into
 | Model interpretation | `permutation_importance`, `PartialDependenceDisplay` | custom | `stats.permutation_importance`, `stats.partial_dependence` |
 | Class imbalance | `imblearn` resamplers, `class_weight` | custom | `stats.class_balance`, `stats.smote`, `stats.random_oversample`, `stats.random_undersample` |
 | Feature pipelines | `Pipeline`, `ColumnTransformer`, `SimpleImputer`, `OneHotEncoder`, `StandardScaler` | custom | `stats.fit_pipeline`, `stats.transform_pipeline`, `analysis.model_pipeline` |
+| Target encoding | `category_encoders.TargetEncoder` | custom | `stats.target_encode`, `stats.target_apply` |
 | Model persistence | joblib, `pickle`, ONNX | custom | `stats.save_model`, `stats.load_model`, `stats.model_summary` |
 | Date features | pandas `.dt` accessor | custom | `stats.date_parts`, `stats.calendar_features`, `analysis.date_features` |
 | Clustering / PCA | `scikit-learn` | custom | `stats.kmeans`, `stats.pca` |
@@ -577,6 +578,49 @@ Available parts include `year`, `month`, `day`, `weekday`, `quarter`,
 `epoch_day`, `month_sin`, `month_cos`, `weekday_sin` and `weekday_cos`. See
 [`docs/DATE_FEATURES.md`](DATE_FEATURES.md) for the full reference.
 
+## Target encoding
+
+Wide categorical columns are expensive to one-hot encode. Target encoding
+replaces each category with its smoothed target mean, keeping the column one
+numeric feature wide.
+
+```pea
+let seen_stores = [r["store"] for r in rows]
+let outcomes = [r["sales"] for r in rows]
+
+let encoder = stats.target_encode(seen_stores, outcomes, 10.0, 1)
+print encoder["prior"]
+print encoder["levels"]
+print stats.target_apply(encoder, ["alpha", "unseen"])
+
+let steps = [
+    {"op": "target", "columns": ["store"], "smoothing": 10.0},
+    {"op": "encode", "method": "onehot"},
+    {"op": "scale", "method": "standard"}
+]
+let fitted = stats.fit_pipeline(steps, features, ["store", "region", "spend"], target)
+print fitted["names"]
+```
+
+`analysis.model_pipeline` passes the training target to the step, so the same
+plan works end to end:
+
+```pea
+let model = analysis.model_pipeline(
+    rows, "sales", ["store", "region"], steps, "tree", "regression",
+    {"max_depth": 5}
+)
+print model["output_features"]
+print analysis.predict_pipeline(model, [{"store": "alpha", "region": "north"}])
+```
+
+Smoothing pulls small categories towards the overall mean; unseen categories
+and categories below `min_count` use the prior. Numeric targets are used as-is,
+and two-class targets map to `0`/`1` in sorted class order. Fitted steps persist
+through `stats.save_model`. Because the encoder uses the training target, fit it
+on training data and apply it to held-out rows. See
+[`docs/TARGET_ENCODING.md`](TARGET_ENCODING.md) for the full reference.
+
 ## Model persistence
 
 Fitted models and transformers are plain records, so they save as versioned
@@ -724,6 +768,7 @@ analysis.write_json_file("summary.json", [summary])
 - `examples/use_cases/20_feature_pipeline.pea`
 - `examples/use_cases/21_model_persistence.pea`
 - `examples/use_cases/22_date_features.pea`
+- `examples/use_cases/23_target_encoding.pea`
 
 Run them with:
 
@@ -745,6 +790,7 @@ pea run examples/use_cases/19_class_imbalance.pea
 pea run examples/use_cases/20_feature_pipeline.pea
 pea run examples/use_cases/21_model_persistence.pea
 pea run examples/use_cases/22_date_features.pea
+pea run examples/use_cases/23_target_encoding.pea
 ```
 
 ## Choosing the right namespace
@@ -812,9 +858,13 @@ pea run examples/use_cases/22_date_features.pea
   create points in regions where the minority class does not occur. Resample
   the training split, never the test set.
 - Pipelines detect categorical columns automatically and do not fail on unseen
-  categories: one-hot rows become all zeros and ordinal codes become `-1`.
-  Interpolation-based imputation, target encoding and column subsetting are not
-  part of the pipeline layer.
+  categories: one-hot rows become all zeros, ordinal codes become `-1` and
+  target encodings fall back to the prior. Interpolation-based imputation and
+  column subsetting are not part of the pipeline layer.
+- Target encoding uses the training target, so training features are optimistic
+  and the pipeline does not cross-fit inside folds. Fit it on training data and
+  apply it to held-out rows. Numeric and two-class targets are supported;
+  encode multiclass targets first. There is no per-class encoding.
 - Saved models are versioned JSON, not pickle. There is no checksum or
   signature, a newer format version is rejected, and feature names and column
   order must match at scoring time. Use the `compact` option to drop training

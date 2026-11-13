@@ -2,6 +2,19 @@
 
 ## 1.0.0-experience (ongoing) - 2026-11-08
 
+### Target encoding (v127)
+- Added `pealang/target_encoding.py`, a dependency-free smoothed mean-encoding layer exposed through `stats` / `std.stats`.
+- Added `target_encode(values, target, smoothing, min_count)`, returning the prior, class metadata and per-level count, mean and smoothed encoding.
+- Added `target_apply(encoder, values)`, mapping unseen categories and missing values to the fitted prior.
+- Added a `target` pipeline step (alias `target_encode`) with `columns`, `smoothing`, `min_count` and `required`; it encodes named columns or all non-numeric columns and passes other columns through.
+- `stats.fit_pipeline` accepts an optional fourth `target` argument; `analysis.model_pipeline` passes its training outcomes automatically, so target steps work end to end.
+- Numeric targets are used as-is; two-class targets map to `0`/`1` in sorted class order and are reported through `classes`.
+- Target steps persist through `stats.save_model` / `stats.load_model` and reapply through `stats.transform_pipeline`.
+- Added runnable use case `examples/use_cases/23_target_encoding.pea`, comparing target encoding with one-hot encoding for a high-cardinality store column, including smoothing, unseen categories and persistence.
+- Added `docs/TARGET_ENCODING.md` and `help/TARGET_ENCODING.md`; extended `docs/FEATURE_PIPELINES.md`, `docs/DATA_SCIENCE.md`, `docs/USE_CASES.md`, the README and the roadmap.
+- Exported target helpers from the Python package (`build_target_namespace`, `stats_target_encode`, `stats_target_apply`).
+- Added regression coverage: `tests/test_target_encoding_v127.py` and `tests/test_use_cases_v127.py`.
+
 ### Date features (v126)
 - Added `pealang/dates.py`, a dependency-free calendar feature layer exposed through `stats` / `std.stats`.
 - Added `is_date`, `date_parts` and `calendar_features`, parsing `YYYY-MM-DD`, `YYYY/MM/DD`, `YYYY.MM.DD`, `YYYYMMDD`, optional time suffixes and Python date/datetime values.

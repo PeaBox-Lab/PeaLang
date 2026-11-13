@@ -1,0 +1,59 @@
+// Use case: target encoding for high-cardinality categories
+let stores = ["alpha", "bravo", "charlie", "delta", "echo", "foxtrot", "golf", "hotel"]
+let rows = []
+for k in range(0, 360) {
+    let store = stores[k % 8]
+    let region = "north"
+    if k % 3 == 1 { region = "south" }
+    if k % 3 == 2 { region = "east" }
+    let store_effect = (k % 8) * 18.0
+    let region_effect = 0.0
+    if region == "south" { region_effect = 12.0 }
+    if region == "east" { region_effect = 24.0 }
+    let noise = ((k * 7) % 11) * 1.5
+    let sales = 120.0 + store_effect + region_effect + noise
+    rows = rows + [{"store": store, "region": region, "sales": sales}]
+}
+
+// Fit one encoder, then apply it to known and unseen stores
+let seen_stores = [r["store"] for r in rows]
+let outcomes = [r["sales"] for r in rows]
+let encoder = stats.target_encode(seen_stores, outcomes, 10.0, 1)
+print "prior: " + str(round(encoder["prior"], 2))
+print "levels: " + str(len(encoder["levels"]))
+print "alpha: " + str(round(stats.target_apply(encoder, ["alpha"])[0], 2))
+print "unseen: " + str(round(stats.target_apply(encoder, ["zulu"])[0], 2))
+
+// Smoothing pulls small groups towards the overall mean
+let raw_encoder = stats.target_encode(seen_stores, outcomes, 0.0, 1)
+let biased = stats.target_encode(seen_stores, outcomes, 200.0, 1)
+print "smoothing: " + str(round(stats.target_apply(raw_encoder, ["alpha"])[0], 2)) + " -> " + str(round(stats.target_apply(biased, ["alpha"])[0], 2))
+
+// Use the target step in a model pipeline
+let steps = [{"op": "impute", "method": "auto"}, {"op": "target", "columns": ["store"], "smoothing": 10.0}, {"op": "encode", "method": "onehot"}, {"op": "scale", "method": "standard"}]
+let model = analysis.model_pipeline(rows, "sales", ["store", "region"], steps, "tree", "regression", {"max_depth": 5})
+print "outputs: " + str(model["output_features"])
+print "r2: " + str(round(model["train_r2"], 3))
+print "top: " + model["importance"][0]["feature"]
+
+// One-hot encoding keeps every store as its own column
+let plain = analysis.model_pipeline(rows, "sales", ["store", "region"], null, "tree", "regression", {"max_depth": 5})
+print "onehot width: " + str(len(plain["output_features"])) + " r2: " + str(round(plain["train_r2"], 3))
+
+// Score a known store and one the encoder never saw
+let probes = [{"store": "alpha", "region": "north"}, {"store": "zulu", "region": "south"}]
+print "probes: " + str([round(v, 2) for v in analysis.predict_pipeline(model, probes)["predicted"]])
+
+// Fitted target steps round-trip through JSON
+stats.save_model("store_model.json", model)
+let loaded = stats.load_model("store_model.json")
+print "reload: " + str(analysis.predict_pipeline(loaded, probes)["predicted"] == analysis.predict_pipeline(model, probes)["predicted"])
+
+// Binary targets are mapped to 0/1; the encoded value is a rate
+let labels = []
+for r in rows {
+    if r["sales"] > 260.0 { labels = labels + ["high"] }
+    if r["sales"] <= 260.0 { labels = labels + ["low"] }
+}
+let binary = stats.target_encode(seen_stores, labels, 5.0)
+print "binary: " + str(binary["classes"]) + " prior=" + str(round(binary["prior"], 3)) + " (share of " + binary["classes"][1] + ")"

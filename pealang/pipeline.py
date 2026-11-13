@@ -1,4 +1,4 @@
-"""Feature engineering pipelines: impute, date, encode and scale in order.
+"""Feature engineering pipelines: impute, date, encode, target and scale.
 
 This module composes preprocessing steps into a fitted transformer that can be
 reapplied to new rows. It is pure Python and dependency-free, and fills the gap
@@ -10,13 +10,14 @@ Steps are plain records, so they work naturally in PeaLang::
     let steps = [
         {"op": "impute", "method": "auto"},
         {"op": "date", "parts": ["year", "month", "weekday"]},
+        {"op": "target", "columns": ["store"], "smoothing": 10.0},
         {"op": "encode", "method": "onehot"},
         {"op": "scale", "method": "standard"}
     ]
 
 A pipeline is fitted once with :func:`fit_pipeline`; the returned transformer
-stores every learned fill value, category level, date part, mean and scale, and
-:func:`transform_pipeline` reapplies them to new data.
+stores every learned fill value, category level, date part, target mean and
+scale, and :func:`transform_pipeline` reapplies them to new data.
 """
 
 from __future__ import annotations
@@ -26,6 +27,9 @@ from typing import Any, Iterable
 
 from .trees import _classes
 from .dates import date_parts, is_date, normalize_parts
+from .target_encoding import (
+    _coerce_target, _key as _target_key, _levels, _options,
+)
 
 
 # ---------------------------------------------------------------------------
@@ -106,7 +110,8 @@ def _label(level: Any) -> str:
 
 
 def _fit_impute(step: dict[str, Any], rows: list[list[Any]],
-                names: list[str]) -> tuple[dict[str, Any], list[list[Any]]]:
+                names: list[str],
+                target: Any = None) -> tuple[dict[str, Any], list[list[Any]]]:
     method = str(step.get("method", "auto") or "auto").lower()
     allowed = {"auto", "mean", "median", "mode", "constant", "zero"}
     if method not in allowed:
@@ -173,7 +178,8 @@ def _fit_impute(step: dict[str, Any], rows: list[list[Any]],
 
 
 def _fit_encode(step: dict[str, Any], rows: list[list[Any]],
-                names: list[str]) -> tuple[dict[str, Any], list[list[Any]]]:
+                names: list[str],
+                target: Any = None) -> tuple[dict[str, Any], list[list[Any]]]:
     method = str(step.get("method", "onehot") or "onehot").lower()
     if method == "label":
         method = "ordinal"
@@ -253,7 +259,8 @@ def _fit_encode(step: dict[str, Any], rows: list[list[Any]],
 
 
 def _fit_scale(step: dict[str, Any], rows: list[list[Any]],
-               names: list[str]) -> tuple[dict[str, Any], list[list[Any]]]:
+               names: list[str],
+               target: Any = None) -> tuple[dict[str, Any], list[list[Any]]]:
     method = str(step.get("method", "standard") or "standard").lower()
     if method not in ("standard", "minmax"):
         raise ValueError("scale method must be 'standard' or 'minmax'")
@@ -292,7 +299,8 @@ def _fit_scale(step: dict[str, Any], rows: list[list[Any]],
 
 
 def _fit_date(step: dict[str, Any], rows: list[list[Any]],
-              names: list[str]) -> tuple[dict[str, Any], list[list[Any]]]:
+              names: list[str],
+              target: Any = None) -> tuple[dict[str, Any], list[list[Any]]]:
     parts = normalize_parts(step.get("parts"))
     required = step.get("required", True)
     width = len(names)
@@ -341,6 +349,85 @@ def _fit_date(step: dict[str, Any], rows: list[list[Any]],
     }, transformed
 
 
+def _fit_target(step: dict[str, Any], rows: list[list[Any]],
+                names: list[str],
+                target: Any = None) -> tuple[dict[str, Any], list[list[Any]]]:
+    method = str(step.get("method", "mean") or "mean").lower()
+    if method not in ("mean", "auto"):
+        raise ValueError("target method must be 'mean'")
+    if target is None:
+        raise ValueError(
+            "target step requires a target; pass it as the fourth argument "
+            "to fit_pipeline"
+        )
+    outcomes, kind, classes = _coerce_target(target, len(rows))
+    smoothing, min_count = _options(
+        step.get("smoothing", 10.0), step.get("min_count", 1)
+    )
+    required = step.get("required", True)
+    chosen = step.get("columns")
+    if chosen is None:
+        requested = [
+            name for index, name in enumerate(names)
+            if not _numeric_column([row[index] for row in rows])
+        ]
+    else:
+        if isinstance(chosen, str):
+            chosen = [chosen]
+        requested = []
+        for item in chosen:
+            name = str(item)
+            if name not in names:
+                raise ValueError("unknown target column: " + name)
+            if name not in requested:
+                requested.append(name)
+    if not requested and required:
+        raise ValueError("target step found no categorical columns")
+    prior = sum(outcomes) / len(outcomes)
+    columns: list[dict[str, Any]] = []
+    for index, name in enumerate(names):
+        if name in requested:
+            column = [row[index] for row in rows]
+            columns.append({
+                "name": name,
+                "encoded": True,
+                "levels": _levels(column, outcomes, prior, smoothing,
+                                  min_count),
+            })
+        else:
+            columns.append({"name": name, "encoded": False, "levels": []})
+    transformed: list[list[Any]] = []
+    lookup = {
+        entry["name"]: {
+            _target_key(level["level"]): level["encoded"]
+            for level in entry["levels"]
+        }
+        for entry in columns if entry["encoded"]
+    }
+    for row in rows:
+        record: list[Any] = []
+        for index, entry in enumerate(columns):
+            if not entry["encoded"]:
+                record.append(row[index])
+                continue
+            record.append(
+                lookup[entry["name"]].get(_target_key(row[index]), prior)
+            )
+        transformed.append(record)
+    return {
+        "op": "target",
+        "method": "mean",
+        "smoothing": smoothing,
+        "min_count": min_count,
+        "prior": prior,
+        "kind": kind,
+        "classes": classes,
+        "columns": columns,
+        "names": list(names),
+        "input_names": list(names),
+    }, transformed
+
+
 _FITTERS = {
     "impute": _fit_impute,
     "fillna": _fit_impute,
@@ -349,6 +436,8 @@ _FITTERS = {
     "standardize": _fit_scale,
     "date": _fit_date,
     "calendar": _fit_date,
+    "target": _fit_target,
+    "target_encode": _fit_target,
 }
 
 
@@ -357,7 +446,8 @@ _FITTERS = {
 # ---------------------------------------------------------------------------
 
 def fit_pipeline(steps: Iterable[Any], features: Any,
-                 names: Any = None) -> dict[str, Any]:
+                 names: Any = None,
+                 target: Any = None) -> dict[str, Any]:
     """Fit preprocessing steps and transform the training rows.
 
     ``steps`` is a list of records such as
@@ -366,6 +456,9 @@ def fit_pipeline(steps: Iterable[Any], features: Any,
     fitted (including learned values) and the output column ``names``. The
     transformed rows keep whatever types the steps produce; add an ``encode``
     and a ``scale`` step before feeding them to a model.
+
+    ``target`` is only needed by a ``target`` step, which learns category means
+    from it. Its length must match the number of rows.
     """
     rows = _rows(features)
     labels = _names(names, len(rows[0]))
@@ -381,9 +474,9 @@ def fit_pipeline(steps: Iterable[Any], features: Any,
         if op not in _FITTERS:
             raise ValueError(
                 "unknown step op: " + repr(step.get("op")) +
-                " (expected impute, date, encode or scale)"
+                " (expected impute, date, target, encode or scale)"
             )
-        record, rows = _FITTERS[op](step, rows, output_names)
+        record, rows = _FITTERS[op](step, rows, output_names, target)
         output_names = record.get("names", output_names)
         fitted.append(record)
     return {
@@ -499,12 +592,40 @@ def _apply_date(step: dict[str, Any], rows: list[list[Any]],
     return transformed, len(step.get("names") or [])
 
 
+def _apply_target(step: dict[str, Any], rows: list[list[Any]],
+                  width: int) -> list[list[Any]]:
+    columns = step.get("columns") or []
+    if len(columns) != width:
+        raise ValueError("transformer does not match the number of features")
+    prior = float(step.get("prior", 0.0))
+    lookups = {
+        entry["name"]: {
+            _target_key(level["level"]): level["encoded"]
+            for level in entry["levels"]
+        }
+        for entry in columns if entry.get("encoded")
+    }
+    transformed: list[list[Any]] = []
+    for row in rows:
+        record: list[Any] = []
+        for index, entry in enumerate(columns):
+            if not entry.get("encoded"):
+                record.append(row[index])
+                continue
+            record.append(
+                lookups[entry["name"]].get(_target_key(row[index]), prior)
+            )
+        transformed.append(record)
+    return transformed
+
+
 def transform_pipeline(transformer: dict[str, Any],
                        features: Any) -> dict[str, Any]:
     """Apply a fitted transformer to new rows.
 
     The column order and count must match the data used during fitting. Unseen
-    categories encode to all-zero one-hot rows, or ``-1`` for ordinal encoding.
+    categories encode to all-zero one-hot rows, ``-1`` for ordinal encoding or
+    the prior for target encoding.
     """
     if not isinstance(transformer, dict) or "steps" not in transformer:
         raise ValueError("transformer must be a fitted pipeline")
@@ -521,6 +642,8 @@ def transform_pipeline(transformer: dict[str, Any],
             rows, width = _apply_encode(step, rows, width)
         elif op == "date":
             rows, width = _apply_date(step, rows, width)
+        elif op == "target":
+            rows = _apply_target(step, rows, width)
         elif op == "scale":
             rows = _apply_scale(step, rows, width)
         else:
