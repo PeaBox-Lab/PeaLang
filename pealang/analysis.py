@@ -7,6 +7,13 @@ from pathlib import Path
 from statistics import mean, median
 from typing import Any, Iterable
 
+from .notebook import (display_records as _nb_display_records,
+    display_profile as _nb_display_profile,
+    display_model as _nb_display_model,
+    display_evaluation as _nb_display_evaluation,
+    display_chart as _nb_display_chart,
+    display_report as _nb_display_report)
+
 
 def _rows(data: Any) -> list[dict[str, Any]]:
     if data is None:
@@ -3139,5 +3146,11 @@ def build_analysis_namespace() -> dict[str, Any]:
         "model_pipeline": model_pipeline,
         "predict_pipeline": predict_pipeline,
         "date_features": date_features,
+        "display_records": _nb_display_records,
+        "display_profile": _nb_display_profile,
+        "display_model": _nb_display_model,
+        "display_evaluation": _nb_display_evaluation,
+        "display_chart": _nb_display_chart,
+        "display_report": _nb_display_report,
     }
 

@@ -1,0 +1,23 @@
+// v129 notebook-rich display hooks example
+let rows = [{"name": "Alice", "age": 30}, {"name": "Bob", "age": 25}]
+let rich = analysis.display_records(rows, "People")
+print rich.data["text/markdown"]
+
+let profile = {"fields": [{"name": "age", "type": "int", "count": 2, "missing": 0, "unique": 2}], "summary": {"rows": 2}}
+let prich = analysis.display_profile(profile)
+print prich.data["text/plain"]
+
+let model = {"estimator": "random_forest", "features": ["age"], "metrics": {"accuracy": 0.9}, "params": {"n_trees": 5}}
+let mrich = analysis.display_model(model)
+print mrich.data["text/plain"]
+
+let ev = {"accuracy": 0.95, "metrics": {"precision": 0.9}}
+let erich = analysis.display_evaluation(ev)
+print erich.data["text/plain"]
+
+let chart = {"kind": "bar", "title": "Ages", "data": [{"x": "Alice", "y": 30}, {"x": "Bob", "y": 25}]}
+let crich = analysis.display_chart(chart)
+print crich.data["text/plain"]
+
+let report = analysis.display_report("# Report\n\nHello world")
+print report.data["text/plain"]

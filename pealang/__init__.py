@@ -201,6 +201,13 @@ from .dashboard import DashboardComponent,Dashboard,dashboard_from_dict,render_r
 from .dashboard import DashboardFilter,DashboardState,DataBinding,apply_dashboard_filters
 from .browser_repl import BrowserResult,BrowserREPL,DatasetInspector
 from .jupyter import RichResult,RichDisplay,PeaKernel,kernelspec
+from .notebook import (build_notebook_namespace,
+    display_records as notebook_display_records,
+    display_profile as notebook_display_profile,
+    display_model as notebook_display_model,
+    display_evaluation as notebook_display_evaluation,
+    display_chart as notebook_display_chart,
+    display_report as notebook_display_report)
 from .model_interop import ModelInteropError,TensorSpec,TensorBridge,ONNXModel,QueryPolicy,QueryPlan,GovernedQueryPlanner
 from .agent_governance import AuditEvent,GovernanceAuditStore,AuditedApprovalGate,approval_request_id
 from .hardening import SecurityProbe,ProbeResult,AdversarialAgentSuite,PublicAPIGate,ReleaseThresholds,ReleaseHardeningGate,sha256_manifest

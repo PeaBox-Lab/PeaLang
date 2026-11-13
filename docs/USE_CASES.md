@@ -427,6 +427,7 @@ Examples:
 - [`examples/use_cases/22_date_features.pea`](../examples/use_cases/22_date_features.pea)
 - [`examples/use_cases/23_target_encoding.pea`](../examples/use_cases/23_target_encoding.pea)
 - [`examples/use_cases/24_reporting.pea`](../examples/use_cases/24_reporting.pea)
+- [`examples/use_cases/25_notebook.pea`](../examples/use_cases/25_notebook.pea)
 
 See [`docs/DATA_SCIENCE.md`](DATA_SCIENCE.md),
 [`docs/STATISTICAL_INFERENCE.md`](STATISTICAL_INFERENCE.md),

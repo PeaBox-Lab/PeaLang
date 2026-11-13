@@ -57,6 +57,7 @@ The objective is to improve security while preserving the existing PeaLang langu
 - File-based IO: `analysis.read_csv_file`, `analysis.write_csv_file`, `analysis.read_json_file`, `analysis.write_json_file`, `analysis.read_jsonl_file`, `analysis.write_jsonl_file`
 - Pandas-class helpers: `qcut`, `rolling_sum`/`rolling_min`/`rolling_max`/`rolling_median`/`rolling_var`, `expanding_std`/`expanding_var`/`expanding_median`, `interpolate`, `factorize`, `mask`, `select_dtypes`, `info`, `memory_usage`, `pivot_table`, `reset_index`/`set_index`, `agg`, `transform`, `group_by_multi`, `merge_multi`, `describe_all`, `missing_summary`, `winsorize`, `corr_spearman`, `date_range`
 - Reporting (v128): `profile_markdown`, `profile_html`, `report_markdown`, `report_html`, `model_markdown`, `model_html`, `evaluation_markdown`, `evaluation_html`, `write_report_markdown`, `write_report_html`, `write_report_json`
+- Notebook display (v129): `display_records`, `display_profile`, `display_model`, `display_evaluation`, `display_chart`, `display_report`
 
 ### Numerical and Statistical Computing (`stats` / `std.stats`)
 - Descriptive: `mean`, `median`, `mode`, `quantile`, `percentile`, `iqr`, `variance`, `std`, `skew`, `kurtosis`, `covariance`, `pearson`/`correlation`, `spearman`, `kendall`, `entropy`, `gini`, `describe`

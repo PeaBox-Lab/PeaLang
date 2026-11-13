@@ -2,6 +2,16 @@
 
 ## 1.0.0-experience (ongoing) - 2026-11-08
 
+### Notebook-rich display hooks (v129)
+- Added `pealang/notebook.py` with rich display helpers for Jupyter and interactive environments.
+- Added `analysis.display_records`, `analysis.display_profile`, `analysis.display_model`, `analysis.display_evaluation`, `analysis.display_chart`, `analysis.display_report`.
+- Each helper returns a `RichResult` with `text/plain`, `text/html`, `text/markdown` and `application/json` MIME bundles.
+- Added `build_notebook_namespace()` and registered in `stats` / `std.stats`.
+- Added `tests/test_notebook_v129.py` (11 tests) and `tests/test_use_cases_v129.py` (1 test).
+- Added `docs/NOTEBOOK.md` and `help/NOTEBOOK.md`.
+- Added `examples/use_cases/25_notebook.pea` — end-to-end notebook display example.
+- Updated `docs/USE_CASES.md`, `README.md` and `ROADMAP.md`.
+
 ### Markdown/HTML Reporting (v128)
 - Added `analysis.profile_markdown`, `analysis.profile_html`, `analysis.report_markdown`, `analysis.report_html`, `analysis.model_markdown`, `analysis.model_html`, `analysis.evaluation_markdown`, `analysis.evaluation_html`, `analysis.write_report_markdown`, `analysis.write_report_html`, `analysis.write_report_json`.
 - Markdown content renders inline in HTML pages; angle brackets are escaped to prevent markup from breaking pages.
