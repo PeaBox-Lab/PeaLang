@@ -1,0 +1,12 @@
+// v130 document processing and OCR example
+let fmt = analysis.detect_format("report.pdf")
+print "Detected PDF format: " + fmt
+
+let fmt2 = analysis.detect_format("data.csv")
+print "Detected CSV format: " + fmt2
+
+print "OCR available: " + str(analysis.ocr_available())
+
+let html = "<html><head><title>Demo</title></head><body><p>Hello world</p></body></html>"
+let text = analysis.strip_html(html)
+print "Stripped HTML: " + text

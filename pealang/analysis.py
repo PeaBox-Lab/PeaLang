@@ -13,6 +13,20 @@ from .notebook import (display_records as _nb_display_records,
     display_evaluation as _nb_display_evaluation,
     display_chart as _nb_display_chart,
     display_report as _nb_display_report)
+from .documents import (read_document as _doc_read,
+    detect_format as _doc_detect,
+    ocr_available as _doc_ocr_available,
+    ocr_extract_text as _doc_ocr_text,
+    ocr_extract_data as _doc_ocr_data,
+    strip_html_tags as _doc_strip_html,
+    read_pdf as _doc_read_pdf,
+    read_docx as _doc_read_docx,
+    read_xlsx as _doc_read_xlsx,
+    read_html as _doc_read_html,
+    read_xml as _doc_read_xml,
+    read_csv as _doc_read_csv,
+    read_json as _doc_read_json,
+    read_jsonl as _doc_read_jsonl)
 
 
 def _rows(data: Any) -> list[dict[str, Any]]:
@@ -3152,5 +3166,19 @@ def build_analysis_namespace() -> dict[str, Any]:
         "display_evaluation": _nb_display_evaluation,
         "display_chart": _nb_display_chart,
         "display_report": _nb_display_report,
+        "read_document": _doc_read,
+        "detect_format": _doc_detect,
+        "ocr_available": _doc_ocr_available,
+        "ocr_extract_text": _doc_ocr_text,
+        "ocr_extract_data": _doc_ocr_data,
+        "read_pdf": _doc_read_pdf,
+        "read_docx": _doc_read_docx,
+        "read_xlsx": _doc_read_xlsx,
+        "read_html": _doc_read_html,
+        "read_xml": _doc_read_xml,
+        "read_csv": _doc_read_csv,
+        "read_json": _doc_read_json,
+        "read_jsonl": _doc_read_jsonl,
+        "strip_html": _doc_strip_html,
     }
 

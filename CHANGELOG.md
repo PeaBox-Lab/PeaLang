@@ -2,6 +2,17 @@
 
 ## 1.0.0-experience (ongoing) - 2026-11-08
 
+### Document processing and OCR (v130)
+- Added `pealang/documents.py` with dependency-light readers for text, CSV, JSON, JSONL, XML, HTML, DOCX, XLSX, PDF and images.
+- Added unified `read_document(path)` with auto-format detection (`detect_format`).
+- Added OCR helpers (`ocr_available`, `ocr_extract_text`, `ocr_extract_data`) using tesseract when available.
+- Added `strip_html` for HTML tag stripping.
+- Registered in `analysis` and `stats`/`std.stats` namespaces.
+- Added `tests/test_documents_v130.py` (11 tests) and `tests/test_use_cases_v130.py` (1 test).
+- Added `docs/DOCUMENTS.md` and `help/DOCUMENTS.md`.
+- Added `examples/use_cases/26_documents.pea`.
+- Updated `docs/USE_CASES.md`, `README.md` and `ROADMAP.md`.
+
 ### Notebook-rich display hooks (v129)
 - Added `pealang/notebook.py` with rich display helpers for Jupyter and interactive environments.
 - Added `analysis.display_records`, `analysis.display_profile`, `analysis.display_model`, `analysis.display_evaluation`, `analysis.display_chart`, `analysis.display_report`.

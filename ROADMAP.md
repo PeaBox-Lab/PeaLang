@@ -96,6 +96,7 @@ Make PeaLang the default extension language for:
    - smoothed target encoding with a pipeline step and model-wrapper support (v127)
    - Markdown and HTML report generation with deterministic file output (v128)
 - Notebook-rich display hooks for Jupyter and interactive environments (v129)
+- Multi-format document processing and OCR (v130)
 3. Cross-language experience
    - Python bridge: `interop.call_python`
    - native bridge: `interop.call_native`

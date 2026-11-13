@@ -58,6 +58,7 @@ The objective is to improve security while preserving the existing PeaLang langu
 - Pandas-class helpers: `qcut`, `rolling_sum`/`rolling_min`/`rolling_max`/`rolling_median`/`rolling_var`, `expanding_std`/`expanding_var`/`expanding_median`, `interpolate`, `factorize`, `mask`, `select_dtypes`, `info`, `memory_usage`, `pivot_table`, `reset_index`/`set_index`, `agg`, `transform`, `group_by_multi`, `merge_multi`, `describe_all`, `missing_summary`, `winsorize`, `corr_spearman`, `date_range`
 - Reporting (v128): `profile_markdown`, `profile_html`, `report_markdown`, `report_html`, `model_markdown`, `model_html`, `evaluation_markdown`, `evaluation_html`, `write_report_markdown`, `write_report_html`, `write_report_json`
 - Notebook display (v129): `display_records`, `display_profile`, `display_model`, `display_evaluation`, `display_chart`, `display_report`
+- Document processing & OCR (v130): `read_document`, `read_csv`, `read_json`, `read_jsonl`, `read_xml`, `read_html`, `read_docx`, `read_xlsx`, `read_pdf`, `ocr_available`, `ocr_extract_text`, `ocr_extract_data`, `detect_format`, `strip_html`
 
 ### Numerical and Statistical Computing (`stats` / `std.stats`)
 - Descriptive: `mean`, `median`, `mode`, `quantile`, `percentile`, `iqr`, `variance`, `std`, `skew`, `kurtosis`, `covariance`, `pearson`/`correlation`, `spearman`, `kendall`, `entropy`, `gini`, `describe`

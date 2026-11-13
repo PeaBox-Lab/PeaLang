@@ -208,6 +208,11 @@ from .notebook import (build_notebook_namespace,
     display_evaluation as notebook_display_evaluation,
     display_chart as notebook_display_chart,
     display_report as notebook_display_report)
+from .documents import (build_document_namespace,
+    read_document as document_read,
+    ocr_extract_text as document_ocr_text,
+    ocr_extract_data as document_ocr_data,
+    detect_format as document_detect_format)
 from .model_interop import ModelInteropError,TensorSpec,TensorBridge,ONNXModel,QueryPolicy,QueryPlan,GovernedQueryPlanner
 from .agent_governance import AuditEvent,GovernanceAuditStore,AuditedApprovalGate,approval_request_id
 from .hardening import SecurityProbe,ProbeResult,AdversarialAgentSuite,PublicAPIGate,ReleaseThresholds,ReleaseHardeningGate,sha256_manifest

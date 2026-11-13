@@ -1360,6 +1360,7 @@ def build_stats_namespace() -> dict[str, Any]:
     from .dates import build_dates_namespace
     from .target_encoding import build_target_namespace
     from .notebook import build_notebook_namespace
+    from .documents import build_document_namespace
 
     namespace.update(build_inference_namespace())
     namespace.update(build_modeling_namespace())
@@ -1375,4 +1376,5 @@ def build_stats_namespace() -> dict[str, Any]:
     namespace.update(build_dates_namespace())
     namespace.update(build_target_namespace())
     namespace.update(build_notebook_namespace())
+    namespace.update(build_document_namespace())
     return namespace
