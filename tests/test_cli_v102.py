@@ -1,11 +1,14 @@
 import json, subprocess, sys
+from pathlib import Path
+
+ROOT = str(Path(__file__).resolve().parent.parent)
 
 
 def test_cli_eval_and_info():
-    r = subprocess.run([sys.executable, "-m", "pealang.cli", "eval", "-e", "print 2+2"], capture_output=True, text=True, cwd=r"C:\Users\Rajesh\Documents\My Apps\GitHub\PeaLang")
+    r = subprocess.run([sys.executable, "-m", "pealang.cli", "eval", "-e", "print 2+2"], capture_output=True, text=True, cwd=ROOT)
     assert r.returncode == 0
     assert r.stdout.strip() == "4"
-    r = subprocess.run([sys.executable, "-m", "pealang.cli", "info"], capture_output=True, text=True, cwd=r"C:\Users\Rajesh\Documents\My Apps\GitHub\PeaLang")
+    r = subprocess.run([sys.executable, "-m", "pealang.cli", "info"], capture_output=True, text=True, cwd=ROOT)
     assert r.returncode == 0
     info = json.loads(r.stdout)
     assert "version" in info and "commands" in info

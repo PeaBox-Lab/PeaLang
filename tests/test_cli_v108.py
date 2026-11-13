@@ -3,8 +3,9 @@ import subprocess
 import sys
 import tempfile
 import os
+from pathlib import Path
 
-ROOT = r"C:\Users\Rajesh\Documents\My Apps\GitHub\PeaLang"
+ROOT = str(Path(__file__).resolve().parent.parent)
 
 
 def test_cli_check_json():

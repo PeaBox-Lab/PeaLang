@@ -1,8 +1,9 @@
 import os
 import subprocess
 import sys
+from pathlib import Path
 
-ROOT = r"C:\Users\Rajesh\Documents\My Apps\GitHub\PeaLang"
+ROOT = str(Path(__file__).resolve().parent.parent)
 ENV = {**os.environ, "PYTHONPATH": ROOT}
 
 
