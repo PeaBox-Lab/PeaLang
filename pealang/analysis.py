@@ -27,6 +27,13 @@ from .documents import (read_document as _doc_read,
     read_csv as _doc_read_csv,
     read_json as _doc_read_json,
     read_jsonl as _doc_read_jsonl)
+from .visualization import (bar_chart_svg as _viz_bar,
+    line_chart_svg as _viz_line,
+    scatter_plot_svg as _viz_scatter,
+    histogram_svg as _viz_histogram,
+    ascii_bar_chart as _viz_ascii_bar,
+    ascii_line_chart as _viz_ascii_line,
+    chart_to_file as _viz_chart_to_file)
 
 
 def _rows(data: Any) -> list[dict[str, Any]]:
@@ -3180,5 +3187,12 @@ def build_analysis_namespace() -> dict[str, Any]:
         "read_json": _doc_read_json,
         "read_jsonl": _doc_read_jsonl,
         "strip_html": _doc_strip_html,
+        "bar_chart_svg": _viz_bar,
+        "line_chart_svg": _viz_line,
+        "scatter_plot_svg": _viz_scatter,
+        "histogram_svg": _viz_histogram,
+        "ascii_bar_chart": _viz_ascii_bar,
+        "ascii_line_chart": _viz_ascii_line,
+        "chart_to_file": _viz_chart_to_file,
     }
 

@@ -2,6 +2,14 @@
 
 ## 1.0.0-experience (ongoing) - 2026-11-08
 
+### Data visualization (v131)
+- Added `pealang/visualization.py` with dependency-free SVG chart generators.
+- Added `bar_chart_svg`, `line_chart_svg`, `scatter_plot_svg`, `histogram_svg`, `ascii_bar_chart`, `ascii_line_chart`, `chart_to_file`.
+- Registered in `analysis` and `stats`/`std.stats` namespaces.
+- Added `tests/test_visualization_v131.py` (8 tests) and `tests/test_use_cases_v131.py` (1 test).
+- Added `examples/use_cases/27_visualization.pea`.
+- Updated `README.md`, `ROADMAP.md`, `docs/USE_CASES.md`.
+
 ### Document processing and OCR (v130)
 - Added `pealang/documents.py` with dependency-light readers for text, CSV, JSON, JSONL, XML, HTML, DOCX, XLSX, PDF and images.
 - Added unified `read_document(path)` with auto-format detection (`detect_format`).

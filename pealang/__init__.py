@@ -213,6 +213,14 @@ from .documents import (build_document_namespace,
     ocr_extract_text as document_ocr_text,
     ocr_extract_data as document_ocr_data,
     detect_format as document_detect_format)
+from .visualization import (build_visualization_namespace,
+    bar_chart_svg as viz_bar_chart_svg,
+    line_chart_svg as viz_line_chart_svg,
+    scatter_plot_svg as viz_scatter_plot_svg,
+    histogram_svg as viz_histogram_svg,
+    ascii_bar_chart as viz_ascii_bar_chart,
+    ascii_line_chart as viz_ascii_line_chart,
+    chart_to_file as viz_chart_to_file)
 from .model_interop import ModelInteropError,TensorSpec,TensorBridge,ONNXModel,QueryPolicy,QueryPlan,GovernedQueryPlanner
 from .agent_governance import AuditEvent,GovernanceAuditStore,AuditedApprovalGate,approval_request_id
 from .hardening import SecurityProbe,ProbeResult,AdversarialAgentSuite,PublicAPIGate,ReleaseThresholds,ReleaseHardeningGate,sha256_manifest

@@ -1,0 +1,12 @@
+// v131 data visualization example
+let labels = ["A", "B", "C", "D"]
+let vals = [10, 25, 15, 30]
+
+let svg = analysis.bar_chart_svg(labels, vals, "Sales")
+print "SVG length: " + str(len(svg))
+
+let ascii = analysis.ascii_bar_chart(labels, vals)
+print ascii
+
+let line = analysis.ascii_line_chart([10, 25, 15, 30])
+print line
