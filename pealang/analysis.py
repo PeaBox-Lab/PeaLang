@@ -34,6 +34,14 @@ from .visualization import (bar_chart_svg as _viz_bar,
     ascii_bar_chart as _viz_ascii_bar,
     ascii_line_chart as _viz_ascii_line,
     chart_to_file as _viz_chart_to_file)
+from .validation import (validate_record as _val_validate_record,
+    validate_records as _val_validate_records,
+    data_quality_report as _val_data_quality_report,
+    infer_schema as _val_infer_schema,
+    check_type as _val_check_type,
+    build_schema as _val_build_schema,
+    missing_value_summary as _val_missing_summary,
+    duplicate_rows as _val_duplicate_rows)
 
 
 def _rows(data: Any) -> list[dict[str, Any]]:
@@ -3194,5 +3202,13 @@ def build_analysis_namespace() -> dict[str, Any]:
         "ascii_bar_chart": _viz_ascii_bar,
         "ascii_line_chart": _viz_ascii_line,
         "chart_to_file": _viz_chart_to_file,
+        "validate_record": _val_validate_record,
+        "validate_records": _val_validate_records,
+        "data_quality_report": _val_data_quality_report,
+        "infer_schema": _val_infer_schema,
+        "check_type": _val_check_type,
+        "build_schema": _val_build_schema,
+        "missing_value_summary": _val_missing_summary,
+        "duplicate_rows": _val_duplicate_rows,
     }
 

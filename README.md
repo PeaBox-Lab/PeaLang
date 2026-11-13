@@ -60,6 +60,7 @@ The objective is to improve security while preserving the existing PeaLang langu
 - Notebook display (v129): `display_records`, `display_profile`, `display_model`, `display_evaluation`, `display_chart`, `display_report`
 - Document processing & OCR (v130): `read_document`, `read_csv`, `read_json`, `read_jsonl`, `read_xml`, `read_html`, `read_docx`, `read_xlsx`, `read_pdf`, `ocr_available`, `ocr_extract_text`, `ocr_extract_data`, `detect_format`, `strip_html`
 - Data visualization (v131): `bar_chart_svg`, `line_chart_svg`, `scatter_plot_svg`, `histogram_svg`, `ascii_bar_chart`, `ascii_line_chart`, `chart_to_file`
+- Data validation (v132): `build_schema`, `validate_record`, `validate_records`, `check_type`, `data_quality_report`, `missing_summary`, `duplicate_rows`, `infer_schema`
 
 ### Numerical and Statistical Computing (`stats` / `std.stats`)
 - Descriptive: `mean`, `median`, `mode`, `quantile`, `percentile`, `iqr`, `variance`, `std`, `skew`, `kurtosis`, `covariance`, `pearson`/`correlation`, `spearman`, `kendall`, `entropy`, `gini`, `describe`

@@ -1,0 +1,12 @@
+// v132 data validation and schema enforcement example
+let data = [{"name": "Alice", "age": 30}, {"name": "Bob", "age": 25}, {"name": "Charlie", "age": 150}]
+
+let schema = analysis.build_schema([{"name": "name", "dtype": "string", "required": true}, {"name": "age", "dtype": "int", "min_value": 0, "max_value": 120}])
+let result = analysis.validate_records(data, schema)
+print "Valid: " + str(result["valid"]) + " / " + str(result["total"])
+
+let report = analysis.data_quality_report(data)
+print "Columns: " + str(report["column_count"])
+
+let inferred = analysis.infer_schema(data)
+print "Inferred age type: " + inferred.field("age").dtype

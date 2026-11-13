@@ -221,6 +221,12 @@ from .visualization import (build_visualization_namespace,
     ascii_bar_chart as viz_ascii_bar_chart,
     ascii_line_chart as viz_ascii_line_chart,
     chart_to_file as viz_chart_to_file)
+from .validation import (build_validation_namespace,
+    validate_record as validation_validate_record,
+    validate_records as validation_validate_records,
+    data_quality_report as validation_data_quality_report,
+    infer_schema as validation_infer_schema,
+    check_type as validation_check_type)
 from .model_interop import ModelInteropError,TensorSpec,TensorBridge,ONNXModel,QueryPolicy,QueryPlan,GovernedQueryPlanner
 from .agent_governance import AuditEvent,GovernanceAuditStore,AuditedApprovalGate,approval_request_id
 from .hardening import SecurityProbe,ProbeResult,AdversarialAgentSuite,PublicAPIGate,ReleaseThresholds,ReleaseHardeningGate,sha256_manifest

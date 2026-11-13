@@ -2,6 +2,15 @@
 
 ## 1.0.0-experience (ongoing) - 2026-11-08
 
+### Data validation and schema enforcement (v132)
+- Added `pealang/validation.py` with dependency-free schema definition, validation and data-quality tools.
+- Added `FieldSpec`, `Schema`, `build_schema`, `check_type`, `validate_record`, `validate_records`, `data_quality_report`, `missing_summary`, `duplicate_rows`, `infer_schema`.
+- Registered in `analysis` and `stats`/`std.stats` namespaces.
+- Added `tests/test_validation_v132.py` (15 tests) and `tests/test_use_cases_v132.py` (1 test).
+- Added `docs/VALIDATION.md` and `help/VALIDATION.md`.
+- Added `examples/use_cases/28_validation.pea`.
+- Updated `README.md`, `ROADMAP.md`, `docs/USE_CASES.md`.
+
 ### Data visualization (v131)
 - Added `pealang/visualization.py` with dependency-free SVG chart generators.
 - Added `bar_chart_svg`, `line_chart_svg`, `scatter_plot_svg`, `histogram_svg`, `ascii_bar_chart`, `ascii_line_chart`, `chart_to_file`.
