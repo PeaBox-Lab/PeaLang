@@ -2,7 +2,11 @@
 from __future__ import annotations
 from dataclasses import dataclass,asdict
 from pathlib import Path
-import hashlib,json,re,shutil,tarfile,tempfile,tomllib
+import hashlib,json,re,shutil,tarfile,tempfile
+try:
+ tomllib=__import__('tomllib')
+except ModuleNotFoundError:  # Python 3.10 has no tomllib
+ import tomli as tomllib
 from .errors import PeaError
 
 @dataclass(frozen=True,order=True)

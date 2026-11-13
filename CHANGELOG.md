@@ -2,6 +2,19 @@
 
 ## 1.0.0-experience (ongoing) - 2026-11-08
 
+### Markdown/HTML Reporting (v128)
+- Added `analysis.profile_markdown`, `analysis.profile_html`, `analysis.report_markdown`, `analysis.report_html`, `analysis.model_markdown`, `analysis.model_html`, `analysis.evaluation_markdown`, `analysis.evaluation_html`, `analysis.write_report_markdown`, `analysis.write_report_html`, `analysis.write_report_json`.
+- Markdown content renders inline in HTML pages; angle brackets are escaped to prevent markup from breaking pages.
+- Markdown reports render directly (not JSON-dumped), so tables, lists and bold text appear naturally.
+- `analysis.write_report_markdown` and `write_report_html` auto-detect report kind from record shape (`profile`, `model`, `evaluation`).
+- `analysis.report_markdown` and `report_html` auto-detect kind when called without `kind`.
+- `analysis.write_report_markdown` and `write_report_html` accept positional arguments only (no keyword `kind=`), matching PeaLang's positional-only API.
+- `analysis.write_report_json` writes JSON documents with `analysis._rows` normalization.
+- Added `tests/test_reporting_v128.py` and `tests/test_use_cases_v128.py` for regression coverage.
+- Added `docs/REPORTING.md` and `help/REPORTING.md` to document the new API.
+- Added `examples/use_cases/24_reporting.pea` — end-to-end reporting example.
+- Updated `docs/USE_CASES.md`, `ROADMAP.md`, `README.md` and `docs/REPORTING.md` to reflect v128.
+
 ### Target encoding (v127)
 - Added `pealang/target_encoding.py`, a dependency-free smoothed mean-encoding layer exposed through `stats` / `std.stats`.
 - Added `target_encode(values, target, smoothing, min_count)`, returning the prior, class metadata and per-level count, mean and smoothed encoding.

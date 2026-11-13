@@ -9,15 +9,10 @@ permissions:
   contents: read
   security-events: write
 jobs:
-  codeql:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: github/codeql-action/init@v3
-        with:
-          languages: python
-          queries: security-extended
-      - uses: github/codeql-action/analyze@v3
+  # CodeQL runs through GitHub's default setup for this repository. An
+  # advanced-setup job (github/codeql-action/init + analyze) cannot upload
+  # SARIF while default setup is enabled, so the workflow here only covers
+  # the supply-chain audit. See security/CODEQL.md.
   dependency-audit:
     runs-on: ubuntu-latest
     steps:

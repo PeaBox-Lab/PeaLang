@@ -217,6 +217,225 @@ def top_values(data: Any, column: str, limit: int = 10) -> list[tuple[Any, int]]
     return counts.most_common(int(limit))
 
 
+def report_markdown(data: Any, kind: str | None = None) -> str:
+    if kind is None:
+        kind = _detect_kind(data)
+    if kind == "profile":
+        report = profile(data)
+    elif kind == "summary":
+        report = {"summary": summary(data)}
+    elif kind == "model":
+        return model_report_markdown(data)
+    elif kind == "evaluation":
+        return evaluation_report_markdown(data)
+    else:
+        report = data
+    if isinstance(report, dict) and "fields" in report:
+        lines = ["# Data Profile", "", f"Rows: {report.get('rows')}", f"Columns: {report.get('columns')}", ""]
+        lines.append("| Field | Type | Missing | Distinct |")
+        lines.append("|---|---:|---:|---:|")
+        for name, info in report["fields"].items():
+            lines.append(f"| {name} | {info.get('type')} | {info.get('missing', 0)} | {info.get('distinct', 0)} |")
+        return "\n".join(lines)
+    if isinstance(report, dict) and "predicted" in report and "probabilities" in report:
+        lines = ["# Classification Prediction", ""]
+        lines.append(f"Predicted class: **{report.get('predicted')}**")
+        probs = report.get("probabilities", [])
+        classes = report.get("classes", [])
+        lines.append("")
+        lines.append("| Class | Probability |")
+        lines.append("|:---|:---|")
+        for cls, p in zip(classes, probs):
+            lines.append(f"| {cls} | {p:.4f} |")
+        lines.append("")
+        lines.append(f"**Confusion matrix not stored in report**.")
+        return "\n".join(lines)
+    import json
+    return "```json\n" + json.dumps(report, ensure_ascii=False, indent=2, default=str) + "\n```"
+
+
+def _detect_kind(data: Any) -> str:
+    if isinstance(data, dict) and "fields" in data:
+        return "profile"
+    if isinstance(data, dict) and "estimator" in data:
+        return "model"
+    if isinstance(data, dict) and "accuracy" in data:
+        return "evaluation"
+    return "profile"  # default
+
+
+def report_html(data: Any, kind: str | None = None) -> str:
+    import html as _html
+    md = report_markdown(data, kind)
+    md = md.replace("<", "&lt;").replace(">", "&gt;")
+    return f"""<!doctype html>
+<html>
+<head>
+    <meta charset='utf-8'>
+    <title>PeaLang Report</title>
+    <style>
+        body {{ font-family: sans-serif; margin: 20px; }}
+        pre {{ white-space: pre-wrap; }}
+        table {{ border-collapse: collapse; margin-top: 8px; }}
+        th, td {{ border: 1px solid #ccc; padding: 6px; text-align: left; }}
+        th {{ background: #f2f2f2; }}
+        code {{ background: #f6f8fa; padding: 2px 4px; border-radius: 3px; }}
+    </style>
+</head>
+<body>
+<h1>PeaLang Report</h1>
+<pre>
+{md}
+</pre>
+</body>
+</html>"""
+
+
+def model_report_markdown(model: Any) -> str:
+    lines = ["# Model Summary", ""]
+    lines.append(f"Estimator: {model.get('estimator')}")
+    lines.append(f"Task: {model.get('task')}")
+    lines.append(f"Rows: {model.get('n_rows')}")
+    lines.append(f"Columns: {model.get('n_features')}")
+    if model.get("output_features"):
+        lines.append("")
+        lines.append("**Output Features:**")
+        for f in model.get("output_features"):
+            lines.append(f"- {f}")
+    if model.get("importance"):
+        lines.append("")
+        lines.append("**Feature Importance:**")
+        lines.append("| Feature | Importance |")
+        lines.append("|:---|:---|")
+        for item in model.get("importance"):
+            lines.append(f"| {item.get('feature')} | {item.get('importance'):.4f} |")
+    if model.get("train_accuracy") is not None:
+        lines.append("")
+        lines.append(f"**Accuracy:** {model.get('train_accuracy'):.4f}")
+    if model.get("train_r2") is not None:
+        lines.append(f"**R²:** {model.get('train_r2'):.4f}")
+    if model.get("train_rmse") is not None:
+        lines.append(f"**RMSE:** {model.get('train_rmse'):.4f}")
+    if model.get("classes"):
+        lines.append("")
+        lines.append(f"**Classes:** {model.get('classes')}")
+    lines.append("")
+    lines.append("```json")
+    import json
+    lines.append(json.dumps(model, ensure_ascii=False, indent=2, default=str))
+    lines.append("```")
+    return "\n".join(lines)
+
+
+def model_report_html(model: Any) -> str:
+    md = model_report_markdown(model)
+    md = md.replace("<", "&lt;").replace(">", "&gt;")
+    return f"""<!doctype html>
+<html>
+<head>
+    <meta charset='utf-8'>
+    <title>Model Report</title>
+    <style>
+        body {{ font-family: sans-serif; margin: 20px; }}
+        pre {{ white-space: pre-wrap; }}
+        table {{ border-collapse: collapse; margin-top: 8px; }}
+        th, td {{ border: 1px solid #ccc; padding: 6px; text-align: left; }}
+        th {{ background: #f2f2f2; }}
+        code {{ background: #f6f8fa; padding: 2px 4px; border-radius: 3px; }}
+    </style>
+</head>
+<body>
+<h1>Model Summary</h1>
+<pre>
+{md}
+</pre>
+</body>
+</html>"""
+
+
+def evaluation_report_markdown(evaluation: Any) -> str:
+    if not isinstance(evaluation, dict):
+        return "```json\n" + _json(evaluation) + "\n```"
+    lines = ["# Evaluation Report", ""]
+    for key, val in sorted(evaluation.items()):
+        if isinstance(val, (int, float)):
+            lines.append(f"**{key}:** {val:.4f}")
+        else:
+            lines.append(f"**{key}:** {val}")
+    return "\n".join(lines)
+
+
+def evaluation_report_html(evaluation: Any) -> str:
+    md = evaluation_report_markdown(evaluation)
+    md = md.replace("<", "&lt;").replace(">", "&gt;")
+    return f"""<!doctype html>
+<html>
+<head>
+    <meta charset='utf-8'>
+    <title>Evaluation Report</title>
+    <style>
+        body {{ font-family: sans-serif; margin: 20px; }}
+        pre {{ white-space: pre-wrap; }}
+        code {{ background: #f6f8fa; padding: 2px 4px; border-radius: 3px; }}
+    </style>
+</head>
+<body>
+<h1>Evaluation Summary</h1>
+<pre>
+{md}
+</pre>
+</body>
+</html>"""
+
+
+def write_report_markdown(path: Any, report: Any) -> None:
+    import pathlib
+    p = pathlib.Path(str(path))
+    p.parent.mkdir(parents=True, exist_ok=True)
+    p.write_text(report_markdown(report), encoding="utf-8")
+
+
+def write_report_html(path: Any, report: Any) -> None:
+    import pathlib
+    p = pathlib.Path(str(path))
+    p.parent.mkdir(parents=True, exist_ok=True)
+    p.write_text(report_html(report), encoding="utf-8")
+
+
+def write_report_json(path: Any, report: Any) -> None:
+    import pathlib, json
+    p = pathlib.Path(str(path))
+    p.parent.mkdir(parents=True, exist_ok=True)
+    if isinstance(report, list):
+        p.write_text(json.dumps(_rows(report), ensure_ascii=False, indent=2, default=str), encoding="utf-8")
+    else:
+        p.write_text(json.dumps(report, ensure_ascii=False, indent=2, default=str), encoding="utf-8")
+
+
+def profile_markdown(data: Any) -> str:
+    return report_markdown(data, kind="profile")
+
+
+def profile_html(data: Any) -> str:
+    return report_html(data, kind="profile")
+
+
+def model_markdown(model: Any) -> str:
+    return model_report_markdown(model)
+
+
+def model_html(model: Any) -> str:
+    return model_report_html(model)
+
+
+def evaluation_markdown(evaluation: Any) -> str:
+    return evaluation_report_markdown(evaluation)
+
+
+def evaluation_html(evaluation: Any) -> str:
+    return evaluation_report_html(evaluation)
+
+
 def to_markdown(report: Any) -> str:
     if isinstance(report, dict) and "fields" in report:
         lines = ["# Data Profile", "", f"Rows: {report.get('rows')}", f"Columns: {report.get('columns')}", ""]
@@ -2747,6 +2966,17 @@ def build_analysis_namespace() -> dict[str, Any]:
         "top_values": top_values,
         "to_markdown": to_markdown,
         "to_html": to_html,
+        "report_markdown": report_markdown,
+        "report_html": report_html,
+        "write_report_markdown": write_report_markdown,
+        "write_report_html": write_report_html,
+        "write_report_json": write_report_json,
+        "profile_markdown": profile_markdown,
+        "profile_html": profile_html,
+        "model_markdown": model_markdown,
+        "model_html": model_html,
+        "evaluation_markdown": evaluation_markdown,
+        "evaluation_html": evaluation_html,
         "to_csv": to_csv,
         "sort_by": sort_by,
         "select": select,

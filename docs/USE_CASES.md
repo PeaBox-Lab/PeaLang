@@ -27,7 +27,7 @@ without an impedance mismatch.
 | Time series | `analysis.shift` / `lag` / `lead`, `analysis.diff`, `analysis.pct_change`, `analysis.rolling_mean`, `analysis.ewm_mean` |
 | Statistics | `analysis.correlation`, `analysis.corr_matrix`, `analysis.variance`, `analysis.skew`, `analysis.kurtosis`, `analysis.quantile`, `analysis.outliers` |
 | SQL over records | `analysis.sql`, `analysis.sql_value` |
-| Reports | `analysis.to_markdown`, `analysis.to_html`, `analysis.to_csv`, `analysis.bar_chart`, `analysis.line_chart` |
+| Reports | `analysis.profile_markdown`, `analysis.profile_html`, `analysis.report_markdown`, `analysis.report_html`, `analysis.model_markdown`, `analysis.model_html`, `analysis.evaluation_markdown`, `analysis.evaluation_html`, `analysis.write_report_markdown`, `analysis.write_report_html`, `analysis.write_report_json` |
 
 ### SQL over in-memory records
 
@@ -426,6 +426,7 @@ Examples:
 - [`examples/use_cases/21_model_persistence.pea`](../examples/use_cases/21_model_persistence.pea)
 - [`examples/use_cases/22_date_features.pea`](../examples/use_cases/22_date_features.pea)
 - [`examples/use_cases/23_target_encoding.pea`](../examples/use_cases/23_target_encoding.pea)
+- [`examples/use_cases/24_reporting.pea`](../examples/use_cases/24_reporting.pea)
 
 See [`docs/DATA_SCIENCE.md`](DATA_SCIENCE.md),
 [`docs/STATISTICAL_INFERENCE.md`](STATISTICAL_INFERENCE.md),

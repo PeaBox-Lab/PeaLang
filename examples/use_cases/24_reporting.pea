@@ -1,0 +1,66 @@
+// Use case: report generation (Markdown/HTML)
+// PeaLang's reporting layer renders profiles, models and evaluations
+// to Markdown and HTML, and writes them to disk in JSON.
+
+let data = [
+    { "category": "A", "value": 10 },
+    { "category": "B", "value": 20 },
+    { "category": "A", "value": 30 },
+    { "category": "C", "value": 40 },
+    { "category": "B", "value": 50 },
+    { "category": "A", "value": 60 }
+]
+
+// Profile report
+let profile_md = analysis.profile_markdown(data)
+let profile_html = analysis.profile_html(data)
+
+// Model report example
+let model = {
+    "estimator": "random_forest",
+    "task": "classification",
+    "n_rows": 100,
+    "n_features": 5,
+    "output_features": ["score", "probability"],
+    "importance": [
+        { "feature": "value", "importance": 0.45 },
+        { "feature": "category", "importance": 0.35 },
+        { "feature": "id", "importance": 0.20 }
+    ],
+    "train_accuracy": 0.85,
+    "train_r2": 0.72,
+    "classes": ["low", "high"]
+}
+
+let model_md = analysis.model_markdown(model)
+let model_html = analysis.model_html(model)
+
+// Evaluation report example
+let evaluation = {
+    "accuracy": 0.88,
+    "precision": 0.82,
+    "recall": 0.79,
+    "f1_score": 0.80,
+    "roc_auc": 0.91
+}
+
+let eval_md = analysis.evaluation_markdown(evaluation)
+let eval_html = analysis.evaluation_html(evaluation)
+
+// Write reports to disk
+let p_dir = "reports"
+analysis.write_report_markdown(p_dir + "/profile_report.md", data)
+analysis.write_report_html(p_dir + "/profile_report.html", data)
+analysis.write_report_markdown(p_dir + "/model_report.md", model)
+analysis.write_report_html(p_dir + "/model_report.html", model)
+analysis.write_report_markdown(p_dir + "/evaluation_report.md", evaluation)
+analysis.write_report_html(p_dir + "/evaluation_report.html", evaluation)
+analysis.write_report_json(p_dir + "/evaluation_report.json", evaluation)
+
+print "Profile markdown written to " + p_dir + "/profile_report.md"
+print "Profile HTML written to " + p_dir + "/profile_report.html"
+print "Model markdown written to " + p_dir + "/model_report.md"
+print "Model HTML written to " + p_dir + "/model_report.html"
+print "Evaluation markdown written to " + p_dir + "/evaluation_report.md"
+print "Evaluation HTML written to " + p_dir + "/evaluation_report.html"
+print "JSON written to " + p_dir + "/evaluation_report.json"
