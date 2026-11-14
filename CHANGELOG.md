@@ -2,6 +2,16 @@
 
 ## 1.0.0-experience (ongoing) - 2026-11-08
 
+### Full-stack web server and auto-typed SDK generator (v1.5.0)
+- Added `pealang/web_sdk.py` with enhanced web server features and TypeScript client generation.
+- Added `generate_typescript_client`, `sse_endpoint_source`, `websocket_handler_source`, `jwt_middleware_source`, `rate_limiter_source`, `api_versioning_source`.
+- Registered in `analysis` and `stats`/`std.stats` namespaces.
+- Added `tests/test_web_sdk_v150.py` (7 tests) and `tests/test_use_cases_v150.py` (1 test).
+- Added `docs/WEB_SDK.md` and `help/WEB_SDK.md`.
+- Added `examples/use_cases/39_web_sdk.pea`.
+- Version bumped to 1.5.0.
+- Updated `README.md`, `ROADMAP.md`, `docs/USE_CASES.md`.
+
 ### Reactive React SDK (v1.4.0)
 - Added `pealang/react_sdk.py` with React hook and adapter code generation.
 - Added `generate_react_hooks`, `generate_data_grid_adapter`, `generate_chart_adapter`, `REACT_HOOKS`.

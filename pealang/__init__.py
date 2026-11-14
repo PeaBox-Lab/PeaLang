@@ -107,7 +107,7 @@ from .target_encoding import (build_target_namespace,
     target_apply as stats_target_apply,
     target_encode as stats_target_encode)
 from .ux import doctor as ux_doctor, explain_error as ux_explain
-__version__ = "1.4.0"
+__version__ = "1.5.0"
 __all__=['BytecodeModule','CodeObject','Instruction','Op','Compiler','CompileError','compile_source_to_bytecode','VirtualMachine','VMError','AsyncSuspension','AsyncVirtualMachine','AsyncVMRuntime','AsyncVMModule','CancellationToken','VMRuntime','VMModule','disassemble','execute','compile_source','Interpreter','PeaError','PeaRuntime','PeaModule',
 'SemanticAnalyzer','SemanticResult','FunctionContract','TypeChecker','TypeRef','Diagnostic','TypeCheckResult','parse_type','erase_types','RuntimeOptions','ExecutionResult','PeaRuntimeError','PeaPermissionError',
 'PeaResourceLimitError','to_pea','from_pea','__version__']
@@ -299,6 +299,13 @@ from .react_sdk import (build_react_sdk_namespace,
     generate_react_hooks as react_generate_react_hooks,
     generate_data_grid_adapter as react_generate_data_grid_adapter,
     generate_chart_adapter as react_generate_chart_adapter)
+from .web_sdk import (build_web_sdk_namespace,
+    generate_typescript_client as web_sdk_generate_typescript_client,
+    sse_endpoint_source as web_sdk_sse_endpoint_source,
+    websocket_handler_source as web_sdk_websocket_handler_source,
+    jwt_middleware_source as web_sdk_jwt_middleware_source,
+    rate_limiter_source as web_sdk_rate_limiter_source,
+    api_versioning_source as web_sdk_api_versioning_source)
 from .timeseries_advanced import (build_timeseries_namespace,
     zscore_anomalies as ts_zscore_anomalies,
     iqr_anomalies as ts_iqr_anomalies,

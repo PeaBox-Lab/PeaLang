@@ -1,0 +1,13 @@
+// v1.5.0 web SDK example
+let routes = [{"method": "GET", "path": "/users", "name": "getUsers", "params": []}]
+let client = analysis.generate_typescript_client(routes, "http://localhost:8000", "MyClient")
+print "Client length: " + str(len(client))
+
+let sse = analysis.sse_endpoint_source()
+print "SSE length: " + str(len(sse))
+
+let ws = analysis.websocket_handler_source()
+print "WS length: " + str(len(ws))
+
+let jwt = analysis.jwt_middleware_source()
+print "JWT length: " + str(len(jwt))

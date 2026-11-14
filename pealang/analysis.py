@@ -108,6 +108,13 @@ from .react_sdk import (generate_react_hooks as _react_generate_react_hooks,
     generate_data_grid_adapter as _react_generate_data_grid_adapter,
     generate_chart_adapter as _react_generate_chart_adapter,
     build_react_sdk_namespace as _react_build_namespace)
+from .web_sdk import (generate_typescript_client as _web_sdk_generate_typescript_client,
+    sse_endpoint_source as _web_sdk_sse_endpoint_source,
+    websocket_handler_source as _web_sdk_websocket_handler_source,
+    jwt_middleware_source as _web_sdk_jwt_middleware_source,
+    rate_limiter_source as _web_sdk_rate_limiter_source,
+    api_versioning_source as _web_sdk_api_versioning_source,
+    build_web_sdk_namespace as _web_sdk_build_namespace)
 from .timeseries_advanced import (zscore_anomalies as _ts_zscore_anomalies,
     iqr_anomalies as _ts_iqr_anomalies,
     moving_average_anomalies as _ts_ma_anomalies,
@@ -3376,5 +3383,12 @@ def build_analysis_namespace() -> dict[str, Any]:
         "generate_data_grid_adapter": _react_generate_data_grid_adapter,
         "generate_chart_adapter": _react_generate_chart_adapter,
         "build_react_sdk_namespace": _react_build_namespace,
+        "generate_typescript_client": _web_sdk_generate_typescript_client,
+        "sse_endpoint_source": _web_sdk_sse_endpoint_source,
+        "websocket_handler_source": _web_sdk_websocket_handler_source,
+        "jwt_middleware_source": _web_sdk_jwt_middleware_source,
+        "rate_limiter_source": _web_sdk_rate_limiter_source,
+        "api_versioning_source": _web_sdk_api_versioning_source,
+        "build_web_sdk_namespace": _web_sdk_build_namespace,
     }
 
