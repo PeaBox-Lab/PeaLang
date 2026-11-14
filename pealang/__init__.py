@@ -364,6 +364,9 @@ from .supply_chain import (build_supply_chain_namespace,
     resolve_dependencies as sc_resolve_dependencies,
     SupplyChainIndex as sc_supply_chain_index,
     PackageMetadata as sc_package_metadata)
+from .jit_compiler import (build_jit_namespace,
+    optimize_instructions as jit_optimize,
+    build_jit_namespace as jit_build_namespace)
 from .timeseries_advanced import (build_timeseries_namespace,
     zscore_anomalies as ts_zscore_anomalies,
     iqr_anomalies as ts_iqr_anomalies,

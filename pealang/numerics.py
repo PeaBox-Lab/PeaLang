@@ -13,6 +13,8 @@ import math
 import random
 from typing import Any, Iterable, Sequence
 
+from .jit_compiler import build_jit_namespace
+
 
 # ---------------------------------------------------------------------------
 # Coercion helpers
@@ -1417,4 +1419,5 @@ def build_stats_namespace() -> dict[str, Any]:
     namespace.update(build_host_bindings_namespace())
     namespace.update(build_vm_optimizer_namespace())
     namespace.update(build_performance_namespace())
+    namespace.update(build_jit_namespace())
     return namespace

@@ -170,6 +170,8 @@ from .supply_chain import (PackageMetadata as _sc_package_metadata,
     verify_signature as _sc_verify_signature,
     resolve_dependencies as _sc_resolve_dependencies,
     SupplyChainIndex as _sc_supply_chain_index)
+from .jit_compiler import (optimize_instructions as _jit_optimize,
+    build_jit_namespace as _jit_build_namespace)
 from .timeseries_advanced import (zscore_anomalies as _ts_zscore_anomalies,
     iqr_anomalies as _ts_iqr_anomalies,
     moving_average_anomalies as _ts_ma_anomalies,
@@ -3483,6 +3485,7 @@ def build_analysis_namespace() -> dict[str, Any]:
         "benchmark_vm": _vm_benchmark_vm,
         "PackageIndex": _vm_package_index,
         "mmap_read": _perf_mmap_read,
+        "OptimizeInstructions": _jit_optimize,
         "mmap_write": _perf_mmap_write,
         "mmap_search": _perf_mmap_search,
         "AdvancedCache": _perf_advanced_cache,
