@@ -1380,6 +1380,7 @@ def build_stats_namespace() -> dict[str, Any]:
     from .notebook_ide import build_notebook_ide_namespace
     from .host_bindings import build_host_bindings_namespace
     from .vm_optimizer import build_vm_optimizer_namespace
+    from .performance import build_performance_namespace
 
     namespace.update(build_inference_namespace())
     namespace.update(build_modeling_namespace())
@@ -1415,4 +1416,5 @@ def build_stats_namespace() -> dict[str, Any]:
     namespace.update(build_notebook_ide_namespace())
     namespace.update(build_host_bindings_namespace())
     namespace.update(build_vm_optimizer_namespace())
+    namespace.update(build_performance_namespace())
     return namespace

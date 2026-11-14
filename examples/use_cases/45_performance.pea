@@ -1,0 +1,19 @@
+// v2.1.0 performance optimization example
+let data = "hello world"
+let filepath = "/tmp/test_perf.bin"
+analysis.mmap_write(filepath, data)
+let read_back = analysis.mmap_read(filepath)
+print "Read back: " + str(len(read_back)) + " bytes"
+
+let cache = analysis.AdvancedCache(10, "lru")
+cache.put("key1", "value1")
+print "Cached: " + str(cache.get("key1"))
+
+let hash = analysis.fast_hash({"a": 1, "b": 2})
+print "Hash: " + str(len(hash))
+
+let chunks = analysis.parallel_chunks([1, 2, 3, 4, 5], 2)
+print "Chunks: " + str(len(chunks))
+
+let bs = analysis.optimize_batch_size(1000, 1.0, 10.0)
+print "Batch size: " + str(bs)
