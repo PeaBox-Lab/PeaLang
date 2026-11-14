@@ -75,6 +75,7 @@ The objective is to improve security while preserving the existing PeaLang langu
 - Web SDK (v1.5.0): `generate_typescript_client`, `sse_endpoint_source`, `websocket_handler_source`, `jwt_middleware_source`, `rate_limiter_source`, `api_versioning_source` — full-stack web server and auto-typed SDK
 - Arrow backend (v1.6.0): `available_backends`, `preferred_backend`, `backend_info`, `create_query_plan`, `PythonBackend`, `DuckDBBackend` — pluggable DataFrame backends with lazy query optimization
 - Vector/RAG (v1.7.0): `create_vector`, `cosine_similarity`, `chunk_text`, `bm25_score`, `hybrid_search`, `VectorStore`, `model_to_onnx`, `tree_to_onnx` — ONNX export and vector/RAG primitives
+- Notebook IDE (v1.8.0): `ReactiveCell`, `ReactiveNotebook`, `inspect_dataframe`, `inspect_sql_result`, `publish_as_webapp`, `generate_notebook_html` — reactive notebook and web IDE
 
 ### Numerical and Statistical Computing (`stats` / `std.stats`)
 - Descriptive: `mean`, `median`, `mode`, `quantile`, `percentile`, `iqr`, `variance`, `std`, `skew`, `kurtosis`, `covariance`, `pearson`/`correlation`, `spearman`, `kendall`, `entropy`, `gini`, `describe`

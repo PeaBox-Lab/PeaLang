@@ -1377,6 +1377,7 @@ def build_stats_namespace() -> dict[str, Any]:
     from .web_sdk import build_web_sdk_namespace
     from .arrow_backend import build_arrow_backend_namespace
     from .vector_rag import build_vector_rag_namespace
+    from .notebook_ide import build_notebook_ide_namespace
 
     namespace.update(build_inference_namespace())
     namespace.update(build_modeling_namespace())
@@ -1409,4 +1410,5 @@ def build_stats_namespace() -> dict[str, Any]:
     namespace.update(build_web_sdk_namespace())
     namespace.update(build_arrow_backend_namespace())
     namespace.update(build_vector_rag_namespace())
+    namespace.update(build_notebook_ide_namespace())
     return namespace

@@ -132,6 +132,12 @@ from .vector_rag import (create_vector as _vr_create_vector,
     model_to_onnx as _vr_model_to_onnx,
     tree_to_onnx as _vr_tree_to_onnx,
     onnx_export_json as _vr_onnx_export_json)
+from .notebook_ide import (ReactiveCell as _nbide_reactive_cell,
+    ReactiveNotebook as _nbide_reactive_notebook,
+    inspect_dataframe as _nbide_inspect_dataframe,
+    inspect_sql_result as _nbide_inspect_sql_result,
+    publish_as_webapp as _nbide_publish_as_webapp,
+    generate_notebook_html as _nbide_generate_notebook_html)
 from .timeseries_advanced import (zscore_anomalies as _ts_zscore_anomalies,
     iqr_anomalies as _ts_iqr_anomalies,
     moving_average_anomalies as _ts_ma_anomalies,
@@ -3422,5 +3428,11 @@ def build_analysis_namespace() -> dict[str, Any]:
         "model_to_onnx": _vr_model_to_onnx,
         "tree_to_onnx": _vr_tree_to_onnx,
         "onnx_export_json": _vr_onnx_export_json,
+        "ReactiveCell": _nbide_reactive_cell,
+        "ReactiveNotebook": _nbide_reactive_notebook,
+        "inspect_dataframe": _nbide_inspect_dataframe,
+        "inspect_sql_result": _nbide_inspect_sql_result,
+        "publish_as_webapp": _nbide_publish_as_webapp,
+        "generate_notebook_html": _nbide_generate_notebook_html,
     }
 

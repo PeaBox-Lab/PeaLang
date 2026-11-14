@@ -1,0 +1,13 @@
+// v1.8.0 notebook IDE example
+let nb = analysis.ReactiveNotebook()
+nb.add_cell("c1", "let x = 1")
+nb.add_cell("c2", "print x", ["c1"])
+let order = nb.execution_order()
+print "Execution order: " + str(len(order))
+
+let data = [{"a": 1, "b": "x"}, {"a": 2, "b": "y"}]
+let info = analysis.inspect_dataframe(data)
+print "Rows: " + str(info["row_count"])
+
+let app = analysis.publish_as_webapp("print 42", "My App")
+print "Files: " + str(len(app["files"]))

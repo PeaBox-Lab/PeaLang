@@ -107,7 +107,7 @@ from .target_encoding import (build_target_namespace,
     target_apply as stats_target_apply,
     target_encode as stats_target_encode)
 from .ux import doctor as ux_doctor, explain_error as ux_explain
-__version__ = "1.7.0"
+__version__ = "1.8.0"
 __all__=['BytecodeModule','CodeObject','Instruction','Op','Compiler','CompileError','compile_source_to_bytecode','VirtualMachine','VMError','AsyncSuspension','AsyncVirtualMachine','AsyncVMRuntime','AsyncVMModule','CancellationToken','VMRuntime','VMModule','disassemble','execute','compile_source','Interpreter','PeaError','PeaRuntime','PeaModule',
 'SemanticAnalyzer','SemanticResult','FunctionContract','TypeChecker','TypeRef','Diagnostic','TypeCheckResult','parse_type','erase_types','RuntimeOptions','ExecutionResult','PeaRuntimeError','PeaPermissionError',
 'PeaResourceLimitError','to_pea','from_pea','__version__']
@@ -321,6 +321,13 @@ from .vector_rag import (build_vector_rag_namespace,
     hybrid_search as vr_hybrid_search,
     VectorStore as vr_vector_store,
     model_to_onnx as vr_model_to_onnx)
+from .notebook_ide import (build_notebook_ide_namespace,
+    ReactiveCell as notebook_ide_reactive_cell,
+    ReactiveNotebook as notebook_ide_reactive_notebook,
+    inspect_dataframe as notebook_ide_inspect_dataframe,
+    inspect_sql_result as notebook_ide_inspect_sql_result,
+    publish_as_webapp as notebook_ide_publish_as_webapp,
+    generate_notebook_html as notebook_ide_generate_notebook_html)
 from .timeseries_advanced import (build_timeseries_namespace,
     zscore_anomalies as ts_zscore_anomalies,
     iqr_anomalies as ts_iqr_anomalies,

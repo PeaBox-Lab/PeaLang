@@ -71,6 +71,11 @@ Grammar, type system, standard library, embedding API, package format and PEAC c
 ## 1.6.0 - Arrow/DuckDB vectorized DataFrame backend (delivered)
 
 ## 1.7.0 - ONNX model export and vector/RAG primitives (delivered)
+
+## 1.8.0 - Interactive Web Data IDE and reactive notebook server (delivered)
+- Reactive cell execution with dependency tracking
+- Visual SQL/DataFrame inspectors
+- One-click publishing of .pea scripts as interactive web apps
 - ONNX graph generation for tree/boosting/GLM models
 - Vector embedding types, semantic chunking, cosine/BM25 hybrid search
 - VectorStore for RAG workflows

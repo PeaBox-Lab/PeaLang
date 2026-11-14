@@ -2,6 +2,16 @@
 
 ## 1.0.0-experience (ongoing) - 2026-11-08
 
+### Interactive Web Data IDE (v1.8.0)
+- Added `pealang/notebook_ide.py` with reactive notebook and web IDE features.
+- Added `ReactiveCell`, `ReactiveNotebook`, `inspect_dataframe`, `inspect_sql_result`, `publish_as_webapp`, `generate_notebook_html`.
+- Registered in `analysis` and `stats`/`std.stats` namespaces.
+- Added `tests/test_notebook_ide_v180.py` (9 tests) and `tests/test_use_cases_v180.py` (1 test).
+- Added `docs/NOTEBOOK_IDE.md` and `help/NOTEBOOK_IDE.md`.
+- Added `examples/use_cases/42_notebook_ide.pea`.
+- Version bumped to 1.8.0.
+- Updated `README.md`, `ROADMAP.md`, `docs/USE_CASES.md`.
+
 ### ONNX model export and vector/RAG primitives (v1.7.0)
 - Added `pealang/vector_rag.py` with ONNX export and vector/RAG primitives.
 - Added `create_vector`, `cosine_similarity`, `euclidean_distance`, `dot_product`, `chunk_text`, `chunk_by_sentences`, `bm25_score`, `hybrid_search`, `VectorStore`, `model_to_onnx`, `tree_to_onnx`, `onnx_export_json`.
