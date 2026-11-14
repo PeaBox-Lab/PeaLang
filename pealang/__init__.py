@@ -244,6 +244,19 @@ from .advanced_ml import (build_ml_namespace,
     svm_fit as ml_svm_fit,
     svm_predict as ml_svm_predict,
     svm_score as ml_svm_score)
+from .sql_interop import (build_sql_interop_namespace,
+    sql_query as sql_interop_query,
+    sql_value as sql_interop_value,
+    dataframe_from_records as sql_df_from_records,
+    dataframe_select as sql_df_select,
+    dataframe_filter as sql_df_filter,
+    dataframe_sort as sql_df_sort,
+    dataframe_groupby as sql_df_groupby,
+    dataframe_to_records as sql_df_to_records,
+    dataframe_head as sql_df_head,
+    dataframe_tail as sql_df_tail,
+    dataframe_describe as sql_df_describe,
+    window_function as sql_window_function)
 from .model_interop import ModelInteropError,TensorSpec,TensorBridge,ONNXModel,QueryPolicy,QueryPlan,GovernedQueryPlanner
 from .agent_governance import AuditEvent,GovernanceAuditStore,AuditedApprovalGate,approval_request_id
 from .hardening import SecurityProbe,ProbeResult,AdversarialAgentSuite,PublicAPIGate,ReleaseThresholds,ReleaseHardeningGate,sha256_manifest

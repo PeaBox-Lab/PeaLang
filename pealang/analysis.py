@@ -57,6 +57,18 @@ from .advanced_ml import (knn_fit as _ml_knn_fit,
     svm_fit as _ml_svm_fit,
     svm_predict as _ml_svm_predict,
     svm_score as _ml_svm_score)
+from .sql_interop import (sql_query as _sql_query,
+    sql_value as _sql_value,
+    dataframe_from_records as _sql_df_from_records,
+    dataframe_select as _sql_df_select,
+    dataframe_filter as _sql_df_filter,
+    dataframe_sort as _sql_df_sort,
+    dataframe_groupby as _sql_df_groupby,
+    dataframe_to_records as _sql_df_to_records,
+    dataframe_head as _sql_df_head,
+    dataframe_tail as _sql_df_tail,
+    dataframe_describe as _sql_df_describe,
+    window_function as _sql_window_function)
 
 
 def _rows(data: Any) -> list[dict[str, Any]]:
@@ -3240,5 +3252,17 @@ def build_analysis_namespace() -> dict[str, Any]:
         "svm_fit": _ml_svm_fit,
         "svm_predict": _ml_svm_predict,
         "svm_score": _ml_svm_score,
+        "sql_query": _sql_query,
+        "sql_value": _sql_value,
+        "dataframe_from_records": _sql_df_from_records,
+        "dataframe_select": _sql_df_select,
+        "dataframe_filter": _sql_df_filter,
+        "dataframe_sort": _sql_df_sort,
+        "dataframe_groupby": _sql_df_groupby,
+        "dataframe_to_records": _sql_df_to_records,
+        "dataframe_head": _sql_df_head,
+        "dataframe_tail": _sql_df_tail,
+        "dataframe_describe": _sql_df_describe,
+        "window_function": _sql_window_function,
     }
 

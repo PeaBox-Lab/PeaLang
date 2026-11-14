@@ -1,0 +1,15 @@
+// v135 SQL/dataframe interop example
+let data = [{"name": "Alice", "age": 30, "score": 90}, {"name": "Bob", "age": 25, "score": 85}, {"name": "Charlie", "age": 35, "score": 95}]
+
+let result = analysis.sql_query(data, "SELECT name, age FROM data WHERE age > 26")
+print "Filtered: " + str(len(result))
+
+let df = analysis.dataframe_from_records(data)
+let described = analysis.dataframe_describe(df)
+print "Columns described: " + str(len(described))
+
+let filtered = analysis.dataframe_filter(df, "age > 26")
+print "Filtered rows: " + str(len(filtered["rows"]))
+
+let grouped = analysis.dataframe_groupby(df, "age", "score", "mean")
+print "Groups: " + str(len(grouped))

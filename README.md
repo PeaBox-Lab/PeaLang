@@ -63,6 +63,7 @@ The objective is to improve security while preserving the existing PeaLang langu
 - Data validation (v132): `build_schema`, `validate_record`, `validate_records`, `check_type`, `data_quality_report`, `missing_summary`, `duplicate_rows`, `infer_schema`
 - Conformance & quality gates (v133): `run_conformance_suite`, `check_api_stability`, `check_doc_coverage`, `environment_check`, `generate_quality_report`, `hash_source_tree`
 - Advanced ML (v134): `knn_fit`, `knn_predict`, `knn_score`, `naive_bayes_fit`, `naive_bayes_predict`, `naive_bayes_score`, `svm_fit`, `svm_predict`, `svm_score`
+- SQL/DataFrame interop (v135): `sql_query`, `sql_value`, `dataframe_from_records`, `dataframe_select`, `dataframe_filter`, `dataframe_sort`, `dataframe_groupby`, `dataframe_head`, `dataframe_tail`, `dataframe_describe`, `window_function`
 
 ### Numerical and Statistical Computing (`stats` / `std.stats`)
 - Descriptive: `mean`, `median`, `mode`, `quantile`, `percentile`, `iqr`, `variance`, `std`, `skew`, `kurtosis`, `covariance`, `pearson`/`correlation`, `spearman`, `kendall`, `entropy`, `gini`, `describe`

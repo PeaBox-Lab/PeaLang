@@ -2,6 +2,15 @@
 
 ## 1.0.0-experience (ongoing) - 2026-11-08
 
+### SQL and DataFrame interop (v135)
+- Added `pealang/sql_interop.py` with enhanced SQL-over-records and DataFrame-like operations.
+- Added `sql_query`, `sql_value`, `dataframe_from_records`, `dataframe_select`, `dataframe_filter`, `dataframe_sort`, `dataframe_groupby`, `dataframe_head`, `dataframe_tail`, `dataframe_describe`, `dataframe_to_records`, `window_function`.
+- Registered in `analysis` and `stats`/`std.stats` namespaces.
+- Added `tests/test_sql_interop_v135.py` (11 tests) and `tests/test_use_cases_v135.py` (1 test).
+- Added `docs/SQL_INTEROP.md` and `help/SQL_INTEROP.md`.
+- Added `examples/use_cases/31_sql_interop.pea`.
+- Updated `README.md`, `ROADMAP.md`, `docs/USE_CASES.md`.
+
 ### Advanced machine learning (v134)
 - Added `pealang/advanced_ml.py` with dependency-free k-NN, Gaussian naive Bayes, and linear SVM classifiers.
 - Added `knn_fit`/`knn_predict`/`knn_score`, `naive_bayes_fit`/`naive_bayes_predict`/`naive_bayes_score`, `svm_fit`/`svm_predict`/`svm_score`.

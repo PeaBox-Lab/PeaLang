@@ -433,6 +433,7 @@ Examples:
 - [`examples/use_cases/28_validation.pea`](../examples/use_cases/28_validation.pea)
 - [`examples/use_cases/29_conformance.pea`](../examples/use_cases/29_conformance.pea)
 - [`examples/use_cases/30_advanced_ml.pea`](../examples/use_cases/30_advanced_ml.pea)
+- [`examples/use_cases/31_sql_interop.pea`](../examples/use_cases/31_sql_interop.pea)
 
 See [`docs/DATA_SCIENCE.md`](DATA_SCIENCE.md),
 [`docs/STATISTICAL_INFERENCE.md`](STATISTICAL_INFERENCE.md),

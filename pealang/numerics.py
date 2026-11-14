@@ -1365,6 +1365,7 @@ def build_stats_namespace() -> dict[str, Any]:
     from .validation import build_validation_namespace
     from .conformance_quality import build_conformance_namespace
     from .advanced_ml import build_ml_namespace
+    from .sql_interop import build_sql_interop_namespace
 
     namespace.update(build_inference_namespace())
     namespace.update(build_modeling_namespace())
@@ -1385,4 +1386,5 @@ def build_stats_namespace() -> dict[str, Any]:
     namespace.update(build_validation_namespace())
     namespace.update(build_conformance_namespace())
     namespace.update(build_ml_namespace())
+    namespace.update(build_sql_interop_namespace())
     return namespace
