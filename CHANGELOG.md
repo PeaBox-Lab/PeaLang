@@ -2,6 +2,16 @@
 
 ## 1.0.0-experience (ongoing) - 2026-11-08
 
+### Code formatter, linter, and AST macros (v1.2.0)
+- Added `pealang/formatter.py` with AST-based formatting, static linting, and auto-fix codemods.
+- Added `PeaFormatter`, `format_source_ast`, `PeaLinter`, `lint_source_ast`, `codemod_remove_unused_imports`, `codemod_rename_variable`, `codemod_fix_naming`.
+- Registered in `analysis` and `stats`/`std.stats` namespaces.
+- Added `tests/test_formatter_v120.py` (8 tests) and `tests/test_use_cases_v120.py` (1 test).
+- Added `docs/FORMATTER.md` and `help/FORMATTER.md`.
+- Added `examples/use_cases/36_formatter.pea`.
+- Version bumped to 1.2.0.
+- Updated `README.md`, `ROADMAP.md`, `docs/USE_CASES.md`.
+
 ### Language Server Protocol (v1.1.0)
 - Added `pealang/lsp.py` with standards-compliant LSP server over stdio.
 - Implemented initialize, didOpen/didChange/didClose, hover, completion, definition, documentSymbol, publishDiagnostics, shutdown/exit.

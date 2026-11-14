@@ -1,0 +1,10 @@
+// v1.2.0 formatter and linter example
+let src = "let x = 1"
+let formatted = analysis.format_source_ast(src)
+print "Formatted: " + str(len(formatted)) + " chars"
+
+let issues = analysis.lint_source_ast(src)
+print "Lint issues: " + str(len(issues))
+
+let renamed = analysis.codemod_rename_variable("let x = 1", "x", "y")
+print "Renamed: " + renamed

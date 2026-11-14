@@ -92,6 +92,13 @@ from .devx import (suggest_fix as _devx_suggest_fix,
     dependency_check as _devx_dependency_check)
 from .lsp import (LSPServer as _lsp_server_class,
     build_lsp_namespace as _lsp_build_namespace)
+from .formatter import (PeaFormatter as _fmt_pea_formatter,
+    format_source_ast as _fmt_format_source_ast,
+    PeaLinter as _fmt_pea_linter,
+    lint_source_ast as _fmt_lint_source_ast,
+    codemod_remove_unused_imports as _fmt_codemod_remove_unused,
+    codemod_rename_variable as _fmt_codemod_rename,
+    codemod_fix_naming as _fmt_codemod_fix_naming)
 from .timeseries_advanced import (zscore_anomalies as _ts_zscore_anomalies,
     iqr_anomalies as _ts_iqr_anomalies,
     moving_average_anomalies as _ts_ma_anomalies,
@@ -3344,5 +3351,12 @@ def build_analysis_namespace() -> dict[str, Any]:
         "silhouette_score": _cl_silhouette,
         "LSPServer": _lsp_server_class,
         "build_lsp_namespace": _lsp_build_namespace,
+        "PeaFormatter": _fmt_pea_formatter,
+        "format_source_ast": _fmt_format_source_ast,
+        "PeaLinter": _fmt_pea_linter,
+        "lint_source_ast": _fmt_lint_source_ast,
+        "codemod_remove_unused_imports": _fmt_codemod_remove_unused,
+        "codemod_rename_variable": _fmt_codemod_rename,
+        "codemod_fix_naming": _fmt_codemod_fix_naming,
     }
 
