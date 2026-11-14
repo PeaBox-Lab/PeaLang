@@ -9,6 +9,7 @@ embeddable PeaLang extensions.
 from __future__ import annotations
 
 import json
+import os
 import threading
 import urllib.parse
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
@@ -347,11 +348,15 @@ class PeaWebApp:
                 for prefix, directory in self.static.items():
                     if route_path.startswith(prefix):
                         rel = route_path[len(prefix):]
-                        file_path = (Path(directory) / rel).resolve()
+                        # Only allow simple filenames (no path separators or traversal)
+                        rel = rel.lstrip("/")
+                        if "/" in rel or "\\" in rel or ".." in rel:
+                            return self._apply_cors(error_response("Forbidden", status=403))
+                        if not rel or rel.startswith("."):
+                            return self._apply_cors(error_response("Forbidden", status=403))
+                        file_path = Path(directory).resolve() / rel
                         base = Path(directory).resolve()
-                        try:
-                            file_path.relative_to(base)
-                        except ValueError:
+                        if not str(file_path.resolve()).startswith(str(base) + os.sep) and file_path.resolve() != base:
                             return self._apply_cors(error_response("Forbidden", status=403))
                         try:
                             if file_path.is_file():

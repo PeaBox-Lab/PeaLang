@@ -13,7 +13,7 @@ def file_hash(path):
  return h.hexdigest()
 def key_id(secret):return hashlib.sha256(secret).hexdigest()[:16]
 def generate_key(path):
- secret=secrets.token_bytes(32);p=Path(path);p.parent.mkdir(parents=True,exist_ok=True);p.write_bytes(base64.b64encode(secret)+b'\n')  # codeql[py/clear-text-storage-sensitive-data]: signing key stored with 0600 permissions
+ secret=secrets.token_bytes(32);p=Path(path);p.parent.mkdir(parents=True,exist_ok=True);p.write_bytes(base64.b64encode(secret)+b'\n')  # codeql[py/clear-text-storage-sensitive-data]
  try:os.chmod(p,0o600)
  except OSError:pass
  return key_id(secret)
