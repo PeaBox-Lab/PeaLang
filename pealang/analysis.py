@@ -146,6 +146,14 @@ from .host_bindings import (register_host_function as _hb_register_host_function
     scaffold_node_sdk as _hb_scaffold_node_sdk,
     import_openapi as _hb_import_openapi,
     generate_connector_package as _hb_generate_connector_package)
+from .vm_optimizer import (OptimizationHints as _vm_optimization_hints,
+    constant_fold as _vm_constant_fold,
+    loop_unroll_hint as _vm_loop_unroll_hint,
+    encode_bytecode_v2 as _vm_encode_bytecode_v2,
+    decode_bytecode_v2 as _vm_decode_bytecode_v2,
+    inspect_bytecode_v2 as _vm_inspect_bytecode_v2,
+    benchmark_vm as _vm_benchmark_vm,
+    PackageIndex as _vm_package_index)
 from .timeseries_advanced import (zscore_anomalies as _ts_zscore_anomalies,
     iqr_anomalies as _ts_iqr_anomalies,
     moving_average_anomalies as _ts_ma_anomalies,
@@ -3450,5 +3458,13 @@ def build_analysis_namespace() -> dict[str, Any]:
         "scaffold_node_sdk": _hb_scaffold_node_sdk,
         "import_openapi": _hb_import_openapi,
         "generate_connector_package": _hb_generate_connector_package,
+        "OptimizationHints": _vm_optimization_hints,
+        "constant_fold": _vm_constant_fold,
+        "loop_unroll_hint": _vm_loop_unroll_hint,
+        "encode_bytecode_v2": _vm_encode_bytecode_v2,
+        "decode_bytecode_v2": _vm_decode_bytecode_v2,
+        "inspect_bytecode_v2": _vm_inspect_bytecode_v2,
+        "benchmark_vm": _vm_benchmark_vm,
+        "PackageIndex": _vm_package_index,
     }
 

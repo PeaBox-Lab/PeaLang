@@ -77,6 +77,7 @@ The objective is to improve security while preserving the existing PeaLang langu
 - Vector/RAG (v1.7.0): `create_vector`, `cosine_similarity`, `chunk_text`, `bm25_score`, `hybrid_search`, `VectorStore`, `model_to_onnx`, `tree_to_onnx` — ONNX export and vector/RAG primitives
 - Notebook IDE (v1.8.0): `ReactiveCell`, `ReactiveNotebook`, `inspect_dataframe`, `inspect_sql_result`, `publish_as_webapp`, `generate_notebook_html` — reactive notebook and web IDE
 - Host bindings (v1.9.0): `register_host_function`, `generate_python_export`, `generate_typescript_export`, `generate_java_export`, `scaffold_go_sdk`, `scaffold_node_sdk`, `import_openapi`, `generate_connector_package` — FFI and multi-language host bindings
+- VM optimizer (v2.0.0): `OptimizationHints`, `constant_fold`, `loop_unroll_hint`, `encode_bytecode_v2`, `decode_bytecode_v2`, `inspect_bytecode_v2`, `benchmark_vm`, `PackageIndex` — optimizing VM, JIT, package hub
 
 ### Numerical and Statistical Computing (`stats` / `std.stats`)
 - Descriptive: `mean`, `median`, `mode`, `quantile`, `percentile`, `iqr`, `variance`, `std`, `skew`, `kurtosis`, `covariance`, `pearson`/`correlation`, `spearman`, `kendall`, `entropy`, `gini`, `describe`

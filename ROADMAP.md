@@ -75,6 +75,12 @@ Grammar, type system, standard library, embedding API, package format and PEAC c
 ## 1.8.0 - Interactive Web Data IDE and reactive notebook server (delivered)
 
 ## 1.9.0 - Native FFI, plugin SDK, and multi-language host bindings (delivered)
+
+## 2.0.0 - Optimizing bytecode VM, JIT, and package hub (delivered)
+- Register-based bytecode format (.peac v2)
+- VM optimization hints (constant folding, loop unrolling, inline caching)
+- Performance benchmarking
+- Decentralized package index with security scanning
 - Host SDKs: Go SDK, Node.js/TypeScript Host SDK
 - Bidirectional FFI with @pea_export decorators
 - OpenAPI/GraphQL importer for connector scaffolding

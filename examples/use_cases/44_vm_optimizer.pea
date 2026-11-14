@@ -1,0 +1,20 @@
+// v2.0.0 VM optimizer and package hub example
+let folded = analysis.constant_fold("2 + 3")
+print "Folded: " + folded
+
+let hint = analysis.loop_unroll_hint(4)
+print "Unroll: " + str(hint["should_unroll"])
+
+let bc = analysis.encode_bytecode_v2([{"op": "LOAD", "arg": 1}])
+print "Bytecode length: " + str(len(bc))
+
+let info = analysis.inspect_bytecode_v2(bc)
+print "Instructions: " + str(info["instruction_count"])
+
+let bench = analysis.benchmark_vm("let x = 1", 3)
+print "Mean ms: " + str(bench["mean_ms"])
+
+let idx = analysis.PackageIndex(".pea_test_index")
+idx.publish("mypkg", "1.0.0")
+let resolved = idx.resolve("mypkg")
+print "Resolved: " + str(resolved["version"])

@@ -107,7 +107,7 @@ from .target_encoding import (build_target_namespace,
     target_apply as stats_target_apply,
     target_encode as stats_target_encode)
 from .ux import doctor as ux_doctor, explain_error as ux_explain
-__version__ = "1.9.0"
+__version__ = "2.0.0"
 __all__=['BytecodeModule','CodeObject','Instruction','Op','Compiler','CompileError','compile_source_to_bytecode','VirtualMachine','VMError','AsyncSuspension','AsyncVirtualMachine','AsyncVMRuntime','AsyncVMModule','CancellationToken','VMRuntime','VMModule','disassemble','execute','compile_source','Interpreter','PeaError','PeaRuntime','PeaModule',
 'SemanticAnalyzer','SemanticResult','FunctionContract','TypeChecker','TypeRef','Diagnostic','TypeCheckResult','parse_type','erase_types','RuntimeOptions','ExecutionResult','PeaRuntimeError','PeaPermissionError',
 'PeaResourceLimitError','to_pea','from_pea','__version__']
@@ -337,6 +337,15 @@ from .host_bindings import (build_host_bindings_namespace,
     scaffold_node_sdk as hb_scaffold_node_sdk,
     import_openapi as hb_import_openapi,
     generate_connector_package as hb_generate_connector_package)
+from .vm_optimizer import (build_vm_optimizer_namespace,
+    OptimizationHints as vm_optimization_hints,
+    constant_fold as vm_constant_fold,
+    loop_unroll_hint as vm_loop_unroll_hint,
+    encode_bytecode_v2 as vm_encode_bytecode_v2,
+    decode_bytecode_v2 as vm_decode_bytecode_v2,
+    inspect_bytecode_v2 as vm_inspect_bytecode_v2,
+    benchmark_vm as vm_benchmark_vm,
+    PackageIndex as vm_package_index)
 from .timeseries_advanced import (build_timeseries_namespace,
     zscore_anomalies as ts_zscore_anomalies,
     iqr_anomalies as ts_iqr_anomalies,

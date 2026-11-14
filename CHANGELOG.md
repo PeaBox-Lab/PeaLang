@@ -2,6 +2,18 @@
 
 ## 1.0.0-experience (ongoing) - 2026-11-08
 
+### Optimizing bytecode VM, JIT, and package hub (v2.0.0)
+- Added `pealang/vm_optimizer.py` with VM optimization and package index management.
+- Added `OptimizationHints`, `constant_fold`, `loop_unroll_hint`, `encode_bytecode_v2`, `decode_bytecode_v2`, `inspect_bytecode_v2`, `benchmark_vm`, `benchmark_compare`, `PackageIndex`.
+- Register-based bytecode format v2 with checksum validation.
+- Decentralized package index with publish/resolve/search/security scan.
+- Registered in `analysis` and `stats`/`std.stats` namespaces.
+- Added `tests/test_vm_optimizer_v200.py` (11 tests) and `tests/test_use_cases_v200.py` (1 test).
+- Added `docs/VM_OPTIMIZER.md` and `help/VM_OPTIMIZER.md`.
+- Added `examples/use_cases/44_vm_optimizer.pea`.
+- Version bumped to 2.0.0.
+- Updated `README.md`, `ROADMAP.md`, `docs/USE_CASES.md`.
+
 ### Native FFI, plugin SDK, and multi-language host bindings (v1.9.0)
 - Added `pealang/host_bindings.py` with bidirectional FFI, host SDK scaffolding, and OpenAPI importer.
 - Added `register_host_function`, `generate_python_export`, `generate_typescript_export`, `generate_java_export`, `scaffold_go_sdk`, `scaffold_node_sdk`, `import_openapi`, `generate_connector_package`.
