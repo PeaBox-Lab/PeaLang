@@ -1,0 +1,15 @@
+// v136 robustness utilities example
+let cache = analysis.LRUCache(10)
+print "Cached: ok"
+
+let chunks = analysis.chunked([1, 2, 3, 4, 5], 2)
+print "Chunks: " + str(len(chunks))
+
+let info = analysis.system_info()
+print "Platform: " + info["platform"]
+
+let fp = analysis.data_fingerprint([{"a": 1}, {"a": 2}])
+print "Fingerprint: " + str(len(fp))
+
+let health = analysis.health_check({})
+print "Health: " + health["status"]

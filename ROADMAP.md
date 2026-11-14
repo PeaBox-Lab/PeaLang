@@ -102,6 +102,7 @@ Make PeaLang the default extension language for:
 - Conformance and quality gates for 1.0 release certification (v133)
 - Advanced ML: k-NN, naive Bayes, linear SVM (v134)
 - SQL and DataFrame interop (v135)
+- Robustness: caching, retry, circuit breaker, health monitoring (v136)
 3. Cross-language experience
    - Python bridge: `interop.call_python`
    - native bridge: `interop.call_native`

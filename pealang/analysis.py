@@ -69,6 +69,20 @@ from .sql_interop import (sql_query as _sql_query,
     dataframe_tail as _sql_df_tail,
     dataframe_describe as _sql_df_describe,
     window_function as _sql_window_function)
+from .robustness import (LRUCache as _rob_lru_cache,
+    memoize as _rob_memoize,
+    retry as _rob_retry,
+    retry_call as _rob_retry_call,
+    CircuitBreaker as _rob_circuit_breaker,
+    batch_process as _rob_batch_process,
+    chunked as _rob_chunked,
+    health_check as _rob_health_check,
+    system_info as _rob_system_info,
+    stream_records as _rob_stream_records,
+    lazy_filter as _rob_lazy_filter,
+    lazy_map as _rob_lazy_map,
+    data_fingerprint as _rob_data_fingerprint,
+    schema_fingerprint as _rob_schema_fingerprint)
 
 
 def _rows(data: Any) -> list[dict[str, Any]]:
@@ -3264,5 +3278,19 @@ def build_analysis_namespace() -> dict[str, Any]:
         "dataframe_tail": _sql_df_tail,
         "dataframe_describe": _sql_df_describe,
         "window_function": _sql_window_function,
+        "LRUCache": _rob_lru_cache,
+        "memoize": _rob_memoize,
+        "retry": _rob_retry,
+        "retry_call": _rob_retry_call,
+        "CircuitBreaker": _rob_circuit_breaker,
+        "batch_process": _rob_batch_process,
+        "chunked": _rob_chunked,
+        "health_check": _rob_health_check,
+        "system_info": _rob_system_info,
+        "stream_records": _rob_stream_records,
+        "lazy_filter": _rob_lazy_filter,
+        "lazy_map": _rob_lazy_map,
+        "data_fingerprint": _rob_data_fingerprint,
+        "schema_fingerprint": _rob_schema_fingerprint,
     }
 

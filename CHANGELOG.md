@@ -2,6 +2,15 @@
 
 ## 1.0.0-experience (ongoing) - 2026-11-08
 
+### Robustness utilities (v136)
+- Added `pealang/robustness.py` with dependency-free resilience utilities.
+- Added `LRUCache`, `memoize`, `retry`, `retry_call`, `CircuitBreaker`, `batch_process`, `chunked`, `parallel_map`, `health_check`, `system_info`, `stream_records`, `lazy_filter`, `lazy_map`, `data_fingerprint`, `schema_fingerprint`.
+- Registered in `analysis` and `stats`/`std.stats` namespaces.
+- Added `tests/test_robustness_v136.py` (12 tests) and `tests/test_use_cases_v136.py` (1 test).
+- Added `docs/ROBUSTNESS.md` and `help/ROBUSTNESS.md`.
+- Added `examples/use_cases/32_robustness.pea`.
+- Updated `README.md`, `ROADMAP.md`, `docs/USE_CASES.md`.
+
 ### SQL and DataFrame interop (v135)
 - Added `pealang/sql_interop.py` with enhanced SQL-over-records and DataFrame-like operations.
 - Added `sql_query`, `sql_value`, `dataframe_from_records`, `dataframe_select`, `dataframe_filter`, `dataframe_sort`, `dataframe_groupby`, `dataframe_head`, `dataframe_tail`, `dataframe_describe`, `dataframe_to_records`, `window_function`.

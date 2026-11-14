@@ -257,6 +257,21 @@ from .sql_interop import (build_sql_interop_namespace,
     dataframe_tail as sql_df_tail,
     dataframe_describe as sql_df_describe,
     window_function as sql_window_function)
+from .robustness import (build_robustness_namespace,
+    LRUCache as robustness_lru_cache,
+    memoize as robustness_memoize,
+    retry as robustness_retry,
+    retry_call as robustness_retry_call,
+    CircuitBreaker as robustness_circuit_breaker,
+    batch_process as robustness_batch_process,
+    chunked as robustness_chunked,
+    health_check as robustness_health_check,
+    system_info as robustness_system_info,
+    stream_records as robustness_stream_records,
+    lazy_filter as robustness_lazy_filter,
+    lazy_map as robustness_lazy_map,
+    data_fingerprint as robustness_data_fingerprint,
+    schema_fingerprint as robustness_schema_fingerprint)
 from .model_interop import ModelInteropError,TensorSpec,TensorBridge,ONNXModel,QueryPolicy,QueryPlan,GovernedQueryPlanner
 from .agent_governance import AuditEvent,GovernanceAuditStore,AuditedApprovalGate,approval_request_id
 from .hardening import SecurityProbe,ProbeResult,AdversarialAgentSuite,PublicAPIGate,ReleaseThresholds,ReleaseHardeningGate,sha256_manifest
