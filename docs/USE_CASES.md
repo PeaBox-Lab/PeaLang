@@ -443,6 +443,7 @@ Examples:
 - [`examples/use_cases/38_react_sdk.pea`](../examples/use_cases/38_react_sdk.pea)
 - [`examples/use_cases/39_web_sdk.pea`](../examples/use_cases/39_web_sdk.pea)
 - [`examples/use_cases/40_arrow_backend.pea`](../examples/use_cases/40_arrow_backend.pea)
+- [`examples/use_cases/41_vector_rag.pea`](../examples/use_cases/41_vector_rag.pea)
 
 See [`docs/DATA_SCIENCE.md`](DATA_SCIENCE.md),
 [`docs/STATISTICAL_INFERENCE.md`](STATISTICAL_INFERENCE.md),

@@ -2,6 +2,16 @@
 
 ## 1.0.0-experience (ongoing) - 2026-11-08
 
+### ONNX model export and vector/RAG primitives (v1.7.0)
+- Added `pealang/vector_rag.py` with ONNX export and vector/RAG primitives.
+- Added `create_vector`, `cosine_similarity`, `euclidean_distance`, `dot_product`, `chunk_text`, `chunk_by_sentences`, `bm25_score`, `hybrid_search`, `VectorStore`, `model_to_onnx`, `tree_to_onnx`, `onnx_export_json`.
+- Registered in `analysis` and `stats`/`std.stats` namespaces.
+- Added `tests/test_vector_rag_v170.py` (14 tests) and `tests/test_use_cases_v170.py` (1 test).
+- Added `docs/VECTOR_RAG.md` and `help/VECTOR_RAG.md`.
+- Added `examples/use_cases/41_vector_rag.pea`.
+- Version bumped to 1.7.0.
+- Updated `README.md`, `ROADMAP.md`, `docs/USE_CASES.md`.
+
 ### Arrow/DuckDB vectorized DataFrame backend (v1.6.0)
 - Added `pealang/arrow_backend.py` with pluggable DataFrame execution backends.
 - Added `available_backends`, `preferred_backend`, `backend_info`, `PythonBackend`, `DuckDBBackend`, `QueryPlan`, `create_query_plan`.

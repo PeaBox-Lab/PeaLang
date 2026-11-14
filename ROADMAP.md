@@ -69,6 +69,11 @@ Grammar, type system, standard library, embedding API, package format and PEAC c
 ## 1.5.0 - Full-stack web server and auto-typed SDK generator (delivered)
 
 ## 1.6.0 - Arrow/DuckDB vectorized DataFrame backend (delivered)
+
+## 1.7.0 - ONNX model export and vector/RAG primitives (delivered)
+- ONNX graph generation for tree/boosting/GLM models
+- Vector embedding types, semantic chunking, cosine/BM25 hybrid search
+- VectorStore for RAG workflows
 - Pluggable execution backends: pure-Python + accelerated (DuckDB/Polars/Arrow)
 - Lazy query plan with predicate/projection pushdown
 - `create_query_plan`, `QueryPlan`, `PythonBackend`, `DuckDBBackend`

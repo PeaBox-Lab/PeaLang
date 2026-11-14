@@ -1,0 +1,12 @@
+// v1.7.0 vector/RAG example
+let v1 = analysis.create_vector([1.0, 0.0, 0.0], "doc1")
+print "Vector dim: " + str(v1["dim"])
+
+let sim = analysis.cosine_similarity([1.0, 0.0], [1.0, 0.0])
+print "Cosine sim: " + str(sim)
+
+let chunks = analysis.chunk_text("Hello world. This is a test. Another sentence.", 20, 5)
+print "Chunks: " + str(len(chunks))
+
+let vs = analysis.VectorStore()
+print "Store size: " + str(vs.size())

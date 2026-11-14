@@ -107,7 +107,7 @@ from .target_encoding import (build_target_namespace,
     target_apply as stats_target_apply,
     target_encode as stats_target_encode)
 from .ux import doctor as ux_doctor, explain_error as ux_explain
-__version__ = "1.6.0"
+__version__ = "1.7.0"
 __all__=['BytecodeModule','CodeObject','Instruction','Op','Compiler','CompileError','compile_source_to_bytecode','VirtualMachine','VMError','AsyncSuspension','AsyncVirtualMachine','AsyncVMRuntime','AsyncVMModule','CancellationToken','VMRuntime','VMModule','disassemble','execute','compile_source','Interpreter','PeaError','PeaRuntime','PeaModule',
 'SemanticAnalyzer','SemanticResult','FunctionContract','TypeChecker','TypeRef','Diagnostic','TypeCheckResult','parse_type','erase_types','RuntimeOptions','ExecutionResult','PeaRuntimeError','PeaPermissionError',
 'PeaResourceLimitError','to_pea','from_pea','__version__']
@@ -311,6 +311,16 @@ from .arrow_backend import (build_arrow_backend_namespace,
     preferred_backend as arrow_preferred_backend,
     backend_info as arrow_backend_info,
     create_query_plan as arrow_create_query_plan)
+from .vector_rag import (build_vector_rag_namespace,
+    create_vector as vr_create_vector,
+    cosine_similarity as vr_cosine_similarity,
+    euclidean_distance as vr_euclidean_distance,
+    chunk_text as vr_chunk_text,
+    chunk_by_sentences as vr_chunk_by_sentences,
+    bm25_score as vr_bm25_score,
+    hybrid_search as vr_hybrid_search,
+    VectorStore as vr_vector_store,
+    model_to_onnx as vr_model_to_onnx)
 from .timeseries_advanced import (build_timeseries_namespace,
     zscore_anomalies as ts_zscore_anomalies,
     iqr_anomalies as ts_iqr_anomalies,
