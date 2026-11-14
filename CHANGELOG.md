@@ -2,6 +2,16 @@
 
 ## 1.0.0-experience (ongoing) - 2026-11-08
 
+### True standalone WASM bytecode VM (v1.3.0)
+- Added `pealang/wasm_runtime.py` with browser capability bridges, Web Worker runtime, and sandboxing.
+- Added `capability_bridge_source`, `web_worker_runtime_source`, `capability_sandbox_policy`, `wasm_module_manifest`, `BROWSER_CAPABILITIES`.
+- Registered in `analysis` and `stats`/`std.stats` namespaces.
+- Added `tests/test_wasm_runtime_v130.py` (6 tests) and `tests/test_use_cases_v130.py` (1 test).
+- Added `docs/WASM_RUNTIME.md` and `help/WASM_RUNTIME.md`.
+- Added `examples/use_cases/37_wasm_runtime.pea`.
+- Version bumped to 1.3.0.
+- Updated `README.md`, `ROADMAP.md`, `docs/USE_CASES.md`.
+
 ### Code formatter, linter, and AST macros (v1.2.0)
 - Added `pealang/formatter.py` with AST-based formatting, static linting, and auto-fix codemods.
 - Added `PeaFormatter`, `format_source_ast`, `PeaLinter`, `lint_source_ast`, `codemod_remove_unused_imports`, `codemod_rename_variable`, `codemod_fix_naming`.

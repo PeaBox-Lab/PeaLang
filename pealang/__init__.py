@@ -107,7 +107,7 @@ from .target_encoding import (build_target_namespace,
     target_apply as stats_target_apply,
     target_encode as stats_target_encode)
 from .ux import doctor as ux_doctor, explain_error as ux_explain
-__version__ = "1.2.0"
+__version__ = "1.3.0"
 __all__=['BytecodeModule','CodeObject','Instruction','Op','Compiler','CompileError','compile_source_to_bytecode','VirtualMachine','VMError','AsyncSuspension','AsyncVirtualMachine','AsyncVMRuntime','AsyncVMModule','CancellationToken','VMRuntime','VMModule','disassemble','execute','compile_source','Interpreter','PeaError','PeaRuntime','PeaModule',
 'SemanticAnalyzer','SemanticResult','FunctionContract','TypeChecker','TypeRef','Diagnostic','TypeCheckResult','parse_type','erase_types','RuntimeOptions','ExecutionResult','PeaRuntimeError','PeaPermissionError',
 'PeaResourceLimitError','to_pea','from_pea','__version__']
@@ -290,6 +290,11 @@ from .formatter import (build_formatter_namespace,
     codemod_remove_unused_imports as formatter_codemod_remove_unused,
     codemod_rename_variable as formatter_codemod_rename,
     codemod_fix_naming as formatter_codemod_fix_naming)
+from .wasm_runtime import (build_wasm_runtime_namespace,
+    capability_bridge_source as wasm_capability_bridge_source,
+    web_worker_runtime_source as wasm_web_worker_runtime_source,
+    capability_sandbox_policy as wasm_capability_sandbox_policy,
+    wasm_module_manifest as wasm_module_manifest)
 from .timeseries_advanced import (build_timeseries_namespace,
     zscore_anomalies as ts_zscore_anomalies,
     iqr_anomalies as ts_iqr_anomalies,

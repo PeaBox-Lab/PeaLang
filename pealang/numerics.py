@@ -1372,6 +1372,7 @@ def build_stats_namespace() -> dict[str, Any]:
     from .clustering import build_clustering_namespace
     from .lsp import build_lsp_namespace
     from .formatter import build_formatter_namespace
+    from .wasm_runtime import build_wasm_runtime_namespace
 
     namespace.update(build_inference_namespace())
     namespace.update(build_modeling_namespace())
@@ -1399,4 +1400,5 @@ def build_stats_namespace() -> dict[str, Any]:
     namespace.update(build_clustering_namespace())
     namespace.update(build_lsp_namespace())
     namespace.update(build_formatter_namespace())
+    namespace.update(build_wasm_runtime_namespace())
     return namespace

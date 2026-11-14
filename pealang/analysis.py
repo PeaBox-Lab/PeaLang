@@ -99,6 +99,11 @@ from .formatter import (PeaFormatter as _fmt_pea_formatter,
     codemod_remove_unused_imports as _fmt_codemod_remove_unused,
     codemod_rename_variable as _fmt_codemod_rename,
     codemod_fix_naming as _fmt_codemod_fix_naming)
+from .wasm_runtime import (capability_bridge_source as _wasm_capability_bridge_source,
+    web_worker_runtime_source as _wasm_web_worker_runtime_source,
+    capability_sandbox_policy as _wasm_capability_sandbox_policy,
+    wasm_module_manifest as _wasm_module_manifest,
+    build_wasm_runtime_namespace as _wasm_build_namespace)
 from .timeseries_advanced import (zscore_anomalies as _ts_zscore_anomalies,
     iqr_anomalies as _ts_iqr_anomalies,
     moving_average_anomalies as _ts_ma_anomalies,
@@ -3358,5 +3363,10 @@ def build_analysis_namespace() -> dict[str, Any]:
         "codemod_remove_unused_imports": _fmt_codemod_remove_unused,
         "codemod_rename_variable": _fmt_codemod_rename,
         "codemod_fix_naming": _fmt_codemod_fix_naming,
+        "capability_bridge_source": _wasm_capability_bridge_source,
+        "web_worker_runtime_source": _wasm_web_worker_runtime_source,
+        "capability_sandbox_policy": _wasm_capability_sandbox_policy,
+        "wasm_module_manifest": _wasm_module_manifest,
+        "build_wasm_runtime_namespace": _wasm_build_namespace,
     }
 

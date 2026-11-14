@@ -61,6 +61,12 @@ Grammar, type system, standard library, embedding API, package format and PEAC c
 ## 1.1.0 - Native LSP (delivered)
 
 ## 1.2.0 - Code formatter, linter, AST macros (delivered)
+
+## 1.3.0 - True standalone WASM bytecode VM (delivered)
+- Browser capability bridges (fetch, IndexedDB, localStorage, WebStreams, console, crypto)
+- Web Worker runtime for WASM execution
+- Capability sandboxing policy
+- WASM module manifest generation
 - AST-based code formatter (PeaFormatter, format_source_ast)
 - Static linter (PeaLinter, lint_source_ast) with dead-code, complexity, naming checks
 - Auto-fix codemods (rename, fix naming, remove unused imports)

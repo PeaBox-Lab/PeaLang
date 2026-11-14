@@ -439,6 +439,7 @@ Examples:
 - [`examples/use_cases/34_timeseries.pea`](../examples/use_cases/34_timeseries.pea)
 - [`examples/use_cases/35_clustering.pea`](../examples/use_cases/35_clustering.pea)
 - [`examples/use_cases/36_formatter.pea`](../examples/use_cases/36_formatter.pea)
+- [`examples/use_cases/37_wasm_runtime.pea`](../examples/use_cases/37_wasm_runtime.pea)
 
 See [`docs/DATA_SCIENCE.md`](DATA_SCIENCE.md),
 [`docs/STATISTICAL_INFERENCE.md`](STATISTICAL_INFERENCE.md),

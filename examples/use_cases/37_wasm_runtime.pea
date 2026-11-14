@@ -1,0 +1,12 @@
+// v1.3.0 WASM runtime example
+let bridge = analysis.capability_bridge_source(["fetch", "console"])
+print "Bridge length: " + str(len(bridge))
+
+let worker = analysis.web_worker_runtime_source()
+print "Worker length: " + str(len(worker))
+
+let policy = analysis.capability_sandbox_policy(["fetch"])
+print "Network access: " + str(policy["network_access"])
+
+let manifest = analysis.wasm_module_manifest("my_app", ["main"], [], ["fetch", "console"])
+print "Manifest format: " + manifest["format"]
