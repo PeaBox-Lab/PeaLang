@@ -2,6 +2,17 @@
 
 ## 1.0.0-experience (ongoing) - 2026-11-08
 
+### Language Server Protocol (v1.1.0)
+- Added `pealang/lsp.py` with standards-compliant LSP server over stdio.
+- Implemented initialize, didOpen/didChange/didClose, hover, completion, definition, documentSymbol, publishDiagnostics, shutdown/exit.
+- Added `LSPServer` class and `build_lsp_namespace()`.
+- Registered in `analysis` and `stats`/`std.stats` namespaces.
+- Added `tests/test_lsp_v110.py` (6 tests).
+- Added `docs/LSP.md` and `help/LSP.md`.
+- Added handover document `docs/handover/PEALANG_AI_DEVELOPMENT_HANDOVER 1.1.0.md`.
+- Version bumped to 1.1.0.
+- Updated `README.md`, `ROADMAP.md`.
+
 ### Clustering and dimensionality reduction (v139)
 - Added `pealang/clustering.py` with dependency-free clustering and dimensionality reduction.
 - Added `dbscan`, `hierarchical_clustering`, `tsne`, `umap`, `variance_threshold`, `correlation_filter`, `mutual_info_scores`, `silhouette_score`.

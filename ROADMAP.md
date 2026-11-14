@@ -57,6 +57,10 @@ The original roadmap goal is not yet complete. The implementation has covered mu
 Grammar, type system, standard library, embedding API, package format and PEAC compatibility policy are Stable; security reviewed; LSP/DAP workflows and documentation complete; real applications run without runtime forks.
 
 ## 1.0.0 - GA (delivered)
+
+## 1.1.0 - Native LSP (delivered)
+- Standards-compliant LSP server over stdio with diagnostics, hover, completion, document symbols
+- `pealang/lsp.py` with `LSPServer` and `build_lsp_namespace`
 - Final spec and public API lock: PUBLIC_API_SNAPSHOT.json regenerated (1755 symbols)
 - Version bumped to 1.0.0
 - All CI matrices configured (OS/Python/Java/Node)

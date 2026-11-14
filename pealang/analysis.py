@@ -90,6 +90,8 @@ from .devx import (suggest_fix as _devx_suggest_fix,
     lint_source as _devx_lint_source,
     format_source as _devx_format_source,
     dependency_check as _devx_dependency_check)
+from .lsp import (LSPServer as _lsp_server_class,
+    build_lsp_namespace as _lsp_build_namespace)
 from .timeseries_advanced import (zscore_anomalies as _ts_zscore_anomalies,
     iqr_anomalies as _ts_iqr_anomalies,
     moving_average_anomalies as _ts_ma_anomalies,
@@ -3340,5 +3342,7 @@ def build_analysis_namespace() -> dict[str, Any]:
         "correlation_filter": _cl_correlation_filter,
         "mutual_info_scores": _cl_mutual_info,
         "silhouette_score": _cl_silhouette,
+        "LSPServer": _lsp_server_class,
+        "build_lsp_namespace": _lsp_build_namespace,
     }
 
