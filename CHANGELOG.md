@@ -2,6 +2,17 @@
 
 ## 1.0.0-experience (ongoing) - 2026-11-08
 
+### Arrow/DuckDB vectorized DataFrame backend (v1.6.0)
+- Added `pealang/arrow_backend.py` with pluggable DataFrame execution backends.
+- Added `available_backends`, `preferred_backend`, `backend_info`, `PythonBackend`, `DuckDBBackend`, `QueryPlan`, `create_query_plan`.
+- Lazy query optimization with predicate/projection pushdown.
+- Registered in `analysis` and `stats`/`std.stats` namespaces.
+- Added `tests/test_arrow_backend_v160.py` (12 tests) and `tests/test_use_cases_v160.py` (1 test).
+- Added `docs/ARROW_BACKEND.md` and `help/ARROW_BACKEND.md`.
+- Added `examples/use_cases/40_arrow_backend.pea`.
+- Version bumped to 1.6.0.
+- Updated `README.md`, `ROADMAP.md`, `docs/USE_CASES.md`.
+
 ### Full-stack web server and auto-typed SDK generator (v1.5.0)
 - Added `pealang/web_sdk.py` with enhanced web server features and TypeScript client generation.
 - Added `generate_typescript_client`, `sse_endpoint_source`, `websocket_handler_source`, `jwt_middleware_source`, `rate_limiter_source`, `api_versioning_source`.

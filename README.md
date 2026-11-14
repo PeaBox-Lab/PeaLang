@@ -73,6 +73,7 @@ The objective is to improve security while preserving the existing PeaLang langu
 - WASM runtime (v1.3.0): `capability_bridge_source`, `web_worker_runtime_source`, `capability_sandbox_policy`, `wasm_module_manifest` — browser capability bridges, Web Worker runtime, sandboxing
 - React SDK (v1.4.0): `generate_react_hooks`, `generate_data_grid_adapter`, `generate_chart_adapter` — React hooks, data grid adapter, chart adapter
 - Web SDK (v1.5.0): `generate_typescript_client`, `sse_endpoint_source`, `websocket_handler_source`, `jwt_middleware_source`, `rate_limiter_source`, `api_versioning_source` — full-stack web server and auto-typed SDK
+- Arrow backend (v1.6.0): `available_backends`, `preferred_backend`, `backend_info`, `create_query_plan`, `PythonBackend`, `DuckDBBackend` — pluggable DataFrame backends with lazy query optimization
 
 ### Numerical and Statistical Computing (`stats` / `std.stats`)
 - Descriptive: `mean`, `median`, `mode`, `quantile`, `percentile`, `iqr`, `variance`, `std`, `skew`, `kurtosis`, `covariance`, `pearson`/`correlation`, `spearman`, `kendall`, `entropy`, `gini`, `describe`

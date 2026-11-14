@@ -1,0 +1,12 @@
+// v1.6.0 Arrow/DuckDB backend example
+let data = [{"a": 1}, {"a": 5}, {"a": 3}, {"a": 2}]
+
+let info = analysis.backend_info()
+print "Preferred backend: " + info["preferred"]
+
+let qp = analysis.create_query_plan(data)
+let result = qp.collect()
+print "Rows: " + str(len(result))
+
+let backends = analysis.available_backends()
+print "Available: " + str(len(backends))

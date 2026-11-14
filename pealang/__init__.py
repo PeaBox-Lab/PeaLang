@@ -107,7 +107,7 @@ from .target_encoding import (build_target_namespace,
     target_apply as stats_target_apply,
     target_encode as stats_target_encode)
 from .ux import doctor as ux_doctor, explain_error as ux_explain
-__version__ = "1.5.0"
+__version__ = "1.6.0"
 __all__=['BytecodeModule','CodeObject','Instruction','Op','Compiler','CompileError','compile_source_to_bytecode','VirtualMachine','VMError','AsyncSuspension','AsyncVirtualMachine','AsyncVMRuntime','AsyncVMModule','CancellationToken','VMRuntime','VMModule','disassemble','execute','compile_source','Interpreter','PeaError','PeaRuntime','PeaModule',
 'SemanticAnalyzer','SemanticResult','FunctionContract','TypeChecker','TypeRef','Diagnostic','TypeCheckResult','parse_type','erase_types','RuntimeOptions','ExecutionResult','PeaRuntimeError','PeaPermissionError',
 'PeaResourceLimitError','to_pea','from_pea','__version__']
@@ -306,6 +306,11 @@ from .web_sdk import (build_web_sdk_namespace,
     jwt_middleware_source as web_sdk_jwt_middleware_source,
     rate_limiter_source as web_sdk_rate_limiter_source,
     api_versioning_source as web_sdk_api_versioning_source)
+from .arrow_backend import (build_arrow_backend_namespace,
+    available_backends as arrow_available_backends,
+    preferred_backend as arrow_preferred_backend,
+    backend_info as arrow_backend_info,
+    create_query_plan as arrow_create_query_plan)
 from .timeseries_advanced import (build_timeseries_namespace,
     zscore_anomalies as ts_zscore_anomalies,
     iqr_anomalies as ts_iqr_anomalies,

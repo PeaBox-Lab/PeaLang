@@ -115,6 +115,12 @@ from .web_sdk import (generate_typescript_client as _web_sdk_generate_typescript
     rate_limiter_source as _web_sdk_rate_limiter_source,
     api_versioning_source as _web_sdk_api_versioning_source,
     build_web_sdk_namespace as _web_sdk_build_namespace)
+from .arrow_backend import (available_backends as _arrow_available_backends,
+    preferred_backend as _arrow_preferred_backend,
+    backend_info as _arrow_backend_info,
+    create_query_plan as _arrow_create_query_plan,
+    PythonBackend as _arrow_python_backend,
+    DuckDBBackend as _arrow_duckdb_backend)
 from .timeseries_advanced import (zscore_anomalies as _ts_zscore_anomalies,
     iqr_anomalies as _ts_iqr_anomalies,
     moving_average_anomalies as _ts_ma_anomalies,
@@ -3390,5 +3396,9 @@ def build_analysis_namespace() -> dict[str, Any]:
         "rate_limiter_source": _web_sdk_rate_limiter_source,
         "api_versioning_source": _web_sdk_api_versioning_source,
         "build_web_sdk_namespace": _web_sdk_build_namespace,
+        "available_backends": _arrow_available_backends,
+        "preferred_backend": _arrow_preferred_backend,
+        "backend_info": _arrow_backend_info,
+        "create_query_plan": _arrow_create_query_plan,
     }
 

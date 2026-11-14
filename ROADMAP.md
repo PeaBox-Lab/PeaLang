@@ -67,6 +67,11 @@ Grammar, type system, standard library, embedding API, package format and PEAC c
 ## 1.4.0 - Reactive React SDK and browser data grid (delivered)
 
 ## 1.5.0 - Full-stack web server and auto-typed SDK generator (delivered)
+
+## 1.6.0 - Arrow/DuckDB vectorized DataFrame backend (delivered)
+- Pluggable execution backends: pure-Python + accelerated (DuckDB/Polars/Arrow)
+- Lazy query plan with predicate/projection pushdown
+- `create_query_plan`, `QueryPlan`, `PythonBackend`, `DuckDBBackend`
 - Native routing, SSE, WebSockets, JWT/OAuth2 middleware, rate limiting
 - `pealang codegen ts` — TypeScript client generation from .pea route definitions
 - React hooks: usePeaRuntime, usePeaScript, usePeaDataFrame, usePeaQuery, usePeaValidation

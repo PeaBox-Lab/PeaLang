@@ -1375,6 +1375,7 @@ def build_stats_namespace() -> dict[str, Any]:
     from .wasm_runtime import build_wasm_runtime_namespace
     from .react_sdk import build_react_sdk_namespace
     from .web_sdk import build_web_sdk_namespace
+    from .arrow_backend import build_arrow_backend_namespace
 
     namespace.update(build_inference_namespace())
     namespace.update(build_modeling_namespace())
@@ -1405,4 +1406,5 @@ def build_stats_namespace() -> dict[str, Any]:
     namespace.update(build_wasm_runtime_namespace())
     namespace.update(build_react_sdk_namespace())
     namespace.update(build_web_sdk_namespace())
+    namespace.update(build_arrow_backend_namespace())
     return namespace
