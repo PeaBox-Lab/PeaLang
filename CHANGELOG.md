@@ -2,6 +2,15 @@
 
 ## 1.0.0-experience (ongoing) - 2026-11-08
 
+### Developer experience (v137)
+- Added `pealang/devx.py` with developer experience and tooling enhancements.
+- Added `suggest_fix`, `explain_error_detailed`, `project_scaffold`, `code_metrics`, `lint_source`, `format_source`, `dependency_check`.
+- Registered in `analysis` and `stats`/`std.stats` namespaces.
+- Added `tests/test_devx_v137.py` (7 tests) and `tests/test_use_cases_v137.py` (1 test).
+- Added `docs/DEVX.md` and `help/DEVX.md`.
+- Added `examples/use_cases/33_devx.pea`.
+- Updated `README.md`, `ROADMAP.md`, `docs/USE_CASES.md`.
+
 ### Robustness utilities (v136)
 - Added `pealang/robustness.py` with dependency-free resilience utilities.
 - Added `LRUCache`, `memoize`, `retry`, `retry_call`, `CircuitBreaker`, `batch_process`, `chunked`, `parallel_map`, `health_check`, `system_info`, `stream_records`, `lazy_filter`, `lazy_map`, `data_fingerprint`, `schema_fingerprint`.

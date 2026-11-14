@@ -65,6 +65,7 @@ The objective is to improve security while preserving the existing PeaLang langu
 - Advanced ML (v134): `knn_fit`, `knn_predict`, `knn_score`, `naive_bayes_fit`, `naive_bayes_predict`, `naive_bayes_score`, `svm_fit`, `svm_predict`, `svm_score`
 - SQL/DataFrame interop (v135): `sql_query`, `sql_value`, `dataframe_from_records`, `dataframe_select`, `dataframe_filter`, `dataframe_sort`, `dataframe_groupby`, `dataframe_head`, `dataframe_tail`, `dataframe_describe`, `window_function`
 - Robustness (v136): `LRUCache`, `memoize`, `retry`, `retry_call`, `CircuitBreaker`, `batch_process`, `chunked`, `parallel_map`, `health_check`, `system_info`, `stream_records`, `lazy_filter`, `lazy_map`, `data_fingerprint`, `schema_fingerprint`
+- Developer experience (v137): `suggest_fix`, `explain_error_detailed`, `project_scaffold`, `code_metrics`, `lint_source`, `format_source`, `dependency_check`
 
 ### Numerical and Statistical Computing (`stats` / `std.stats`)
 - Descriptive: `mean`, `median`, `mode`, `quantile`, `percentile`, `iqr`, `variance`, `std`, `skew`, `kurtosis`, `covariance`, `pearson`/`correlation`, `spearman`, `kendall`, `entropy`, `gini`, `describe`

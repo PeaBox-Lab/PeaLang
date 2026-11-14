@@ -1,0 +1,15 @@
+// v137 developer experience example
+let src = "let x = 1"
+let metrics = analysis.code_metrics(src)
+let tl = metrics["total_lines"]
+print "Lines: " + str(tl)
+
+let suggestions = analysis.suggest_fix("Variable 'y' not defined")
+print "Suggestions: " + str(len(suggestions))
+
+let lint_issues = analysis.lint_source("let x = 1   ")
+print "Lint issues: " + str(len(lint_issues))
+
+let formatted = analysis.format_source("function f() let x = 1 return x")
+let fl = len(formatted)
+print "Formatted length: " + str(fl)

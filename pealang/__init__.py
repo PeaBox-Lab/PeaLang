@@ -272,6 +272,14 @@ from .robustness import (build_robustness_namespace,
     lazy_map as robustness_lazy_map,
     data_fingerprint as robustness_data_fingerprint,
     schema_fingerprint as robustness_schema_fingerprint)
+from .devx import (build_devx_namespace,
+    suggest_fix as devx_suggest_fix,
+    explain_error_detailed as devx_explain_error,
+    project_scaffold as devx_project_scaffold,
+    code_metrics as devx_code_metrics,
+    lint_source as devx_lint_source,
+    format_source as devx_format_source,
+    dependency_check as devx_dependency_check)
 from .model_interop import ModelInteropError,TensorSpec,TensorBridge,ONNXModel,QueryPolicy,QueryPlan,GovernedQueryPlanner
 from .agent_governance import AuditEvent,GovernanceAuditStore,AuditedApprovalGate,approval_request_id
 from .hardening import SecurityProbe,ProbeResult,AdversarialAgentSuite,PublicAPIGate,ReleaseThresholds,ReleaseHardeningGate,sha256_manifest

@@ -83,6 +83,13 @@ from .robustness import (LRUCache as _rob_lru_cache,
     lazy_map as _rob_lazy_map,
     data_fingerprint as _rob_data_fingerprint,
     schema_fingerprint as _rob_schema_fingerprint)
+from .devx import (suggest_fix as _devx_suggest_fix,
+    explain_error_detailed as _devx_explain_error,
+    project_scaffold as _devx_project_scaffold,
+    code_metrics as _devx_code_metrics,
+    lint_source as _devx_lint_source,
+    format_source as _devx_format_source,
+    dependency_check as _devx_dependency_check)
 
 
 def _rows(data: Any) -> list[dict[str, Any]]:
@@ -3292,5 +3299,12 @@ def build_analysis_namespace() -> dict[str, Any]:
         "lazy_map": _rob_lazy_map,
         "data_fingerprint": _rob_data_fingerprint,
         "schema_fingerprint": _rob_schema_fingerprint,
+        "suggest_fix": _devx_suggest_fix,
+        "explain_error_detailed": _devx_explain_error,
+        "project_scaffold": _devx_project_scaffold,
+        "code_metrics": _devx_code_metrics,
+        "lint_source": _devx_lint_source,
+        "format_source": _devx_format_source,
+        "dependency_check": _devx_dependency_check,
     }
 

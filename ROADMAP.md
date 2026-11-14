@@ -103,6 +103,7 @@ Make PeaLang the default extension language for:
 - Advanced ML: k-NN, naive Bayes, linear SVM (v134)
 - SQL and DataFrame interop (v135)
 - Robustness: caching, retry, circuit breaker, health monitoring (v136)
+- Developer experience: error suggestions, scaffolding, metrics, linting, formatting (v137)
 3. Cross-language experience
    - Python bridge: `interop.call_python`
    - native bridge: `interop.call_native`
