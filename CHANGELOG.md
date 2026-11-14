@@ -2,6 +2,15 @@
 
 ## 1.0.0-experience (ongoing) - 2026-11-08
 
+### Advanced machine learning (v134)
+- Added `pealang/advanced_ml.py` with dependency-free k-NN, Gaussian naive Bayes, and linear SVM classifiers.
+- Added `knn_fit`/`knn_predict`/`knn_score`, `naive_bayes_fit`/`naive_bayes_predict`/`naive_bayes_score`, `svm_fit`/`svm_predict`/`svm_score`.
+- Registered in `analysis` and `stats`/`std.stats` namespaces.
+- Added `tests/test_advanced_ml_v134.py` (4 tests) and `tests/test_use_cases_v134.py` (1 test).
+- Added `docs/ADVANCED_ML.md` and `help/ADVANCED_ML.md`.
+- Added `examples/use_cases/30_advanced_ml.pea`.
+- Updated `README.md`, `ROADMAP.md`, `docs/USE_CASES.md`.
+
 ### Conformance and quality gates (v133)
 - Added `pealang/conformance_quality.py` with dependency-free conformance and quality-gate helpers.
 - Added `run_conformance_suite`, `check_api_stability`, `check_documentation_coverage`, `environment_check`, `generate_quality_report`, `hash_source_tree`.

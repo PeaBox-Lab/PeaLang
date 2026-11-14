@@ -234,6 +234,16 @@ from .conformance_quality import (build_conformance_namespace,
     environment_check as cq_environment_check,
     generate_quality_report as cq_generate_quality_report,
     hash_source_tree as cq_hash_source_tree)
+from .advanced_ml import (build_ml_namespace,
+    knn_fit as ml_knn_fit,
+    knn_predict as ml_knn_predict,
+    knn_score as ml_knn_score,
+    naive_bayes_fit as ml_nb_fit,
+    naive_bayes_predict as ml_nb_predict,
+    naive_bayes_score as ml_nb_score,
+    svm_fit as ml_svm_fit,
+    svm_predict as ml_svm_predict,
+    svm_score as ml_svm_score)
 from .model_interop import ModelInteropError,TensorSpec,TensorBridge,ONNXModel,QueryPolicy,QueryPlan,GovernedQueryPlanner
 from .agent_governance import AuditEvent,GovernanceAuditStore,AuditedApprovalGate,approval_request_id
 from .hardening import SecurityProbe,ProbeResult,AdversarialAgentSuite,PublicAPIGate,ReleaseThresholds,ReleaseHardeningGate,sha256_manifest

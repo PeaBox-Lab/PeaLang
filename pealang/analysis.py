@@ -48,6 +48,15 @@ from .conformance_quality import (run_conformance_suite as _cq_run_suite,
     environment_check as _cq_env_check,
     generate_quality_report as _cq_gen_report,
     hash_source_tree as _cq_hash_tree)
+from .advanced_ml import (knn_fit as _ml_knn_fit,
+    knn_predict as _ml_knn_predict,
+    knn_score as _ml_knn_score,
+    naive_bayes_fit as _ml_nb_fit,
+    naive_bayes_predict as _ml_nb_predict,
+    naive_bayes_score as _ml_nb_score,
+    svm_fit as _ml_svm_fit,
+    svm_predict as _ml_svm_predict,
+    svm_score as _ml_svm_score)
 
 
 def _rows(data: Any) -> list[dict[str, Any]]:
@@ -3222,5 +3231,14 @@ def build_analysis_namespace() -> dict[str, Any]:
         "environment_check": _cq_env_check,
         "generate_quality_report": _cq_gen_report,
         "hash_source_tree": _cq_hash_tree,
+        "knn_fit": _ml_knn_fit,
+        "knn_predict": _ml_knn_predict,
+        "knn_score": _ml_knn_score,
+        "naive_bayes_fit": _ml_nb_fit,
+        "naive_bayes_predict": _ml_nb_predict,
+        "naive_bayes_score": _ml_nb_score,
+        "svm_fit": _ml_svm_fit,
+        "svm_predict": _ml_svm_predict,
+        "svm_score": _ml_svm_score,
     }
 

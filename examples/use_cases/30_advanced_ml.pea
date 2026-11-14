@@ -1,0 +1,15 @@
+// v134 advanced ML example
+let X = [[1, 2], [2, 3], [3, 4], [10, 10], [11, 11], [12, 12]]
+let y = [0, 0, 0, 1, 1, 1]
+
+let model = analysis.knn_fit(X, y, 3)
+let preds = analysis.knn_predict(model, [[2, 3], [11, 11]])
+print "KNN preds: " + str(preds)
+
+let nb = analysis.naive_bayes_fit(X, y)
+let nb_preds = analysis.naive_bayes_predict(nb, [[2, 3], [11, 11]])
+print "NB preds: " + str(nb_preds)
+
+let svm = analysis.svm_fit(X, y, 1.0, 0.001, 500)
+let svm_preds = analysis.svm_predict(svm, [[2, 3], [11, 11]])
+print "SVM preds: " + str(svm_preds)
