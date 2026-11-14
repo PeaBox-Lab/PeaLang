@@ -1,5 +1,8 @@
 name: Java and Node Matrix
 on: [push, pull_request]
+permissions:
+  contents: read
+
 jobs:
   java:
     strategy:

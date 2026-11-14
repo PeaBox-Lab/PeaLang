@@ -77,11 +77,38 @@ def read_xml(path: str, encoding: str = "utf-8") -> dict[str, Any]:
 
 
 def strip_html_tags(html: str) -> str:
-    text = re.sub(r"<script[^>]*>.*?</script>", " ", html, flags=re.DOTALL | re.IGNORECASE)
-    text = re.sub(r"<style[^>]*>.*?</style>", " ", text, flags=re.DOTALL | re.IGNORECASE)
-    text = re.sub(r"<[^>]+>", " ", text)
-    text = re.sub(r"\s+", " ", text)
-    return text.strip()
+    from html.parser import HTMLParser
+
+    class _TextExtractor(HTMLParser):
+        def __init__(self):
+            super().__init__()
+            self._parts: list[str] = []
+            self._skip = 0
+
+        def handle_starttag(self, tag, attrs):
+            if tag in ("script", "style"):
+                self._skip += 1
+
+        def handle_endtag(self, tag):
+            if tag in ("script", "style") and self._skip > 0:
+                self._skip -= 1
+
+        def handle_data(self, data):
+            if self._skip == 0:
+                self._parts.append(data)
+
+        def get_text(self):
+            return " ".join(self._parts)
+
+    parser = _TextExtractor()
+    try:
+        parser.feed(str(html))
+    except Exception:
+        # Fallback to simple regex stripping if parsing fails
+        text = re.sub(r"<[^>]+>", " ", str(html))
+        return re.sub(r"\s+", " ", text).strip()
+    text = parser.get_text()
+    return re.sub(r"\s+", " ", text).strip()
 
 
 def read_html(path: str, encoding: str = "utf-8") -> dict[str, Any]:

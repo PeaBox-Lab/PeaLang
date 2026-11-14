@@ -347,7 +347,12 @@ class PeaWebApp:
                 for prefix, directory in self.static.items():
                     if route_path.startswith(prefix):
                         rel = route_path[len(prefix):]
-                        file_path = Path(directory) / rel
+                        file_path = (Path(directory) / rel).resolve()
+                        base = Path(directory).resolve()
+                        try:
+                            file_path.relative_to(base)
+                        except ValueError:
+                            return self._apply_cors(error_response("Forbidden", status=403))
                         try:
                             if file_path.is_file():
                                 content_type = _guess_content_type(file_path)
