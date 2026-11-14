@@ -2,6 +2,16 @@
 
 ## 1.0.0-experience (ongoing) - 2026-11-08
 
+### Native FFI, plugin SDK, and multi-language host bindings (v1.9.0)
+- Added `pealang/host_bindings.py` with bidirectional FFI, host SDK scaffolding, and OpenAPI importer.
+- Added `register_host_function`, `generate_python_export`, `generate_typescript_export`, `generate_java_export`, `scaffold_go_sdk`, `scaffold_node_sdk`, `import_openapi`, `generate_connector_package`.
+- Registered in `analysis` and `stats`/`std.stats` namespaces.
+- Added `tests/test_host_bindings_v190.py` (9 tests) and `tests/test_use_cases_v190.py` (1 test).
+- Added `docs/HOST_BINDINGS.md` and `help/HOST_BINDINGS.md`.
+- Added `examples/use_cases/43_host_bindings.pea`.
+- Version bumped to 1.9.0.
+- Updated `README.md`, `ROADMAP.md`, `docs/USE_CASES.md`.
+
 ### Interactive Web Data IDE (v1.8.0)
 - Added `pealang/notebook_ide.py` with reactive notebook and web IDE features.
 - Added `ReactiveCell`, `ReactiveNotebook`, `inspect_dataframe`, `inspect_sql_result`, `publish_as_webapp`, `generate_notebook_html`.

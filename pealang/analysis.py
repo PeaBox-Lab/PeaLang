@@ -138,6 +138,14 @@ from .notebook_ide import (ReactiveCell as _nbide_reactive_cell,
     inspect_sql_result as _nbide_inspect_sql_result,
     publish_as_webapp as _nbide_publish_as_webapp,
     generate_notebook_html as _nbide_generate_notebook_html)
+from .host_bindings import (register_host_function as _hb_register_host_function,
+    generate_python_export_decorator as _hb_generate_python_export,
+    generate_typescript_export as _hb_generate_typescript_export,
+    generate_java_export as _hb_generate_java_export,
+    scaffold_go_sdk as _hb_scaffold_go_sdk,
+    scaffold_node_sdk as _hb_scaffold_node_sdk,
+    import_openapi as _hb_import_openapi,
+    generate_connector_package as _hb_generate_connector_package)
 from .timeseries_advanced import (zscore_anomalies as _ts_zscore_anomalies,
     iqr_anomalies as _ts_iqr_anomalies,
     moving_average_anomalies as _ts_ma_anomalies,
@@ -3434,5 +3442,13 @@ def build_analysis_namespace() -> dict[str, Any]:
         "inspect_sql_result": _nbide_inspect_sql_result,
         "publish_as_webapp": _nbide_publish_as_webapp,
         "generate_notebook_html": _nbide_generate_notebook_html,
+        "register_host_function": _hb_register_host_function,
+        "generate_python_export": _hb_generate_python_export,
+        "generate_typescript_export": _hb_generate_typescript_export,
+        "generate_java_export": _hb_generate_java_export,
+        "scaffold_go_sdk": _hb_scaffold_go_sdk,
+        "scaffold_node_sdk": _hb_scaffold_node_sdk,
+        "import_openapi": _hb_import_openapi,
+        "generate_connector_package": _hb_generate_connector_package,
     }
 

@@ -107,7 +107,7 @@ from .target_encoding import (build_target_namespace,
     target_apply as stats_target_apply,
     target_encode as stats_target_encode)
 from .ux import doctor as ux_doctor, explain_error as ux_explain
-__version__ = "1.8.0"
+__version__ = "1.9.0"
 __all__=['BytecodeModule','CodeObject','Instruction','Op','Compiler','CompileError','compile_source_to_bytecode','VirtualMachine','VMError','AsyncSuspension','AsyncVirtualMachine','AsyncVMRuntime','AsyncVMModule','CancellationToken','VMRuntime','VMModule','disassemble','execute','compile_source','Interpreter','PeaError','PeaRuntime','PeaModule',
 'SemanticAnalyzer','SemanticResult','FunctionContract','TypeChecker','TypeRef','Diagnostic','TypeCheckResult','parse_type','erase_types','RuntimeOptions','ExecutionResult','PeaRuntimeError','PeaPermissionError',
 'PeaResourceLimitError','to_pea','from_pea','__version__']
@@ -328,6 +328,15 @@ from .notebook_ide import (build_notebook_ide_namespace,
     inspect_sql_result as notebook_ide_inspect_sql_result,
     publish_as_webapp as notebook_ide_publish_as_webapp,
     generate_notebook_html as notebook_ide_generate_notebook_html)
+from .host_bindings import (build_host_bindings_namespace,
+    register_host_function as hb_register_host_function,
+    generate_python_export_decorator as hb_generate_python_export,
+    generate_typescript_export as hb_generate_typescript_export,
+    generate_java_export as hb_generate_java_export,
+    scaffold_go_sdk as hb_scaffold_go_sdk,
+    scaffold_node_sdk as hb_scaffold_node_sdk,
+    import_openapi as hb_import_openapi,
+    generate_connector_package as hb_generate_connector_package)
 from .timeseries_advanced import (build_timeseries_namespace,
     zscore_anomalies as ts_zscore_anomalies,
     iqr_anomalies as ts_iqr_anomalies,

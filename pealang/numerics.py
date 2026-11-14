@@ -1378,6 +1378,7 @@ def build_stats_namespace() -> dict[str, Any]:
     from .arrow_backend import build_arrow_backend_namespace
     from .vector_rag import build_vector_rag_namespace
     from .notebook_ide import build_notebook_ide_namespace
+    from .host_bindings import build_host_bindings_namespace
 
     namespace.update(build_inference_namespace())
     namespace.update(build_modeling_namespace())
@@ -1411,4 +1412,5 @@ def build_stats_namespace() -> dict[str, Any]:
     namespace.update(build_arrow_backend_namespace())
     namespace.update(build_vector_rag_namespace())
     namespace.update(build_notebook_ide_namespace())
+    namespace.update(build_host_bindings_namespace())
     return namespace

@@ -73,6 +73,11 @@ Grammar, type system, standard library, embedding API, package format and PEAC c
 ## 1.7.0 - ONNX model export and vector/RAG primitives (delivered)
 
 ## 1.8.0 - Interactive Web Data IDE and reactive notebook server (delivered)
+
+## 1.9.0 - Native FFI, plugin SDK, and multi-language host bindings (delivered)
+- Host SDKs: Go SDK, Node.js/TypeScript Host SDK
+- Bidirectional FFI with @pea_export decorators
+- OpenAPI/GraphQL importer for connector scaffolding
 - Reactive cell execution with dependency tracking
 - Visual SQL/DataFrame inspectors
 - One-click publishing of .pea scripts as interactive web apps

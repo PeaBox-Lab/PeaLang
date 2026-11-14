@@ -445,6 +445,7 @@ Examples:
 - [`examples/use_cases/40_arrow_backend.pea`](../examples/use_cases/40_arrow_backend.pea)
 - [`examples/use_cases/41_vector_rag.pea`](../examples/use_cases/41_vector_rag.pea)
 - [`examples/use_cases/42_notebook_ide.pea`](../examples/use_cases/42_notebook_ide.pea)
+- [`examples/use_cases/43_host_bindings.pea`](../examples/use_cases/43_host_bindings.pea)
 
 See [`docs/DATA_SCIENCE.md`](DATA_SCIENCE.md),
 [`docs/STATISTICAL_INFERENCE.md`](STATISTICAL_INFERENCE.md),

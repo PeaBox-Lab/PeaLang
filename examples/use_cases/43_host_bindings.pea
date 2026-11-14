@@ -1,0 +1,13 @@
+// v1.9.0 host bindings example
+let reg = analysis.register_host_function("add", "math", "add", ["int", "int"], "int")
+print "Registered: " + str(reg["registered"])
+
+let py_export = analysis.generate_python_export("add", ["int", "int"], "int")
+print "Python export length: " + str(len(py_export))
+
+let ts_export = analysis.generate_typescript_export("multiply", ["number"], "number")
+print "TS export length: " + str(len(ts_export))
+
+let openapi_spec = {"info": {"title": "Test API", "version": "1.0"}, "paths": {"/users": {"get": {"operationId": "getUsers", "responses": {"200": {}}}}}}
+let imported = analysis.import_openapi(openapi_spec)
+print "Connectors: " + str(imported["count"])
