@@ -1,0 +1,14 @@
+// v139 clustering and dimensionality reduction example
+let X = [[1, 2], [1.5, 1.8], [5, 8], [8, 8], [1, 0.6], [9, 11]]
+
+let labels = analysis.hierarchical_clustering(X, 2)
+print "Labels: " + str(len(labels))
+
+let score = analysis.silhouette_score(X, labels)
+print "Silhouette: " + str(score)
+
+let selected = analysis.variance_threshold(X, 0.0)
+print "Selected features: " + str(len(selected))
+
+let tsne_result = analysis.tsne(X, 2, 30.0, 50, 42)
+print "t-SNE points: " + str(len(tsne_result))

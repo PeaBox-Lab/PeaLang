@@ -105,6 +105,7 @@ Make PeaLang the default extension language for:
 - Robustness: caching, retry, circuit breaker, health monitoring (v136)
 - Developer experience: error suggestions, scaffolding, metrics, linting, formatting (v137)
 - Advanced time series: anomaly detection, decomposition, forecasting, change points (v138)
+- Clustering and dimensionality reduction: DBSCAN, hierarchical, t-SNE, UMAP, feature selection (v139)
 3. Cross-language experience
    - Python bridge: `interop.call_python`
    - native bridge: `interop.call_native`

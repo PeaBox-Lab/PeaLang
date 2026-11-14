@@ -2,6 +2,15 @@
 
 ## 1.0.0-experience (ongoing) - 2026-11-08
 
+### Clustering and dimensionality reduction (v139)
+- Added `pealang/clustering.py` with dependency-free clustering and dimensionality reduction.
+- Added `dbscan`, `hierarchical_clustering`, `tsne`, `umap`, `variance_threshold`, `correlation_filter`, `mutual_info_scores`, `silhouette_score`.
+- Registered in `analysis` and `stats`/`std.stats` namespaces.
+- Added `tests/test_clustering_v139.py` (9 tests) and `tests/test_use_cases_v139.py` (1 test).
+- Added `docs/CLUSTERING.md` and `help/CLUSTERING.md`.
+- Added `examples/use_cases/35_clustering.pea`.
+- Updated `README.md`, `ROADMAP.md`, `docs/USE_CASES.md`.
+
 ### Advanced time series and anomaly detection (v138)
 - Added `pealang/timeseries_advanced.py` with dependency-free time series and anomaly detection tools.
 - Added `zscore_anomalies`, `iqr_anomalies`, `moving_average_anomalies`, `seasonal_decompose_simple`, `holt_winters_forecast`, `exponential_smoothing_forecast`, `detect_change_points`, `polynomial_features_2d`, `interaction_features`.

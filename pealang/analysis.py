@@ -99,6 +99,14 @@ from .timeseries_advanced import (zscore_anomalies as _ts_zscore_anomalies,
     detect_change_points as _ts_detect_change_points,
     polynomial_features_2d as _ts_poly_features_2d,
     interaction_features as _ts_interaction_features)
+from .clustering import (dbscan as _cl_dbscan,
+    hierarchical_clustering as _cl_hierarchical,
+    tsne as _cl_tsne,
+    umap as _cl_umap,
+    variance_threshold as _cl_variance_threshold,
+    correlation_filter as _cl_correlation_filter,
+    mutual_info_scores as _cl_mutual_info,
+    silhouette_score as _cl_silhouette)
 
 
 def _rows(data: Any) -> list[dict[str, Any]]:
@@ -3324,5 +3332,13 @@ def build_analysis_namespace() -> dict[str, Any]:
         "detect_change_points": _ts_detect_change_points,
         "polynomial_features_2d": _ts_poly_features_2d,
         "interaction_features": _ts_interaction_features,
+        "dbscan": _cl_dbscan,
+        "hierarchical_clustering": _cl_hierarchical,
+        "tsne": _cl_tsne,
+        "umap": _cl_umap,
+        "variance_threshold": _cl_variance_threshold,
+        "correlation_filter": _cl_correlation_filter,
+        "mutual_info_scores": _cl_mutual_info,
+        "silhouette_score": _cl_silhouette,
     }
 

@@ -290,6 +290,15 @@ from .timeseries_advanced import (build_timeseries_namespace,
     detect_change_points as ts_detect_change_points,
     polynomial_features_2d as ts_poly_features_2d,
     interaction_features as ts_interaction_features)
+from .clustering import (build_clustering_namespace,
+    dbscan as cluster_dbscan,
+    hierarchical_clustering as cluster_hierarchical,
+    tsne as cluster_tsne,
+    umap as cluster_umap,
+    variance_threshold as cluster_variance_threshold,
+    correlation_filter as cluster_correlation_filter,
+    mutual_info_scores as cluster_mutual_info,
+    silhouette_score as cluster_silhouette)
 from .model_interop import ModelInteropError,TensorSpec,TensorBridge,ONNXModel,QueryPolicy,QueryPlan,GovernedQueryPlanner
 from .agent_governance import AuditEvent,GovernanceAuditStore,AuditedApprovalGate,approval_request_id
 from .hardening import SecurityProbe,ProbeResult,AdversarialAgentSuite,PublicAPIGate,ReleaseThresholds,ReleaseHardeningGate,sha256_manifest

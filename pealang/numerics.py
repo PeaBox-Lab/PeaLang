@@ -1369,6 +1369,7 @@ def build_stats_namespace() -> dict[str, Any]:
     from .robustness import build_robustness_namespace
     from .devx import build_devx_namespace
     from .timeseries_advanced import build_timeseries_namespace
+    from .clustering import build_clustering_namespace
 
     namespace.update(build_inference_namespace())
     namespace.update(build_modeling_namespace())
@@ -1393,4 +1394,5 @@ def build_stats_namespace() -> dict[str, Any]:
     namespace.update(build_robustness_namespace())
     namespace.update(build_devx_namespace())
     namespace.update(build_timeseries_namespace())
+    namespace.update(build_clustering_namespace())
     return namespace

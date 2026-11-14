@@ -67,6 +67,7 @@ The objective is to improve security while preserving the existing PeaLang langu
 - Robustness (v136): `LRUCache`, `memoize`, `retry`, `retry_call`, `CircuitBreaker`, `batch_process`, `chunked`, `parallel_map`, `health_check`, `system_info`, `stream_records`, `lazy_filter`, `lazy_map`, `data_fingerprint`, `schema_fingerprint`
 - Developer experience (v137): `suggest_fix`, `explain_error_detailed`, `project_scaffold`, `code_metrics`, `lint_source`, `format_source`, `dependency_check`
 - Advanced time series (v138): `zscore_anomalies`, `iqr_anomalies`, `moving_average_anomalies`, `seasonal_decompose_simple`, `holt_winters_forecast`, `exponential_smoothing_forecast`, `detect_change_points`, `polynomial_features_2d`, `interaction_features`
+- Clustering (v139): `dbscan`, `hierarchical_clustering`, `tsne`, `umap`, `variance_threshold`, `correlation_filter`, `mutual_info_scores`, `silhouette_score`
 
 ### Numerical and Statistical Computing (`stats` / `std.stats`)
 - Descriptive: `mean`, `median`, `mode`, `quantile`, `percentile`, `iqr`, `variance`, `std`, `skew`, `kurtosis`, `covariance`, `pearson`/`correlation`, `spearman`, `kendall`, `entropy`, `gini`, `describe`
