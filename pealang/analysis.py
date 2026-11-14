@@ -90,6 +90,15 @@ from .devx import (suggest_fix as _devx_suggest_fix,
     lint_source as _devx_lint_source,
     format_source as _devx_format_source,
     dependency_check as _devx_dependency_check)
+from .timeseries_advanced import (zscore_anomalies as _ts_zscore_anomalies,
+    iqr_anomalies as _ts_iqr_anomalies,
+    moving_average_anomalies as _ts_ma_anomalies,
+    seasonal_decompose_simple as _ts_seasonal_decompose,
+    holt_winters_forecast as _ts_holt_winters_forecast,
+    exponential_smoothing_forecast as _ts_exp_smoothing_forecast,
+    detect_change_points as _ts_detect_change_points,
+    polynomial_features_2d as _ts_poly_features_2d,
+    interaction_features as _ts_interaction_features)
 
 
 def _rows(data: Any) -> list[dict[str, Any]]:
@@ -3306,5 +3315,14 @@ def build_analysis_namespace() -> dict[str, Any]:
         "lint_source": _devx_lint_source,
         "format_source": _devx_format_source,
         "dependency_check": _devx_dependency_check,
+        "zscore_anomalies": _ts_zscore_anomalies,
+        "iqr_anomalies": _ts_iqr_anomalies,
+        "moving_average_anomalies": _ts_ma_anomalies,
+        "seasonal_decompose_simple": _ts_seasonal_decompose,
+        "holt_winters_forecast": _ts_holt_winters_forecast,
+        "exponential_smoothing_forecast": _ts_exp_smoothing_forecast,
+        "detect_change_points": _ts_detect_change_points,
+        "polynomial_features_2d": _ts_poly_features_2d,
+        "interaction_features": _ts_interaction_features,
     }
 

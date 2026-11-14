@@ -1,0 +1,14 @@
+// v138 advanced time series example
+let data = [10, 12, 13, 12, 10, 12, 13, 12, 10, 12, 13, 12, 10, 12, 13, 12, 100]
+
+let anomalies = analysis.zscore_anomalies(data, 2.0)
+print "Anomalies found: " + str(len(anomalies))
+
+let fc = analysis.holt_winters_forecast(data, 3, 0.3, 0.1, 0.1, 4)
+print "Forecast: " + str(len(fc))
+
+let decomp = analysis.seasonal_decompose_simple(data, 4)
+print "Trend length: " + str(len(decomp["trend"]))
+
+let cps = analysis.detect_change_points(data, 3, 1.5)
+print "Change points: " + str(len(cps))

@@ -280,6 +280,16 @@ from .devx import (build_devx_namespace,
     lint_source as devx_lint_source,
     format_source as devx_format_source,
     dependency_check as devx_dependency_check)
+from .timeseries_advanced import (build_timeseries_namespace,
+    zscore_anomalies as ts_zscore_anomalies,
+    iqr_anomalies as ts_iqr_anomalies,
+    moving_average_anomalies as ts_ma_anomalies,
+    seasonal_decompose_simple as ts_seasonal_decompose,
+    holt_winters_forecast as ts_holt_winters_forecast,
+    exponential_smoothing_forecast as ts_exp_smoothing_forecast,
+    detect_change_points as ts_detect_change_points,
+    polynomial_features_2d as ts_poly_features_2d,
+    interaction_features as ts_interaction_features)
 from .model_interop import ModelInteropError,TensorSpec,TensorBridge,ONNXModel,QueryPolicy,QueryPlan,GovernedQueryPlanner
 from .agent_governance import AuditEvent,GovernanceAuditStore,AuditedApprovalGate,approval_request_id
 from .hardening import SecurityProbe,ProbeResult,AdversarialAgentSuite,PublicAPIGate,ReleaseThresholds,ReleaseHardeningGate,sha256_manifest

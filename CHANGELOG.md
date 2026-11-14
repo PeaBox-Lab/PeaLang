@@ -2,6 +2,15 @@
 
 ## 1.0.0-experience (ongoing) - 2026-11-08
 
+### Advanced time series and anomaly detection (v138)
+- Added `pealang/timeseries_advanced.py` with dependency-free time series and anomaly detection tools.
+- Added `zscore_anomalies`, `iqr_anomalies`, `moving_average_anomalies`, `seasonal_decompose_simple`, `holt_winters_forecast`, `exponential_smoothing_forecast`, `detect_change_points`, `polynomial_features_2d`, `interaction_features`.
+- Registered in `analysis` and `stats`/`std.stats` namespaces.
+- Added `tests/test_timeseries_v138.py` (10 tests) and `tests/test_use_cases_v138.py` (1 test).
+- Added `docs/TIMESERIES_ADVANCED.md` and `help/TIMESERIES_ADVANCED.md`.
+- Added `examples/use_cases/34_timeseries.pea`.
+- Updated `README.md`, `ROADMAP.md`, `docs/USE_CASES.md`.
+
 ### Developer experience (v137)
 - Added `pealang/devx.py` with developer experience and tooling enhancements.
 - Added `suggest_fix`, `explain_error_detailed`, `project_scaffold`, `code_metrics`, `lint_source`, `format_source`, `dependency_check`.

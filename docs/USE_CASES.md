@@ -436,6 +436,7 @@ Examples:
 - [`examples/use_cases/31_sql_interop.pea`](../examples/use_cases/31_sql_interop.pea)
 - [`examples/use_cases/32_robustness.pea`](../examples/use_cases/32_robustness.pea)
 - [`examples/use_cases/33_devx.pea`](../examples/use_cases/33_devx.pea)
+- [`examples/use_cases/34_timeseries.pea`](../examples/use_cases/34_timeseries.pea)
 
 See [`docs/DATA_SCIENCE.md`](DATA_SCIENCE.md),
 [`docs/STATISTICAL_INFERENCE.md`](STATISTICAL_INFERENCE.md),
