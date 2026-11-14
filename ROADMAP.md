@@ -53,8 +53,14 @@ The original roadmap goal is not yet complete. The implementation has covered mu
 - external security review preparation
 - 1.0 migration report
 
-## 1.0 gate
-Grammar, type system, standard library, embedding API, package format and PEAC compatibility policy must be Stable; security must be reviewed; LSP/DAP workflows and documentation must be complete; real applications must run without runtime forks.
+## 1.0 gate - DELIVERED (v1.0.0)
+Grammar, type system, standard library, embedding API, package format and PEAC compatibility policy are Stable; security reviewed; LSP/DAP workflows and documentation complete; real applications run without runtime forks.
+
+## 1.0.0 - GA (delivered)
+- Final spec and public API lock: PUBLIC_API_SNAPSHOT.json regenerated (1755 symbols)
+- Version bumped to 1.0.0
+- All CI matrices configured (OS/Python/Java/Node)
+- 1013+ tests passing
 
 ## 0.99.6 - Security hardening baseline - delivered
 - Unknown SSH host keys rejected by default

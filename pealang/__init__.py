@@ -107,7 +107,7 @@ from .target_encoding import (build_target_namespace,
     target_apply as stats_target_apply,
     target_encode as stats_target_encode)
 from .ux import doctor as ux_doctor, explain_error as ux_explain
-__version__ = "0.99.6"
+__version__ = "1.0.0"
 __all__=['BytecodeModule','CodeObject','Instruction','Op','Compiler','CompileError','compile_source_to_bytecode','VirtualMachine','VMError','AsyncSuspension','AsyncVirtualMachine','AsyncVMRuntime','AsyncVMModule','CancellationToken','VMRuntime','VMModule','disassemble','execute','compile_source','Interpreter','PeaError','PeaRuntime','PeaModule',
 'SemanticAnalyzer','SemanticResult','FunctionContract','TypeChecker','TypeRef','Diagnostic','TypeCheckResult','parse_type','erase_types','RuntimeOptions','ExecutionResult','PeaRuntimeError','PeaPermissionError',
 'PeaResourceLimitError','to_pea','from_pea','__version__']
