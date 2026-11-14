@@ -104,6 +104,10 @@ from .wasm_runtime import (capability_bridge_source as _wasm_capability_bridge_s
     capability_sandbox_policy as _wasm_capability_sandbox_policy,
     wasm_module_manifest as _wasm_module_manifest,
     build_wasm_runtime_namespace as _wasm_build_namespace)
+from .react_sdk import (generate_react_hooks as _react_generate_react_hooks,
+    generate_data_grid_adapter as _react_generate_data_grid_adapter,
+    generate_chart_adapter as _react_generate_chart_adapter,
+    build_react_sdk_namespace as _react_build_namespace)
 from .timeseries_advanced import (zscore_anomalies as _ts_zscore_anomalies,
     iqr_anomalies as _ts_iqr_anomalies,
     moving_average_anomalies as _ts_ma_anomalies,
@@ -3368,5 +3372,9 @@ def build_analysis_namespace() -> dict[str, Any]:
         "capability_sandbox_policy": _wasm_capability_sandbox_policy,
         "wasm_module_manifest": _wasm_module_manifest,
         "build_wasm_runtime_namespace": _wasm_build_namespace,
+        "generate_react_hooks": _react_generate_react_hooks,
+        "generate_data_grid_adapter": _react_generate_data_grid_adapter,
+        "generate_chart_adapter": _react_generate_chart_adapter,
+        "build_react_sdk_namespace": _react_build_namespace,
     }
 

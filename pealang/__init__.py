@@ -107,7 +107,7 @@ from .target_encoding import (build_target_namespace,
     target_apply as stats_target_apply,
     target_encode as stats_target_encode)
 from .ux import doctor as ux_doctor, explain_error as ux_explain
-__version__ = "1.3.0"
+__version__ = "1.4.0"
 __all__=['BytecodeModule','CodeObject','Instruction','Op','Compiler','CompileError','compile_source_to_bytecode','VirtualMachine','VMError','AsyncSuspension','AsyncVirtualMachine','AsyncVMRuntime','AsyncVMModule','CancellationToken','VMRuntime','VMModule','disassemble','execute','compile_source','Interpreter','PeaError','PeaRuntime','PeaModule',
 'SemanticAnalyzer','SemanticResult','FunctionContract','TypeChecker','TypeRef','Diagnostic','TypeCheckResult','parse_type','erase_types','RuntimeOptions','ExecutionResult','PeaRuntimeError','PeaPermissionError',
 'PeaResourceLimitError','to_pea','from_pea','__version__']
@@ -295,6 +295,10 @@ from .wasm_runtime import (build_wasm_runtime_namespace,
     web_worker_runtime_source as wasm_web_worker_runtime_source,
     capability_sandbox_policy as wasm_capability_sandbox_policy,
     wasm_module_manifest as wasm_module_manifest)
+from .react_sdk import (build_react_sdk_namespace,
+    generate_react_hooks as react_generate_react_hooks,
+    generate_data_grid_adapter as react_generate_data_grid_adapter,
+    generate_chart_adapter as react_generate_chart_adapter)
 from .timeseries_advanced import (build_timeseries_namespace,
     zscore_anomalies as ts_zscore_anomalies,
     iqr_anomalies as ts_iqr_anomalies,

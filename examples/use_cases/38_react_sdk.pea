@@ -1,0 +1,9 @@
+// v1.4.0 React SDK example
+let hooks = analysis.generate_react_hooks()
+print "Hooks length: " + str(len(hooks))
+
+let grid = analysis.generate_data_grid_adapter()
+print "Grid adapter length: " + str(len(grid))
+
+let chart = analysis.generate_chart_adapter()
+print "Chart adapter length: " + str(len(chart))

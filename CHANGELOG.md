@@ -2,6 +2,16 @@
 
 ## 1.0.0-experience (ongoing) - 2026-11-08
 
+### Reactive React SDK (v1.4.0)
+- Added `pealang/react_sdk.py` with React hook and adapter code generation.
+- Added `generate_react_hooks`, `generate_data_grid_adapter`, `generate_chart_adapter`, `REACT_HOOKS`.
+- Registered in `analysis` and `stats`/`std.stats` namespaces.
+- Added `tests/test_react_sdk_v140.py` (5 tests) and `tests/test_use_cases_v140.py` (1 test).
+- Added `docs/REACT_SDK.md` and `help/REACT_SDK.md`.
+- Added `examples/use_cases/38_react_sdk.pea`.
+- Version bumped to 1.4.0.
+- Updated `README.md`, `ROADMAP.md`, `docs/USE_CASES.md`.
+
 ### True standalone WASM bytecode VM (v1.3.0)
 - Added `pealang/wasm_runtime.py` with browser capability bridges, Web Worker runtime, and sandboxing.
 - Added `capability_bridge_source`, `web_worker_runtime_source`, `capability_sandbox_policy`, `wasm_module_manifest`, `BROWSER_CAPABILITIES`.

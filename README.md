@@ -71,6 +71,7 @@ The objective is to improve security while preserving the existing PeaLang langu
 - LSP (v1.1.0): `LSPServer`, `build_lsp_namespace` — standards-compliant language server with diagnostics, hover, completion, symbols
 - Formatter (v1.2.0): `PeaFormatter`, `format_source_ast`, `PeaLinter`, `lint_source_ast`, `codemod_remove_unused_imports`, `codemod_rename_variable`, `codemod_fix_naming`
 - WASM runtime (v1.3.0): `capability_bridge_source`, `web_worker_runtime_source`, `capability_sandbox_policy`, `wasm_module_manifest` — browser capability bridges, Web Worker runtime, sandboxing
+- React SDK (v1.4.0): `generate_react_hooks`, `generate_data_grid_adapter`, `generate_chart_adapter` — React hooks, data grid adapter, chart adapter
 
 ### Numerical and Statistical Computing (`stats` / `std.stats`)
 - Descriptive: `mean`, `median`, `mode`, `quantile`, `percentile`, `iqr`, `variance`, `std`, `skew`, `kurtosis`, `covariance`, `pearson`/`correlation`, `spearman`, `kendall`, `entropy`, `gini`, `describe`

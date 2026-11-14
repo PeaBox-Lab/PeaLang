@@ -63,6 +63,11 @@ Grammar, type system, standard library, embedding API, package format and PEAC c
 ## 1.2.0 - Code formatter, linter, AST macros (delivered)
 
 ## 1.3.0 - True standalone WASM bytecode VM (delivered)
+
+## 1.4.0 - Reactive React SDK and browser data grid (delivered)
+- React hooks: usePeaRuntime, usePeaScript, usePeaDataFrame, usePeaQuery, usePeaValidation
+- Zero-copy data grid adapter (ag-Grid, TanStack Table)
+- Chart adapter (Vega-Lite, Chart.js)
 - Browser capability bridges (fetch, IndexedDB, localStorage, WebStreams, console, crypto)
 - Web Worker runtime for WASM execution
 - Capability sandboxing policy
