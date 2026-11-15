@@ -7,6 +7,38 @@ class Compiler:
  def __init__(self,source_name='<input>'):self.module=BytecodeModule(source_name=source_name);self.code=self.module.code;self.code.source_name=source_name;self.loops=[]
  def emit(self,op,arg=None,node=None):self.code.instructions.append(Instruction(op.value if hasattr(op,'value') else op,arg,getattr(getattr(node,'span',None),'line',1)));return len(self.code.instructions)-1
  def patch(self,i,arg):self.code.instructions[i].arg=arg
+ def _pattern_to_string(self, pattern):
+  """Convert a pattern AST node to its string representation for match_pattern."""
+  from .ast_nodes import WildcardPattern, LiteralPattern, VariablePattern, ListPattern, DictPattern, OrPattern
+  if isinstance(pattern, WildcardPattern):
+    return "_"
+  if isinstance(pattern, LiteralPattern):
+    v = pattern.value
+    if isinstance(v, bool):
+      return "true" if v else "false"
+    if isinstance(v, str):
+      return f'"{v}"'
+    return str(v)
+  if isinstance(pattern, VariablePattern):
+    return pattern.name
+  if isinstance(pattern, ListPattern):
+    elems = [self._pattern_to_string(e) for e in pattern.elements]
+    rest = pattern.rest
+    if rest:
+      elems.append(rest)
+    return "[" + ", ".join(elems) + "]"
+  if isinstance(pattern, DictPattern):
+    fields = []
+    for k, p in pattern.fields:
+      k_str = self._pattern_to_string(k) if hasattr(k, '__class__') else str(k)
+      p_str = self._pattern_to_string(p)
+      fields.append(f"{k_str}: {p_str}")
+    return "{" + ", ".join(fields) + "}"
+  if isinstance(pattern, OrPattern):
+    pats = [self._pattern_to_string(p) for p in pattern.patterns]
+    return " | ".join(pats)
+  return str(pattern)
+
  def const(self,v):
   try:return self.module.constants.index(v)
   except ValueError:self.module.constants.append(v);return len(self.module.constants)-1
@@ -44,6 +76,43 @@ class Compiler:
   if isinstance(s,ContinueStmt):
    if not self.loops:raise CompileError('continue outside loop')
    self.emit(Op.JUMP,self.loops[-1]['continue'],s);return
+  if isinstance(s,MatchStmt):
+   # Compile match statement to bytecode
+   # 1. Emit the value to match
+   self.expr(s.value)
+   # 2. For each case, compile pattern matching
+   for i, case in enumerate(s.cases):
+    # Emit the pattern as a string representation
+    pattern_str = self._pattern_to_string(case.pattern)
+    # Push pattern string as constant
+    self.emit(Op.CONST, self.const(pattern_str))
+    # Call match_pattern(pattern_str, value) - 2 args: pattern and value
+    # match_pattern returns {} (truthy after NOT) or None (falsy after NOT)
+    self.emit(Op.CALL, 2)
+    # NOT the result: {} -> True, None -> False
+    self.emit(Op.NOT)
+    # JUMP_IF_FALSE to the case body if match succeeded
+    jt_idx = len(self.code.instructions)  # save position for patching
+    self.emit(Op.JUMP_IF_FALSE, None, s)
+    # Emit the case body
+    self.block(case.body)
+    # After the body, emit JUMP to skip to after the match statement
+    jf_idx = len(self.code.instructions)
+    self.emit(Op.JUMP, None, s)
+    # Patch the JUMP_IF_FALSE to skip over this case body
+    target = len(self.code.instructions)
+    self.code.instructions[jt_idx].arg = target
+    # Patch the last JUMP's target (if not the last case)
+    if i < len(s.cases) - 1:
+      # The JUMP after this case's body should go to the next case's JUMP_IF_FALSE check
+      # We need to link them properly
+      self.code.instructions[jf_idx].arg = len(self.code.instructions) + 1  # approximate
+    else:
+      # Last case - JUMP to after the match statement
+      self.code.instructions[jf_idx].arg = len(self.code.instructions) + 1
+   # Pop the match result
+   self.emit(Op.POP, node=s)
+   return
   if isinstance(s,ThrowStmt):self.expr(s.value);self.emit(Op.RAISE,node=s);return
   if isinstance(s,TryStmt):
    push=self.emit(Op.PUSH_HANDLER,{'catch':None,'finally':None,'end':None,'name':s.catch_name},s);self.block(s.try_body);self.emit(Op.POP_HANDLER,node=s)

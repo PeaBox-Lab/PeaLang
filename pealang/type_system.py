@@ -68,15 +68,24 @@ class TypeChecker:
         if len(source) > 100000:
             raise ValueError('Type-check source exceeds safety limit')
         r=TypeCheckResult();known=set(BUILTINS)
-        # record declarations, one-line or multiline
-        for m in re.finditer(r'(?m)^type[ \t]+([A-Za-z_]\w*)[ \t]*=[ \t]*\{([^{}]*)\}',source):
-            name,body=m.group(1),m.group(2);fields={}
-            for f in body.split(','):
-                if ':' in f:
-                    n,t=f.split(':',1)
-                    try:fields[n.strip()]=parse_type(t.strip())
-                    except ValueError as e:r.diagnostics.append(Diagnostic('P100',str(e),source[:m.start()].count('\n')+1))
-            r.records[name]=fields;known.add(name)
+        # record declarations, one-line or multiline (supports ADT constructors)
+        for m in re.finditer(r'(?m)^type[ \t]+([A-Za-z_]\w*)[ \t]*=[ \t]*(?:\{([^{}]*)\}|([^\n]*))',source):
+            name,mbody,mcons=m.group(1),m.group(2),m.group(3)
+            if mbody is not None:
+                # Record-style type: type Name = {field: type, ...}
+                fields={}
+                for f in mbody.split(','):
+                    if ':' in f:
+                        n,t=f.split(':',1)
+                        try:fields[n.strip()]=parse_type(t.strip())
+                        except ValueError as e:r.diagnostics.append(Diagnostic('P100',str(e),source[:m.start()].count('\n')+1))
+                r.records[name]=fields;known.add(name)
+            elif mcons is not None:
+                # ADT-style type: type Name = Constructor1 | Constructor2 | Constructor3
+                # or type Name = Constructor1 arg1 arg2 | Constructor2 arg1 arg2
+                # mcons captures the full text after '='
+                tags=[t.strip() for t in mcons.split('|') if t.strip()]
+                r.records[name]={'constructors': tags};known.add(name)
         for ln,line in enumerate(source.splitlines(),1):
             clean=line.split('//',1)[0].strip()
             # Typed declaration: let x: Type = value
