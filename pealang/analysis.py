@@ -174,6 +174,7 @@ from .jit_compiler import (optimize_instructions as _jit_optimize,
     build_jit_namespace as _jit_build_namespace)
 from .ai_ml import (build_ai_ml_namespace as _ai_ml_build_namespace)
 from .debugger import (build_debugger_namespace as _debugger_build_namespace)
+from .serverless import build_serverless_namespace as _serverless_build_namespace
 from .ecosystem import (build_ecosystem_namespace as _ecosystem_build_namespace)
 from .timeseries_advanced import (zscore_anomalies as _ts_zscore_anomalies,
     iqr_anomalies as _ts_iqr_anomalies,
@@ -3492,6 +3493,7 @@ def build_analysis_namespace() -> dict[str, Any]:
         "AIML": _ai_ml_build_namespace,
         "Debugger": _debugger_build_namespace,
         "Ecosystem": _ecosystem_build_namespace,
+        "Serverless": _serverless_build_namespace,
         "mmap_write": _perf_mmap_write,
         "mmap_search": _perf_mmap_search,
         "AdvancedCache": _perf_advanced_cache,
