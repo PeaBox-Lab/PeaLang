@@ -369,6 +369,8 @@ from .jit_compiler import (build_jit_namespace,
     build_jit_namespace as jit_build_namespace)
 from .ai_ml import (build_ai_ml_namespace,
     build_ai_ml_namespace as ai_ml_import)
+from .debugger import (build_debugger_namespace,
+    build_debugger_namespace as debugger_import)
 from .timeseries_advanced import (build_timeseries_namespace,
     zscore_anomalies as ts_zscore_anomalies,
     iqr_anomalies as ts_iqr_anomalies,
