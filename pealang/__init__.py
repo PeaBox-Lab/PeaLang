@@ -367,6 +367,8 @@ from .supply_chain import (build_supply_chain_namespace,
 from .jit_compiler import (build_jit_namespace,
     optimize_instructions as jit_optimize,
     build_jit_namespace as jit_build_namespace)
+from .ai_ml import (build_ai_ml_namespace,
+    build_ai_ml_namespace as ai_ml_import)
 from .timeseries_advanced import (build_timeseries_namespace,
     zscore_anomalies as ts_zscore_anomalies,
     iqr_anomalies as ts_iqr_anomalies,
