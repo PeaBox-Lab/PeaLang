@@ -170,6 +170,115 @@ def dependency_check(manifest_path: str = "pea.json") -> dict[str, Any]:
     return {"dependencies": len(deps), "issues": issues, "ok": len(issues) == 0}
 
 
+def diagnose_source(source: str, source_name: str = "<input>") -> dict[str, Any]:
+    """Combine the static type checker and linter into one structured report.
+
+    Returns a top-level "ok" flag, severity counts, all diagnostics with
+    consistent shape, and a simple 0-100 health score so tooling can gate on it.
+    """
+    from .type_system import TypeChecker
+
+    report: dict[str, Any] = {"source": source_name, "diagnostics": []}
+
+    # Static type check
+    typed = TypeChecker().check(source, source_name)
+    for d in typed.diagnostics:
+        report["diagnostics"].append({
+            "code": d.code,
+            "message": d.message,
+            "line": d.line,
+            "column": d.column,
+            "severity": d.severity,
+            "origin": "type",
+        })
+
+    # Lint
+    for issue in lint_source(source):
+        report["diagnostics"].append({
+            "code": "LINT",
+            "message": issue.get("message", ""),
+            "line": issue.get("line", 0),
+            "column": 0,
+            "severity": issue.get("severity", "info"),
+            "origin": "lint",
+        })
+
+    # Count by severity (normalise 'warn' -> 'warning')
+    counts = {"error": 0, "warning": 0, "info": 0}
+    for d in report["diagnostics"]:
+        sev = d["severity"]
+        if sev in ("warning", "warn"):
+            sev = "warning"
+        counts[sev] = counts.get(sev, 0) + 1
+
+    errors = counts.get("error", 0)
+    warnings = counts.get("warning", 0)
+    infos = counts.get("info", 0)
+    report["counts"] = counts
+    # Simple health score: start at 100, penalise errors heavily and warnings lightly.
+    report["health"] = max(0, 100 - errors * 20 - warnings * 3 - infos)
+    report["ok"] = errors == 0
+    return report
+
+
+def cheatsheet(topic: str | None = None) -> dict[str, Any]:
+    """Return a developer cheat-sheet for PeaLang.
+
+    Without a topic, returns an overview of the available namespaces and their
+    purpose. With a topic (case-insensitive), returns focused guidance.
+    """
+    sheets = {
+        "overview": {
+            "title": "PeaLang developer overview",
+            "commands": [
+                {"topic": "check", "description": "pea check <file> - static type + lint diagnostics"},
+                {"topic": "fmt", "description": "pea fmt <file> - normalise indentation"},
+                {"topic": "explain", "description": "pea explain <error> - detailed error with suggestions"},
+                {"topic": "metrics", "description": "code_metrics <file> - code/comment/function counts"},
+                {"topic": "diagnose", "description": "diagnose_source <file> - combined type+lint report with health score"},
+            ],
+        },
+        "types": {
+            "title": "Types",
+            "summary": "Optional static typing via TypeChecker; erased before runtime.",
+            "syntax": [
+                "let x: Int = 5",
+                "let names: List<String> = [\"a\"]",
+                "let okOrErr: Result = ...",
+                "type Point = {x: Int, y: Int}",
+            ],
+        },
+        "match": {
+            "title": "Pattern matching",
+            "syntax": [
+                "match x {",
+                "  1 => \"one\",",
+                "  _ => \"other\",",
+                "}",
+            ],
+        },
+        "errors": {
+            "title": "Error handling workflow",
+            "steps": [
+                "1. pea explain <error>  -> suggestions + context",
+                "2. pea check <file>     -> find undeclared/type issues",
+                "3. diagnose_source <file> -> combined report with health score",
+            ],
+        },
+    }
+
+    if topic is None or topic.lower() == "overview":
+        return sheets["overview"]
+    key = topic.lower()
+    for name, sheet in sheets.items():
+        if name.startswith(key) or key in name:
+            return sheet
+    return {
+        "error": f"Unknown topic '{topic}'",
+        "available": list(sheets.keys()),
+    }
+
+
 def build_devx_namespace() -> dict[str, Any]:
     return {
         "suggest_fix": suggest_fix,
@@ -179,4 +288,6 @@ def build_devx_namespace() -> dict[str, Any]:
         "lint_source": lint_source,
         "format_source": format_source,
         "dependency_check": dependency_check,
+        "diagnose_source": diagnose_source,
+        "cheatsheet": cheatsheet,
     }

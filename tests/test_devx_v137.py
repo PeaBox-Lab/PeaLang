@@ -8,6 +8,8 @@ from pealang.devx import (
     lint_source,
     format_source,
     dependency_check,
+    diagnose_source,
+    cheatsheet,
 )
 
 
@@ -51,10 +53,44 @@ def test_dependency_check_missing():
     assert "error" in result
 
 
+def test_diagnose_source():
+    clean = diagnose_source("let x: Int = 5\nprint x")
+    assert clean["ok"] is True
+    assert clean["health"] == 100
+
+    broken = diagnose_source('let x: Int = "hi"\nprint x')
+    assert broken["ok"] is False
+    assert broken["counts"]["error"] == 1
+    assert broken["diagnostics"][0]["origin"] == "type"
+
+
+def test_diagnose_source_includes_lint():
+    src = "let x = 1   \n"  # trailing whitespace
+    r = diagnose_source(src)
+    assert any(d["origin"] == "lint" for d in r["diagnostics"])
+
+
+def test_cheatsheet():
+    cs = cheatsheet()
+    assert "overview" not in cs  # returns the default overview dict
+    assert cs["title"].lower().startswith("pealang")
+    assert isinstance(cs["commands"], list)
+
+    t = cheatsheet("types")
+    assert t["title"] == "Types"
+    assert isinstance(t["syntax"], list)
+
+    bogus = cheatsheet("bogus")
+    assert "error" in bogus
+    assert "available" in bogus
+
+
 def test_build_devx_namespace():
     ns = build_devx_namespace()
     assert "suggest_fix" in ns
     assert "code_metrics" in ns
     assert "lint_source" in ns
     assert "format_source" in ns
-    assert len(ns) == 7
+    assert "diagnose_source" in ns
+    assert "cheatsheet" in ns
+    assert len(ns) == 9
