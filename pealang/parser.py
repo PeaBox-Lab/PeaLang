@@ -1,5 +1,6 @@
 from __future__ import annotations
 from .errors import PeaError
+from .exceptions import ScopeError, ValueError
 from .lexer import Lexer
 from .ast_nodes import *
 class Parser:
@@ -44,10 +45,10 @@ class Parser:
         if self.match('FUNCTION'):return self.function(x.span)
         if self.match('RETURN'):return ReturnStmt(None if self.cur().kind in ('NEWLINE',';','}') else self.expression(),span=x.span)
         if self.match('BREAK'):
-            if not self.loop_depth:raise PeaError("'break' is only valid inside a loop",x.span,self.source_name)
+            if not self.loop_depth:raise ScopeError("'break' is only valid inside a loop",x.span,self.source_name)
             return BreakStmt(span=x.span)
         if self.match('CONTINUE'):
-            if not self.loop_depth:raise PeaError("'continue' is only valid inside a loop",x.span,self.source_name)
+            if not self.loop_depth:raise ScopeError("'continue' is only valid inside a loop",x.span,self.source_name)
             return ContinueStmt(span=x.span)
         if self.match('IMPORT'):
             p=self.need('STRING','Expected a quoted module path after import');alias=None
@@ -61,19 +62,37 @@ class Parser:
             return AssertStmt(condition,message,span=x.span)
         if self.match('THROW'):return ThrowStmt(self.expression(),span=x.span)
         if self.match('TRY'):
-            body=self.block();self.skip();name=None;catch_body=None;finally_body=None
+            body=self.block();self.skip();name=None;catch_body=None;finally_body=None;catch_type=None
             if self.match('CATCH'):
-                if self.cur().kind=='IDENT':name=self.advance().value
+                from .exceptions import EXCEPTION_TYPES
+                catch_type=None
+                # gather idents: 'catch Name {}' or 'catch Type Name {}' or 'catch Type as Name {}'
+                if self.cur().kind=='IDENT':
+                    first=self.advance().value
+                    if self.match('AS'):
+                        catch_type=first
+                        name=self.need('IDENT','Expected variable name after as').value
+                    elif self.cur().kind=='IDENT':
+                        if first in EXCEPTION_TYPES:
+                            catch_type=first
+                            name=self.advance().value
+                        else:
+                            name=first
+                    elif first in EXCEPTION_TYPES:
+                        catch_type=first
+                        name='e'
+                    else:
+                        name=first
                 catch_body=self.block();self.skip()
             if self.match('FINALLY'):finally_body=self.block()
-            if catch_body is None and finally_body is None:raise PeaError('try requires catch or finally',x.span,self.source_name)
-            return TryStmt(body,name,catch_body,finally_body,span=x.span)
+            if catch_body is None and finally_body is None:raise ScopeError('try requires catch or finally',x.span,self.source_name)
+            return TryStmt(body,name,catch_body,finally_body,span=x.span,catch_type=catch_type)
         x=self.cur()
         if self.match('MATCH'):
             return self.match_stmt(x.span)
         expr=self.expression()
         if self.cur().kind in ('=','+=','-=','*=','/='):
-            if not isinstance(expr,(Variable,Index,Property)):raise PeaError('Invalid assignment target',expr.span,self.source_name)
+            if not isinstance(expr,(Variable,Index,Property)):raise ValueError('Invalid assignment target',expr.span,self.source_name)
             op=self.advance().kind;return Assign(expr,op,self.expression(),span=x.span)
         return ExprStmt(expr,span=x.span)
     def var_decl(self,const,span):
@@ -98,7 +117,7 @@ class Parser:
             while True:
                 pt=self.need('IDENT');default=None
                 if self.match('='):default=self.expression();saw_default=True
-                elif saw_default:raise PeaError('Required parameter cannot follow a default parameter',pt.span,self.source_name)
+                elif saw_default:raise ValueError('Required parameter cannot follow a default parameter',pt.span,self.source_name)
                 p.append(Param(pt.value,default,span=pt.span))
                 if not self.match(','):break
         self.need(')');return FunctionStmt(n,p,self.block(),span=span)
@@ -272,7 +291,7 @@ class Parser:
                 while True:
                     pt=self.need('IDENT');default=None
                     if self.match('='):default=self.expression();saw_default=True
-                    elif saw_default:raise PeaError('Required parameter cannot follow a default parameter',pt.span,self.source_name)
+                    elif saw_default:raise ValueError('Required parameter cannot follow a default parameter',pt.span,self.source_name)
                     p.append(Param(pt.value,default,span=pt.span))
                     if not self.match(','):break
             self.need(')')

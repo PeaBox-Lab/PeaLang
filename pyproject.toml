@@ -20,6 +20,9 @@ testpaths=["tests"]
 [tool.setuptools]
 packages = ["pealang"]
 
+[tool.setuptools.package-data]
+pealang = ["*.json"]
+
 [project.optional-dependencies]
 fastapi = ["fastapi>=0.110", "pydantic>=2.0", "uvicorn>=0.27"]
 

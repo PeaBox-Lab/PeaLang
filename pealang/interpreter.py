@@ -19,6 +19,8 @@ from .skills import SkillRegistry
 from .project import load_manifest, resolve_module
 from .agents import ToolRegistry,AgentRuntime
 from .help import help as _pea_help
+from .exceptions import (PeaException, NameError, ValueError, TypeError, IndexError,
+    ZeroDivisionError, ScopeError, AssertionError, AttributeError, ImportError, UserError)
 class ReturnSignal(Exception):
     def __init__(self,v):self.value=v
 class BreakSignal(Exception):pass
@@ -28,6 +30,27 @@ class UserFunction:
     def __init__(self, params, body, closure, name="<anonymous>", line=0, source="<input>"):
         self.params=params; self.body=body; self.closure=closure
         self.name=name; self.line=line; self.source=source
+
+def _map_builtin_exception(exc, span=None, source=None):
+    """Translate Python builtin exceptions into typed PeaException subclasses."""
+    import builtins as _builtins
+    from . import exceptions as _exc
+    span = span if span is not None else getattr(exc, 'span', None)
+    source = source if source is not None else getattr(exc, 'source_name', '<input>')
+    if isinstance(exc, _exc.PeaException):
+        return exc
+    if isinstance(exc, _builtins.ZeroDivisionError):
+        return _exc.ZeroDivisionError(str(exc), span, source)
+    if isinstance(exc, _builtins.IndexError):
+        return _exc.IndexError(str(exc), span, source)
+    if isinstance(exc, _builtins.TypeError):
+        return _exc.TypeError(str(exc), span, source)
+    if isinstance(exc, _builtins.ValueError):
+        return _exc.ValueError(str(exc), span, source)
+    if isinstance(exc, _builtins.NameError):
+        return _exc.NameError(str(exc), span, source)
+    return _exc.PeaException(str(exc), span, source)
+
 class Interpreter:
     def __init__(self,output=None,base_dir=None,allow_process=False,project_root=None,dependencies=None,debug_hook=None,permissions=None):
         self.output=output or print;self.debug_hook=debug_hook;self.call_stack=[];self.global_env=Env();self.env=self.global_env;self.module_exports=None;self.base_dir=Path(base_dir or '.').resolve();self.source_name='<input>';self.imported=set();self.project_root=Path(project_root).resolve() if project_root else self.base_dir;self.dependencies=dependencies or {}
@@ -487,29 +510,35 @@ class Interpreter:
             if isinstance(s,ContinueStmt):raise ContinueSignal()
             if isinstance(s,ImportStmt):return self.import_file(s.path,s,s.alias)
             if isinstance(s,ExportStmt):
-                if self.module_exports is None:raise PeaError('export is only valid inside an imported module',s.span,self.source_name)
+                if self.module_exports is None:raise ScopeError('export is only valid inside an imported module',s.span,self.source_name)
                 self.module_exports.add(s.name);return None
             if isinstance(s,AssertStmt):
                 if not self.truth(self.eval(s.condition)):
                     message=self.stringify(self.eval(s.message)) if s.message else 'Assertion failed'
-                    raise PeaError(message,s.span,self.source_name)
+                    raise AssertionError(message,s.span,self.source_name)
                 return None
-            if isinstance(s,ThrowStmt):raise PeaError(self.stringify(self.eval(s.value)),s.span,self.source_name)
+            if isinstance(s,ThrowStmt):raise UserError(self.stringify(self.eval(s.value)),s.span,self.source_name)
             if isinstance(s,TryStmt):
                 try:return self.exec_block(s.try_body)
-                except PeaError as ex:
+                except PeaException as ex:
                     if s.catch_body is None:raise
                     catchenv=Env(self.env)
-                    if s.catch_name:catchenv.define(s.catch_name,{'message':ex.message,'source':ex.source_name,'line':ex.span.line if ex.span else None,'column':ex.span.col if ex.span else None,'frames':getattr(ex,'frames',None),'trace':ex.trace() if hasattr(ex,'trace') else str(ex)},True)
+                    catch_type = getattr(s, 'catch_type', None)
+                    if catch_type is not None:
+                        from .exceptions import EXCEPTION_TYPES
+                        expected = EXCEPTION_TYPES.get(catch_type)
+                        if expected is not None and not isinstance(ex, expected):
+                            raise
+                    if s.catch_name:catchenv.define(s.catch_name,{'message':ex.message,'source':ex.source_name,'line':ex.span.line if ex.span else None,'column':ex.span.col if ex.span else None,'kind':getattr(ex,'kind','Exception'),'frames':getattr(ex,'frames',None),'trace':ex.trace() if hasattr(ex,'trace') else str(ex)},True)
                     return self.exec_block(s.catch_body,catchenv)
                 finally:
                     if s.finally_body is not None:self.exec_block(s.finally_body)
-            raise PeaError(f'Unknown statement {type(s).__name__}',s.span,self.source_name)
+            raise ScopeError(f'Unknown statement {type(s).__name__}',s.span,self.source_name)
         except (PeaError,ReturnSignal,BreakSignal,ContinueSignal):raise
-        except Exception as ex:raise PeaError(str(ex),s.span,self.source_name) from ex
+        except Exception as ex:raise _map_builtin_exception(ex, span=s.span, source=self.source_name) from ex
     def import_file(self,name,node,alias=None):
         path=resolve_module(name,self.base_dir,self.project_root,self.dependencies)
-        if not path.is_file():raise PeaError(f"Module not found: {name}",node.span,self.source_name)
+        if not path.is_file():raise ImportError(f"Module not found: {name}",node.span,self.source_name)
         if alias is None:
             if path in self.imported:return None
             self.imported.add(path);src=path.read_text(encoding='utf-8');oldbase=self.base_dir;oldskill=self.skill_registry.base_dir;self.base_dir=path.parent;self.skill_registry.base_dir=path.parent
@@ -528,7 +557,7 @@ class Interpreter:
         self.call_stack.append(frame)
         try:
             required=sum(1 for p in f.params if getattr(p,'default',None) is None)
-            if len(args)<required or len(args)>len(f.params):raise PeaError(f'Expected {required} to {len(f.params)} arguments, got {len(args)}', frames=list(self.call_stack))
+            if len(args)<required or len(args)>len(f.params):raise ValueError(f'Expected {required} to {len(f.params)} arguments, got {len(args)}', frames=list(self.call_stack))
             env=Env(f.closure);old=self.env;self.env=env
             try:
                 for i,p in enumerate(f.params):
@@ -541,7 +570,8 @@ class Interpreter:
                     e.frames = list(self.call_stack)
                 raise
             except Exception as e:
-                raise PeaError(str(e), SourceSpan(0, 0), self.source_name, frames=list(self.call_stack))
+                mapped = _map_builtin_exception(e)
+                raise mapped from e
             finally:self.env=old
         finally:
             self.call_stack.pop()
@@ -626,7 +656,7 @@ class Interpreter:
                 futures=[pool.submit(evaluate,e) for e in expressions]
                 return [f.result() for f in futures]
         except PeaError:raise
-        except Exception as ex:raise PeaError(str(ex),node.span,self.source_name) from ex
+        except Exception as ex:raise _map_builtin_exception(ex, span=node.span, source=self.source_name) from ex
 
     def read_target(self,t):return self.eval(t)
     def write_target(self,t,v,node):
@@ -637,13 +667,13 @@ class Interpreter:
             target=self.eval(t.target)
             if isinstance(target,dict):target[t.name]=v;return v
             setattr(target,t.name,v);return v
-        raise PeaError('Invalid assignment target',getattr(t,'span',node.span),self.source_name)
+        raise ValueError('Invalid assignment target',getattr(t,'span',node.span),self.source_name)
     def truth(self,v):return bool(v)
     def apply(self,op,a,b,node=None):
         try:
             return {'+':lambda:a+b,'-':lambda:a-b,'*':lambda:a*b,'/':lambda:a/b,'%':lambda:a%b,'**':lambda:a**b,'==':lambda:a==b,'!=':lambda:a!=b,'<':lambda:a<b,'<=':lambda:a<=b,'>':lambda:a>b,'>=':lambda:a>=b,'in':lambda:a in b,'not in':lambda:a not in b}[op]()
-        except KeyError:raise PeaError(f'Unknown operator {op}',getattr(node,'span',None),self.source_name)
-        except Exception as ex:raise PeaError(str(ex),getattr(node,'span',None),self.source_name) from ex
+        except KeyError:raise TypeError(f'Unknown operator {op}',getattr(node,'span',None),self.source_name)
+        except Exception as ex:raise _map_builtin_exception(ex, span=getattr(node, 'span', None), source=self.source_name) from ex
     def eval(self,e):
         if isinstance(e,Literal):return e.value
         if isinstance(e,FunctionExpr):
@@ -708,19 +738,19 @@ class Interpreter:
             return self.apply(e.op,self.eval(e.left),self.eval(e.right),e)
         if isinstance(e,Index):
             try:return self.eval(e.target)[self.eval(e.index)]
-            except Exception as ex:raise PeaError(str(ex),e.span,self.source_name) from ex
+            except Exception as ex:raise _map_builtin_exception(ex, span=e.span, source=self.source_name) from ex
         if isinstance(e,Property):
             target=self.eval(e.target)
             try:return target[e.name] if isinstance(target,dict) else getattr(target,e.name)
-            except (KeyError,AttributeError) as ex:raise PeaError(f"Property '{e.name}' not found",e.span,self.source_name) from ex
+            except (KeyError,AttributeError) as ex:raise AttributeError(f"Property '{e.name}' not found",e.span,self.source_name) from ex
         if isinstance(e,Call):
             f=self.eval(e.callee);args=[self.eval(x) for x in e.args]
             if isinstance(f,UserFunction):return self.invoke_user_function(f,args)
             if callable(f):
                 try:return f(*args)
                 except PeaError:raise
-                except Exception as ex:raise PeaError(str(ex),e.span,self.source_name) from ex
-            raise PeaError('Value is not callable',e.span,self.source_name)
+                except Exception as ex:raise _map_builtin_exception(ex, span=e.span, source=self.source_name) from ex
+            raise TypeError('Value is not callable',e.span,self.source_name)
         if isinstance(e,OptionalProperty):
             target=self.eval(e.target)
             if target is None:return None
@@ -740,4 +770,4 @@ class Interpreter:
                 try:return callee(*args)
                 except Exception:return None
             return None
-        raise PeaError(f'Unknown expression {type(e).__name__}',getattr(e,'span',None),self.source_name)
+        raise ScopeError(f'Unknown expression {type(e).__name__}',getattr(e,'span',None),self.source_name)
