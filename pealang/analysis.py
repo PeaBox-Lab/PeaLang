@@ -91,7 +91,8 @@ from .devx import (suggest_fix as _devx_suggest_fix,
     format_source as _devx_format_source,
     dependency_check as _devx_dependency_check,
     diagnose_source as _devx_diagnose_source,
-    cheatsheet as _devx_cheatsheet)
+    cheatsheet as _devx_cheatsheet,
+    project_check as _devx_project_check)
 from .lsp import (LSPServer as _lsp_server_class,
     build_lsp_namespace as _lsp_build_namespace)
 from .formatter import (PeaFormatter as _fmt_pea_formatter,
@@ -3423,6 +3424,7 @@ def build_analysis_namespace() -> dict[str, Any]:
         "dependency_check": _devx_dependency_check,
         "diagnose_source": _devx_diagnose_source,
         "cheatsheet": _devx_cheatsheet,
+        "project_check": _devx_project_check,
         "zscore_anomalies": _ts_zscore_anomalies,
         "iqr_anomalies": _ts_iqr_anomalies,
         "moving_average_anomalies": _ts_ma_anomalies,

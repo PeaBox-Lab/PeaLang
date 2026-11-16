@@ -1,0 +1,8 @@
+// Runnable in PeaLang: `pealang run examples/getting_started/hello.pea`
+print "Hello from PeaLang!"
+
+let x: Int = 5
+print "x + 1 = " + str(x + 1)
+
+let metrics = analysis.code_metrics("let x = 1")
+print "lines: " + str(metrics["total_lines"])

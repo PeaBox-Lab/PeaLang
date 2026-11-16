@@ -1,6 +1,19 @@
 # Changelog
 
-## 1.0.0-experience (ongoing) - 2026-11-08
+## 1.0.0-experience (ongoing) - 2026-11-16
+
+### Developer tooling and frameworks toolkit (v2.14.0)
+- Added `pealang/frameworks.py` with backend/full-stack scaffolding (FastAPI, Flask, Express, Gin, and FastAPI+React monorepo), ADR generation/indexing, service contracts with an OpenAPI 3.0 emitter, and a lightweight layered-architecture linter.
+- Added `frameworks.write_scaffold`: path-traversal-guarded writer that materialises generated projects to disk.
+- Added `pea scaffold <framework|fullstack> <dir> [--port N] [--frontend react]` CLI command.
+- Added `devx.project_check`: bounded aggregate diagnostics (type + lint) for `.pea` files under a project root; wired into analysis and DevX namespaces.
+- Added `devx.diagnose_source` / `devx.cheatsheet` (previously uncommitted) and `pea scaffold` tests.
+- Added ready-made examples under `examples/getting_started/` (fastapi_orders, fullstack_shop, hello.pea) and `examples/use_cases/46_project_check.pea`, `examples/use_cases/47_frameworks_scaffold.pea`.
+- Added `docs/GETTING_STARTED.md` with an end-to-end install/run walkthrough.
+- Added `tests/test_frameworks_v150.py` (25 tests) and extended `tests/test_devx_v137.py`.
+- Full suite 1131+ tests passing; 17 pre-existing failures remain (packaging, supply-chain, security closures).
+
+
 
 ### Optimizing bytecode VM, JIT, and package hub (v2.0.0)
 - Added `pealang/vm_optimizer.py` with VM optimization and package index management.

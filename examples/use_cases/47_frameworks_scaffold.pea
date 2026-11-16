@@ -1,0 +1,19 @@
+// v151 architecture & scaffolding example (PeaLang side)
+// Generates scaffold file maps and ADR markdown without writing to disk.
+
+let svc = analysis.scaffold_backend("orders", "fastapi", 8080)
+print "Framework: " + svc["framework"]
+print "Files: " + str(len(list(svc["files"])))
+
+let md = analysis.adr("Adopt PeaLang", "Need a single language.", "Adopt it.",
+                      "One runtime to maintain.", "accepted", 1)
+print "ADR starts: " + str(len(md) > 0)
+
+let contract = analysis.service_contract("orders", [
+    {"method": "get", "path": "/orders"},
+    {"method": "post", "path": "/orders", "auth": "jwt", "owner": "team-a"},
+])
+let spec = analysis.service_contract_to_openapi(contract)
+print "OpenAPI: " + spec["openapi"]
+print "Endpoints: " + str(contract["endpoint_count"])
+print "Methods on /orders: " + str(len(list(spec["paths"]["/orders"])))

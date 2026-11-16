@@ -1,0 +1,15 @@
+// v151 developer toolkit & project check example
+let src = "let x = 1"
+let metrics = analysis.code_metrics(src)
+print "Lines: " + str(metrics["total_lines"])
+
+// Aggregate diagnostics for every .pea file under a project root
+let report = analysis.project_check(".")
+let totals = report["totals"]
+print "Checked files: " + str(totals["files"])
+print "Errors: " + str(totals["errors"])
+print "Ok: " + str(totals["ok"])
+
+// Cheat sheet
+let cs = analysis.cheatsheet()
+print "Commands in cheat sheet: " + str(len(cs["commands"]))

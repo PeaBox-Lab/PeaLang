@@ -58,6 +58,7 @@ def scaffold_backend(name: str, framework: str = "fastapi", port: int = 8000) ->
 
     if framework == "fastapi":
         files["requirements.txt"] = "fastapi>=0.104\\nuvicorn[standard]>=0.24\\npytest>=7.4\\n"
+        files["app/__init__.py"] = ""
         files["app/main.py"] = (
             "from fastapi import FastAPI\n\n"
             f"app = FastAPI(title=\"{name}\")\n\n"
@@ -66,6 +67,8 @@ def scaffold_backend(name: str, framework: str = "fastapi", port: int = 8000) ->
             "    return {\"status\": \"ok\", \"service\": \"" + name + "\"}\n"
         )
         files["tests/test_health.py"] = (
+            "import os\nimport sys\n"
+            "sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))\n"
             "from fastapi.testclient import TestClient\n"
             "from app.main import app\n\n"
             "client = TestClient(app)\n\n"
@@ -79,6 +82,7 @@ def scaffold_backend(name: str, framework: str = "fastapi", port: int = 8000) ->
         )
     elif framework == "flask":
         files["requirements.txt"] = "flask>=3.0\\ngunicorn>=21\\npytest>=7.4\\n"
+        files["app/__init__.py"] = ""
         files["app/main.py"] = (
             "from flask import Flask, jsonify\n\n"
             f"app = Flask(__name__)\n\n"
@@ -87,6 +91,8 @@ def scaffold_backend(name: str, framework: str = "fastapi", port: int = 8000) ->
             f"    return jsonify(status=\"ok\", service=\"{name}\")\n"
         )
         files["tests/test_health.py"] = (
+            "import os\nimport sys\n"
+            "sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))\n"
             "from app.main import app\n\n"
             "def test_health():\n"
             "    assert app.test_client().get(\"/health\").get_json()[\"status\"] == \"ok\"\n"

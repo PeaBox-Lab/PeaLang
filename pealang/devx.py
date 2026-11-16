@@ -149,6 +149,51 @@ def format_source(source: str) -> str:
     return "\n".join(result) + "\n"
 
 
+def project_check(project_root: str = ".", max_files: int = 50) -> dict[str, Any]:
+    """Aggregate per-file diagnostics for .pea files under project_root.
+
+    Bounded by max_files so unusually large trees don't blow up a check.
+    Returns per-file reports plus a totals summary suitable for CI gating.
+    """
+    root = Path(project_root).resolve()
+    files: list[Path] = []
+    for dirpath, _, filenames in os.walk(root):
+        if ".git" in dirpath or "__pycache__" in dirpath:
+            continue
+        for fn in filenames:
+            if fn.endswith(".pea"):
+                files.append(Path(dirpath) / fn)
+                if len(files) >= max_files:
+                    break
+        if len(files) >= max_files:
+            break
+
+    per_file = []
+    totals = {"files": 0, "errors": 0, "warnings": 0, "infos": 0}
+    for f in files:
+        try:
+            res = diagnose_source(f.read_text(encoding="utf-8"), str(f))
+        except Exception as exc:
+            res = {"ok": False, "health": 0,
+                   "counts": {"error": 1, "warning": 0, "info": 0},
+                   "diagnostics": [{"code": "READ", "message": str(exc),
+                                    "line": 0, "column": 0,
+                                    "severity": "error", "origin": "read"}]}
+        per_file.append({
+            "file": str(f.relative_to(root)),
+            "ok": res["ok"],
+            "health": res["health"],
+            "counts": res["counts"],
+            "diagnostic_count": len(res["diagnostics"]),
+        })
+        totals["files"] += 1
+        totals["errors"] += res["counts"].get("error", 0)
+        totals["warnings"] += res["counts"].get("warning", 0)
+        totals["infos"] += res["counts"].get("info", 0)
+    totals["ok"] = totals["errors"] == 0
+    return {"project": str(root), "totals": totals, "files": per_file}
+
+
 def dependency_check(manifest_path: str = "pea.json") -> dict[str, Any]:
     """Check project dependencies for issues."""
     path = Path(manifest_path)
@@ -290,4 +335,5 @@ def build_devx_namespace() -> dict[str, Any]:
         "dependency_check": dependency_check,
         "diagnose_source": diagnose_source,
         "cheatsheet": cheatsheet,
+        "project_check": project_check,
     }

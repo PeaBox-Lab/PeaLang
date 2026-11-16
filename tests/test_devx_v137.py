@@ -10,6 +10,7 @@ from pealang.devx import (
     dependency_check,
     diagnose_source,
     cheatsheet,
+    project_check,
 )
 
 
@@ -85,6 +86,26 @@ def test_cheatsheet():
     assert "available" in bogus
 
 
+def test_project_check_basic(tmp_path):
+    (tmp_path / "good.pea").write_text("let x: Int = 5\nprint x\n", encoding="utf-8")
+    (tmp_path / "bad.pea").write_text('let x: Int = "nope"\nprint x\n', encoding="utf-8")
+    from pealang.devx import project_check
+    out = project_check(str(tmp_path))
+    assert out["totals"]["files"] == 2
+    assert out["totals"]["errors"] == 1
+    assert out["totals"]["ok"] is False
+    names = [f["file"] for f in out["files"]]
+    assert any("bad.pea" in n for n in names)
+
+
+def test_project_check_all_ok(tmp_path):
+    (tmp_path / "ok.pea").write_text("let x: Int = 5\nprint x\n", encoding="utf-8")
+    from pealang.devx import project_check
+    out = project_check(str(tmp_path))
+    assert out["totals"]["ok"] is True
+    assert out["totals"]["errors"] == 0
+
+
 def test_build_devx_namespace():
     ns = build_devx_namespace()
     assert "suggest_fix" in ns
@@ -93,4 +114,5 @@ def test_build_devx_namespace():
     assert "format_source" in ns
     assert "diagnose_source" in ns
     assert "cheatsheet" in ns
-    assert len(ns) == 9
+    assert "project_check" in ns
+    assert len(ns) == 10

@@ -206,7 +206,10 @@ Make PeaLang the default extension language for:
 - `frameworks.adr` / `frameworks.adr_index`: Architecture Decision Record generation and indexing for solution architects
 - `frameworks.service_contract` + `frameworks.service_contract_to_openapi` + `frameworks.openapi_json`: route manifest plus an OpenAPI 3.0 spec emitter (JWT bearer scheme included only when requested by a route contract)
 - `frameworks.layered_architecture_check`: lightweight layer-violation linter (raw SQL in UI layer, direct network calls in data layer)
-- New tests: `tests/test_frameworks_v150.py` (25 tests) and extended `tests/test_devx_v137.py`; full suite 1124+ passing (17 pre-existing failures in packaging / supply-chain / security closures)
+- `devx.project_check`: bounded aggregate diagnostics for every `.pea` file under a project root; wired into analysis and DevX namespaces
+- Ready-made, runnable pre-built examples: `examples/getting_started/fastapi_orders/` (FastAPI service + test + Dockerfile), `examples/getting_started/fullstack_shop/` (FastAPI + React monorepo), `examples/getting_started/hello.pea`, plus `examples/use_cases/46_project_check.pea` and `47_frameworks_scaffold.pea`
+- `docs/GETTING_STARTED.md`: install → verify → generate → run walkthrough, including copy-ready examples
+- New tests: `tests/test_frameworks_v150.py` (25 tests) and extended `tests/test_devx_v137.py`; full suite 1131 passing (17 pre-existing failures in packaging / supply-chain / security closures)
 
 ## 2.15.0 — Planned (next)
 - Wire `pea scaffold` output templates into release packaging (Containerfile end-to-end build of a generated FastAPI service)
