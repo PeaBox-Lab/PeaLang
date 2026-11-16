@@ -10,6 +10,20 @@ from .project import load_manifest,init_project,add_dependency,remove_dependency
 
 from . import __version__
 
+def _print_error(e):
+    frames = getattr(e, "frames", None)
+    if frames:
+        print(f"Error: {e}", file=sys.stderr)
+        print("Traceback (most recent call last):", file=sys.stderr)
+        for frame in frames:
+            src = frame.get("source", "<input>")
+            line = frame.get("line", 0)
+            name = frame.get("name", "<anonymous>")
+            print(f"  File \"{src}\", line {line}, in {name}", file=sys.stderr)
+    else:
+        print(f"Error: {e}", file=sys.stderr)
+
+
 def repl():
 
     print(f'PeaLang {__version__} - type :help for help or exit to quit');vm=Interpreter();buf=''
@@ -34,7 +48,7 @@ def repl():
 
         try:execute(buf,interpreter=vm,source_name='<repl>')
 
-        except PeaError as e:print(f'Error: {e}',file=sys.stderr)
+        except PeaError as e:_print_error(e)
 
         buf=''
 
@@ -48,7 +62,7 @@ def run_file(path,allow_process=False):
 
     try:execute(p.read_text(encoding='utf-8'),source_name=str(p),base_dir=p.parent,allow_process=allow_process,**kwargs)
 
-    except (PeaError,OSError) as e:print(f'Error: {e}',file=sys.stderr);return 1
+    except (PeaError,OSError) as e:_print_error(e);return 1
 
     return 0
 
@@ -565,7 +579,7 @@ def main(argv=None):
 
         return run_file(argv[0],allow)
 
-    except (PeaError,OSError) as e:print(f'Error: {e}',file=sys.stderr);return 1
+    except (PeaError,OSError) as e:_print_error(e);return 1
 
 if __name__=='__main__':raise SystemExit(main())
 

@@ -5,7 +5,7 @@ import json,math,os,time
 from concurrent.futures import ThreadPoolExecutor
 from .ast_nodes import *
 from .environment import Env
-from .errors import PeaError
+from .errors import PeaError, SourceSpan
 from .parser import parse_source
 
 CURRENT_INTERPRETER = None
@@ -23,7 +23,10 @@ class ReturnSignal(Exception):
 class BreakSignal(Exception):pass
 class ContinueSignal(Exception):pass
 @dataclass
-class UserFunction:params:list;body:list[Stmt];closure:Env
+class UserFunction:
+    def __init__(self, params, body, closure, name="<anonymous>", line=0, source="<input>"):
+        self.params=params; self.body=body; self.closure=closure
+        self.name=name; self.line=line; self.source=source
 class Interpreter:
     def __init__(self,output=None,base_dir=None,allow_process=False,project_root=None,dependencies=None,debug_hook=None,permissions=None):
         self.output=output or print;self.debug_hook=debug_hook;self.call_stack=[];self.global_env=Env();self.env=self.global_env;self.module_exports=None;self.base_dir=Path(base_dir or '.').resolve();self.source_name='<input>';self.imported=set();self.project_root=Path(project_root).resolve() if project_root else self.base_dir;self.dependencies=dependencies or {}
@@ -475,7 +478,9 @@ class Interpreter:
                     except ContinueSignal:continue
                     except BreakSignal:break
                 return None
-            if isinstance(s,FunctionStmt):self.env.define(s.name,UserFunction(s.params,s.body,self.env),True);return None
+            if isinstance(s,FunctionStmt):
+                frame_line = getattr(getattr(s, "span", None), "line", 0)
+                self.env.define(s.name,UserFunction(s.params,s.body,self.env,name=s.name,line=frame_line,source=self.source_name),True);return None
             if isinstance(s,ReturnStmt):raise ReturnSignal(self.eval(s.value) if s.value else None)
             if isinstance(s,BreakStmt):raise BreakSignal()
             if isinstance(s,ContinueStmt):raise ContinueSignal()
@@ -516,16 +521,29 @@ class Interpreter:
         finally:self.env=oldenv;self.base_dir=oldbase;self.skill_registry.base_dir=oldskill;self.module_exports=oldexports
 
     def invoke_user_function(self, f, args):
-        required=sum(1 for p in f.params if getattr(p,'default',None) is None)
-        if len(args)<required or len(args)>len(f.params):raise PeaError(f'Expected {required} to {len(f.params)} arguments, got {len(args)}')
-        env=Env(f.closure);old=self.env;self.env=env
+        frame = {"name": getattr(f, 'name', '<anonymous>'),
+                 "line": getattr(f, 'line', 0),
+                 "source": getattr(f, 'source', self.source_name)}
+        self.call_stack.append(frame)
         try:
-            for i,p in enumerate(f.params):
-                value=args[i] if i<len(args) else self.eval(p.default)
-                env.define(p.name,value)
-            try:return self.exec_block(f.body,env)
-            except ReturnSignal as result:return result.value
-        finally:self.env=old
+            required=sum(1 for p in f.params if getattr(p,'default',None) is None)
+            if len(args)<required or len(args)>len(f.params):raise PeaError(f'Expected {required} to {len(f.params)} arguments, got {len(args)}', frames=list(self.call_stack))
+            env=Env(f.closure);old=self.env;self.env=env
+            try:
+                for i,p in enumerate(f.params):
+                    value=args[i] if i<len(args) else self.eval(p.default)
+                    env.define(p.name,value)
+                try:return self.exec_block(f.body,env)
+                except ReturnSignal as result:return result.value
+            except PeaError as e:
+                if e.frames is None:
+                    e.frames = list(self.call_stack)
+                raise
+            except Exception as e:
+                raise PeaError(str(e), SourceSpan(0, 0), self.source_name, frames=list(self.call_stack))
+            finally:self.env=old
+        finally:
+            self.call_stack.pop()
 
     def match_pattern(self, pattern, value, env):
         from .ast_nodes import WildcardPattern, LiteralPattern, VariablePattern, ListPattern, DictPattern, OrPattern
@@ -627,7 +645,9 @@ class Interpreter:
         except Exception as ex:raise PeaError(str(ex),getattr(node,'span',None),self.source_name) from ex
     def eval(self,e):
         if isinstance(e,Literal):return e.value
-        if isinstance(e,FunctionExpr):return UserFunction(e.params,e.body,self.env)
+        if isinstance(e,FunctionExpr):
+            frame_line = getattr(getattr(e, "span", None), "line", 0)
+            return UserFunction(e.params,e.body,self.env,name="<anonymous>",line=frame_line,source=self.source_name)
         if isinstance(e,ComprehensionExpr):
             result=[]
             for value in self.eval(e.iterable):
