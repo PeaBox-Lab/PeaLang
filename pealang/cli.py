@@ -337,6 +337,19 @@ def main(argv=None):
         if c=='quickstart':
             from .ux import quickstart
             print(quickstart()); return 0
+        if c=='scaffold':
+            p=argparse.ArgumentParser(prog='pea scaffold',description='Generate a backend or full-stack project skeleton')
+            p.add_argument('target',help='framework (fastapi|flask|express|gin) or "fullstack"')
+            p.add_argument('path',help='output directory')
+            p.add_argument('--port',type=int,default=8000)
+            p.add_argument('--frontend',default='react')
+            a=p.parse_args(argv[1:])
+            from .frameworks import write_scaffold
+            fw=a.target.lower();kind='fullstack' if fw=='fullstack' else 'backend'
+            framework=fw if kind=='backend' else 'fastapi'
+            name=Path(a.path).resolve().name or 'service'
+            out=write_scaffold(name,kind=kind,target_dir=a.path,framework=framework,port=a.port,frontend=a.frontend)
+            print(json.dumps(out,indent=2));return 0 if 'error' not in out else 1
 
         if c=='doctor':
 

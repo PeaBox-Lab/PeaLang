@@ -12,6 +12,7 @@ from __future__ import annotations
 import json
 import re
 import time
+from pathlib import Path
 from typing import Any
 
 
@@ -188,6 +189,42 @@ def scaffold_fullstack(name: str, backend: str = "fastapi",
             "layout": ["backend/" + k for k in svc["files"]] + list(files)}
 
 
+def write_scaffold(name: str, kind: str = "backend", target_dir: str = ".",
+                   framework: str = "fastapi", port: int = 8000,
+                   frontend: str = "react") -> dict[str, Any]:
+    """Write a generated backend or full-stack skeleton into target_dir.
+
+    Refuses to write outside the resolved target directory: any generated path
+    containing '..' after normalisation aborts the write before anything is
+    written, so accidents cannot scatter files across the filesystem.
+    """
+    kind = kind.lower()
+    if kind == "backend":
+        gen = scaffold_backend(name, framework=framework, port=port)
+    elif kind == "fullstack":
+        gen = scaffold_fullstack(name, backend=framework, frontend=frontend, port=port)
+    else:
+        return {"error": f"Unknown kind {kind!r}", "available": ["backend", "fullstack"]}
+    if "error" in gen:
+        return gen
+
+    root = Path(target_dir).resolve()
+    for rel in gen["files"]:
+        parts = Path(rel).parts
+        if ".." in parts:
+            return {"error": f"Refusing to write outside target: {rel!r}"}
+
+    root.mkdir(parents=True, exist_ok=True)
+    written = []
+    for rel, content in gen["files"].items():
+        dest = root / rel
+        dest.parent.mkdir(parents=True, exist_ok=True)
+        dest.write_text(content, encoding="utf-8")
+        written.append(rel)
+    return {"root": str(root), "name": gen.get("name"), "kind": kind,
+            "files": sorted(written), "file_count": len(written)}
+
+
 # ---------------------------------------------------------------------------
 # Architecture tooling (solution architects)
 # ---------------------------------------------------------------------------
@@ -239,6 +276,62 @@ def service_contract(service: str, routes: list[dict[str, Any]] | None = None,
     }
 
 
+def service_contract_to_openapi(contract: dict[str, Any],
+                                title: str | None = None,
+                                version: str | None = None) -> dict[str, Any]:
+    """Convert a service_contract dict into an OpenAPI 3.0 specification.
+
+    Routes become paths/operations; `auth: jwt` maps to a bearer security
+    scheme; `owner` is surfaced as x-owner. Endpoints get no input schemas
+    (contracts intentionally carry no payloads), so this is an honest minimal
+    spec suitable both for web clients (via generate_typescript_client) and
+    for backend/architect documentation.
+    """
+    if not isinstance(contract, dict):
+        return {"error": "Expected a service_contract dict"}
+
+    service = contract.get("service", "service")
+    spec_version = version or contract.get("version") or "1.0.0"
+    spec_title = title or f"{service} API"
+
+    paths: dict[str, Any] = {}
+    needs_bearer = False
+    for ep in contract.get("endpoints", []):
+        method = str(ep.get("method", "GET")).lower()
+        path = ep.get("path", "/")
+        path_item = paths.setdefault(path, {})
+        op: dict[str, Any] = {
+            "operationId": ep.get("name") or path.strip("/").replace("/", "_") or "index",
+            "summary": f"{ep.get('method', 'GET').upper()} {path}",
+            "x-owner": ep.get("owner", "unassigned"),
+            "responses": {"200": {"description": "Success"}},
+        }
+        if str(ep.get("auth", "none")).lower() == "jwt":
+            op["security"] = [{"bearerAuth": []}]
+            needs_bearer = True
+        path_item[method] = op
+
+    spec: dict[str, Any] = {
+        "openapi": "3.0.3",
+        "info": {"title": spec_title, "version": spec_version},
+        "paths": paths,
+    }
+    if needs_bearer:
+        spec["components"] = {
+            "securitySchemes": {
+                "bearerAuth": {"type": "http", "scheme": "bearer", "bearerFormat": "JWT"},
+            },
+        }
+    return spec
+
+
+def openapi_json(contract: dict[str, Any], title: str | None = None,
+                 version: str | None = None) -> str:
+    """Return the OpenAPI document for a service contract as a JSON string."""
+    spec = service_contract_to_openapi(contract, title=title, version=version)
+    return json.dumps(spec, indent=2, sort_keys=True)
+
+
 def layered_architecture_check(source: str) -> dict[str, Any]:
     """Detect layering-style violations in PeaLang sources.
 
@@ -272,8 +365,11 @@ def build_frameworks_namespace() -> dict[str, Any]:
     return {
         "scaffold_backend": scaffold_backend,
         "scaffold_fullstack": scaffold_fullstack,
+        "write_scaffold": write_scaffold,
         "adr": adr,
         "adr_index": adr_index,
         "service_contract": service_contract,
+        "service_contract_to_openapi": service_contract_to_openapi,
+        "openapi_json": openapi_json,
         "layered_architecture_check": layered_architecture_check,
     }

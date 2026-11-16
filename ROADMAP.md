@@ -195,3 +195,24 @@ Make PeaLang the default extension language for:
 - Web, analysis, and interop smoke tests pass.
 - Existing 611-test baseline remains green.
 - Roadmap and changelog describe the 1.0.0 experience layer.
+
+## 2.14.0 — Developer tooling and frameworks toolkit (delivered)
+- `devx.diagnose_source`: combined static type-check + lint diagnostic report with per-severity counts, a 0-100 health score, and an `ok` flag for CI/editor gating
+- `devx.cheatsheet`: quick developer reference (overview / types / match / error workflow) available from the analysis namespace
+- `frameworks.scaffold_backend`: generates backend service skeletons (FastAPI, Flask, Express, Gin) as path-safe `{file: content}` maps including health endpoint, tests, Dockerfile, and README (no third-party runtime deps required to generate)
+- `frameworks.scaffold_fullstack`: FastAPI + React monorepo skeleton (`backend/` + `frontend/`)
+- `frameworks.write_scaffold`: path-traversal-guarded writer that materialises a backend/full-stack skeleton to disk
+- `pea scaffold <framework|fullstack> <dir> [--port N] [--frontend react]`: CLI command that generate projects from the templates above
+- `frameworks.adr` / `frameworks.adr_index`: Architecture Decision Record generation and indexing for solution architects
+- `frameworks.service_contract` + `frameworks.service_contract_to_openapi` + `frameworks.openapi_json`: route manifest plus an OpenAPI 3.0 spec emitter (JWT bearer scheme included only when requested by a route contract)
+- `frameworks.layered_architecture_check`: lightweight layer-violation linter (raw SQL in UI layer, direct network calls in data layer)
+- New tests: `tests/test_frameworks_v150.py` (25 tests) and extended `tests/test_devx_v137.py`; full suite 1124+ passing (17 pre-existing failures in packaging / supply-chain / security closures)
+
+## 2.15.0 — Planned (next)
+- Wire `pea scaffold` output templates into release packaging (Containerfile end-to-end build of a generated FastAPI service)
+- Add Django and Next.js scaffolds behind `--framework` / `--frontend`
+- OpenAPI emitter: request/response body schemas and `info` contact metadata
+- Integration test: generate a FastAPI service, `pip install -r requirements.txt`, `pytest` the skeleton, and run it behind `pea serve` or uvicorn
+- ADR lifecycle: status transitions (proposed → accepted → superseded) and `adr_index` filtering by status/owner
+- Analysis-namespace health gate: surface `diagnose_source` health score through `pea doctor` / `pea readiness`
+- Resolve the 17 pre-existing failures (test_packaging_hardening_v082, test_supply_chain_v062, test_security_closure_v0994)
