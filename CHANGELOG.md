@@ -8,7 +8,7 @@
 - README.md release-status section now points at 2.20.0 as the single current version; historical release notes remain in docs/releases/ for provenance but no longer define the current version.
 - Historical 0.99.6 manifests and release notes are intentionally preserved as-is for audit provenance.
 
-## 1.0.0-experience (ongoing) - 2026-11-16
+## 2.x history (pre-2.20.0 unification) - through 2026-11-16
 
 ### Frameworks expansion and API contract enrichment (v2.15.0)
 - Added Django backend scaffold to `frameworks.scaffold_backend` (framework="django"): manage.py, config/settings.py, urls.py, wsgi.py, services app with JsonResponse health endpoint; Dockerfile included. Generated Python files parse and have tests (runtime requires Django).
