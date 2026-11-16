@@ -3,6 +3,10 @@
 This walkthrough gets you from a clone to a running service. Every step is
 self-contained — no documentation beyond this file is required.
 
+**Note on running the example test-suites:** run `pytest` from *inside*
+`examples/getting_started/fastapi_orders` (and separately from
+`fullstack_shop/backend`), not both in one invocation.
+
 ## 0. Prerequisites
 
 - Python 3.10 or newer

@@ -14,6 +14,8 @@ from pealang.frameworks import (
     write_scaffold,
     adr,
     adr_index,
+    adr_transition,
+    adr_filter,
     service_contract,
     service_contract_to_openapi,
     openapi_json,
@@ -216,7 +218,86 @@ def test_cli_scaffold_fullstack(tmp_path):
 
 def test_build_frameworks_namespace():
     ns = build_frameworks_namespace()
-    for key in ("scaffold_backend", "scaffold_fullstack", "adr", "adr_index",
+    for key in ("scaffold_backend", "scaffold_fullstack", "write_scaffold",
+                "adr", "adr_index", "adr_transition", "adr_filter",
                 "service_contract", "service_contract_to_openapi", "openapi_json",
                 "layered_architecture_check"):
         assert key in ns
+
+
+def test_scaffold_backend_django():
+    out = scaffold_backend("orders", framework="django", port=8080)
+    assert out["framework"] == "django"
+    assert "manage.py" in out["files"]
+    assert "config/settings.py" in out["files"]
+    assert "services/views.py" in out["files"]
+    assert "services/test_health.py" in out["files"]
+    assert "JsonResponse" in out["files"]["services/views.py"]
+    assert "health" in out["files"]["config/urls.py"]
+
+
+def test_scaffold_fullstack_nextjs():
+    out = scaffold_fullstack("shop", backend="fastapi", frontend="nextjs")
+    assert out["frontend"] == "nextjs"
+    assert "frontend/pages/index.js" in out["files"]
+    assert "frontend/package.json" in out["files"]
+    assert "next" in out["files"]["frontend/package.json"]
+
+
+def test_scaffold_fullstack_bad_frontend():
+    out = scaffold_fullstack("shop", backend="fastapi", frontend="angular")
+    assert "frontend/README.md" in out["files"]
+    assert "angular" in out["files"]["frontend/README.md"]
+
+
+def test_service_contract_with_schemas():
+    c = service_contract("orders", routes=[
+        {"method": "post", "path": "/orders",
+         "request_body": {"type": "object", "required": ["item"],
+                          "properties": {"item": {"type": "string"}}},
+         "response_schema": {"type": "object",
+                             "properties": {"id": {"type": "integer"}}}},
+    ])
+    assert c["endpoints"][0]["request_body"]["required"] == ["item"]
+    assert c["endpoints"][0]["response_schema"]["type"] == "object"
+
+
+def test_openapi_with_request_response_schemas():
+    c = service_contract("orders", routes=[
+        {"method": "post", "path": "/orders",
+         "request_body": {"type": "object",
+                          "properties": {"item": {"type": "string"}}},
+         "response_schema": {"type": "object",
+                             "properties": {"id": {"type": "integer"}}}},
+    ])
+    spec = service_contract_to_openapi(c)
+    op = spec["paths"]["/orders"]["post"]
+    body_schema = op["requestBody"]["content"]["application/json"]["schema"]
+    assert body_schema["type"] == "object"
+    resp_schema = op["responses"]["200"]["content"]["application/json"]["schema"]
+    assert resp_schema["type"] == "object"
+
+
+def test_adr_transition_valid():
+    rec = {"number": "0001", "title": "Use PeaLang", "status": "proposed", "owner": "team-a"}
+    updated = adr_transition(rec, "accepted")
+    assert updated["status"] == "accepted"
+    assert rec["status"] == "proposed"  # original unchanged
+
+
+def test_adr_transition_invalid():
+    rec = {"number": "0001", "status": "proposed"}
+    out = adr_transition(rec, "maybe")
+    assert "error" in out
+    assert "allowed" in out
+
+
+def test_adr_filter():
+    recs = [
+        {"number": "1", "status": "accepted", "owner": "a"},
+        {"number": "2", "status": "proposed", "owner": "a"},
+        {"number": "3", "status": "accepted", "owner": "b"},
+    ]
+    assert [r["number"] for r in adr_filter(recs, status="accepted")] == ["1", "3"]
+    assert [r["number"] for r in adr_filter(recs, owner="a")] == ["1", "2"]
+    assert [r["number"] for r in adr_filter(recs, status="accepted", owner="b")] == ["3"]

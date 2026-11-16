@@ -211,11 +211,19 @@ Make PeaLang the default extension language for:
 - `docs/GETTING_STARTED.md`: install → verify → generate → run walkthrough, including copy-ready examples
 - New tests: `tests/test_frameworks_v150.py` (25 tests) and extended `tests/test_devx_v137.py`; full suite 1131 passing (17 pre-existing failures in packaging / supply-chain / security closures)
 
+## 2.15.0 — Frameworks expansion and API contract enrichment (delivered)
+- `frameworks.scaffold_backend(..., framework="django")`: Django service skeleton (manage.py, settings, urls, WSGI, JsonResponse health endpoint, tests, Dockerfile); generated Python files parse cleanly (runtime execution requires Django, not installed in this environment)
+- `frameworks.scaffold_fullstack(..., frontend="nextjs")`: Next.js pages-router frontend alongside the default React/Vite option, plus friendly README fallback for unknown frontend names
+- `frameworks.adr_transition` + `frameworks.adr_filter`: ADR lifecycle tooling — validated status transitions (proposed/accepted/deprecated/superseded/rejected) and filtering by status and owner; original record unchanged on transition
+- `frameworks.service_contract` now records `request_body` / `response_schema` per route; `service_contract_to_openapi` emits `requestBody` and `200` response `content` schemas accordingly
+- `scaffold_backend` for Python frameworks now generates `app/__init__.py`, and tests locate their own package dir via `sys.path` so generated suites run from any cwd
+- New tests: `tests/test_frameworks_v150.py` extended to 33 tests (Django / Next.js / schema passthrough / ADR lifecycle / namespace keys)
+- Full suite 1133 passing; 17 pre-existing failures remain unchanged
+
 ## 2.15.0 — Planned (next)
 - Wire `pea scaffold` output templates into release packaging (Containerfile end-to-end build of a generated FastAPI service)
-- Add Django and Next.js scaffolds behind `--framework` / `--frontend`
-- OpenAPI emitter: request/response body schemas and `info` contact metadata
-- Integration test: generate a FastAPI service, `pip install -r requirements.txt`, `pytest` the skeleton, and run it behind `pea serve` or uvicorn
-- ADR lifecycle: status transitions (proposed → accepted → superseded) and `adr_index` filtering by status/owner
+- OpenAPI emitter: `info.contact` metadata and explicit error response schemas (4xx/5xx)
+- Integration test: generate a FastAPI service, install, pytest, and serve behind uvicorn in CI
+- ADR lifecycle: `adr_index` filtering by status/owner and supersession links (see adr_transition/adr_filter)
 - Analysis-namespace health gate: surface `diagnose_source` health score through `pea doctor` / `pea readiness`
 - Resolve the 17 pre-existing failures (test_packaging_hardening_v082, test_supply_chain_v062, test_security_closure_v0994)

@@ -41,6 +41,11 @@ _BACKENDS = {
         "framework": "gin",
         "entrypoint": "cmd/server/main.go",
     },
+    "django": {
+        "language": "python",
+        "framework": "django",
+        "entrypoint": "config/settings.py",
+    },
 }
 
 
@@ -132,6 +137,62 @@ def scaffold_backend(name: str, framework: str = "fastapi", port: int = 8000) ->
             f"    r.Run(\":{port}\")\n"
             "}\n"
         )
+    elif framework == "django":
+        files["requirements.txt"] = "django>=5.0\\ngunicorn>=21\\npytest>=7.4\\npytest-django>=4.8\\n"
+        files["manage.py"] = (
+            "#!/usr/bin/env python\n"
+            "import os\nimport sys\n"
+            "if __name__ == \"__main__\":\n"
+            "    os.environ.setdefault(\"DJANGO_SETTINGS_MODULE\", \"config.settings\")\n"
+            "    from django.core.management import execute_from_command_line\n"
+            "    execute_from_command_line(sys.argv)\n"
+        )
+        files["config/settings.py"] = (
+            "SECRET_KEY = \"change-me-in-production\"\n"
+            "DEBUG = True\n"
+            "ALLOWED_HOSTS = [\"*\"]\n"
+            "ROOT_URLCONF = \"config.urls\"\n"
+            "INSTALLED_APPS = [\"django.contrib.contenttypes\", \"django.contrib.auth\", \"services\"]\n"
+            "DATABASES = {}\n"
+            "MIDDLEWARE = []\n"
+            "TEMPLATES = []\n"
+            "TIME_ZONE = \"UTC\"\n"
+            "DEFAULT_AUTO_FIELD = \"django.db.models.BigAutoField\"\n"
+        )
+        files["config/wsgi.py"] = (
+            "import os\n"
+            "from django.core.wsgi import get_wsgi_application\n\n"
+            "os.environ.setdefault(\"DJANGO_SETTINGS_MODULE\", \"config.settings\")\n"
+            "application = get_wsgi_application()\n"
+        )
+        files["config/urls.py"] = (
+            "from django.urls import path\n"
+            "from services.views import health\n\n"
+            "urlpatterns = [path(\"health\", health)]\n"
+        )
+        files["services/views.py"] = (
+            "from django.http import JsonResponse\n\n"
+            f"def health(request):\n"
+            f"    return JsonResponse({{\"status\": \"ok\", \"service\": \"{name}\"}})\n"
+        )
+        files["services/apps.py"] = (
+            "from django.apps import AppConfig\n\n"
+            "class ServicesConfig(AppConfig):\n"
+            "    name = \"services\"\n"
+        )
+        files["services/test_health.py"] = (
+            "from django.test import Client\n\n"
+            "def test_health():\n"
+            "    c = Client()\n"
+            "    r = c.get(\"/health\")\n"
+            "    assert r.status_code == 200\n"
+            "    assert r.json()[\"status\"] == \"ok\"\n"
+        )
+        files["Dockerfile"] = (
+            "FROM python:3.12-slim\nWORKDIR /srv\nCOPY requirements.txt .\n"
+            "RUN pip install --no-cache-dir -r requirements.txt\nCOPY . .\n"
+            f"CMD [\"gunicorn\", \"--bind\", \"0.0.0.0:{port}\", \"config.wsgi:application\"]\n"
+        )
 
     files["README.md"] = (
         f"# {name}\n\n"
@@ -139,8 +200,11 @@ def scaffold_backend(name: str, framework: str = "fastapi", port: int = 8000) ->
         f"Framework: {b['framework']} ({b['language']})\n"
         f"Entrypoint: `{b['entrypoint']}`\nPort: {port}\n\n"
         "```bash\n"
-        + ("pip install -r requirements.txt && uvicorn app.main:app --reload\n" if framework in ("fastapi", "flask")
-           else "npm install && npm start\n" if framework == "express" else "go run ./cmd/server\n")
+        + ("pip install -r requirements.txt && uvicorn app.main:app --reload\n" if framework == "fastapi"
+           else "pip install -r requirements.txt && gunicorn -b 0.0.0.0:8000 app.main:app\n" if framework == "flask"
+           else "npm install && npm start\n" if framework == "express"
+           else "go run ./cmd/server\n" if framework == "gin"
+           else "pip install -r requirements.txt && python manage.py runserver 0.0.0.0:{port}\n".format(port=port))
         + "```\n"
     )
     return {"name": name, "framework": framework, "language": b["language"],
@@ -180,8 +244,25 @@ def scaffold_fullstack(name: str, backend: str = "fastapi",
             "import React from 'react';\nimport { createRoot } from 'react-dom/client';\nimport App from './App.jsx';\n"
             "createRoot(document.getElementById('root')).render(<App />);\n"
         )
+    elif frontend.lower() == "nextjs":
+        files["frontend/package.json"] = json.dumps({
+            "name": f"{name}-ui", "version": "1.0.0", "private": True,
+            "scripts": {"dev": "next dev", "build": "next build", "start": "next start"},
+            "dependencies": {"next": "^14.2.0", "react": "^18.2.0", "react-dom": "^18.2.0"},
+        }, indent=2) + "\n"
+        files["frontend/pages/index.js"] = (
+            "import { useEffect, useState } from 'react';\n\n"
+            "export default function Home() {\n"
+            "  const [health, setHealth] = useState(null);\n"
+            "  useEffect(() => {\n"
+            f"    fetch('http://localhost:{port}/health').then(r => r.json()).then(setHealth).catch(() => setHealth({{error:'backend unreachable'}}));\n"
+            "  }, []);\n"
+            "  return <pre>{JSON.stringify(health, null, 2)}</pre>;\n"
+            "}\n"
+        )
+        files["frontend/next.config.js"] = "module.exports = { reactStrictMode: true };\n"
     else:
-        files["frontend/README.md"] = f"# {name} frontend\nFramework '{frontend}' not scaffolded; choose 'react'.\n"
+        files["frontend/README.md"] = f"# {name} frontend\nFramework '{frontend}' not scaffolded; choose 'react' or 'nextjs'.\n"
 
     files["README.md"] = (
         f"# {name}\n\n"
@@ -260,6 +341,31 @@ def adr_index(records: list[dict[str, str]]) -> str:
     return "\n".join(lines) + "\n"
 
 
+_ADR_STATUSES = ("proposed", "accepted", "deprecated", "superseded", "rejected")
+
+
+def adr_transition(record: dict[str, Any], new_status: str) -> dict[str, Any]:
+    """Return a copy of an ADR record with an updated, validated status."""
+    if new_status not in _ADR_STATUSES:
+        return {"error": f"Invalid ADR status {new_status!r}", "allowed": list(_ADR_STATUSES)}
+    updated = dict(record)
+    updated["status"] = new_status
+    return updated
+
+
+def adr_filter(records: list[dict[str, Any]], status: str | None = None,
+               owner: str | None = None) -> list[dict[str, Any]]:
+    """Filter ADR records by status and/or owner."""
+    out = []
+    for rec in records:
+        if status is not None and rec.get("status") != status:
+            continue
+        if owner is not None and rec.get("owner") != owner:
+            continue
+        out.append(rec)
+    return out
+
+
 def service_contract(service: str, routes: list[dict[str, Any]] | None = None,
                      version: str = "1.0.0") -> dict[str, Any]:
     """Build a simple service contract manifest (routes, owners, version)."""
@@ -272,6 +378,9 @@ def service_contract(service: str, routes: list[dict[str, Any]] | None = None,
             "name": r.get("name") or r.get("path", "/").strip("/").replace("/", "_") or "index",
             "owner": r.get("owner", "unassigned"),
             "auth": r.get("auth", "none"),
+            "request_body": r.get("request_body"),
+            "response_body": r.get("response_body"),
+            "response_schema": r.get("response_schema"),
         })
     return {
         "service": service,
@@ -312,6 +421,18 @@ def service_contract_to_openapi(contract: dict[str, Any],
             "x-owner": ep.get("owner", "unassigned"),
             "responses": {"200": {"description": "Success"}},
         }
+        req_body = ep.get("request_body")
+        if req_body is not None:
+            op["requestBody"] = {
+                "required": True,
+                "content": {"application/json": {"schema": req_body}},
+            }
+        resp_schema = ep.get("response_schema")
+        if resp_schema is not None:
+            op["responses"]["200"] = {
+                "description": "Success",
+                "content": {"application/json": {"schema": resp_schema}},
+            }
         if str(ep.get("auth", "none")).lower() == "jwt":
             op["security"] = [{"bearerAuth": []}]
             needs_bearer = True
@@ -374,6 +495,8 @@ def build_frameworks_namespace() -> dict[str, Any]:
         "write_scaffold": write_scaffold,
         "adr": adr,
         "adr_index": adr_index,
+        "adr_transition": adr_transition,
+        "adr_filter": adr_filter,
         "service_contract": service_contract,
         "service_contract_to_openapi": service_contract_to_openapi,
         "openapi_json": openapi_json,

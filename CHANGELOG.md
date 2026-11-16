@@ -2,6 +2,15 @@
 
 ## 1.0.0-experience (ongoing) - 2026-11-16
 
+### Frameworks expansion and API contract enrichment (v2.15.0)
+- Added Django backend scaffold to `frameworks.scaffold_backend` (framework="django"): manage.py, config/settings.py, urls.py, wsgi.py, services app with JsonResponse health endpoint; Dockerfile included. Generated Python files parse and have tests (runtime requires Django).
+- Added Next.js frontend to `frameworks.scaffold_fullstack` (frontend="nextjs"): pages-router index polling backend /health.
+- Added `frameworks.adr_transition` and `frameworks.adr_filter` (ADR lifecycle); exported in analysis namespace.
+- `frameworks.service_contract` now records optional `request_body` / `response_schema` per route; `service_contract_to_openapi` emits `requestBody` and `200` response `content` schemas.
+- Python scaffolds now generate `app/__init__.py` and self-locate via sys.path so test suites run from any cwd.
+- Docs updated: `examples/getting_started/README.md` documents the new frameworks/frontend choices; ROADMAP.md marks v2.14.0 and v2.15.0 (delivered) sections.
+- 33 framework tests pass; ready-made examples re-generated and verified (fastapi_orders and fullstack_shop backend suites run from repository root).
+
 ### Developer tooling and frameworks toolkit (v2.14.0)
 - Added `pealang/frameworks.py` with backend/full-stack scaffolding (FastAPI, Flask, Express, Gin, and FastAPI+React monorepo), ADR generation/indexing, service contracts with an OpenAPI 3.0 emitter, and a lightweight layered-architecture linter.
 - Added `frameworks.write_scaffold`: path-traversal-guarded writer that materialises generated projects to disk.
