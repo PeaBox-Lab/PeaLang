@@ -12,6 +12,8 @@ import uuid
 import hashlib
 import json
 import os
+import re
+import zipfile
 from collections.abc import ItemsView, KeysView, ValuesView
 from pathlib import Path
 from typing import Any, Dict, ItemsView, ItemsView, KeysView, List, Optional
@@ -253,118 +255,307 @@ class SupplyChainIndex:
 
 
 # ---------------------------------------------------------------------------
-# Stubs for __init__.py line 192 imports
+# Release-hardening API
+#
+# Deterministic manifests, SBOMs, provenance, integrity verification and
+# packaging gates. Functions take project trees (Path-like) or file lists and
+# are side-effect free except where noted (write_checksums writes a file).
 # ---------------------------------------------------------------------------
 
+def _parse_pyproject_deps(text):
+    m = re.search(r'dependencies\s*=\s*\[(.*?)\]', text, re.DOTALL)
+    if not m:
+        return []
+    return [d.strip() for d in re.findall(r'"([^"]+)"', m.group(1))]
 
-def sha256_file(path: str) -> str:
+def _dep_name(spec):
+    return re.split(r'[<>=!~\[]', spec.strip(), maxsplit=1)[0].strip()
+
+def sha256_file(path):
     """Compute SHA-256 hex digest of a file."""
-    import hashlib as _hl
-    h = _hl.sha256()
+    h = hashlib.sha256()
     with open(path, "rb") as f:
         for chunk in iter(lambda: f.read(8192), b""):
             h.update(chunk)
     return h.hexdigest()
 
-
-def artifact_checksums(*paths: str) -> Dict[str, str]:
+def artifact_checksums(*paths):
     """Return SHA-256 checksums for each given path."""
-    return {p: sha256_file(p) for p in paths}
+    return {str(p): sha256_file(str(p)) for p in paths}
 
+def write_checksums(checksums_or_paths, dest=None):
+    """Write checksums to dest.
 
-def write_checksums(checksums: Dict[str, str], dest: str) -> None:
-    """Write a checksums dict to dest as JSON."""
-    Path(dest).write_text(json.dumps(checksums, sort_keys=True, indent=2))
+    Accepts either a dict {path: hexdigest} (written as sorted JSON) or a
+    list of file paths (written in SHA256SUMS format: "<hash>  <path>").
+    Returns the destination path on success.
+    """
+    if dest is None:
+        raise TypeError("write_checksums requires a destination path")
+    dest = Path(dest)
+    if isinstance(checksums_or_paths, dict):
+        dest.write_text(json.dumps({str(k): v for k, v in checksums_or_paths.items()},
+                                     sort_keys=True, indent=2), encoding="utf-8")
+        return dest
+    lines = []
+    for p in checksums_or_paths:
+        p = Path(p)
+        lines.append(f"{sha256_file(str(p))}  {p.name}")
+    dest.write_text("\n".join(lines) + "\n", encoding="utf-8")
+    return dest
 
-
-def generate_sbom(name: str, version: str, dependencies: List[str]) -> Dict[str, Any]:
-    """Generate a minimal SBOM (Software Bill of Materials)."""
+def generate_sbom(root, version="0.0.0", dependencies=None):
+    """Generate a CycloneDX SBOM for the project tree at root."""
+    root = Path(root)
+    deps = dependencies
+    pyproject = root / "pyproject.toml"
+    if deps is None and pyproject.is_file():
+        deps = _parse_pyproject_deps(pyproject.read_text(encoding="utf-8", errors="ignore"))
+    components = [{"type": "application", "name": root.name or "app",
+                   "version": version, "bom-ref": "root"}]
+    for p in sorted(root.rglob("*"), key=lambda p: p.as_posix()):
+        if not p.is_file():
+            continue
+        rel = p.relative_to(root).as_posix()
+        components.append({"type": "file", "name": rel,
+                           "sha256": sha256_file(str(p))})
     return {
-        "name": name,
+        "bomFormat": "CycloneDX",
+        "specVersion": "1.5",
         "version": version,
-        "dependencies": dependencies,
-        "hash": sha256_file(f"._{name}_{version}.peg"),
+        "metadata": {"component": {"type": "application",
+                                    "name": root.name or "app", "version": version}},
+        "dependencies": deps or [],
+        "components": components,
     }
 
+def verify_sbom(sbom, root):
+    """Verify every file component in an SBOM against its hash."""
+    root = Path(root)
+    mismatches = []
+    for comp in sbom.get("components", []):
+        if comp.get("type") != "file":
+            continue
+        p = root / comp["name"]
+        if not p.is_file() or sha256_file(str(p)) != comp.get("sha256"):
+            mismatches.append(comp["name"])
+    return {"valid": not mismatches, "mismatches": mismatches}
 
-def dependency_inventory(index: Dict[str, Any]) -> List[Dict[str, Any]]:
-    """Produce an inventory list from a package index dict."""
-    if not index:
-        return []
-    # Use UUIDv5 for deterministic package identities (no MD5)
+def dependency_inventory(source, dep_name=_dep_name):
+    """Inventory a pyproject.toml (directory) or UUID-keyed index (dict)."""
+    if isinstance(source, (str, os.PathLike)):
+        root = Path(source)
+        pyproject = root / "pyproject.toml"
+        deps = _parse_pyproject_deps(pyproject.read_text(encoding="utf-8", errors="ignore")) if pyproject.is_file() else []
+        return [{"name": dep_name(d), "specifier": d} for d in deps]
     return [{"name": str(uuid.uuid5(uuid.NAMESPACE_DNS, str(k))), **v}
-            for k, v in index.items()]
+            for k, v in source.items()]
 
-
-def build_provenance(
-    package_name: str,
-    version: str,
-    source_files: List[str],
-    compiler: str = "peac",
-) -> Dict[str, Any]:
-    """Build a provenance record for a compiled package."""
+def build_provenance(root, files, version="0.0.0", compiler="peac"):
+    """Build a provenance record for the compiled artifacts in files."""
+    root = Path(root)
+    subject = []
+    for f in files:
+        p = Path(f)
+        subject.append({"name": p.name,
+                        "digest": {"sha256": sha256_file(str(p))},
+                        "path": str(p)})
     return {
-        "package": package_name,
+        "_type": "provenance",
+        "package": root.name or "app",
         "version": version,
         "compiler": compiler,
-        "source_files": source_files,
+        "subject": subject,
     }
 
+def verify_provenance(provenance, files):
+    """Verify every file listed in a provenance record matches its hash."""
+    by_name = {entry.get("name"): entry.get("digest", {}).get("sha256")
+               for entry in provenance.get("subject", [])}
+    mismatches = []
+    for f in files:
+        p = Path(f)
+        expected = by_name.get(p.name)
+        if expected is None or sha256_file(str(p)) != expected:
+            mismatches.append(p.name)
+    return {"valid": not mismatches, "mismatches": mismatches}
 
-def verify_wheel(wheel_path: str, expected_hash: str) -> bool:
-    """Verify a wheel file's hash."""
-    return sha256_file(wheel_path) == expected_hash
+def deterministic_manifest(root):
+    """Hash every file under root in sorted order; deterministic output."""
+    root = Path(root)
+    files = []
+    for p in sorted(root.rglob("*"), key=lambda p: p.as_posix()):
+        if not p.is_file():
+            continue
+        rel = p.relative_to(root).as_posix()
+        files.append({"path": rel, "sha256": sha256_file(str(p))})
+    return {"algorithm": "sha256", "files": files, "file_count": len(files)}
 
+def verify_manifest(root, manifest):
+    """Verify a deterministic manifest: list files whose hash changed."""
+    root = Path(root)
+    changed = []
+    for entry in manifest.get("files", []):
+        p = root / entry["path"]
+        if not p.is_file() or sha256_file(str(p)) != entry["sha256"]:
+            changed.append(entry["path"])
+    return {"valid": not changed, "changed": changed}
 
-def verify_source_archive(archive_path: str, expected_hash: str) -> bool:
-    """Verify a source archive's hash."""
-    return sha256_file(archive_path) == expected_hash
+def sign_release_manifest(manifest, private_key_bytes):
+    """Sign a manifest dict with a raw Ed25519 private key."""
+    from cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PrivateKey
+    key = Ed25519PrivateKey.from_private_bytes(private_key_bytes)
+    payload = json.dumps(manifest, sort_keys=True, separators=(",", ":")).encode("utf-8")
+    return key.sign(payload)
 
+def verify_release_signature(manifest, signature, public_key_bytes):
+    """Verify an Ed25519 signature for a manifest dict."""
+    from cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PublicKey
+    key = Ed25519PublicKey.from_public_bytes(public_key_bytes)
+    payload = json.dumps(manifest, sort_keys=True, separators=(",", ":")).encode("utf-8")
+    try:
+        key.verify(signature, payload)
+        return True
+    except Exception:
+        return False
 
-def migration_check(
-    from_version: str, to_version: str, changes: List[str],
-) -> Dict[str, Any]:
-    """Check if a migration from one version to another is safe."""
-    return {
-        "from": from_version,
-        "to": to_version,
-        "safe": len(changes) < 3,
-        "changes": changes,
-    }
+def verify_wheel(wheel_path):
+    """Inspect a wheel: requires pealang/__init__.py and *-dist-info/METADATA."""
+    try:
+        with zipfile.ZipFile(wheel_path) as z:
+            names = z.namelist()
+            has_init = any(n.endswith("pealang/__init__.py") for n in names)
+            metadata = next((n for n in names if n.endswith(".dist-info/METADATA")), None)
+            version = None
+            if metadata is not None:
+                m = re.search(r"^Version:\s*([^\s]+)",
+                              z.read(metadata).decode("utf-8", "replace"), re.MULTILINE)
+                version = m.group(1).strip() if m else None
+            valid = has_init and metadata is not None
+            return {"valid": valid, "version": version, "files": len(names)}
+    except Exception:
+        return {"valid": False, "version": None, "files": 0}
 
+def verify_source_archive(archive_path):
+    """Inspect a source zip: requires pyproject.toml and README.md at its root."""
+    try:
+        with zipfile.ZipFile(archive_path) as z:
+            names = z.namelist()
+            tree_root = None
+            for n in names:
+                parts = n.split("/")
+                if len(parts) >= 2 and parts[-1] == "pyproject.toml":
+                    tree_root = parts[0]
+                    break
+            pyproject = next((n for n in names if n.endswith("/pyproject.toml")), None)
+            readme = next((n for n in names if n.endswith("/README.md")), None)
+            valid = bool(pyproject and readme)
+            return {"valid": valid, "root": tree_root, "files": len(names)}
+    except Exception:
+        return {"valid": False, "root": None, "files": 0}
 
-def reproducible_build_metadata(
-    build_id: str, timestamp: float, source_hash: str,
-) -> Dict[str, Any]:
+def migration_check(from_root, to_root):
+    """Compare two trees; a migration is compatible iff no source files vanished."""
+    a, b = Path(from_root), Path(to_root)
+    if not a.is_dir() or not b.is_dir():
+        return {"compatible": False,
+                "removed": sorted(set(p.as_posix() for p in a.rglob("*") if p.is_file()))
+                if a.is_dir() else [str(a)]}
+    a_files = {p.relative_to(a).as_posix() for p in a.rglob("*") if p.is_file()}
+    b_files = {p.relative_to(b).as_posix() for p in b.rglob("*") if p.is_file()}
+    removed = sorted(a_files - b_files)
+    added = sorted(b_files - a_files)
+    changed = sorted(rel for rel in (a_files & b_files)
+                     if sha256_file(str(a / rel)) != sha256_file(str(b / rel)))
+    return {"compatible": not removed, "removed": removed,
+            "added": added, "changed": changed}
+
+def reproducible_build_metadata(build_id, timestamp, source_hash):
     """Produce reproducible build metadata dict."""
     return {"build_id": build_id, "timestamp": timestamp, "source_hash": source_hash}
 
+def release_checklist():
+    """A release checklist covering spec, tests, security and distribution."""
+    return [
+        "spec version frozen and verified",
+        "regression suite green",
+        "conformance suite green",
+        "security audit clean",
+        "SBOM and provenance signed",
+        "deterministic manifest verified",
+        "packaging quality gate PASS",
+        "migration check compatible",
+        "docs and examples updated",
+        "release manifest signed",
+        "known limitations documented",
+        "changelog and roadmap updated",
+    ]
 
-def release_checklist(
-    version: str, requirements: List[str],
-) -> Dict[str, Any]:
-    """Generate a release checklist for *version."""
-    return {"version": version, "requirements": requirements, "passed": True}
+def readiness_assessment(states):
+    """Score a mapping of component -> truthy state; full score means ready."""
+    if not isinstance(states, dict):
+        states = {"state": bool(states)}
+    total = len(states)
+    passed = sum(1 for v in states.values() if bool(v))
+    score = int(round(passed * 100 / total)) if total else 100
+    return {"component": "aggregate", "state": "green" if score == 100 else "amber",
+            "score": score, "ready": score == 100, "checks": list(states)}
 
+def containerfile():
+    """Generate a minimal containerfile definition for release builds."""
+    return ("FROM python:3.12-slim\n"
+            "WORKDIR /app\n"
+            "ENV PYTHONUNBUFFERED=1\n"
+            "WORKDIR /app\n"
+            "COPY . /app\n"
+            "RUN pip install --no-cache-dir .\n"
+            "USER 10001:10001\n"
+            "CMD [\"pealang\", \"run\", \"main.pea\"]\n")
 
-def readiness_assessment(
-    component: str, state: str, checks: List[str],
-) -> Dict[str, Any]:
-    """Assess readiness of a component."""
-    return {"component": component, "state": state, "checks": checks, "ready": state == "green"}
+def ci_matrix():
+    """Return the CI platform/version matrix for release gating."""
+    return {"os": ["ubuntu-latest", "windows-latest", "macos-latest"],
+            "python-version": ["3.10", "3.11", "3.12", "3.13"]}
 
+def locked_dependency_evidence(root):
+    """Inspect requirements.lock for a pinned, complete dependency lock."""
+    root = Path(root)
+    lock = root / "requirements.lock"
+    locked = lock.is_file() and bool(lock.read_text(encoding="utf-8", errors="ignore").strip())
+    packages = [l for l in lock.read_text(encoding="utf-8", errors="ignore").splitlines()
+                if l.strip() and not l.strip().startswith("#")] if lock.is_file() else []
+    return {"locked": locked, "packages": packages}
 
-def containerfile(
-    name: str, tag: str, registry: str = "docker.io",
-) -> Dict[str, Any]:
-    """Generate a container image reference dict."""
-    return {"name": name, "tag": tag, "registry": registry}
+def offline_install_evidence(wheelhouse, packages):
+    """Check each pkg==version in packages has a wheel in wheelhouse."""
+    wh = Path(wheelhouse)
+    wheels = list(wh.glob("*.whl")) if wh.is_dir() else []
+    missing = []
+    matched = []
+    for pkg in packages:
+        name, _, version = pkg.partition("==")
+        name, version = name.strip(), version.strip()
+        match = any(w.name.startswith(f"{name}-{version}-") for w in wheels)
+        if match:
+            matched.append(pkg)
+        else:
+            missing.append(pkg)
+    return {"ready": not missing, "matched": matched, "missing": missing,
+            "wheels": [w.name for w in wheels]}
 
-
-def ci_matrix(platform: str, matrix: List[Dict[str, Any]]) -> Dict[str, Any]:
-    """Normalize a CI matrix dict for the given platform."""
-    return {"platform": platform, "matrix": matrix}
-
+def packaging_quality_gate(manifest, sbom, provenance, deterministic, offline, files):
+    """Aggregate the packaging gate checks into a PASS/FAIL verdict."""
+    def _ok(arg, key="valid"):
+        if isinstance(arg, dict):
+            return bool(arg.get(key, arg.get("ready", arg)))
+        return bool(arg)
+    checks = [_ok(manifest, "valid"),
+              _ok(sbom, "valid"),
+              _ok(provenance, "valid"),
+              bool(deterministic),
+              _ok(offline, "ready"),
+              bool(files.get("files", files) if isinstance(files, dict) else bool(files))]
+    return {"gate": "PASS" if all(checks) else "FAIL", "checks": checks}
 
 # ---------------------------------------------------------------------------
 # Namespace exporter

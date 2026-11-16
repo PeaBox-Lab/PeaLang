@@ -217,12 +217,10 @@ class PythonTarget(CompilationTarget):
         return f"def pea_main():\n    # Compiled from PeaLang\n    {source}\n\nif __name__ == \"__main__\":\n    pea_main()"
 
     def execute(self, source: str) -> Any:
-        # Execute the compiled Python source
-        try:
-            exec(source, {})
-            return {"python_exec": True}
-        except Exception as e:
-            return {"python_exec_error": str(e)}
+        # Intentionally unimplemented: compiling to Python is a stub in this
+        # release and no code is ever executed here. Implementing execution
+        # would require a sandboxed Python runtime, which does not exist yet.
+        raise NotImplementedError("PythonTarget.execute requires a sandboxed Python runtime that is not implemented in this release")
 
 
 # ---------------------------------------------------------------------------

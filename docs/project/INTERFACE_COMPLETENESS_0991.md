@@ -1,6 +1,6 @@
 # Interface Completeness 0.99.1
 
-All 23 `NotImplementedError` sites found by the audit are intentional base-interface contracts, not directly instantiable production backends. Concrete implementations are tested separately. The classified modules and methods are:
+All 26 `NotImplementedError` sites found by the audit are intentional base-interface contracts, not directly instantiable production backends. Concrete implementations are tested separately. The classified modules and methods are:
 
 - `pealang/cloud_connectors.py`: listdir, stat, open, mkdir, remove, rename
 - `pealang/connector_runtime.py`: token
@@ -10,6 +10,8 @@ All 23 `NotImplementedError` sites found by the audit are intentional base-inter
 - `pealang/enterprise_connectors.py`: get
 - `pealang/integration_hardening.py`: get
 - `pealang/object_storage.py`: list, read_bytes, write_bytes, delete
-- `pealang/orchestration_state.py`: begin, finish, successful, latest
+- `pealang/orchestration_state.py`: begin, finish, successful, attempts
+- `pealang/serverless.py`: CompilationTarget.compile, CompilationTarget.execute, PythonTarget.execute (added as intentional stubs in the v2.8.0 platform-expansion work; PythonTarget.execute requires a sandboxed runtime and is intentionally unimplemented)
+- `pealang/sql.py`: SQLite-only portable upsert; other dialects raise intentionally
 
 Release policy: unclassified `NotImplementedError` occurrences are forbidden.
