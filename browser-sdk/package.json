@@ -1,6 +1,6 @@
 {
   "name": "@pealang/browser",
-  "version": "0.99.6",
+  "version": "2.20.0",
   "type": "module",
   "exports": "./pealang-wasm.js"
 }

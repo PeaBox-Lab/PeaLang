@@ -196,6 +196,11 @@ Make PeaLang the default extension language for:
 - Existing 611-test baseline remains green.
 - Roadmap and changelog describe the 1.0.0 experience layer.
 
+## 2.20.0 — Single source of truth release (delivered)
+- Unified pyproject.toml, pealang.__init__.__version__, TypeScript/browser/React SDK package.json and react peer dependency on @pealang/client, Containerfile image version, RELEASE_MANIFEST.json, registry User-Agent, runtime_service health version, and audit_closure manifest check to **2.20.0**.
+- Added `tests/test_version_v220.py` (7 tests) pinning the agreement of all tracked version surfaces.
+- Historical 0.99.6 manifests/notes preserved for provenance; current release is **2.20.0**.
+
 ## 2.14.0 — Developer tooling and frameworks toolkit (delivered)
 - `devx.diagnose_source`: combined static type-check + lint diagnostic report with per-severity counts, a 0-100 health score, and an `ok` flag for CI/editor gating
 - `devx.cheatsheet`: quick developer reference (overview / types / match / error workflow) available from the analysis namespace

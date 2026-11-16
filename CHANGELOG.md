@@ -1,5 +1,13 @@
 # Changelog
 
+## 2.20.0 - 2026-11-16
+
+### Version unification (single source of truth)
+- Unified package, runtime, SDK and container versions to **2.20.0**: pyproject.toml, pealang.__init__.__version__, typescript/browser/react SDKs, react-sdk @pealang/client peer dependency, Containerfile, RELEASE_MANIFEST.json, registry_auth User-Agent, runtime_service health endpoint, audit_closure manifest check.
+- Added tests/test_version_v220.py (7 tests) that assert all of the above agree, so future bumps cannot silently drift again.
+- README.md release-status section now points at 2.20.0 as the single current version; historical release notes remain in docs/releases/ for provenance but no longer define the current version.
+- Historical 0.99.6 manifests and release notes are intentionally preserved as-is for audit provenance.
+
 ## 1.0.0-experience (ongoing) - 2026-11-16
 
 ### Frameworks expansion and API contract enrichment (v2.15.0)

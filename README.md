@@ -8,18 +8,11 @@ PeaLang is designed to complement existing ecosystems such as Python, FastAPI, J
 
 ## Release Status
 
-Base version: **0.99.6** (security hardening baseline)  
-Experience layer: **1.0.0-experience** (developer experience, language ergonomics, web/data/interop)
+**Version: 2.20.0** — single source of truth for the current release.
 
-The 1.0.0-experience layer builds on the 0.99.6 security baseline with a comprehensive application-development surface while preserving the existing runtime, security, and integration foundations.
+`2.20.0` is the current unified release after the v0.99.6 security-hardening baseline and the 2.x feature build-out (optimizer, JIT, AI/ML, developer tooling, frameworks scaffolding, and examples). Historical release notes are kept in `docs/releases/` for provenance, but they do not define the current version.
 
-PeaLang v0.99.6 is a security-focused release following the v0.99.5 compatibility and release-readiness work.
-
-The release addresses security findings identified after enabling GitHub CodeQL analysis against the reconstructed PeaLang repository history.
-
-No new major feature family is introduced in v0.99.6.
-
-The objective is to improve security while preserving the existing PeaLang language, runtime, SDK, data, integration, orchestration, ML, tooling, and enterprise capabilities.
+See `ROADMAP.md` for the forward-looking plan and `CHANGELOG.md` for per-feature history.
 
 ## What's New in 1.0.0-experience
 

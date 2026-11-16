@@ -105,11 +105,11 @@ def test_service_contract_to_openapi():
     c = service_contract("orders", routes=[
         {"method": "get", "path": "/orders", "owner": "team-a"},
         {"method": "post", "path": "/orders", "name": "create_order", "auth": "jwt"},
-    ], version="2.0.0")
+    ], version="2.20.0")
     spec = service_contract_to_openapi(c)
     assert spec["openapi"] == "3.0.3"
     assert spec["info"]["title"] == "orders API"
-    assert spec["info"]["version"] == "2.0.0"
+    assert spec["info"]["version"] == "2.20.0"
     assert spec["paths"]["/orders"]["get"]["operationId"] == "orders"
     assert spec["paths"]["/orders"]["post"]["operationId"] == "create_order"
     assert spec["paths"]["/orders"]["get"]["x-owner"] == "team-a"

@@ -1,10 +1,10 @@
 {
   "name": "@pealang/react",
-  "version": "0.99.6",
+  "version": "2.20.0",
   "type": "module",
   "peerDependencies": {
     "react": ">=18 <20",
-    "@pealang/client": "^0.99.6"
+    "@pealang/client": "^2.20.0"
   },
   "devDependencies": {
     "typescript": "^5.6.0",
