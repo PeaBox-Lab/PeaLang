@@ -187,15 +187,23 @@ def main(argv=None):
             if c=='install':print('Installed: '+', '.join(install(root)));return 0
 
             if c=='audit':
-
+                # Package audit for pea.toml projects; repo closure audit otherwise.
+                if '--write-interface-doc' in argv[1:] or not (Path(root)/'pea.toml').exists():
+                    p=argparse.ArgumentParser(prog='pea audit')
+                    p.add_argument('path',nargs='?',default='.')
+                    p.add_argument('--json',action='store_true')
+                    p.add_argument('--write-interface-doc',action='store_true')
+                    a=p.parse_args(argv[1:])
+                    from .audit_closure_v0991 import audit_repository, write_interface_markdown
+                    if a.write_interface_doc:
+                        out=write_interface_markdown(a.path)
+                        if not a.json: print(out)
+                    report=audit_repository(a.path)
+                    print(json.dumps(report,indent=2));return 0 if report.get('passed') else 1
                 issues=audit(root)
-
                 if issues:
-
                     for x in issues:print('AUDIT '+x)
-
                     return 1
-
                 print('Audit: clean');return 0
 
             if c=='build':p,h=build_package(root);print(f'{p}\nsha256 {h}');return 0
@@ -414,7 +422,7 @@ def main(argv=None):
         if c=='info':
             from .stdlib import stdlib_manifest
             sm=stdlib_manifest();mods=sm.get('modules',sm)
-            info={'version':__version__,'stdlib':list(mods.keys()) if isinstance(mods,dict) else mods,'commands':['run','eval','repl','check','lint','fmt','test','compile','vm','dis','init','new','serve-web','doctor','health','help','templates','info','project','serve','stdlib','typecheck','typecheck-project','docs','analyze','web-openapi','openapi','hash','tree','env','quickstart','scaffold','readiness']}
+            info={'version':__version__,'stdlib':list(mods.keys()) if isinstance(mods,dict) else mods,'commands':['run','eval','repl','check','lint','fmt','test','compile','vm','dis','init','new','serve-web','doctor','health','help','templates','info','project','serve','stdlib','typecheck','typecheck-project','docs','analyze','web-openapi','openapi','hash','tree','env','quickstart','scaffold','readiness','audit']}
             print(json.dumps(info,indent=2));return 0
 
         if c=='project':print(json.dumps(project_info(argv[1] if len(argv)>1 else '.'),indent=2));return 0
@@ -600,7 +608,7 @@ def main(argv=None):
 
         if allow:argv.remove('--allow-process')
 
-        if len(argv)!=1:print('Usage: pea [run|eval|repl|check|lint|fmt|test|compile|vm|dis|init|new|serve-web|doctor|health|help|quickstart|scaffold|templates|info|project|docs|analyze|web-openapi|hash|tree|env|typecheck|typecheck-project|readiness|stdlib] ...',file=sys.stderr);return 2
+        if len(argv)!=1:print('Usage: pea [run|eval|repl|check|lint|fmt|test|compile|vm|dis|init|new|serve-web|doctor|health|help|quickstart|scaffold|templates|info|project|docs|analyze|web-openapi|hash|tree|env|typecheck|typecheck-project|readiness|audit|stdlib] ...',file=sys.stderr);return 2
 
         return run_file(argv[0],allow)
 
