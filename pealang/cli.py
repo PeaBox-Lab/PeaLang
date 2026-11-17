@@ -399,6 +399,28 @@ def main(argv=None):
                         print(f"  - {f.get('file')}: health={f.get('health')} errors={f.get('counts',{}).get('error',0)} warnings={f.get('counts',{}).get('warning',0)}")
             return 0 if report.get('totals',{}).get('ok',True) else 1
 
+        if c=='diagnose':
+            p=argparse.ArgumentParser(prog='pea diagnose')
+            p.add_argument('file')
+            p.add_argument('--json',action='store_true')
+            a=p.parse_args(argv[1:])
+            from .devx import diagnose_source
+            try:
+                src=Path(a.file).read_text(encoding='utf-8')
+                report=diagnose_source(src, str(a.file))
+            except Exception as e:
+                report={'source':str(a.file),'ok':False,'health':0,'counts':{'error':1,'warning':0,'info':0},'diagnostics':[{'code':'READ','message':str(e),'line':0,'column':0,'severity':'error','origin':'read'}]}
+            if a.json:
+                print(json.dumps(report,indent=2))
+            else:
+                counts=report.get('counts',{})
+                print(f"Source: {report.get('source','')}")
+                print(f"Health: {report.get('health',0)}  Errors: {counts.get('error',0)}  Warnings: {counts.get('warning',0)}  OK: {report.get('ok',False)}")
+                for d in report.get('diagnostics',[]):
+                    loc=f"{d.get('line',0)}:{d.get('column',0)}" if d.get('line') else ''
+                    print(f"  - [{d.get('severity')}] {d.get('code','')} {loc} {d.get('message','')}".rstrip())
+            return 0 if report.get('ok',False) else 1
+
         if c=='help':
             p=argparse.ArgumentParser(prog='pea help');p.add_argument('topic',nargs='?');a=p.parse_args(argv[1:])
             from .help import help as pea_help
@@ -422,7 +444,7 @@ def main(argv=None):
         if c=='info':
             from .stdlib import stdlib_manifest
             sm=stdlib_manifest();mods=sm.get('modules',sm)
-            info={'version':__version__,'stdlib':list(mods.keys()) if isinstance(mods,dict) else mods,'commands':['run','eval','repl','check','lint','fmt','test','compile','vm','dis','init','new','serve-web','doctor','health','help','templates','info','project','serve','stdlib','typecheck','typecheck-project','docs','analyze','web-openapi','openapi','openapi-contract','hash','tree','env','quickstart','scaffold','readiness','audit']}
+            info={'version':__version__,'stdlib':list(mods.keys()) if isinstance(mods,dict) else mods,'commands':['run','eval','repl','check','lint','fmt','test','compile','vm','dis','init','new','serve-web','doctor','health','diagnose','help','templates','info','project','serve','stdlib','typecheck','typecheck-project','docs','analyze','web-openapi','openapi','openapi-contract','hash','tree','env','quickstart','scaffold','readiness','audit']}
             print(json.dumps(info,indent=2));return 0
 
         if c=='project':print(json.dumps(project_info(argv[1] if len(argv)>1 else '.'),indent=2));return 0
