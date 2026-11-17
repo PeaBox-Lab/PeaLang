@@ -550,10 +550,14 @@ class Interpreter:
             self.run(parse_source(src,str(path)),str(path));names=self.module_exports;values={n:module_env.values[n] for n in names if n in module_env.values};self.global_env.define(alias,values,True);return values
         finally:self.env=oldenv;self.base_dir=oldbase;self.skill_registry.base_dir=oldskill;self.module_exports=oldexports
 
-    def invoke_user_function(self, f, args):
+    def invoke_user_function(self, f, args, call_span=None, call_source=None):
         frame = {"name": getattr(f, 'name', '<anonymous>'),
                  "line": getattr(f, 'line', 0),
                  "source": getattr(f, 'source', self.source_name)}
+        if call_span is not None:
+            frame["call_line"] = getattr(call_span, 'line', None)
+            frame["call_col"] = getattr(call_span, 'col', None)
+            frame["call_source"] = call_source or self.source_name
         self.call_stack.append(frame)
         try:
             required=sum(1 for p in f.params if getattr(p,'default',None) is None)
@@ -745,7 +749,7 @@ class Interpreter:
             except (KeyError,AttributeError) as ex:raise AttributeError(f"Property '{e.name}' not found",e.span,self.source_name) from ex
         if isinstance(e,Call):
             f=self.eval(e.callee);args=[self.eval(x) for x in e.args]
-            if isinstance(f,UserFunction):return self.invoke_user_function(f,args)
+            if isinstance(f,UserFunction):return self.invoke_user_function(f,args, call_span=e.span, call_source=self.source_name)
             if callable(f):
                 try:return f(*args)
                 except PeaError:raise

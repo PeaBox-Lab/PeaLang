@@ -25,7 +25,11 @@ class PeaError(Exception):
         lines = [str(self), "Traceback (most recent call last):"]
         for frame in self.frames:
             name = frame.get("name", "<anonymous>")
-            src = frame.get("source", self.source_name)
-            line = frame.get("line", 0)
-            lines.append(f'  File "{src}", line {line}, in {name}')
+            src = frame.get("call_source") or frame.get("source", self.source_name)
+            line = frame.get("call_line") if frame.get("call_line") is not None else frame.get("line", 0)
+            def_line = frame.get("line", 0)
+            if frame.get("call_line") is not None and frame.get("call_line") != def_line:
+                lines.append(f'  File "{src}", line {line}, in {name} (defined at line {def_line})')
+            else:
+                lines.append(f'  File "{src}", line {line}, in {name}')
         return "\n".join(lines)
