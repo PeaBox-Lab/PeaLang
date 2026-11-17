@@ -11,7 +11,7 @@ from typing import Any
 from .errors import PeaError
 
 
-def doctor() -> dict[str, Any]:
+def doctor(project_root: str | None = None) -> dict[str, Any]:
     report = {
         "python": sys.version,
         "executable": sys.executable,
@@ -31,6 +31,15 @@ def doctor() -> dict[str, Any]:
         except Exception:
             optional[module] = "missing"
     report["optional_dependencies"] = optional
+    # Best-effort project health gate (bounded, does not fail doctor)
+    root = project_root or "."
+    try:
+        from .devx import project_check
+        rp = Path(root).resolve()
+        if (rp / "pea.json").exists() or any(rp.glob("*.pea")) or any(rp.rglob("*.pea")):
+            report["project_health"] = project_check(str(rp), max_files=25).get("totals", {})
+    except Exception:
+        pass
     return report
 
 

@@ -337,19 +337,31 @@ def adr_index(records: list[dict[str, str]]) -> str:
         num = rec.get("number", "?")
         title = rec.get("title", "Untitled")
         status = rec.get("status", "unknown")
-        lines.append(f"- ADR-{num}: {title} — {status}")
+        owner = rec.get("owner")
+        superseded_by = rec.get("superseded_by")
+        line = f"- ADR-{num}: {title} — {status}"
+        if owner:
+            line += f" (owner: {owner})"
+        if superseded_by:
+            line += f" (superseded by ADR-{superseded_by})"
+        supersedes = rec.get("supersedes")
+        if supersedes:
+            line += f" (supersedes ADR-{supersedes})"
+        lines.append(line)
     return "\n".join(lines) + "\n"
 
 
 _ADR_STATUSES = ("proposed", "accepted", "deprecated", "superseded", "rejected")
 
 
-def adr_transition(record: dict[str, Any], new_status: str) -> dict[str, Any]:
+def adr_transition(record: dict[str, Any], new_status: str, superseded_by: str | None = None) -> dict[str, Any]:
     """Return a copy of an ADR record with an updated, validated status."""
     if new_status not in _ADR_STATUSES:
         return {"error": f"Invalid ADR status {new_status!r}", "allowed": list(_ADR_STATUSES)}
     updated = dict(record)
     updated["status"] = new_status
+    if superseded_by is not None:
+        updated["superseded_by"] = superseded_by
     return updated
 
 
@@ -393,14 +405,17 @@ def service_contract(service: str, routes: list[dict[str, Any]] | None = None,
 
 def service_contract_to_openapi(contract: dict[str, Any],
                                 title: str | None = None,
-                                version: str | None = None) -> dict[str, Any]:
+                                version: str | None = None,
+                                contact: dict[str, Any] | None = None,
+                                license: dict[str, Any] | None = None,
+                                description: str | None = None,
+                                include_error_responses: bool = True) -> dict[str, Any]:
     """Convert a service_contract dict into an OpenAPI 3.0 specification.
 
     Routes become paths/operations; `auth: jwt` maps to a bearer security
-    scheme; `owner` is surfaced as x-owner. Endpoints get no input schemas
-    (contracts intentionally carry no payloads), so this is an honest minimal
-    spec suitable both for web clients (via generate_typescript_client) and
-    for backend/architect documentation.
+    scheme; `owner` is surfaced as x-owner. Endpoints may include request/
+    response schemas. Optional info metadata (contact/license/description) and
+    default error response schemas (4xx/5xx) can be included for richer API docs.
     """
     if not isinstance(contract, dict):
         return {"error": "Expected a service_contract dict"}
@@ -417,10 +432,12 @@ def service_contract_to_openapi(contract: dict[str, Any],
         path_item = paths.setdefault(path, {})
         op: dict[str, Any] = {
             "operationId": ep.get("name") or path.strip("/").replace("/", "_") or "index",
-            "summary": f"{ep.get('method', 'GET').upper()} {path}",
+            "summary": ep.get("summary") or f"{ep.get('method', 'GET').upper()} {path}",
             "x-owner": ep.get("owner", "unassigned"),
             "responses": {"200": {"description": "Success"}},
         }
+        if ep.get("description"):
+            op["description"] = ep["description"]
         req_body = ep.get("request_body")
         if req_body is not None:
             op["requestBody"] = {
@@ -436,26 +453,69 @@ def service_contract_to_openapi(contract: dict[str, Any],
         if str(ep.get("auth", "none")).lower() == "jwt":
             op["security"] = [{"bearerAuth": []}]
             needs_bearer = True
+        if include_error_responses:
+            error_schema = {"$ref": "#/components/schemas/Error"}
+            for code, desc in (("400", "Bad Request"), ("401", "Unauthorized"),
+                               ("403", "Forbidden"), ("404", "Not Found"),
+                               ("422", "Unprocessable Entity"), ("429", "Too Many Requests"),
+                               ("500", "Internal Server Error")):
+                op["responses"][code] = {
+                    "description": desc,
+                    "content": {"application/json": {"schema": error_schema}},
+                }
         path_item[method] = op
+
+    info: dict[str, Any] = {"title": spec_title, "version": spec_version}
+    desc = description or contract.get("description")
+    if desc:
+        info["description"] = desc
+    contact_info = contact or contract.get("contact")
+    if isinstance(contact_info, dict):
+        info["contact"] = contact_info
+    license_info = license or contract.get("license")
+    if isinstance(license_info, dict):
+        info["license"] = license_info
+    terms = contract.get("termsOfService")
+    if terms:
+        info["termsOfService"] = terms
 
     spec: dict[str, Any] = {
         "openapi": "3.0.3",
-        "info": {"title": spec_title, "version": spec_version},
+        "info": info,
         "paths": paths,
     }
+    components: dict[str, Any] = {}
     if needs_bearer:
-        spec["components"] = {
-            "securitySchemes": {
-                "bearerAuth": {"type": "http", "scheme": "bearer", "bearerFormat": "JWT"},
-            },
+        components["securitySchemes"] = {
+            "bearerAuth": {"type": "http", "scheme": "bearer", "bearerFormat": "JWT"},
         }
+    if include_error_responses:
+        components.setdefault("schemas", {})
+        components["schemas"]["Error"] = {
+            "type": "object",
+            "properties": {
+                "error": {"type": "string"},
+                "message": {"type": "string"},
+                "code": {"type": "string"},
+                "details": {"type": "object"},
+            },
+            "required": ["error", "message"],
+        }
+    if components:
+        spec["components"] = components
     return spec
 
 
 def openapi_json(contract: dict[str, Any], title: str | None = None,
-                 version: str | None = None) -> str:
+                 version: str | None = None, contact: dict[str, Any] | None = None,
+                 license: dict[str, Any] | None = None, description: str | None = None,
+                 include_error_responses: bool = True) -> str:
     """Return the OpenAPI document for a service contract as a JSON string."""
-    spec = service_contract_to_openapi(contract, title=title, version=version)
+    spec = service_contract_to_openapi(
+        contract, title=title, version=version, contact=contact,
+        license=license, description=description,
+        include_error_responses=include_error_responses,
+    )
     return json.dumps(spec, indent=2, sort_keys=True)
 
 

@@ -119,7 +119,7 @@ def test_service_contract_to_openapi():
 
 def test_service_contract_to_openapi_overrides_title_and_no_bearer():
     c = service_contract("health", routes=[{"method": "get", "path": "/health"}])
-    spec = service_contract_to_openapi(c, title="Health API", version="1.2.3")
+    spec = service_contract_to_openapi(c, title="Health API", version="1.2.3", include_error_responses=False)
     assert spec["info"]["title"] == "Health API"
     assert spec["info"]["version"] == "1.2.3"
     assert "components" not in spec
@@ -132,6 +132,8 @@ def test_openapi_json_round_trip():
     spec = json.loads(raw)
     assert spec["openapi"] == "3.0.3"
     assert spec["paths"]["/orders"]["get"]["responses"]["200"]["description"] == "Success"
+    assert spec["paths"]["/orders"]["get"]["responses"]["400"]["description"] == "Bad Request"
+    assert spec["components"]["schemas"]["Error"]["type"] == "object"
 
 
 def test_service_contract_to_openapi_invalid():
@@ -301,3 +303,45 @@ def test_adr_filter():
     assert [r["number"] for r in adr_filter(recs, status="accepted")] == ["1", "3"]
     assert [r["number"] for r in adr_filter(recs, owner="a")] == ["1", "2"]
     assert [r["number"] for r in adr_filter(recs, status="accepted", owner="b")] == ["3"]
+
+
+def test_adr_transition_superseded_by():
+    rec = {"number": "0001", "title": "Old", "status": "accepted"}
+    updated = adr_transition(rec, "superseded", superseded_by="0002")
+    assert updated["status"] == "superseded"
+    assert updated["superseded_by"] == "0002"
+    assert rec.get("superseded_by") is None
+
+
+def test_adr_index_with_links():
+    md = adr_index([
+        {"number": "0001", "title": "Use PeaLang", "status": "superseded", "owner": "arch", "superseded_by": "0002"},
+        {"number": "0002", "title": "Use PeaLang v2", "status": "accepted", "supersedes": "0001"},
+    ])
+    assert "owner: arch" in md
+    assert "superseded by ADR-0002" in md
+    assert "supersedes ADR-0001" in md
+
+
+def test_openapi_contact_license_and_errors():
+    c = service_contract("orders", routes=[{"method": "get", "path": "/orders"}], version="2.20.0")
+    c["contact"] = {"name": "API Team", "email": "api@example.com"}
+    c["license"] = {"name": "MIT"}
+    c["description"] = "Orders service API"
+    spec = service_contract_to_openapi(c)
+    assert spec["info"]["contact"]["email"] == "api@example.com"
+    assert spec["info"]["license"]["name"] == "MIT"
+    assert spec["info"]["description"] == "Orders service API"
+    assert "Error" in spec["components"]["schemas"]
+    responses = spec["paths"]["/orders"]["get"]["responses"]
+    for code in ("400", "401", "403", "404", "422", "429", "500"):
+        assert code in responses
+        assert responses[code]["content"]["application/json"]["schema"]["$ref"] == "#/components/schemas/Error"
+
+
+def test_openapi_disable_error_responses():
+    c = service_contract("orders", routes=[{"method": "get", "path": "/orders"}])
+    spec = service_contract_to_openapi(c, include_error_responses=False)
+    responses = spec["paths"]["/orders"]["get"]["responses"]
+    assert "400" not in responses
+    assert "components" not in spec or "Error" not in spec.get("components", {}).get("schemas", {})
