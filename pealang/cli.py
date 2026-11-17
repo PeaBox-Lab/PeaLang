@@ -372,6 +372,30 @@ def main(argv=None):
             p=argparse.ArgumentParser(prog='pea doctor');p.add_argument('path',nargs='?',default='.');a=p.parse_args(argv[1:])
             print(json.dumps(doctor(a.path),indent=2));return 0
 
+        if c in ('health','project-health','check-project'):
+            p=argparse.ArgumentParser(prog='pea health')
+            p.add_argument('path',nargs='?',default='.')
+            p.add_argument('--json',action='store_true')
+            p.add_argument('--max-files',type=int,default=50)
+            a=p.parse_args(argv[1:])
+            from .devx import project_check
+            report=project_check(a.path,max_files=a.max_files)
+            if a.json:
+                print(json.dumps(report,indent=2))
+            else:
+                totals=report.get('totals',{})
+                print(f"Project: {report.get('project','')}")
+                print(f"Files: {totals.get('files',0)}  Errors: {totals.get('errors',0)}  Warnings: {totals.get('warnings',0)}  OK: {totals.get('ok',False)}")
+                for f in report.get('files',[]):
+                    if f.get('diagnostic_count',0) or not f.get('ok',True):
+                        print(f"  - {f.get('file')}: health={f.get('health')} errors={f.get('counts',{}).get('error',0)} warnings={f.get('counts',{}).get('warning',0)}")
+            return 0 if report.get('totals',{}).get('ok',True) else 1
+
+        if c=='help':
+            p=argparse.ArgumentParser(prog='pea help');p.add_argument('topic',nargs='?');a=p.parse_args(argv[1:])
+            from .help import help as pea_help
+            print(pea_help(a.topic));return 0
+
         if c=='templates':
 
             from .project import TEMPLATES
@@ -390,7 +414,7 @@ def main(argv=None):
         if c=='info':
             from .stdlib import stdlib_manifest
             sm=stdlib_manifest();mods=sm.get('modules',sm)
-            info={'version':__version__,'stdlib':list(mods.keys()) if isinstance(mods,dict) else mods,'commands':['run','eval','repl','check','lint','fmt','test','compile','vm','dis','init','new','serve-web','doctor','templates','info','project','serve','stdlib','typecheck','docs','analyze','web-openapi','openapi','hash','tree','env','quickstart']}
+            info={'version':__version__,'stdlib':list(mods.keys()) if isinstance(mods,dict) else mods,'commands':['run','eval','repl','check','lint','fmt','test','compile','vm','dis','init','new','serve-web','doctor','health','help','templates','info','project','serve','stdlib','typecheck','typecheck-project','docs','analyze','web-openapi','openapi','hash','tree','env','quickstart','scaffold','readiness']}
             print(json.dumps(info,indent=2));return 0
 
         if c=='project':print(json.dumps(project_info(argv[1] if len(argv)>1 else '.'),indent=2));return 0
@@ -576,7 +600,7 @@ def main(argv=None):
 
         if allow:argv.remove('--allow-process')
 
-        if len(argv)!=1:print('Usage: pea [run|eval|repl|check|lint|fmt|test|compile|vm|dis|init|new|serve-web|doctor|quickstart|templates|info|project|docs|analyze|web-openapi|hash|tree|env|typecheck|stdlib] ...',file=sys.stderr);return 2
+        if len(argv)!=1:print('Usage: pea [run|eval|repl|check|lint|fmt|test|compile|vm|dis|init|new|serve-web|doctor|health|help|quickstart|scaffold|templates|info|project|docs|analyze|web-openapi|hash|tree|env|typecheck|typecheck-project|readiness|stdlib] ...',file=sys.stderr);return 2
 
         return run_file(argv[0],allow)
 
