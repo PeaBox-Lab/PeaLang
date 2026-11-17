@@ -422,7 +422,7 @@ def main(argv=None):
         if c=='info':
             from .stdlib import stdlib_manifest
             sm=stdlib_manifest();mods=sm.get('modules',sm)
-            info={'version':__version__,'stdlib':list(mods.keys()) if isinstance(mods,dict) else mods,'commands':['run','eval','repl','check','lint','fmt','test','compile','vm','dis','init','new','serve-web','doctor','health','help','templates','info','project','serve','stdlib','typecheck','typecheck-project','docs','analyze','web-openapi','openapi','hash','tree','env','quickstart','scaffold','readiness','audit']}
+            info={'version':__version__,'stdlib':list(mods.keys()) if isinstance(mods,dict) else mods,'commands':['run','eval','repl','check','lint','fmt','test','compile','vm','dis','init','new','serve-web','doctor','health','help','templates','info','project','serve','stdlib','typecheck','typecheck-project','docs','analyze','web-openapi','openapi','openapi-contract','hash','tree','env','quickstart','scaffold','readiness','audit']}
             print(json.dumps(info,indent=2));return 0
 
         if c=='project':print(json.dumps(project_info(argv[1] if len(argv)>1 else '.'),indent=2));return 0
@@ -489,6 +489,25 @@ def main(argv=None):
             if app is None or not hasattr(app,'openapi'):
                 print('No web app found (define `app = web.app()`)',file=sys.stderr); return 1
             print(json.dumps(app.openapi(a.title,a.ver),indent=2,default=str)); return 0
+
+        if c=='openapi-contract':
+            p=argparse.ArgumentParser(prog='pea openapi-contract')
+            p.add_argument('file',help='service contract JSON file')
+            p.add_argument('--out')
+            p.add_argument('--title')
+            p.add_argument('--version',dest='ver')
+            p.add_argument('--no-errors',action='store_true')
+            a=p.parse_args(argv[1:])
+            from .frameworks import service_contract_to_openapi
+            contract=json.loads(Path(a.file).read_text(encoding='utf-8'))
+            spec=service_contract_to_openapi(contract, title=a.title, version=a.ver, include_error_responses=not a.no_errors)
+            out=json.dumps(spec, indent=2, sort_keys=True)
+            if a.out:
+                Path(a.out).write_text(out+'\n', encoding='utf-8')
+                print(a.out)
+            else:
+                print(out)
+            return 0 if 'error' not in spec else 1
 
         if c=='hash':
             p=argparse.ArgumentParser(prog='pea hash');p.add_argument('file');p.add_argument('--algo',default='sha256');a=p.parse_args(argv[1:])

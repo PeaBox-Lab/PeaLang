@@ -194,11 +194,20 @@ def scaffold_backend(name: str, framework: str = "fastapi", port: int = 8000) ->
             f"CMD [\"gunicorn\", \"--bind\", \"0.0.0.0:{port}\", \"config.wsgi:application\"]\n"
         )
 
+    # Starter API contract + OpenAPI spec (contract-first workflow)
+    _contract = service_contract(name, routes=[
+        {"method": "get", "path": "/health", "name": "health", "owner": "platform",
+         "response_schema": {"type": "object", "properties": {"status": {"type": "string"}, "service": {"type": "string"}}}},
+    ], version="1.0.0")
+    files["service_contract.json"] = json.dumps(_contract, indent=2) + "\n"
+    files["openapi.json"] = openapi_json(_contract, title=f"{name} API", version="1.0.0") + "\n"
+
     files["README.md"] = (
         f"# {name}\n\n"
         f"Backend service scaffolded by PeaLang frameworks toolkit.\n\n"
         f"Framework: {b['framework']} ({b['language']})\n"
         f"Entrypoint: `{b['entrypoint']}`\nPort: {port}\n\n"
+        "Includes starter `service_contract.json` and `openapi.json`.\n\n"
         "```bash\n"
         + ("pip install -r requirements.txt && uvicorn app.main:app --reload\n" if framework == "fastapi"
            else "pip install -r requirements.txt && gunicorn -b 0.0.0.0:8000 app.main:app\n" if framework == "flask"
@@ -267,7 +276,7 @@ def scaffold_fullstack(name: str, backend: str = "fastapi",
     files["README.md"] = (
         f"# {name}\n\n"
         f"Full-stack PeaLang task skeleton: `{backend}` backend + `{frontend}` frontend.\n\n"
-        f"- Backend under `backend/` (port {port})\n- Frontend under `frontend/`\n\n"
+        f"- Backend under `backend/` (port {port}, with `service_contract.json` and `openapi.json`)\n- Frontend under `frontend/`\n\n"
         "```bash\ncd backend && pip install -r requirements.txt && uvicorn app.main:app --reload\n"
         "cd frontend && npm install && npm run dev\n```\n"
     )
