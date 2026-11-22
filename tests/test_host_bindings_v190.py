@@ -7,6 +7,7 @@ from pathlib import Path
 
 from pealang.host_bindings import (
     build_host_bindings_namespace,
+    build_host_sdk_namespace,
     register_host_function,
     generate_python_export_decorator as generate_python_export,
     generate_typescript_export,
@@ -95,3 +96,16 @@ def test_build_host_bindings_namespace():
     assert "scaffold_go_sdk" in ns
     assert "import_openapi" in ns
     assert len(ns) == 8
+
+
+def test_build_host_sdk_namespace():
+    """Phase 18: unified host SDK namespace exposes all scaffold_*_sdk functions."""
+    ns = build_host_sdk_namespace()
+    expected = {"scaffold_node_sdk", "scaffold_go_sdk", "scaffold_python_sdk", "scaffold_browser_sdk", "scaffold_java_sdk"}
+    assert set(ns.keys()) == expected, f"Got {set(ns.keys())!r}"
+    # Every exposed function should be callable and return a valid scaffold dict
+    for name, fn in ns.items():
+        out = fn(f"/tmp/pea-sdk-test-{name}")
+        assert "root" in out, f"{name} missing root"
+        assert "files" in out, f"{name} missing files"
+        assert isinstance(out["files"], list), f"{name} files not a list"

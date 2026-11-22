@@ -474,3 +474,24 @@ def build_host_bindings_namespace() -> dict[str, Any]:
         "import_openapi": import_openapi,
         "generate_connector_package": generate_connector_package,
     }
+
+
+def build_host_sdk_namespace() -> dict[str, Any]:
+    """Expose all host SDK scaffolding functions in a single namespace."""
+    return {
+        "scaffold_node_sdk": scaffold_node_sdk,
+        "scaffold_go_sdk": scaffold_go_sdk,
+        "scaffold_python_sdk": scaffold_python_sdk,
+        "scaffold_browser_sdk": scaffold_browser_sdk,
+        "scaffold_java_sdk": scaffold_java_sdk,
+    }
+
+
+# Map of SDK name to scaffold function for CLI discovery.
+HOST_SDK_NAMES = {
+    "node": scaffold_node_sdk,
+    "go": scaffold_go_sdk,
+    "python": scaffold_python_sdk,
+    "browser": scaffold_browser_sdk,
+    "java": scaffold_java_sdk,
+}

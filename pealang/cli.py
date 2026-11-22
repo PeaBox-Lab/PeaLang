@@ -198,6 +198,44 @@ def main(argv=None):
 
             print(f'PeaLang runtime service on http://{host}:{port}');return serve(host,port)
 
+        if c=='sdk':
+
+            from .host_bindings import HOST_SDK_NAMES, build_host_sdk_namespace
+
+            sub=argv[1] if len(argv)>1 else None
+
+            if sub=='list':
+
+                print("Available host SDKs: "+", ".join(sorted(HOST_SDK_NAMES.keys())))
+
+                return 0
+
+            if sub=='generate':
+
+                lang=argv[2] if len(argv)>2 else None
+
+                target=argv[3] if len(argv)>3 else f"{lang}-sdk"
+
+                if lang not in HOST_SDK_NAMES:
+
+                    print(f"Unknown SDK language: {lang} (available: {', '.join(sorted(HOST_SDK_NAMES.keys()))})")
+
+                    return 1
+
+                out=HOST_SDK_NAMES[lang](target)
+
+                print(f"Generated {lang} SDK at {out['root']}:")
+
+                for f in out['files']:
+
+                    print(f"  {f}")
+
+                return 0
+
+            print(f"Usage: pea sdk list|generate <lang> <dir>\nAvailable SDKs: {', '.join(sorted(HOST_SDK_NAMES.keys()))}")
+
+            return 1
+
         if c=='pkg-init':
 
             from .package_manager import init_manifest

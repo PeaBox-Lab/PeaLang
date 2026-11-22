@@ -72,6 +72,13 @@ All 1240 tests pass.
 - Added tests in `tests/test_host_integration_v042.py` for the Java SDK scaffold.
 - All 1243 tests pass.
 
+### Phase 18: Unified Host SDK Compatibility & CLI (2.24.0)
+- **Unified SDK namespace**: `build_host_sdk_namespace()` exposes all five `scaffold_*_sdk` functions (node, go, python, browser, java).
+- **`pea sdk` CLI command**: `pea sdk list` lists available SDKs; `pea sdk generate <lang> <dir>` scaffolds a host SDK to disk.
+- **SDK compatibility tests**: `tests/test_sdk_compatibility.py` validates that every SDK emits its expected file set and that the CLI can list and generate each language.
+- Added `build_host_sdk_namespace` test to `tests/test_host_bindings_v190.py`.
+- All 1250 tests pass.
+
 ## 2.20.0 - 2026-11-16
 
 ### Version unification (single source of truth)
