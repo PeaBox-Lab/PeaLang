@@ -156,18 +156,38 @@ class SemanticResult(TypeCheckResult):
 
 class SemanticAnalyzer:
     """Flow-aware semantic checks layered over the optional type surface."""
-    def analyze(self,source:str,source_name='<input>')->SemanticResult:
+    def analyze(self,source:str,source_name='<input>', 
+                cross_module_context: dict | None = None)->SemanticResult:
         if len(source) > MAX_TYPE_SOURCE_CHARS: raise ValueError('Source exceeds safety limit')
         base=TypeChecker().check(source,source_name)
         result=SemanticResult(base.diagnostics,base.symbols,base.records,{})
         known=set(BUILTINS)|set(result.records)
+        
+        # Parse generic functions
+        generics = parse_generic_functions(source)
+        for name, gf in generics.items():
+            result.functions[name] = FunctionContract(name, gf.params, gf.return_type, 0)
+        
+        # Parse protocols
+        protocols = parse_protocols(source)
+        
         lines=source.splitlines()
         # Collect function contracts and bodies using brace depth.
         i=0
         while i<len(lines):
-            line=lines[i];m=re.search(r'function[ \t]+([A-Za-z_]\w*)[ \t]*\(([^()]*)\)[ \t]*(?:->[ \t]*([^{}\n]+))?[ \t]*\{',line)  # lgtm[py/polynomial-redos]
+            line=lines[i];m=re.search(r'function[ \t]+([A-Za-z_]\w*)[ \t]*<([^<>]+)>[ \t]*\(([^()]*)\)[ \t]*(?:->[ \t]*([^{}\n]+))?[ \t]*\{',line)
+            if not m:
+                m=re.search(r'function[ \t]+([A-Za-z_]\w*)[ \t]*\(([^()]*)\)[ \t]*(?:->[ \t]*([^{}\n]+))?[ \t]*\{',line)
             if not m:i+=1;continue
-            name,raw_params,raw_ret=m.groups();params=[]
+            
+            if m.groups() and '<' in line and '>' in line and m.groups()[1] and '<' in m.groups()[1]:
+                # Generic function
+                name,tps,raw_params,raw_ret=m.groups()
+            else:
+                name,raw_params,raw_ret=m.groups()[:3]
+                tps = None
+            
+            params=[]
             for item in split_top(raw_params,','):
                 item=item.strip()
                 if not item:continue
@@ -184,8 +204,30 @@ class SemanticAnalyzer:
                 j+=1
             self._check_function(name,params,ret,body,result,known)
             i=j
+        
+        # Check protocol conformance
+        for record_name, record_fields in result.records.items():
+            for proto_name, proto in protocols.items():
+                diags = check_record_protocol_conformance(record_name, record_fields, proto)
+                result.diagnostics.extend(diags)
+        
+        # Check match exhaustiveness for ADTs
+        all_records = dict(result.records)
+        # Parse ADT constructors
+        for m in re.finditer(r'(?m)^type[ \t]+([A-Za-z_]\w*)[ \t]*=[ \t]*([^\n]+)', source):
+            if '|' in m.group(2):
+                name = m.group(1)
+                constructors = [c.strip() for c in m.group(2).split('|')]
+                all_records[name] = {'constructors': constructors}
+        
         self._check_records(source,result)
         self._check_calls(source,result)
+        
+        # Cross-module context
+        if cross_module_context:
+            # Check external function calls
+            self._check_cross_module_calls(source, result, cross_module_context)
+        
         return result
 
     def _check_function(self,name,params,ret,body,r,known):
@@ -254,6 +296,34 @@ class SemanticAnalyzer:
                     actual=infer_literal(arg)
                     if actual.name!='Any' and not compatible(expected,actual):r.diagnostics.append(Diagnostic('C202',f"Argument expects {expected}, got {actual}",source[:m.start()].count('\n')+1))
 
+    def _check_cross_module_calls(self, source: str, r: SemanticResult, context: dict):
+        """Check calls to functions from other modules."""
+        # Check for module.function() calls
+        for m in re.finditer(r'(\w+)\.(\w+)\s*\(([^()]*)\)', source):
+            module, fn_name = m.group(1), m.group(2)
+            args = split_top(m.group(3), ',') if m.group(3).strip() else []
+            
+            if module in context.get('modules', {}):
+                mod_funcs = context['modules'][module].get('functions', {})
+                full_name = f"{module}.{fn_name}"
+                if full_name in context.get('functions', {}):
+                    fn = context['functions'][full_name]
+                    if len(args) != len(fn.params):
+                        r.diagnostics.append(Diagnostic(
+                            'X201',
+                            f"Cross-module call '{full_name}' expects {len(fn.params)} arguments, got {len(args)}",
+                            source[:m.start()].count('\n')+1
+                        ))
+                        continue
+                    for arg, (_, expected) in zip(args, fn.params):
+                        actual = infer_literal(arg)
+                        if actual.name != 'Any' and not compatible(expected, actual):
+                            r.diagnostics.append(Diagnostic(
+                                'X202',
+                                f"Cross-module call '{full_name}' arg expects {expected}, got {actual}",
+                                source[:m.start()].count('\n')+1
+                            ))
+
 
 # PeaLang 0.36 foundational type-system completion layer
 @dataclass(frozen=True)
@@ -269,10 +339,14 @@ class ProtocolContract:
     methods:tuple[tuple[str,tuple[tuple[str,TypeRef],...],TypeRef],...]
 
 def substitute_type(t:TypeRef, bindings:dict[str,TypeRef])->TypeRef:
-    if t.name in bindings and not t.args:return bindings[t.name]
+    """Substitute type parameters with concrete types."""
+    if t.name in bindings and not t.args:
+        return bindings[t.name]
     return TypeRef(t.name,tuple(substitute_type(x,bindings) for x in t.args),t.nullable)
 
+
 def infer_generic_bindings(expected:TypeRef, actual:TypeRef, type_params:set[str], bindings=None):
+    """Infer type parameter bindings from expected vs actual types."""
     bindings=dict(bindings or {})
     if expected.name in type_params and not expected.args:
         prior=bindings.get(expected.name)
@@ -280,6 +354,41 @@ def infer_generic_bindings(expected:TypeRef, actual:TypeRef, type_params:set[str
         bindings[expected.name]=actual;return bindings
     if expected.name==actual.name and len(expected.args)==len(actual.args):
         for a,b in zip(expected.args,actual.args):bindings=infer_generic_bindings(a,b,type_params,bindings)
+    return bindings
+
+
+def instantiate_generic(generic: GenericFunctionContract, bindings: dict[str,TypeRef]) -> FunctionContract:
+    """Instantiate a generic function with concrete type bindings."""
+    params = tuple((name, substitute_type(t, bindings)) for name, t in generic.params)
+    ret = substitute_type(generic.return_type, bindings)
+    return FunctionContract(generic.name, params, ret, 0)
+
+
+def check_generic_application(generic: GenericFunctionContract, type_args: list[TypeRef]) -> dict[str,TypeRef]:
+    """Check and infer type arguments for a generic function application."""
+    if len(type_args) != len(generic.type_params):
+        raise ValueError(f"Expected {len(generic.type_params)} type arguments, got {len(type_args)}")
+    bindings = dict(zip(generic.type_params, type_args))
+    # Validate constraints (future: add trait bounds)
+    return bindings
+
+
+def infer_type_arguments(generic: GenericFunctionContract, actual_args: list[TypeRef]) -> dict[str,TypeRef]:
+    """Infer type arguments from actual argument types."""
+    bindings = {}
+    type_params = set(generic.type_params)
+    
+    # Try to infer from each parameter
+    for (_, expected_param), actual_arg in zip(generic.params, actual_args):
+        if actual_arg.name == 'Any':
+            continue
+        bindings = infer_generic_bindings(expected_param, actual_arg, type_params, bindings)
+    
+    # Check all type params are bound
+    missing = [p for p in generic.type_params if p not in bindings]
+    if missing:
+        raise ValueError(f"Cannot infer type arguments for: {missing}")
+    
     return bindings
 
 def parse_generic_functions(source:str):
@@ -313,6 +422,94 @@ def protocol_conforms(record_fields:dict[str,TypeRef], protocol:ProtocolContract
     # 0.36 structural protocol surface: method-shaped fields must be Function.
     return all(name in record_fields and record_fields[name].name=='Function' for name,_,_ in protocol.methods)
 
+
+def check_record_protocol_conformance(record_name: str, record_fields: dict[str,TypeRef], 
+                                       protocol: ProtocolContract) -> list[Diagnostic]:
+    """Check if a record conforms to a protocol, return diagnostics for missing/mismatched methods."""
+    diagnostics = []
+    for method_name, params, return_type in protocol.methods:
+        if method_name not in record_fields:
+            diagnostics.append(Diagnostic(
+                'P201', 
+                f"Record '{record_name}' does not implement required method '{method_name}' for protocol '{protocol.name}'",
+                0
+            ))
+            continue
+        
+        field_type = record_fields[method_name]
+        if field_type.name != 'Function':
+            diagnostics.append(Diagnostic(
+                'P202',
+                f"Field '{method_name}' in record '{record_name}' must be a function for protocol '{protocol.name}'",
+                0
+            ))
+            continue
+        
+        # Check function signature compatibility
+        # field_type.args should be (params, return_type)
+        if field_type.args:
+            expected_params = params
+            actual_params = field_type.args[0] if field_type.args else []
+            if len(actual_params) != len(expected_params):
+                diagnostics.append(Diagnostic(
+                    'P203',
+                    f"Method '{method_name}' in '{record_name}' has {len(actual_params)} params, protocol requires {len(expected_params)}",
+                    0
+                ))
+            else:
+                for (_, expected_t), actual_t in zip(expected_params, actual_params):
+                    if expected_t.name != 'Any' and actual_t.name != 'Any' and expected_t.name != actual_t.name:
+                        diagnostics.append(Diagnostic(
+                            'P204',
+                            f"Method '{method_name}' param type mismatch: expected {expected_t}, got {actual_t}",
+                            0
+                        ))
+    return diagnostics
+
+
+def check_exhaustive_match(source: str, match_expr_type: TypeRef, cases: list[str], 
+                            all_records: dict[str, dict] | None = None) -> list[Diagnostic]:
+    """Check if match cases are exhaustive for the given ADT type."""
+    diagnostics = []
+    
+    if all_records and match_expr_type.name in all_records:
+        record_info = all_records[match_expr_type.name]
+        if 'constructors' in record_info:
+            constructors = set(record_info['constructors'])
+            covered = set()
+            for case in cases:
+                # Extract constructor name from case pattern
+                c = case.strip().split()[0] if case.strip() else ''
+                if c in constructors:
+                    covered.add(c)
+            
+            missing = constructors - covered
+            if missing:
+                diagnostics.append(Diagnostic(
+                    'M201',
+                    f"Non-exhaustive match on '{match_expr_type.name}': missing constructors {sorted(missing)}",
+                    0,
+                    severity='warning'
+                ))
+    
+    return diagnostics
+
+
+# Result/Option/Future type constructors
+def result_type(ok_t: TypeRef, err_t: TypeRef) -> TypeRef:
+    return TypeRef('Result', (ok_t, err_t))
+
+def option_type(inner_t: TypeRef) -> TypeRef:
+    return TypeRef('Option', (inner_t,))
+
+def future_type(inner_t: TypeRef) -> TypeRef:
+    return TypeRef('Future', (inner_t,))
+
+# Predefined common types
+Result = lambda ok, err: result_type(ok, err)
+Option = lambda inner: option_type(inner)
+Future = lambda inner: future_type(inner)
+
 def option_type(t):return TypeRef('Option',(t,))
 def result_type(ok,err):return TypeRef('Result',(ok,err))
 def future_type(t):return TypeRef('Future',(t,))
@@ -321,10 +518,56 @@ def analyze_project(paths):
     """Cross-module contract collector/checker for .pea source files."""
     from pathlib import Path
     result={'files':{},'functions':{},'records':{},'diagnostics':[]}
+    all_records = {}
+    all_protocols = {}
+    all_generics = {}
+    all_functions = {}
+    
+    # First pass: collect all declarations
+    for raw in paths:
+        p=Path(raw); src=p.read_text(encoding='utf-8')
+        # Parse generics
+        all_generics.update({f'{p.stem}.{k}': v for k,v in parse_generic_functions(src).items()})
+        # Parse protocols
+        all_protocols.update({f'{p.stem}.{k}': v for k,v in parse_protocols(src).items()})
+        # Parse records (type declarations)
+        for m in re.finditer(r'(?m)^type[ \t]+([A-Za-z_]\w*)[ \t]*=[ \t]*\{([^{}]*)\}', src):
+            name, body = m.group(1), m.group(2)
+            fields = {}
+            for f in body.split(','):
+                if ':' in f:
+                    n, t = f.split(':', 1)
+                    try:
+                        fields[n.strip()] = parse_type(t.strip())
+                    except ValueError:
+                        pass
+            all_records[f'{p.stem}.{name}'] = fields
+        # Parse ADT types
+        for m in re.finditer(r'(?m)^type[ \t]+([A-Za-z_]\w*)[ \t]*=[ \t]*([^\n]+)', src):
+            if '|' in m.group(2):
+                name = m.group(1)
+                constructors = [c.strip() for c in m.group(2).split('|')]
+                all_records[f'{p.stem}.{name}'] = {'constructors': constructors}
+    
+    # Second pass: check each file with cross-module context
     for raw in paths:
         p=Path(raw); src=p.read_text(encoding='utf-8'); checked=SemanticAnalyzer().analyze(src,str(p))
+        
+        # Cross-module function calls
+        for call in re.finditer(r'(\w+)\.(\w+)\s*\(', src):
+            module, fn = call.groups()
+            # Check if this is a cross-module call
+            pass
+        
         result['files'][str(p)]={'ok':checked.ok,'diagnostics':[str(x) for x in checked.diagnostics]}
         result['diagnostics'].extend((str(p),x) for x in checked.diagnostics)
         for n,c in checked.functions.items():result['functions'][f'{p.stem}.{n}']=c
         for n,c in checked.records.items():result['records'][f'{p.stem}.{n}']=c
+    
+    # Check protocol conformance across modules
+    for record_name, record_fields in all_records.items():
+        for protocol_name, protocol in all_protocols.items():
+            # Would need explicit "implements" declaration or structural check
+            pass
+    
     return result

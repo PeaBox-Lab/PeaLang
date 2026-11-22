@@ -338,11 +338,43 @@ def main(argv=None):
 
             p=argparse.ArgumentParser(prog='pea migrate');p.add_argument('--from',dest='src',required=True);p.add_argument('--to',dest='dst',required=True);p.add_argument('path',nargs='?',default='.');p.add_argument('--check',action='store_true');a=p.parse_args(argv[1:]);changes=migrate_path(a.path,a.src,a.dst,not a.check);print(json.dumps([x.__dict__ for x in changes],indent=2));return 0
 
+        if c=='upgrade':
+            from .project import upgrade_project
+            p=argparse.ArgumentParser(prog='pea upgrade')
+            p.add_argument('path',nargs='?',default='.')
+            p.add_argument('--target')
+            p.add_argument('--dry-run',action='store_true')
+            p.add_argument('--check-lock',action='store_true')
+            a=p.parse_args(argv[1:])
+            result=upgrade_project(a.path,a.target,a.dry_run)
+            if a.check_lock:
+                from .project import verify_lock
+                try:
+                    verify_lock(a.path)
+                    result['lock_verified'] = True
+                except Exception as e:
+                    result['lock_verified'] = False
+                    result['lock_error'] = str(e)
+            print(json.dumps(result,indent=2))
+            return 0 if result.get('applied') or result.get('current') == result.get('target') else 1
+
         if c=='repl':return repl()
 
         if c in ('init','new'):
             prog = 'pea new' if c=='new' else 'pea init'
-            p=argparse.ArgumentParser(prog=prog);p.add_argument('path',nargs='?',default='.');p.add_argument('--name');p.add_argument('--template',default='default');a=p.parse_args(argv[1:]);print(init_project(a.path,a.name,a.template));return 0
+            p=argparse.ArgumentParser(prog=prog)
+            p.add_argument('path',nargs='?',default='.')
+            p.add_argument('--name')
+            p.add_argument('--template',default='default')
+            p.add_argument('--var', action='append', default=[], help='Template variables: --var key=value')
+            a=p.parse_args(argv[1:])
+            vars_dict = {}
+            for v in a.var:
+                if '=' in v:
+                    k, val = v.split('=', 1)
+                    vars_dict[k] = val
+            print(init_project(a.path, a.name, a.template, vars_dict if vars_dict else None))
+            return 0
         if c=='serve-web':
             p=argparse.ArgumentParser(prog='pea serve-web');p.add_argument('file');p.add_argument('--host',default='127.0.0.1');p.add_argument('--port',type=int,default=8080);a=p.parse_args(argv[1:])
             from .interpreter import Interpreter
