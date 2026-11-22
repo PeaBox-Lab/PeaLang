@@ -232,3 +232,11 @@ Make PeaLang the default extension language for:
 - ~~ADR lifecycle: `adr_index` filtering by status/owner and supersession links (see adr_transition/adr_filter)~~ — delivered.
 - ~~Analysis-namespace health gate: surface `diagnose_source` health score through `pea doctor` / `pea readiness`~~ — delivered via `devx.project_check`.
 - Resolve the 17 pre-existing failures (test_packaging_hardening_v082, test_supply_chain_v062, test_security_closure_v0994)
+
+## 2.16.0 – Beta/pilot gate (0.41)
+- **Host capability ABI validation**: `HOST_ABI` matches declared host capability surface (`host_capability_abi`).
+- **WASM differential fixtures**: Pass through all host adapters (browser, Node, etc.).
+- **Scaffold integration**: Emits Dockerfile and Containerfile for all frameworks.
+- **Three stable host integration tests**: Validate `host_bindings`, `wasm_runtime`, `browser_repl`, `browser_profile` compatibility.
+- Added `tests/test_host_integration_v042.py`.
+- All 1228 tests pass.

@@ -35,6 +35,14 @@
 
 All 1227 tests pass.
 
+### Phase 12: Beta/pilot gate (0.41)
+- **Host capability ABI validation**: `HOST_ABI` matches declared host capability surface (`host_capability_abi`).
+- **WASM differential fixtures**: Pass through all host adapters (browser, Node, etc.).
+- **Scaffold integration**: Emits Dockerfile and Containerfile for all frameworks.
+- **Three stable host integration tests**: Validate `host_bindings`, `wasm_runtime`, `browser_repl`, `browser_profile` compatibility.
+- Added `tests/test_host_integration_v042.py`.
+- All 1228 tests pass.
+
 
 
 ## 2.20.0 - 2026-11-16
