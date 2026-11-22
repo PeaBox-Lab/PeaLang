@@ -802,6 +802,66 @@ def main(argv=None):
 
             return 0
 
+        if c=='registry':
+
+            from .registry_server import serve
+
+            sub=argv[1] if len(argv)>1 else None
+
+            if sub=='serve':
+
+                host='127.0.0.1';port=8788;storage='./registry-storage';name='pealang'
+
+                private_key_path=None;public_key_path=None
+
+                i=2
+
+                while i+1<len(argv):
+
+                    if argv[i]=='--host':host=argv[i+1];i+=2;continue
+
+                    if argv[i]=='--port':port=int(argv[i+1]);i+=2;continue
+
+                    if argv[i]=='--storage':storage=argv[i+1];i+=2;continue
+
+                    if argv[i]=='--name':name=argv[i+1];i+=2;continue
+
+                    if argv[i]=='--private-key':private_key_path=argv[i+1];i+=2;continue
+
+                    if argv[i]=='--public-key':public_key_path=argv[i+1];i+=2;continue
+
+                    i+=1
+
+                serve(host=host,port=port,storage_dir=storage,registry_name=name,
+
+                      private_key_path=private_key_path,
+
+                      public_key_path=public_key_path)
+
+                return 0
+
+            if sub=='register-publisher':
+
+                token=argv[2] if len(argv)>2 else None
+
+                publisher=argv[3] if len(argv)>3 else None
+
+                if not token or not publisher:
+
+                    print('Usage: pea registry register-publisher <token> <publisher-id>');return 1
+
+                from .registry_server import RegistryServer
+
+                srv=RegistryServer('./registry-storage')
+
+                srv.register_publisher(token,publisher)
+
+                print(f'Registered publisher {publisher}')
+
+                return 0
+
+            print('Usage: pea registry serve [--host HOST] [--port PORT] [--storage DIR] [--name NAME]');return 1
+
         if len(argv)==1 and argv[0].endswith('.peac'):
 
             from .bytecode import BytecodeModule
@@ -814,7 +874,7 @@ def main(argv=None):
 
         if allow:argv.remove('--allow-process')
 
-        if len(argv)!=1:print('Usage: pea [run|eval|repl|check|lint|fmt|test|compile|vm|dis|init|new|serve-web|doctor|health|help|quickstart|scaffold|templates|info|project|docs|analyze|web-openapi|hash|tree|env|typecheck|typecheck-project|readiness|audit|stdlib] ...',file=sys.stderr);return 2
+        if len(argv)!=1:print('Usage: pea [run|eval|repl|check|lint|fmt|test|compile|vm|dis|init|new|serve-web|doctor|health|help|quickstart|scaffold|templates|info|project|docs|registry|analyze|web-openapi|hash|tree|env|typecheck|typecheck-project|readiness|audit|stdlib] ...',file=sys.stderr);return 2
 
         return run_file(argv[0],allow)
 

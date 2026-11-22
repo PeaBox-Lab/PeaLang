@@ -332,3 +332,13 @@ Make PeaLang the default extension language for:
 - Added `build_library` to `package_manager.py` and `__init__.py` exports.
 - Added `test_build_library` to `tests/test_host_integration_v042.py`.
 - All 1273 tests pass.
+
+### Phase 27: Public Package Registry (2.33.0)
+- **`pealang/registry_server.py`**: Self-hostable HTTP package registry for PeaLang libraries (.pelib packages).
+- **`pea registry serve`**: CLI command to run a registry server on configurable host/port/storage.
+- **Endpoints**: `GET /api/v1/packages` (list), `GET /api/v1/packages/<name>` (info), `GET /api/v1/packages/<name>/<version>/download` (download), `GET /api/v1/packages/<name>/<version>/signature` (signature), `GET /api/v1/index` (signed index), `PUT /api/v1/packages/<name>/<version>` (upload).
+- **Authentication**: Bearer token-based publisher authentication via `pea registry register-publisher <token> <publisher-id>`.
+- **Signed index**: Ed25519-signed `index.json` with sequence numbers, duplicate version detection, and expiration validation.
+- **Storage**: Directory-based package storage with per-package directories.
+- **Tests**: `test_registry_server_upload_download`, `test_registry_server_auth_required`, `test_registry_server_duplicate_rejected`, `test_pea_registry_cli_help`.
+- All 1277 tests pass.

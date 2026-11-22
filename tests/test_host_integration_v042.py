@@ -319,3 +319,108 @@ def test_build_library(tmp_path):
         assert receipt['name'] == 'mylib'
         assert receipt['version'] == '0.1.0'
         assert 'source_hash' in receipt
+
+
+def test_registry_server_upload_download(tmp_path):
+    """Phase 27: Registry server upload/download lifecycle."""
+    from pealang.registry_server import RegistryServer
+    import shutil
+
+    storage = str(tmp_path / "registry-storage")
+    srv = RegistryServer(storage, registry_name="test-registry")
+    srv.register_publisher("test-token-123", "alice")
+
+    # Scaffold and build a library package
+    lib_dir = tmp_path / "mylib"
+    scaffold_library(str(lib_dir))
+    pkg_path, _ = build_library(str(lib_dir))
+    package_bytes = Path(pkg_path).read_bytes()
+
+    # Upload
+    result = srv.upload_package("mylib", "0.1.0", package_bytes, "alice", "test-token-123")
+    assert result["name"] == "mylib"
+    assert result["version"] == "0.1.0"
+    assert result["sha256"]
+
+    # Download
+    downloaded = srv.download_package("mylib", "0.1.0")
+    assert downloaded == package_bytes
+
+    # Signature
+    sig = srv.download_signature("mylib", "0.1.0")
+    assert sig is not None
+    assert len(sig) > 0
+
+    # Index
+    idx = srv.get_index()
+    assert idx["registry"] == "test-registry"
+    assert idx["sequence"] == 1
+    assert len(idx["packages"]) == 1
+
+    # Package info
+    info = srv.get_package_info("mylib")
+    assert info["name"] == "mylib"
+    assert len(info["versions"]) == 1
+
+
+def test_registry_server_auth_required(tmp_path):
+    """Phase 27: Registry rejects unauthenticated uploads."""
+    from pealang.registry_server import RegistryServer
+
+    storage = str(tmp_path / "registry-storage2")
+    srv = RegistryServer(storage, registry_name="test-registry")
+
+    # No token should fail
+    try:
+        srv.upload_package("mylib", "0.1.0", b"fake", "alice", None)
+        assert False, "Should have raised PeaError"
+    except Exception:
+        pass  # Expected
+
+    # Wrong token should fail
+    try:
+        srv.upload_package("mylib", "0.1.0", b"fake", "alice", "wrong-token")
+        assert False, "Should have raised PeaError"
+    except Exception:
+        pass  # Expected
+
+
+def test_registry_server_duplicate_rejected(tmp_path):
+    """Phase 27: Registry rejects duplicate package versions."""
+    from pealang.registry_server import RegistryServer
+    import shutil
+
+    storage = str(tmp_path / "registry-storage3")
+    srv = RegistryServer(storage, registry_name="test-registry")
+    srv.register_publisher("test-token-123", "alice")
+
+    lib_dir = tmp_path / "mylib"
+    scaffold_library(str(lib_dir))
+    pkg_path, _ = build_library(str(lib_dir))
+    package_bytes = Path(pkg_path).read_bytes()
+
+    # Upload first version
+    srv.upload_package("mylib", "0.1.0", package_bytes, "alice", "test-token-123")
+
+    # Duplicate should fail
+    try:
+        srv.upload_package("mylib", "0.1.0", package_bytes, "alice", "test-token-123")
+        assert False, "Should have raised PeaError"
+    except Exception:
+        pass  # Expected
+
+    # Different version - need to rebuild with updated version in pea.toml
+    lib_dir2 = tmp_path / "mylib2"
+    scaffold_library(str(lib_dir2))
+    # Update version in pea.toml
+    toml_path = lib_dir2 / "pea.toml"
+    toml_content = toml_path.read_text(encoding="utf-8")
+    toml_content = toml_content.replace('version = "0.1.0"', 'version = "0.2.0"')
+    toml_path.write_text(toml_content, encoding="utf-8")
+    # Also update the source file name to match (scaffold_library uses "mylib" as default name)
+    # The scaffold uses lib_name = "mylib" hardcoded, so files are src/mylib.pea etc.
+    pkg_path2, _ = build_library(str(lib_dir2))
+    package_bytes2 = Path(pkg_path2).read_bytes()
+
+    result = srv.upload_package("mylib", "0.2.0", package_bytes2, "alice", "test-token-123")
+    assert result["version"] == "0.2.0"

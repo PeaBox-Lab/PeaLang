@@ -95,6 +95,18 @@ def test_pea_sdk_cli_generate(tmp_path):
         assert Path(target).is_dir()
 
 
+def test_pea_registry_cli_help(tmp_path):
+    """0.41: `pea registry serve` CLI command exists and is invocable."""
+    result = subprocess.run(
+        [sys.executable, "-m", "pealang.cli", "registry"],
+        capture_output=True, text=True,
+        cwd=str(Path(__file__).resolve().parent.parent),
+    )
+    # Should show usage, not crash
+    assert result.returncode == 1, "Expected usage error for missing subcommand"
+    assert "Usage" in result.stdout or "Usage" in result.stderr
+
+
 def test_pea_benchmark_plain_output(tmp_path):
     """0.41: `pea benchmark` plain output produces valid JSON."""
     src = tmp_path / "bench.pea"
