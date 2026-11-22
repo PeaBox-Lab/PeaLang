@@ -101,7 +101,7 @@ def test_build_host_bindings_namespace():
 def test_build_host_sdk_namespace():
     """Phase 18: unified host SDK namespace exposes all scaffold_*_sdk functions."""
     ns = build_host_sdk_namespace()
-    expected = {"scaffold_node_sdk", "scaffold_go_sdk", "scaffold_python_sdk", "scaffold_browser_sdk", "scaffold_java_sdk", "scaffold_csharp_sdk"}
+    expected = {"scaffold_node_sdk", "scaffold_go_sdk", "scaffold_python_sdk", "scaffold_browser_sdk", "scaffold_java_sdk", "scaffold_csharp_sdk", "scaffold_rust_sdk"}
     assert set(ns.keys()) == expected, f"Got {set(ns.keys())!r}"
     # Every exposed function should be callable and return a valid scaffold dict
     for name, fn in ns.items():

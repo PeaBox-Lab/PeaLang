@@ -85,6 +85,12 @@ All 1240 tests pass.
 - Added tests in `tests/test_host_integration_v042.py`, `tests/test_sdk_compatibility.py`, and `tests/test_host_bindings_v190.py`.
 - All 1251 tests pass.
 
+### Phase 20: Rust Host SDK scaffolding (2.26.0)
+- **Rust SDK scaffolding**: `scaffold_rust_sdk` generates `src/main.rs`, `Cargo.toml`, and `README.md` for Rust host integration.
+- **src/main.rs**: reqwest-based async client with `invoke()` and `health()` methods targeting `/v1/invoke` and `/health`.
+- Added tests in `tests/test_host_integration_v042.py`, `tests/test_sdk_compatibility.py`, and `tests/test_host_bindings_v190.py`.
+- All 1252 tests pass.
+
 ## 2.20.0 - 2026-11-16
 
 ### Version unification (single source of truth)

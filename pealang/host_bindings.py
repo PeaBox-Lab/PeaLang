@@ -502,6 +502,89 @@ def scaffold_csharp_sdk(target_dir: str = "csharp-sdk") -> dict[str, Any]:
     }
 
 
+def scaffold_rust_sdk(target_dir: str = "rust-sdk") -> dict[str, Any]:
+    """Scaffold a Rust host SDK directory structure.
+
+    Generates a Rust starter project with a PeaLang runtime connector,
+    main client, configuration, and build configuration.
+    """
+    root = Path(target_dir)
+    root.mkdir(parents=True, exist_ok=True)
+    (root / "src").mkdir(parents=True, exist_ok=True)
+    (root / "src" / "main.rs").write_text(
+        "use reqwest::Client;\\n"
+        "use serde::{Serialize, Deserialize};\\n\\n"
+        "#[derive(Serialize)]\\n"
+        "struct InvokeRequest {\\n"
+        "    module: String,\\n"
+        "    function: String,\\n"
+        "    args: Vec<String>,\\n"
+        "}\\n\\n"
+        "pub struct SdkClient {\\n"
+        "    client: Client,\\n"
+        "    base_url: String,\\n"
+        "}\\n\\n"
+        "impl SdkClient {\\n"
+        "    pub fn new(base_url: &str) -> Self {\\n"
+        "        SdkClient {\\n"
+        "            client: Client::new(),\\n"
+        "            base_url: base_url.trim_end_matches('/').to_string(),\\n"
+        "        }\\n"
+        "    }\\n\\n"
+        "    pub async fn invoke(&self, module: &str, function: &str, args: Vec<String>) -> Result<String, reqwest::Error> {\\n"
+        "        let payload = InvokeRequest {\\n"
+        "            module: module.to_string(),\\n"
+        "            function: function.to_string(),\\n"
+        "            args,\\n"
+        "        };\\n"
+        "        let response = self.client\\n"
+        "            .post(&format!(\"{}/v1/invoke\", self.base_url))\\n"
+        "            .json(&payload)\\n"
+        "            .send()\\n"
+        "            .await?;\\n"
+        "        if !response.status().is_success() {\\n"
+        "            return Err(reqwest::Error::status(response.status()));\\n"
+        "        }\\n"
+        "        response.text().await\\n"
+        "    }\\n\\n"
+        "    pub async fn health(&self) -> Result<String, reqwest::Error> {\\n"
+        "        let response = self.client\\n"
+        "            .get(&format!(\"{}/health\", self.base_url))\\n"
+        "            .send()\\n"
+        "            .await?;\\n"
+        "        if !response.status().is_success() {\\n"
+        "            return Err(reqwest::Error::status(response.status()));\\n"
+        "        }\\n"
+        "        response.text().await\\n"
+        "    }\\n"
+        "}\\n",
+        encoding="utf-8",
+    )
+    (root / "Cargo.toml").write_text(
+        "[package]\\n"
+        "name = \"pealang-rust-sdk\"\\n"
+        "version = \"1.0.0\"\\n"
+        "edition = \"2021\"\\n\\n"
+        "[dependencies]\\n"
+        "reqwest = { version = \"0.11\", features = [\"json\"] }\\n"
+        "serde = { version = \"1.0\", features = [\"derive\"] }\\n"
+        "tokio = { version = \"1\", features = [\"full\"] }\\n",
+        encoding="utf-8",
+    )
+    (root / "README.md").write_text(
+        "# PeaLang Rust SDK\\n\\nRust client for PeaLang runtime.\\n",
+        encoding="utf-8",
+    )
+    return {
+        "root": str(root),
+        "files": [
+            "src/main.rs",
+            "Cargo.toml",
+            "README.md",
+        ],
+    }
+
+
 def import_openapi(spec: dict[str, Any] | str) -> dict[str, Any]:
     """Parse an OpenAPI spec and generate PeaLang connector scaffolding."""
     if isinstance(spec, str):
@@ -577,6 +660,7 @@ def build_host_sdk_namespace() -> dict[str, Any]:
         "scaffold_browser_sdk": scaffold_browser_sdk,
         "scaffold_java_sdk": scaffold_java_sdk,
         "scaffold_csharp_sdk": scaffold_csharp_sdk,
+        "scaffold_rust_sdk": scaffold_rust_sdk,
     }
 
 
@@ -588,4 +672,5 @@ HOST_SDK_NAMES = {
     "browser": scaffold_browser_sdk,
     "java": scaffold_java_sdk,
     "csharp": scaffold_csharp_sdk,
+    "rust": scaffold_rust_sdk,
 }
