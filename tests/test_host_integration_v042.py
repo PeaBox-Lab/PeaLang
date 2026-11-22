@@ -19,7 +19,7 @@ from pealang.wasm_differential import (
     run_differential_fixtures,
 )
 from pealang.frameworks import write_scaffold
-from pealang.host_bindings import scaffold_node_sdk, scaffold_go_sdk
+from pealang.host_bindings import scaffold_node_sdk, scaffold_go_sdk, scaffold_python_sdk
 
 
 def _run(source: str, *args):
@@ -160,3 +160,11 @@ def test_validate_artifact_abi_rejects_unknown_imports():
     assert result["ok"] is False
     assert result["unknown_imports"] == ["pea_unknown_import"]
     assert result["unknown_exports"] == ["pea_unknown_export"]
+
+
+def test_scaffold_python_sdk(tmp_path):
+    """Phase 15: Python host SDK scaffolding generates expected files."""
+    out = scaffold_python_sdk(str(tmp_path / "python-sdk"))
+    assert "error" not in out
+    expected_files = {"pealang/client.py", "pyproject.toml", "README.md"}
+    assert set(out["files"]) == expected_files, f"Got {set(out['files'])!r}"

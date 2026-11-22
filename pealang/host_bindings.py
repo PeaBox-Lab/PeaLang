@@ -196,6 +196,57 @@ export default PeaClient;
     return {"root": str(root), "files": ["src/index.ts", "package.json", "tsconfig.json", "README.md"]}
 
 
+def scaffold_python_sdk(target_dir: str = "python-sdk") -> dict[str, Any]:
+    """Scaffold a Python host SDK directory structure."""
+    root = Path(target_dir)
+    root.mkdir(parents=True, exist_ok=True)
+    (root / "pealang").mkdir(exist_ok=True)
+    (root / "pealang" / "client.py").write_text('''"""PeaLang Python host client."""
+import json
+import urllib.request
+from typing import Any
+
+
+class PeaClient:
+    """HTTP client for the PeaLang runtime service."""
+
+    def __init__(self, base_url: str, timeout: float = 30.0) -> None:
+        self.base_url = base_url.rstrip("/")
+        self.timeout = timeout
+
+    def invoke(self, module: str, function: str, args: list[Any] | None = None) -> Any:
+        payload = json.dumps({"module": module, "function": function, "args": args or []}).encode()
+        req = urllib.request.Request(
+            f"{self.base_url}/v1/invoke",
+            data=payload,
+            headers={"Content-Type": "application/json"},
+            method="POST",
+        )
+        with urllib.request.urlopen(req, timeout=self.timeout) as resp:
+            body = json.loads(resp.read().decode())
+            if not resp.ok or not body.get("ok"):
+                raise RuntimeError(body.get("error", {}).get("message") or "Invocation failed")
+            return body.get("result")
+
+    def health(self) -> dict[str, Any]:
+        with urllib.request.urlopen(f"{self.base_url}/health", timeout=self.timeout) as resp:
+            return json.loads(resp.read().decode())
+
+
+__all__ = ["PeaClient"]
+''', encoding="utf-8")
+    (root / "pyproject.toml").write_text(
+        "[project]\nname = \"pealang-python-sdk\"\nversion = \"1.0.0\"\n\n"
+        "[project.scripts]\npea = \"pealang.client:PeaClient\"\n\n"
+        "[tool.setuptools.packages.find]\ninclude = [\"pealang*\"]\n",
+        encoding="utf-8",
+    )
+    (root / "README.md").write_text(
+        "# PeaLang Python SDK\n\nPython client for PeaLang runtime.\n", encoding="utf-8"
+    )
+    return {"root": str(root), "files": ["pealang/client.py", "pyproject.toml", "README.md"]}
+
+
 # ---------------------------------------------------------------------------
 # OpenAPI/GraphQL importer
 # ---------------------------------------------------------------------------
