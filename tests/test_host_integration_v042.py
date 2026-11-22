@@ -19,7 +19,7 @@ from pealang.wasm_differential import (
     run_differential_fixtures,
 )
 from pealang.frameworks import write_scaffold
-from pealang.host_bindings import scaffold_node_sdk, scaffold_go_sdk, scaffold_python_sdk, scaffold_browser_sdk, scaffold_java_sdk, scaffold_csharp_sdk, scaffold_rust_sdk, generate_sdk_from_source
+from pealang.host_bindings import scaffold_node_sdk, scaffold_go_sdk, scaffold_python_sdk, scaffold_browser_sdk, scaffold_java_sdk, scaffold_csharp_sdk, scaffold_rust_sdk, scaffold_ruby_sdk, scaffold_php_sdk, generate_sdk_from_source
 
 
 def _run(source: str, *args):
@@ -226,3 +226,19 @@ def test_generate_sdk_from_source(tmp_path):
     client = Path(tmp_path / "codegen-python" / "pealang" / "client.py").read_text(encoding="utf-8")
     assert "add" in client
     assert "greet" in client
+
+
+def test_scaffold_ruby_sdk(tmp_path):
+    """Phase 22: Ruby host SDK scaffolding generates expected files."""
+    out = scaffold_ruby_sdk(str(tmp_path / "ruby-sdk"))
+    assert "error" not in out
+    expected_files = {"lib/pealang/client.rb", "Gemfile", "README.md"}
+    assert set(out["files"]) == expected_files, f"Got {set(out['files'])!r}"
+
+
+def test_scaffold_php_sdk(tmp_path):
+    """Phase 22: PHP host SDK scaffolding generates expected files."""
+    out = scaffold_php_sdk(str(tmp_path / "php-sdk"))
+    assert "error" not in out
+    expected_files = {"src/PeaClient.php", "composer.json", "README.md"}
+    assert set(out["files"]) == expected_files, f"Got {set(out['files'])!r}"

@@ -585,6 +585,131 @@ def scaffold_rust_sdk(target_dir: str = "rust-sdk") -> dict[str, Any]:
     }
 
 
+def scaffold_ruby_sdk(target_dir: str = "ruby-sdk") -> dict[str, Any]:
+    """Scaffold a Ruby host SDK directory structure.
+
+    Generates a Ruby starter project with a PeaLang runtime connector,
+    client class, Gemfile, and README.
+    """
+    root = Path(target_dir)
+    root.mkdir(parents=True, exist_ok=True)
+    (root / "lib").mkdir(parents=True, exist_ok=True)
+    (root / "lib" / "pealang").mkdir(parents=True, exist_ok=True)
+    (root / "lib" / "pealang" / "client.rb").write_text(
+        "# PeaLang Ruby SDK\\n"
+        "require 'net/http'\\n"
+        "require 'json'\\n\\n"
+        "module PeaLang\\n"
+        "  class SdkClient\\n"
+        "    attr_reader :base_url\\n\\n"
+        "    def initialize(base_url)\\n"
+        "      @base_url = base_url.chomp('/')\\n"
+        "      @http = Net::HTTP.new(URI(@base_url).host, URI(@base_url).port)\\n"
+        "    end\\n\\n"
+        "    def health\\n"
+        "      response = @http.get('/health')\\n"
+        "      raise \"Health check failed: #{response.code}\" unless response.is_a?(Net::HTTPSuccess)\\n"
+        "      response.body\\n"
+        "    end\\n\\n"
+        "    def invoke(module, function, args = [])\\n"
+        "      uri = URI(@base_url + '/v1/invoke')\\n"
+        "      request = Net::HTTP::Post.new(uri, 'Content-Type' => 'application/json')\\n"
+        "      request.body = JSON.generate({module: module, function: function, args: args})\\n"
+        "      response = @http.request(request)\\n"
+        "      raise \"Invocation failed: #{response.code}\" unless response.is_a?(Net::HTTPSuccess)\\n"
+        "      JSON.parse(response.body)['result']\\n"
+        "    end\\n"
+        "  end\\n"
+        "end\\n",
+        encoding="utf-8",
+    )
+    (root / "Gemfile").write_text(
+        "source 'https://rubygems.org'\\n\\n"
+        "gem 'net-http', '~> 0.3.1'\\n"
+        "gem 'json', '~> 2.6'\\n",
+        encoding="utf-8",
+    )
+    (root / "README.md").write_text(
+        "# PeaLang Ruby SDK\\n\\nRuby client for PeaLang runtime.\\n",
+        encoding="utf-8",
+    )
+    return {
+        "root": str(root),
+        "files": [
+            "lib/pealang/client.rb",
+            "Gemfile",
+            "README.md",
+        ],
+    }
+
+
+def scaffold_php_sdk(target_dir: str = "php-sdk") -> dict[str, Any]:
+    """Scaffold a PHP host SDK directory structure.
+
+    Generates a PHP starter project with a PeaLang runtime connector,
+    client class, composer.json, and README.
+    """
+    root = Path(target_dir)
+    root.mkdir(parents=True, exist_ok=True)
+    (root / "src").mkdir(parents=True, exist_ok=True)
+    (root / "src" / "PeaClient.php").write_text(
+        "<?php\\n"
+        "namespace PeaLang;\\n\\n"
+        "class SdkClient\\n"
+        "{\\n"
+        "    private string $baseUrl;\\n"
+        "    private \\GuzzleHttp\\\\Client $client;\\n\\n"
+        "    public function __construct(string $baseUrl)\\n"
+        "    {\\n"
+        "        $this->baseUrl = rtrim($baseUrl, '/');\\n"
+        "        $this->client = new \\GuzzleHttp\\\\Client();\\n"
+        "    }\\n\\n"
+        "    public function health(): string\\n"
+        "    {\\n"
+        "        $response = $this->client->get($this->baseUrl . '/health');\\n"
+        "        if ($response->getStatusCode() !== 200) {\\n"
+        "            throw new \\RuntimeException('Health check failed: ' . $response->getStatusCode());\\n"
+        "        }\\n"
+        "        return $response->getBody()->getContents();\\n"
+        "    }\\n\\n"
+        "    public function invoke(string $module, string $function, array $args = []): string\\n"
+        "    {\\n"
+        "        $payload = json_encode([\\n"
+        "            'module' => $module,\\n"
+        "            'function' => $function,\\n"
+        "            'args' => $args,\\n"
+        "        ]);\\n"
+        "        $response = $this->client->post($this->baseUrl . '/v1/invoke', [\\n"
+        "            'headers' => ['Content-Type' => 'application/json'],\\n"
+        "            'body' => $payload,\\n"
+        "        ]);\\n"
+        "        if ($response->getStatusCode() !== 200) {\\n"
+        "            throw new \\RuntimeException('Invocation failed: ' . $response->getStatusCode());\\n"
+        "        }\\n"
+        "        $result = json_decode($response->getBody()->getContents(), true);\\n"
+        "        return $result['result'] ?? '';\\n"
+        "    }\\n"
+        "}\\n",
+        encoding="utf-8",
+    )
+    (root / "composer.json").write_text(
+        '{ "name": "pealang/php-sdk", "version": "1.0.0", "require": { "guzzlehttp/guzzle": "^7.0" } }\\n',
+        encoding="utf-8",
+    )
+    (root / "README.md").write_text(
+        "# PeaLang PHP SDK\\n\\nPHP client for PeaLang runtime.\\n",
+        encoding="utf-8",
+    )
+    return {
+        "root": str(root),
+        "files": [
+            "src/PeaClient.php",
+            "composer.json",
+            "README.md",
+        ],
+    }
+
+
 def extract_functions(source: str) -> list[dict[str, Any]]:
     """Parse .pea source and extract function declarations.
 
@@ -1006,6 +1131,110 @@ def generate_sdk_from_source(source: str, language: str, target_dir: str | None 
         )
         files = ["src/main.rs", "Cargo.toml", "README.md"]
 
+    elif language == "ruby":
+        (root / "lib" / "pealang").mkdir(parents=True, exist_ok=True)
+        lines = [
+            "# PeaLang Ruby SDK\\n"
+            "require 'net/http'\\n"
+            "require 'json'\\n\\n"
+            "module PeaLang\\n"
+            "  class SdkClient\\n"
+            "    attr_reader :base_url\\n\\n"
+            "    def initialize(base_url)\\n"
+            "      @base_url = base_url.chomp('/')\\n"
+            "      @http = Net::HTTP.new(URI(@base_url).host, URI(@base_url).port)\\n"
+            "    end\\n\\n"
+            "    def health\\n"
+            "      response = @http.get('/health')\\n"
+            "      raise \"Health check failed: #{response.code}\" unless response.is_a?(Net::HTTPSuccess)\\n"
+            "      response.body\\n"
+            "    end\\n",
+        ]
+        for fn in functions:
+            params = ", ".join(p["name"] for p in fn["params"])
+            args = ", ".join(f"'{p['name']}': {p['name']}" for p in fn["params"])
+            lines.append("    def " + fn["name"] + "(" + params + ")")
+            lines.append("      uri = URI(@base_url + '/v1/invoke')")
+            lines.append("      request = Net::HTTP::Post.new(uri, 'Content-Type' => 'application/json')")
+            lines.append("      request.body = JSON.generate({module: '" + module_name + "', function: '" + fn["name"] + "', args: [" + args + "]})")
+            lines.append("      response = @http.request(request)")
+            lines.append('      raise "Invocation failed: #{response.code}" unless response.is_a?(Net::HTTPSuccess)')
+            lines.append("      JSON.parse(response.body)['result']")
+            lines.append("    end")
+            lines.append("")
+        lines.append("  end")
+        lines.append("end")
+        client_content = "\\n".join(lines) + "\\n"
+        (root / "lib" / "pealang" / "client.rb").write_text(client_content, encoding="utf-8")
+        (root / "Gemfile").write_text(
+            "source 'https://rubygems.org'\\n\\n"
+            "gem 'net-http', '~> 0.3.1'\\n"
+            "gem 'json', '~> 2.6'\\n",
+            encoding="utf-8",
+        )
+        (root / "README.md").write_text(
+            "# PeaLang Ruby SDK\\n\\nGenerated from .pea source.\\n",
+            encoding="utf-8",
+        )
+        files = ["lib/pealang/client.rb", "Gemfile", "README.md"]
+
+    elif language == "php":
+        (root / "src").mkdir(parents=True, exist_ok=True)
+        lines = [
+            "<?php\\n"
+            "namespace PeaLang;\\n\\n"
+            "class SdkClient\\n"
+            "{\\n"
+            "    private string $baseUrl;\\n"
+            "    private \\GuzzleHttp\\\\Client $client;\\n\\n"
+            "    public function __construct(string $baseUrl)\\n"
+            "    {\\n"
+            "        $this->baseUrl = rtrim($baseUrl, '/');\\n"
+            "        $this->client = new \\GuzzleHttp\\\\Client();\\n"
+            "    }\\n\\n"
+            "    public function health(): string\\n"
+            "    {\\n"
+            "        $response = $this->client->get($this->baseUrl . '/health');\\n"
+            "        if ($response->getStatusCode() !== 200) {\\n"
+            "            throw new \\RuntimeException('Health check failed: ' . $response->getStatusCode());\\n"
+            "        }\\n"
+            "        return $response->getBody()->getContents();\\n"
+            "    }\\n",
+        ]
+        for fn in functions:
+            params = ", ".join(f"${p['name']}" for p in fn["params"])
+            args = ", ".join(f"'{p['name']}' => ${p['name']}" for p in fn["params"])
+            lines.append("    public function " + fn["name"] + "(" + params + ")")
+            lines.append("    {")
+            lines.append("        $payload = json_encode([")
+            lines.append("            'module' => '" + module_name + "',")
+            lines.append("            'function' => '" + fn["name"] + "',")
+            lines.append("            'args' => [" + args + "],")
+            lines.append("        ])")
+            lines.append("        $response = $this->client->post($this->baseUrl . '/v1/invoke', [")
+            lines.append("            'headers' => ['Content-Type' => 'application/json'],")
+            lines.append("            'body' => $payload,")
+            lines.append("        ])")
+            lines.append("        if ($response->getStatusCode() !== 200) {")
+            lines.append("            throw new \\RuntimeException('Invocation failed: ' . $response->getStatusCode())")
+            lines.append("        }")
+            lines.append("        $result = json_decode($response->getBody()->getContents(), true)")
+            lines.append("        return $result['result'] ?? ''")
+            lines.append("    }")
+            lines.append("")
+        lines.append("}")
+        client_content = "\\n".join(lines) + "\\n"
+        (root / "src" / "PeaClient.php").write_text(client_content, encoding="utf-8")
+        (root / "composer.json").write_text(
+            '{ "name": "pealang/php-sdk", "version": "1.0.0", "require": { "guzzlehttp/guzzle": "^7.0" } }\\n',
+            encoding="utf-8",
+        )
+        (root / "README.md").write_text(
+            "# PeaLang PHP SDK\\n\\nGenerated from .pea source.\\n",
+            encoding="utf-8",
+        )
+        files = ["src/PeaClient.php", "composer.json", "README.md"]
+
     else:
         return {"error": f"Unsupported language: {language}"}
 
@@ -1091,6 +1320,8 @@ def build_host_sdk_namespace() -> dict[str, Any]:
         "scaffold_java_sdk": scaffold_java_sdk,
         "scaffold_csharp_sdk": scaffold_csharp_sdk,
         "scaffold_rust_sdk": scaffold_rust_sdk,
+        "scaffold_ruby_sdk": scaffold_ruby_sdk,
+        "scaffold_php_sdk": scaffold_php_sdk,
         "generate_sdk_from_source": generate_sdk_from_source,
     }
 
@@ -1104,4 +1335,6 @@ HOST_SDK_NAMES = {
     "java": scaffold_java_sdk,
     "csharp": scaffold_csharp_sdk,
     "rust": scaffold_rust_sdk,
+    "ruby": scaffold_ruby_sdk,
+    "php": scaffold_php_sdk,
 }

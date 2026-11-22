@@ -102,7 +102,7 @@ def test_build_host_bindings_namespace():
 def test_build_host_sdk_namespace():
     """Phase 18: unified host SDK namespace exposes all scaffold_*_sdk functions."""
     ns = build_host_sdk_namespace()
-    expected = {"scaffold_node_sdk", "scaffold_go_sdk", "scaffold_python_sdk", "scaffold_browser_sdk", "scaffold_java_sdk", "scaffold_csharp_sdk", "scaffold_rust_sdk", "generate_sdk_from_source"}
+    expected = {"scaffold_node_sdk", "scaffold_go_sdk", "scaffold_python_sdk", "scaffold_browser_sdk", "scaffold_java_sdk", "scaffold_csharp_sdk", "scaffold_rust_sdk", "scaffold_ruby_sdk", "scaffold_php_sdk", "generate_sdk_from_source"}
     assert set(ns.keys()) == expected, f"Got {set(ns.keys())!r}"
     # Every scaffold function should be callable and return a valid scaffold dict
     for name, fn in ns.items():
@@ -117,7 +117,7 @@ def test_build_host_sdk_namespace():
 def test_generate_sdk_from_source():
     """Phase 21: generate_sdk_from_source parses .pea source and emits typed clients."""
     source = "function add(a, b) {\n  return a + b\n}\nfunction greet(name) {\n  print \"Hello \" + name\n}"
-    for lang in ("node", "go", "python", "browser", "java", "csharp", "rust"):
+    for lang in ("node", "go", "python", "browser", "java", "csharp", "rust", "ruby", "php"):
         out = generate_sdk_from_source(source, lang, f"/tmp/pea-codegen-{lang}")
         assert "error" not in out, f"{lang}: {out}"
         assert "root" in out

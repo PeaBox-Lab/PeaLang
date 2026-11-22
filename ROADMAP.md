@@ -287,8 +287,17 @@ Make PeaLang the default extension language for:
 - All 1252 tests pass.
 
 ### Phase 21: Codegen from .pea Source (2.27.0)
-- **`generate_sdk_from_source`**: Parses .pea source (Lexer + Parser) and emits typed host SDK clients for all seven languages (node, go, python, browser, java, csharp, rust).
+- **`generate_sdk_from_source`**: Parses .pea source (Lexer + Parser) and emits typed host SDK clients for all nine languages (node, go, python, browser, java, csharp, rust, ruby, php).
 - **`extract_functions`**: Extracts `FunctionStmt` declarations (name + params) from parsed .pea AST.
 - **`pea sdk-codegen` CLI**: `pea sdk-codegen <source.pea> <lang> <dir>` generates a typed client from a .pea file.
 - Added tests in `tests/test_host_integration_v042.py`, `tests/test_sdk_compatibility.py`, and `tests/test_host_bindings_v190.py`.
 - All 1256 tests pass.
+
+### Phase 22: Ruby & PHP Host SDK scaffolding (2.28.0)
+- **Ruby SDK scaffolding**: `scaffold_ruby_sdk` generates `lib/pealang/client.rb`, `Gemfile`, and `README.md` for Ruby host integration.
+- **PHP SDK scaffolding**: `scaffold_php_sdk` generates `src/PeaClient.php`, `composer.json`, and `README.md` for PHP host integration.
+- **Ruby client**: Net::HTTP-based `SdkClient` with `health()` and `invoke()` methods targeting `/health` and `/v1/invoke`.
+- **PHP client**: Guzzle-based `SdkClient` with `health()` and `invoke()` methods targeting `/health` and `/v1/invoke`.
+- Added `scaffold_ruby_sdk` and `scaffold_php_sdk` to `build_host_sdk_namespace` and `HOST_SDK_NAMES`.
+- Added tests in `tests/test_host_integration_v042.py`, `tests/test_sdk_compatibility.py`, and `tests/test_host_bindings_v190.py`.
+- All 1259 tests pass.

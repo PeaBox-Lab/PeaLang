@@ -21,6 +21,8 @@ from pealang.host_bindings import (
     scaffold_java_sdk,
     scaffold_csharp_sdk,
     scaffold_rust_sdk,
+    scaffold_ruby_sdk,
+    scaffold_php_sdk,
     generate_sdk_from_source,
 )
 
@@ -46,6 +48,16 @@ EXPECTED_SDK_FILES = {
         "Cargo.toml",
         "README.md",
     },
+    "ruby": {
+        "lib/pealang/client.rb",
+        "Gemfile",
+        "README.md",
+    },
+    "php": {
+        "src/PeaClient.php",
+        "composer.json",
+        "README.md",
+    },
 }
 
 SCAF_FN = {
@@ -56,6 +68,8 @@ SCAF_FN = {
     "java": scaffold_java_sdk,
     "csharp": scaffold_csharp_sdk,
     "rust": scaffold_rust_sdk,
+    "ruby": scaffold_ruby_sdk,
+    "php": scaffold_php_sdk,
 }
 
 
@@ -68,7 +82,7 @@ def _run_cli(*args):
 
 
 def test_all_sdks_in_namespace():
-    """build_host_sdk_namespace exposes all seven scaffold functions plus codegen."""
+    """build_host_sdk_namespace exposes all scaffold functions plus codegen."""
     ns = build_host_sdk_namespace()
     assert set(ns.keys()) == {
         "scaffold_node_sdk",
@@ -78,13 +92,17 @@ def test_all_sdks_in_namespace():
         "scaffold_java_sdk",
         "scaffold_csharp_sdk",
         "scaffold_rust_sdk",
+        "scaffold_ruby_sdk",
+        "scaffold_php_sdk",
         "generate_sdk_from_source",
     }
 
 
 def test_all_sdks_in_cli_map():
     """HOST_SDK_NAMES maps each supported language to its scaffold function."""
-    assert set(HOST_SDK_NAMES.keys()) == {"node", "go", "python", "browser", "java", "csharp", "rust"}
+    assert set(HOST_SDK_NAMES.keys()) == {
+        "node", "go", "python", "browser", "java", "csharp", "rust", "ruby", "php",
+    }
     for lang, fn in HOST_SDK_NAMES.items():
         out = fn(f"/tmp/pea-sdk-{lang}-test")
         assert "root" in out
@@ -101,6 +119,8 @@ def test_each_sdk_produces_expected_files(tmp_path):
         ("java", scaffold_java_sdk, EXPECTED_SDK_FILES["java"]),
         ("csharp", scaffold_csharp_sdk, EXPECTED_SDK_FILES["csharp"]),
         ("rust", scaffold_rust_sdk, EXPECTED_SDK_FILES["rust"]),
+        ("ruby", scaffold_ruby_sdk, EXPECTED_SDK_FILES["ruby"]),
+        ("php", scaffold_php_sdk, EXPECTED_SDK_FILES["php"]),
     ]
     for lang, fn, expected in cases:
         out = fn(str(tmp_path / f"{lang}-sdk"))
@@ -112,13 +132,13 @@ def test_pea_sdk_list():
     """pea sdk list reports all available SDK languages."""
     result = _run_cli("sdk", "list")
     assert result.returncode == 0, result.stderr
-    for lang in ("node", "go", "python", "browser", "java", "csharp", "rust"):
+    for lang in ("node", "go", "python", "browser", "java", "csharp", "rust", "ruby", "php"):
         assert lang in result.stdout
 
 
 def test_pea_sdk_generate_each_lang(tmp_path):
     """pea sdk generate <lang> <dir> creates files for every supported language."""
-    for lang in ("node", "go", "python", "browser", "java", "csharp", "rust"):
+    for lang in ("node", "go", "python", "browser", "java", "csharp", "rust", "ruby", "php"):
         target = str(tmp_path / f"{lang}-sdk")
         result = _run_cli("sdk", "generate", lang, target)
         assert result.returncode == 0, f"{lang}: {result.stderr}"
@@ -136,7 +156,7 @@ def test_pea_sdk_generate_unknown_lang():
 def test_generate_sdk_from_source_each_lang(tmp_path):
     """generate_sdk_from_source produces typed clients for every language."""
     source = "function add(a, b) {\n  return a + b\n}\nfunction greet(name) {\n  print \"Hello \" + name\n}"
-    for lang in ("node", "go", "python", "browser", "java", "csharp", "rust"):
+    for lang in ("node", "go", "python", "browser", "java", "csharp", "rust", "ruby", "php"):
         target = str(tmp_path / f"codegen-{lang}")
         out = generate_sdk_from_source(source, lang, target)
         assert "error" not in out, f"{lang}: {out}"
