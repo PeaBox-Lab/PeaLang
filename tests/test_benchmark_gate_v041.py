@@ -27,16 +27,19 @@ def test_benchmark_plain_output(tmp_path):
 
 def test_benchmark_save_and_compare(tmp_path):
     src = tmp_path / "bench.pea"
-    src.write_text("let total = 0\nfor i in [1, 2, 3] {\n  total = total + i\n}\nprint total", encoding="utf-8")
+    src.write_text(
+        "let total = 0\nfor i in [1, 2, 3, 4, 5, 6, 7, 8, 9, 10] {\n  total = total + i * i\n}\nprint total",
+        encoding="utf-8",
+    )
     baseline = tmp_path / "baseline.json"
 
-    saved = _run(str(src), "--save-baseline", str(baseline), "--iterations", "5")
+    saved = _run(str(src), "--save-baseline", str(baseline), "--iterations", "10")
     assert saved.returncode == 0, saved.stderr
     assert baseline.exists()
     payload = json.loads(baseline.read_text(encoding="utf-8"))
     assert "median_ms" in payload
 
-    compared = _run(str(src), "--baseline", str(baseline), "--iterations", "5")
+    compared = _run(str(src), "--baseline", str(baseline), "--iterations", "10")
     assert compared.returncode == 0, compared.stdout + compared.stderr
     report = json.loads(compared.stdout)
     assert report["ok"] is True
