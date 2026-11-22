@@ -43,7 +43,7 @@ def test_version_surface_consistent():
 
 
 def test_all_host_sdks_scaffold():
-    """0.41: all nine host SDKs scaffold without error."""
+    """0.41: all ten host SDKs scaffold without error."""
     for lang, fn in HOST_SDK_NAMES.items():
         out = fn(f"/tmp/pea-quality-{lang}")
         assert "error" not in out, f"{lang}: {out}"
@@ -64,6 +64,7 @@ def test_build_host_sdk_namespace_complete():
         "scaffold_rust_sdk",
         "scaffold_ruby_sdk",
         "scaffold_php_sdk",
+        "scaffold_library",
         "generate_sdk_from_source",
     }
     assert set(ns.keys()) == expected
@@ -77,13 +78,13 @@ def test_pea_sdk_cli_list():
         cwd=str(Path(__file__).resolve().parent.parent),
     )
     assert result.returncode == 0, result.stderr
-    for lang in ("node", "go", "python", "browser", "java", "csharp", "rust", "ruby", "php"):
+    for lang in ("node", "go", "python", "browser", "java", "csharp", "rust", "ruby", "php", "library"):
         assert lang in result.stdout
 
 
 def test_pea_sdk_cli_generate(tmp_path):
     """0.41: `pea sdk generate <lang> <dir>` creates files for every language."""
-    for lang in ("node", "go", "python", "browser", "java", "csharp", "rust", "ruby", "php"):
+    for lang in ("node", "go", "python", "browser", "java", "csharp", "rust", "ruby", "php", "library"):
         target = str(tmp_path / f"quality-{lang}")
         result = subprocess.run(
             [sys.executable, "-m", "pealang.cli", "sdk", "generate", lang, target],

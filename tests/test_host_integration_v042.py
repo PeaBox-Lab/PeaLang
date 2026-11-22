@@ -19,7 +19,7 @@ from pealang.wasm_differential import (
     run_differential_fixtures,
 )
 from pealang.frameworks import write_scaffold
-from pealang.host_bindings import scaffold_node_sdk, scaffold_go_sdk, scaffold_python_sdk, scaffold_browser_sdk, scaffold_java_sdk, scaffold_csharp_sdk, scaffold_rust_sdk, scaffold_ruby_sdk, scaffold_php_sdk, generate_sdk_from_source
+from pealang.host_bindings import scaffold_node_sdk, scaffold_go_sdk, scaffold_python_sdk, scaffold_browser_sdk, scaffold_java_sdk, scaffold_csharp_sdk, scaffold_rust_sdk, scaffold_ruby_sdk, scaffold_php_sdk, scaffold_library, generate_sdk_from_source
 
 
 def _run(source: str, *args):
@@ -248,3 +248,20 @@ def test_scaffold_php_sdk(tmp_path):
     assert "error" not in out
     expected_files = {"src/PeaClient.php", "composer.json", "README.md"}
     assert set(out["files"]) == expected_files, f"Got {set(out['files'])!r}"
+
+
+def test_scaffold_library(tmp_path):
+    """Phase 25: Library project scaffolding generates expected files."""
+    out = scaffold_library(str(tmp_path / "mylib"))
+    assert "error" not in out
+    expected_files = {"pea.toml", "src/mylib.pea", "tests/test_mylib.pea", "README.md", "LICENSE"}
+    assert set(out["files"]) == expected_files, f"Got {set(out['files'])!r}"
+    # Verify pea.toml has library section
+    toml_content = (tmp_path / "mylib" / "pea.toml").read_text(encoding="utf-8")
+    assert "[library]" in toml_content
+    assert "exports" in toml_content
+    # Verify library source has export functions
+    src_content = (tmp_path / "mylib" / "src" / "mylib.pea").read_text(encoding="utf-8")
+    assert "export function add" in src_content
+    assert "export function greet" in src_content
+    assert "export function version" in src_content

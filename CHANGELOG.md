@@ -121,6 +121,14 @@ All 1240 tests pass.
 - **SDK examples test**: `tests/test_sdk_examples_v230.py` validates that all 9 SDK example files exist and reference the math_utils module.
 - All 1271 tests pass.
 
+### Phase 25: Library Project Scaffolding (2.31.0)
+- **`scaffold_library`**: Generates a PeaLang library project with `pea.toml` manifest, `src/<lib>.pea` source with exported functions, `tests/test_<lib>.pea` test file, `README.md`, and `LICENSE`.
+- **`pea init --template library`**: CLI command that scaffolds a library project using the library template, generating `pea.toml` (with `[library]` and `[exports]` sections), `src/`, `tests/`, `README.md`, and `LICENSE`.
+- **Library manifest format**: `pea.toml` with `[library]` section declaring exported symbols and `[exports]` listing public functions.
+- Added `scaffold_library` to `build_host_sdk_namespace` and `HOST_SDK_NAMES` for CLI discovery.
+- Added tests in `tests/test_host_integration_v042.py`, `tests/test_sdk_compatibility.py`, `tests/test_host_bindings_v190.py`, and `tests/test_quality_gate_v229.py`.
+- All 1272 tests pass.
+
 ## 2.20.0 - 2026-11-16
 
 ### Version unification (single source of truth)

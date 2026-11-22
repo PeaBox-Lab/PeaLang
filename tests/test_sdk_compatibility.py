@@ -23,6 +23,7 @@ from pealang.host_bindings import (
     scaffold_rust_sdk,
     scaffold_ruby_sdk,
     scaffold_php_sdk,
+    scaffold_library,
     generate_sdk_from_source,
 )
 
@@ -57,6 +58,13 @@ EXPECTED_SDK_FILES = {
         "src/PeaClient.php",
         "composer.json",
         "README.md",
+    },
+    "library": {
+        "pea.toml",
+        "src/mylib.pea",
+        "tests/test_mylib.pea",
+        "README.md",
+        "LICENSE",
     },
 }
 
@@ -94,6 +102,7 @@ def test_all_sdks_in_namespace():
         "scaffold_rust_sdk",
         "scaffold_ruby_sdk",
         "scaffold_php_sdk",
+        "scaffold_library",
         "generate_sdk_from_source",
     }
 
@@ -101,7 +110,7 @@ def test_all_sdks_in_namespace():
 def test_all_sdks_in_cli_map():
     """HOST_SDK_NAMES maps each supported language to its scaffold function."""
     assert set(HOST_SDK_NAMES.keys()) == {
-        "node", "go", "python", "browser", "java", "csharp", "rust", "ruby", "php",
+        "node", "go", "python", "browser", "java", "csharp", "rust", "ruby", "php", "library",
     }
     for lang, fn in HOST_SDK_NAMES.items():
         out = fn(f"/tmp/pea-sdk-{lang}-test")
@@ -121,6 +130,7 @@ def test_each_sdk_produces_expected_files(tmp_path):
         ("rust", scaffold_rust_sdk, EXPECTED_SDK_FILES["rust"]),
         ("ruby", scaffold_ruby_sdk, EXPECTED_SDK_FILES["ruby"]),
         ("php", scaffold_php_sdk, EXPECTED_SDK_FILES["php"]),
+        ("library", scaffold_library, EXPECTED_SDK_FILES["library"]),
     ]
     for lang, fn, expected in cases:
         out = fn(str(tmp_path / f"{lang}-sdk"))
@@ -132,13 +142,13 @@ def test_pea_sdk_list():
     """pea sdk list reports all available SDK languages."""
     result = _run_cli("sdk", "list")
     assert result.returncode == 0, result.stderr
-    for lang in ("node", "go", "python", "browser", "java", "csharp", "rust", "ruby", "php"):
+    for lang in ("node", "go", "python", "browser", "java", "csharp", "rust", "ruby", "php", "library"):
         assert lang in result.stdout
 
 
 def test_pea_sdk_generate_each_lang(tmp_path):
     """pea sdk generate <lang> <dir> creates files for every supported language."""
-    for lang in ("node", "go", "python", "browser", "java", "csharp", "rust", "ruby", "php"):
+    for lang in ("node", "go", "python", "browser", "java", "csharp", "rust", "ruby", "php", "library"):
         target = str(tmp_path / f"{lang}-sdk")
         result = _run_cli("sdk", "generate", lang, target)
         assert result.returncode == 0, f"{lang}: {result.stderr}"

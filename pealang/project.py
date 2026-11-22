@@ -231,10 +231,6 @@ def load_manifest(start: str = '.'):
 def init_project(path: str = '.', name: str | None = None, template: str = 'default', variables: dict | None = None):
     root = Path(path).resolve()
     root.mkdir(parents=True, exist_ok=True)
-    manifest = root / 'pea.json'
-
-    if manifest.exists():
-        raise PeaError('pea.json already exists')
 
     if template not in TEMPLATES:
         raise PeaError(f'Unknown template: {template}. Available: {", ".join(sorted(TEMPLATES))}')
@@ -253,6 +249,110 @@ def init_project(path: str = '.', name: str | None = None, template: str = 'defa
         'vars': variables or {},
     }
     context.update(variables or {})
+
+    if template == 'library':
+        # Library projects use pea.toml manifest
+        manifest = root / 'pea.toml'
+        if manifest.exists():
+            raise PeaError('pea.toml already exists')
+
+        lib_name = proj_name.replace("-", "_")
+        # Create pea.toml manifest for library
+        manifest.write_text(
+            '[project]\n'
+            'name = "' + lib_name + '"\n'
+            'version = "0.1.0"\n'
+            'description = "' + context['project']['description'] + '"\n'
+            'entry = "src/' + lib_name + '.pea"\n'
+            '\n'
+            '[library]\n'
+            'exports = ["add", "greet", "version"]\n'
+            '\n'
+            '[dependencies]\n'
+            '\n'
+            '[permissions]\n'
+            'allow = []\n',
+            encoding="utf-8",
+        )
+        # Create src/<name>.pea from library template
+        src_dir = root / 'src'
+        src_dir.mkdir(exist_ok=True)
+        lib_src = src_dir / (lib_name + '.pea')
+        if not lib_src.exists():
+            content = _render_template(TEMPLATES[template], context)
+            lib_src.write_text(content, encoding='utf-8')
+        # Create tests/test_<name>.pea
+        tests_dir = root / 'tests'
+        tests_dir.mkdir(exist_ok=True)
+        test_file = tests_dir / ('test_' + lib_name + '.pea')
+        test_file.write_text(
+            '// Tests for ' + proj_name + '\n'
+            'import "../src/' + lib_name + '.pea" as ' + lib_name + '\n'
+            '\n'
+            'test "add function" {\n'
+            '    expect ' + lib_name + '.add(2, 3) == 5\n'
+            '    expect ' + lib_name + '.add(-1, 1) == 0\n'
+            '}\n'
+            '\n'
+            'test "greet function" {\n'
+            '    expect ' + lib_name + '.greet("World") == "Hello, World"\n'
+            '}\n'
+            '\n'
+            'test "version function" {\n'
+            '    expect ' + lib_name + '.version() == "0.1.0"\n'
+            '}\n',
+            encoding='utf-8',
+        )
+        # Create README.md
+        readme_lines = [
+            '# ' + proj_name,
+            '',
+            'A PeaLang library.',
+            '',
+            '## Installation',
+            '',
+            'Add to your project\'s pea.toml:',
+            '',
+            '```toml',
+            '[dependencies]',
+            '"' + lib_name + '" = { path = "./path/to/' + lib_name + '" }',
+            '```',
+            '',
+            '## Usage',
+            '',
+            '```pea',
+            'import "' + lib_name + '" as ' + lib_name,
+            '',
+            'print ' + lib_name + '.add(2, 3)',
+            'print ' + lib_name + '.greet("World")',
+            '```',
+        ]
+        (root / 'README.md').write_text('\n'.join(readme_lines) + '\n', encoding='utf-8')
+        # Create LICENSE
+        license_lines = [
+            'MIT License',
+            '',
+            'Copyright (c) ' + str(datetime.now().year) + ' ' + proj_name,
+            '',
+            'Permission is hereby granted, free of charge, to any person obtaining a copy',
+            'of this software and associated documentation files (the "Software"), to deal',
+            'in the Software without restriction, including without limitation the rights',
+            'to use, copy, modify, merge, publish, distribute, sublicense, and/or sell',
+            'copies of the Software, and to permit persons to whom the Software is',
+            'furnished to do so, subject to the following conditions:',
+            '',
+            'The above copyright notice and this permission notice shall be included in all',
+            'copies or substantial portions of the Software.',
+        ]
+        (root / 'LICENSE').write_text('\n'.join(license_lines) + '\n', encoding='utf-8')
+
+        return str(manifest)
+
+    # Non-library templates use pea.json
+    manifest = root / 'pea.json'
+
+    if manifest.exists():
+        raise PeaError('pea.json already exists')
 
     # Prepare manifest
     data = json.loads(json.dumps(DEFAULT_MANIFEST))
