@@ -114,8 +114,11 @@ def discover_pea(paths:Iterable[str]):
     found=[]
     for raw in paths:
         p=Path(raw)
-        if p.is_dir():found.extend(sorted(p.rglob('*.pea')))
-        elif p.suffix=='.pea':found.append(p)
+        if p.is_dir():
+            found.extend(sorted(p.rglob('*.pea')))
+            found.extend(sorted(p.rglob('*.py')))
+        elif p.suffix in ('.pea', '.py'):
+            found.append(p)
     return found
 
 def generate_docs(source,path='<input>'):

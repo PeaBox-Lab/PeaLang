@@ -303,33 +303,64 @@ def main(argv=None):
             print(json.dumps(inspect_wasm(argv[1])['manifest'],indent=2));return 0
 
         if c=='test':
-
             import time
-
-            from .native_testing import run_paths,coverage_summary
-
-            args=argv[1:];flt=None;coverage='--coverage' in args;watch='--watch' in args
-
-            clean=[];i=0
-
-            while i<len(args):
-
-                if args[i]=='--filter' and i+1<len(args):flt=args[i+1];i+=2;continue
-
-                if args[i].startswith('--filter='):flt=args[i].split('=',1)[1];i+=1;continue
-
-                if args[i] not in ('--coverage','--watch'):clean.append(args[i])
-
-                i+=1
-
-            files=discover_pea(clean or ['tests','.']);results=run_paths(files,flt or getattr(a,'filter_k',None))
-
-            for r in results:print(('PASS' if r.passed else 'FAIL')+f' {r.name} ({r.elapsed_ms:.1f} ms)'+((' - '+r.error) if r.error else ''))
-
-            if coverage:print(json.dumps(coverage_summary(files,results),indent=2))
-
-            if watch:print('Watch mode baseline enabled; rerun pea test --watch after changes in environments without filesystem events.')
-
+            from .native_testing import run_paths,coverage_summary,to_junit_xml
+            p=argparse.ArgumentParser(prog='pea test')
+            p.add_argument('paths',nargs='*',default=['tests','.'])
+            p.add_argument('--filter',help='Filter tests by name pattern')
+            p.add_argument('--coverage',action='store_true',help='Show coverage summary')
+            p.add_argument('--watch',action='store_true',help='Watch mode (re-run on file changes)')
+            p.add_argument('--junit',help='Output JUnit XML to file')
+            p.add_argument('--json',action='store_true',help='Output results as JSON')
+            p.add_argument('--legacy',action='store_true',help='Run legacy tests (execute .pea files and compare output to .out files)')
+            a=p.parse_args(argv[1:])
+            if a.legacy:
+                # Legacy test mode: run .pea files and compare output to .out files
+                files=discover_pea(a.paths)
+                failed=0
+                results=[]
+                for f in files:
+                    src=f.read_text(encoding='utf-8')
+                    out_file=f.with_suffix('.out')
+                    expected=out_file.read_text(encoding='utf-8').splitlines() if out_file.exists() else None
+                    out=[]
+                    try:
+                        execute(src,output=out.append,source_name=str(f),base_dir=f.parent)
+                    except Exception as e:
+                        out=[f'ERROR: {e}']
+                    passed = expected is None or out==expected
+                    results.append({'name': f.name, 'file': str(f), 'passed': passed, 'elapsed_ms': 0, 'error': None if passed else 'output mismatch', 'line': 0, 'describe': 'legacy'})
+                    if not passed:
+                        failed+=1
+                        print(f'FAIL {f}: output mismatch')
+                        print('Expected:',expected)
+                        print('Got:',out)
+                    else:
+                        print(f'PASS {f}')
+                print(f'{len(files)-failed} passed, {failed} failed')
+                if a.junit:
+                    from .native_testing import to_junit_xml
+                    from pealang.native_testing import NativeTestResult
+                    native_results = [NativeTestResult(r['name'], r['file'], r['passed'], r['elapsed_ms'], r['error'], r['line'], r['describe']) for r in results]
+                    xml=to_junit_xml(native_results)
+                    Path(a.junit).write_text(xml,encoding='utf-8')
+                    print(f'JUnit XML written to {a.junit}')
+                return 1 if failed else 0
+            # Native test mode
+            files=discover_pea(a.paths);results=run_paths(files,a.filter)
+            if a.json:
+                print(json.dumps([{
+                    'name':r.name,'file':r.file,'passed':r.passed,
+                    'elapsed_ms':r.elapsed_ms,'error':r.error,'line':r.line,'describe':r.describe
+                } for r in results],indent=2))
+            else:
+                for r in results:print(('PASS' if r.passed else 'FAIL')+f' {r.name} ({r.elapsed_ms:.1f} ms)'+((' - '+r.error) if r.error else ''))
+            if a.coverage:print(json.dumps(coverage_summary(files,results),indent=2))
+            if a.junit:
+                xml=to_junit_xml(results)
+                Path(a.junit).write_text(xml,encoding='utf-8')
+                print(f'JUnit XML written to {a.junit}')
+            if a.watch:print('Watch mode baseline enabled; rerun pea test --watch after changes in environments without filesystem events.')
             print(f'Tests: {sum(r.passed for r in results)} passed, {sum(not r.passed for r in results)} failed');return 1 if any(not r.passed for r in results) else 0
 
         if c=='migrate':
@@ -637,27 +668,7 @@ def main(argv=None):
 
             print(json.dumps(inspect_wasm(argv[1])['manifest'],indent=2));return 0
 
-        if c=='test':
-
-            p=argparse.ArgumentParser(prog='pea test');p.add_argument('paths',nargs='*',default=['pea_tests']);a=p.parse_args(argv[1:]);files=discover_pea(a.paths);failed=0
-
-            for f in files:
-
-                out=[]
-
-                try:
-
-                    execute(f.read_text(encoding='utf-8'),output=out.append,source_name=str(f),base_dir=f.parent)
-
-                    expected=f.with_suffix('.out')
-
-                    if expected.exists() and out!=expected.read_text(encoding='utf-8').splitlines():failed+=1;print(f'FAIL {f}: output mismatch');continue
-
-                    print(f'PASS {f}')
-
-                except Exception as e:failed+=1;print(f'FAIL {f}: {e}')
-
-            print(f'{len(files)-failed} passed, {failed} failed');return 1 if failed else 0
+        
 
         if c=='docs':
 
