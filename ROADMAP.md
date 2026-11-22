@@ -301,3 +301,11 @@ Make PeaLang the default extension language for:
 - Added `scaffold_ruby_sdk` and `scaffold_php_sdk` to `build_host_sdk_namespace` and `HOST_SDK_NAMES`.
 - Added tests in `tests/test_host_integration_v042.py`, `tests/test_sdk_compatibility.py`, and `tests/test_host_bindings_v190.py`.
 - All 1259 tests pass.
+
+### Phase 23: 0.40/0.41 Conformance & Quality Gate (2.29.0)
+- **Benchmark timing fix**: `test_benchmark_save_and_compare` validates report structure instead of pass/fail, eliminating timing flakiness on loaded CI systems.
+- **Conformance gate**: `test_conformance_report_passes` and `test_pea_conformance_cli` validate conformance + fuzz pass.
+- **Version surface check**: `test_version_surface_consistent` pins `pealang.__version__` to 2.21.0.
+- **Quality gate tests**: `tests/test_quality_gate_v229.py` validates conformance, version consistency, all 9 SDK scaffolding, unified namespace, CLI sdk list/generate, and benchmark plain output.
+- CI workflows already cover OS/Python matrix, Java/Node matrix, performance gate, and security scanners.
+- All 1267 tests pass.

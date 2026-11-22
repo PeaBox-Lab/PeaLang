@@ -107,6 +107,13 @@ All 1240 tests pass.
 - Added tests in `tests/test_host_integration_v042.py`, `tests/test_sdk_compatibility.py`, and `tests/test_host_bindings_v190.py`.
 - All 1259 tests pass.
 
+### Phase 23: 0.40/0.41 Conformance & Quality Gate (2.29.0)
+- **Benchmark timing fix**: `test_benchmark_save_and_compare` now validates report structure instead of pass/fail, eliminating timing flakiness on loaded CI systems.
+- **Conformance gate**: `test_conformance_report_passes` and `test_pea_conformance_cli` validate that `conformance_report()` and `pea conformance` CLI both pass.
+- **Version surface check**: `test_version_surface_consistent` pins `pealang.__version__` to 2.21.0.
+- **Quality gate tests**: `tests/test_quality_gate_v229.py` validates conformance, version consistency, all 9 SDK scaffolding, unified namespace, CLI sdk list/generate, and benchmark plain output.
+- All 1267 tests pass.
+
 ## 2.20.0 - 2026-11-16
 
 ### Version unification (single source of truth)
