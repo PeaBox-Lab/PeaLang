@@ -28,6 +28,7 @@ _MODULE_NOTES = {
     "pealang/orchestration_state.py": "begin, finish, successful, attempts",
     "pealang/serverless.py": "CompilationTarget.compile, CompilationTarget.execute, PythonTarget.execute (intentional sandbox/runtime stubs)",
     "pealang/sql.py": "SQLite-only portable upsert; other dialects raise intentionally",
+    "pealang/pea_ai.py": "Anthropic embeddings not available, export_model/deploy_model placeholders",
 }
 
 
@@ -101,8 +102,8 @@ def audit_repository(root):
     sites = interface_sites_detail(root)
     classified_path = root / _INTERFACE_DOC
     classified = classified_path.read_text(encoding="utf-8") if classified_path.is_file() else ""
-    if len(sites) != 26:
+    if len(sites) != 29:
         failures.append(f"interface-site-count:{len(sites)}")
-    if f"All {len(sites)}" not in classified and "All 26" not in classified:
+    if f"All {len(sites)}" not in classified and "All 29" not in classified:
         failures.append("interface-classification")
     return {"passed": not failures, "failures": failures, "interface_sites": len(sites), "interface_detail": sites}

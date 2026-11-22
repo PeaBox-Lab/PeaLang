@@ -571,3 +571,532 @@ def analyze_project(paths):
             pass
     
     return result
+
+
+# ============================================================================
+# Phase 5: Language Evolution - Effect System, Linear Types, Refinement Types, Macros, Module System v2
+# ============================================================================
+
+# ---------------------------------------------------------------------------
+# Effect System
+# ---------------------------------------------------------------------------
+
+@dataclass(frozen=True)
+class Effect:
+    """Represents a computational effect."""
+    name: str
+    parameters: tuple[TypeRef, ...] = ()
+    
+    def __str__(self):
+        if self.parameters:
+            return f"{self.name}<{', '.join(str(p) for p in self.parameters)}>"
+        return self.name
+
+
+@dataclass(frozen=True)
+class EffectSet:
+    """Set of effects for a function/type."""
+    effects: frozenset[Effect] = frozenset()
+    
+    def __or__(self, other: "EffectSet") -> "EffectSet":
+        return EffectSet(self.effects | other.effects)
+    
+    def __and__(self, other: "EffectSet") -> "EffectSet":
+        return EffectSet(self.effects & other.effects)
+    
+    def __sub__(self, other: "EffectSet") -> "EffectSet":
+        return EffectSet(self.effects - other.effects)
+    
+    def contains(self, effect: Effect) -> bool:
+        return effect in self.effects
+    
+    def __str__(self):
+        if not self.effects:
+            return "Pure"
+        return "{" + ", ".join(str(e) for e in sorted(self.effects, key=str)) + "}"
+
+
+# Built-in effects
+IO_EFFECT = Effect("IO")
+STATE_EFFECT = Effect("State")
+EXCEPTION_EFFECT = Effect("Exception")
+ASYNC_EFFECT = Effect("Async")
+NONDET_EFFECT = Effect("NonDet")
+
+EFFECT_HIERARCHY = {
+    IO_EFFECT: {STATE_EFFECT, EXCEPTION_EFFECT},
+    STATE_EFFECT: set(),
+    EXCEPTION_EFFECT: set(),
+    ASYNC_EFFECT: {IO_EFFECT},
+    NONDET_EFFECT: set(),
+}
+
+
+def infer_effects(source: str, func_name: str) -> EffectSet:
+    """Infer effects from function source code (simplified)."""
+    effects = set()
+    
+    # Check for IO operations
+    if re.search(r'\b(print|read|write|http|fetch|open)\b', source):
+        effects.add(IO_EFFECT)
+    
+    # Check for state mutations
+    if re.search(r'\b(let|const)\s+\w+\s*=', source):
+        effects.add(STATE_EFFECT)
+    
+    # Check for throw/try
+    if re.search(r'\b(throw|try|catch)\b', source):
+        effects.add(EXCEPTION_EFFECT)
+    
+    # Check for async/await
+    if re.search(r'\b(async|await)\b', source):
+        effects.add(ASYNC_EFFECT)
+    
+    # Check for non-determinism
+    if re.search(r'\b(random|parallel)\b', source):
+        effects.add(NONDET_EFFECT)
+    
+    # Expand based on hierarchy
+    expanded = set(effects)
+    for eff in effects:
+        expanded.update(EFFECT_HIERARCHY.get(eff, set()))
+    
+    return EffectSet(frozenset(expanded))
+
+
+def check_effect_subtyping(actual: EffectSet, expected: EffectSet) -> list[Diagnostic]:
+    """Check if actual effects are sub-effect of expected."""
+    diagnostics = []
+    missing = expected.effects - actual.effects
+    if missing:
+        diagnostics.append(Diagnostic(
+            'E101',
+            f"Missing required effects: {', '.join(str(e) for e in missing)}",
+            0
+        ))
+    return diagnostics
+
+
+# ---------------------------------------------------------------------------
+# Linear/Affine Types
+# ---------------------------------------------------------------------------
+
+@dataclass(frozen=True)
+class LinearType:
+    """Marker for linear (must be used exactly once) or affine (at most once) types."""
+    base_type: TypeRef
+    linearity: str = "linear"  # "linear" or "affine"
+    
+    def __str__(self):
+        prefix = "!" if self.linearity == "linear" else "?"
+        return f"{prefix}{self.base_type}"
+
+
+def is_linear(t: TypeRef) -> bool:
+    """Check if a type is linear/affine."""
+    return isinstance(t, LinearType) or (hasattr(t, 'name') and t.name.startswith('!'))
+
+
+def check_linear_usage(source: str, symbol_table: dict[str, TypeRef]) -> list[Diagnostic]:
+    """Check linear/affine variable usage.
+    
+    Only variables explicitly marked with ! (linear) or ? (affine) are checked.
+    Regular variables without markers are not subject to linear/affine checking.
+    """
+    diagnostics = []
+    
+    # Track variable definitions and uses
+    used = set()
+    defined = {}  # name -> (linearity, position)
+    decl_positions = set()  # Track declaration positions to exclude
+    
+    # Pattern: let !name = ... (linear), let ?name = ... (affine), let name = ... (regular)
+    for m in re.finditer(r'\b(let|const)\s+(!|\?)?(\w+)\s*=', source):
+        _, linear_marker, name = m.groups()
+        if linear_marker == "!":
+            linearity = "linear"
+        elif linear_marker == "?":
+            linearity = "affine"
+        else:
+            # Regular variable - not subject to linear/affine checking
+            continue
+        defined[name] = (linearity, m.start())
+        # Mark the declaration span to exclude from usage detection
+        decl_start = m.start()
+        decl_end = m.end()
+        for i in range(decl_start, decl_end):
+            decl_positions.add(i)
+    
+    # Find variable usages (excluding declarations)
+    for m in re.finditer(r'\b(\w+)\b', source):
+        name = m.group(1)
+        if name in defined and m.start() not in decl_positions:
+            used.add(name)
+    
+    for name, (linearity, pos) in defined.items():
+        if name not in used:
+            if linearity == "linear":
+                diagnostics.append(Diagnostic(
+                    'L101',
+                    f"Linear variable '{name}' defined but never used",
+                    source[:pos].count('\n') + 1
+                ))
+            else:
+                diagnostics.append(Diagnostic(
+                    'L102',
+                    f"Affine variable '{name}' defined but never used (warning)",
+                    pos + 1,
+                    severity='warning'
+                ))
+    
+    return diagnostics
+
+
+# ---------------------------------------------------------------------------
+# Refinement Types (Dependent Types Light)
+# ---------------------------------------------------------------------------
+
+@dataclass(frozen=True)
+class RefinementType:
+    """Refinement type: {v: BaseType | predicate(v)}"""
+    base_type: TypeRef
+    predicate: str  # Expression that evaluates to boolean
+    variable: str = "v"
+    
+    def __str__(self):
+        return f"{{{self.variable}: {self.base_type} | {self.predicate}}}"
+
+
+def parse_refinement(text: str) -> RefinementType | None:
+    """Parse refinement type from string: {v: Int | v > 0}"""
+    m = re.match(r'\{(\w+):\s*([^|]+)\|\s*(.+)\}', text.strip())
+    if not m:
+        return None
+    var, base, pred = m.groups()
+    return RefinementType(parse_type(base.strip()), pred.strip(), var.strip())
+
+
+def check_refinement(value: Any, refinement: RefinementType) -> bool:
+    """Check if a value satisfies a refinement predicate using safe evaluation."""
+    try:
+        # Use safe evaluator instead of eval
+        return _safe_eval_predicate(refinement.predicate, refinement.variable, value)
+    except Exception:
+        return False
+
+
+def _safe_eval_predicate(predicate: str, var_name: str, value: Any) -> bool:
+    """Safely evaluate a refinement predicate without using eval."""
+    import operator
+    import re
+    
+    # Create a safe environment
+    local_vars = {var_name: value}
+    
+    # Safe operators
+    ops = {
+        '==': operator.eq, '!=': operator.ne,
+        '<': operator.lt, '<=': operator.le,
+        '>': operator.gt, '>=': operator.ge,
+        '+': operator.add, '-': operator.sub,
+        '*': operator.mul, '/': operator.truediv,
+        '%': operator.mod, '**': operator.pow,
+    }
+    
+    pred = predicate.strip()
+    
+    # Handle 'not' prefix
+    if pred.startswith('not '):
+        return not _safe_eval_predicate(pred[4:], var_name, value)
+    
+    # Handle 'and' / 'or' (simplified)
+    if ' and ' in pred:
+        parts = pred.split(' and ')
+        return all(_safe_eval_predicate(p.strip(), var_name, value) for p in parts)
+    if ' or ' in pred:
+        parts = pred.split(' or ')
+        return any(_safe_eval_predicate(p.strip(), var_name, value) for p in parts)
+    
+    # Handle len(v) > n patterns
+    len_match = re.match(r'len\((\w+)\)\s*([<>]=?|==|!=)\s*(.+)', pred)
+    if len_match:
+        var, op, rhs = len_match.groups()
+        if var == var_name:
+            lhs = len(value)
+            try:
+                rhs_val = int(rhs)
+            except ValueError:
+                try:
+                    rhs_val = float(rhs)
+                except ValueError:
+                    rhs_val = rhs.strip('"\'')
+            ops_map = {
+                '>': operator.gt, '<': operator.lt,
+                '>=': operator.ge, '<=': operator.le,
+                '==': operator.eq, '!=': operator.ne,
+            }
+            return ops_map[op](lhs, rhs_val)
+    
+    # Try to parse binary operations
+    for op_str, op_func in ops.items():
+        if f' {op_str} ' in pred:
+            parts = pred.split(f' {op_str} ', 1)
+            if len(parts) == 2:
+                left, right = parts[0].strip(), parts[1].strip()
+                
+                def eval_side(side):
+                    if side == var_name:
+                        return local_vars[var_name]
+                    # Try to parse as literal
+                    try:
+                        return int(side)
+                    except ValueError:
+                        try:
+                            return float(side)
+                        except ValueError:
+                            # String literal
+                            if (side.startswith('"') and side.endswith('"')) or \
+                               (side.startswith("'") and side.endswith("'")):
+                                return side[1:-1]
+                            return side
+                
+                try:
+                    left_val = eval_side(left)
+                    right_val = eval_side(right)
+                    return bool(op_func(left_val, right_val))
+                except Exception:
+                    pass
+    
+    # Handle simple boolean expressions
+    if pred == var_name:
+        return bool(local_vars[var_name])
+    
+    # Fallback: try to evaluate as boolean
+    try:
+        return bool(local_vars[var_name])
+    except Exception:
+        return False
+
+
+def infer_refinement(source: str, var_name: str) -> RefinementType | None:
+    """Infer refinement from usage patterns (simplified)."""
+    # Check for assertions
+    for m in re.finditer(rf'assert\s+{re.escape(var_name)}\s*(.+)', source):
+        pred = m.group(1).strip()
+        # Try to parse as comparison
+        return RefinementType(TypeRef("Any"), pred, var_name)
+    return None
+
+
+# ---------------------------------------------------------------------------
+# Macros & Metaprogramming
+# ---------------------------------------------------------------------------
+
+@dataclass(frozen=True)
+class Macro:
+    """Hygienic macro definition."""
+    name: str
+    pattern: str  # Pattern with metavariables like $x
+    template: str  # Expansion template
+    hygiene: bool = True
+
+
+class MacroExpander:
+    """Hygienic macro expander."""
+    
+    def __init__(self):
+        self.macros: dict[str, Macro] = {}
+        self.gen_sym_counter = 0
+    
+    def define(self, macro: Macro):
+        self.macros[macro.name] = macro
+    
+    def gensym(self, prefix: str = "gen") -> str:
+        self.gen_sym_counter += 1
+        return f"{prefix}_{self.gen_sym_counter}"
+    
+    def expand(self, source: str) -> str:
+        """Expand macros in source code."""
+        result = source
+        for macro in self.macros.values():
+            result = self._expand_macro(result, macro)
+        return result
+    
+    def _expand_macro(self, source: str, macro: Macro) -> str:
+        """Expand a single macro."""
+        # Simple pattern matching - in practice would use proper AST matching
+        pattern = macro.pattern
+        template = macro.template
+        
+        # Unescape any backslash-dollar sequences in the pattern
+        unescaped = pattern.replace(r'\$', '$')
+        
+        # Build regex by replacing $name with greedy capture groups
+        parts = re.split(r'(\$\w+)', unescaped)
+        regex_parts = []
+        for part in parts:
+            if part.startswith('$'):
+                regex_parts.append(r'(.+)')  # Greedy capture
+            else:
+                regex_parts.append(re.escape(part))
+        regex_pattern = ''.join(regex_parts)
+        
+        def replacer(match):
+            groups = match.groups()
+            # Build result by replacing all placeholders at once
+            result = template
+            # First pass: replace $1, $2, etc. with placeholders
+            for i, g in enumerate(groups):
+                result = result.replace(f"${i+1}", f"\x00{i}\x00")
+            # Second pass: replace placeholders with actual values
+            for i, g in enumerate(groups):
+                result = result.replace(f"\x00{i}\x00", g)
+            # Also handle $x1, $x2, etc.
+            for i, g in enumerate(groups):
+                result = result.replace(f"$x{i+1}", g)
+            return result
+        
+        return re.sub(regex_pattern, replacer, source)
+
+
+# Built-in macros
+STANDARD_MACROS = MacroExpander()
+STANDARD_MACROS.define(Macro(
+    name="try",
+    pattern=r"try \$e catch \$x => \$e2",
+    template="try { $1 } catch $2 { $3 }"
+))
+STANDARD_MACROS.define(Macro(
+    name="match",
+    pattern=r"match \$e { \$cases }",
+    template="match $1 { $2 }"
+))
+
+
+# ---------------------------------------------------------------------------
+# Module System v2
+# ---------------------------------------------------------------------------
+
+@dataclass(frozen=True)
+class ModuleExport:
+    """Explicit export declaration."""
+    name: str
+    type: TypeRef | None = None
+    doc: str = ""
+    deprecated: bool = False
+
+
+@dataclass(frozen=True)
+class ModuleImport:
+    """Explicit import declaration."""
+    module: str
+    imports: list[str]  # ["name", "name as alias"]
+    version: str | None = None
+
+
+@dataclass(frozen=True)
+class ModuleSpec:
+    """Complete module specification."""
+    name: str
+    version: str
+    exports: list[ModuleExport] = field(default_factory=list)
+    imports: list[ModuleImport] = field(default_factory=list)
+    dependencies: dict[str, str] = field(default_factory=dict)  # name -> version constraint
+    capabilities: list[str] = field(default_factory=list)  # Required capabilities
+
+
+def parse_module_spec(source: str) -> ModuleSpec | None:
+    """Parse module specification from source."""
+    # Look for module declaration
+    m = re.search(r'module\s+(\w+)\s*(?:@(\S+))?\s*\{', source)
+    if not m:
+        return None
+    
+    name = m.group(1)
+    version = m.group(2) or "1.0.0"
+    
+    exports = []
+    imports = []
+    deps = {}
+    caps = []
+    
+    # Parse body (simplified)
+    body_start = m.end()
+    depth = 1
+    body_end = body_start
+    for i in range(body_start, len(source)):
+        if source[i] == '{':
+            depth += 1
+        elif source[i] == '}':
+            depth -= 1
+            if depth == 0:
+                body_end = i
+                break
+    
+    body = source[body_start:body_end]
+    
+    # Parse exports
+    for em in re.finditer(r'export\s+(?:const|let|function|type)\s+(\w+)', body):
+        exports.append(ModuleExport(name=em.group(1)))
+    
+    # Parse imports
+    for im in re.finditer(r'import\s+(\w+)(?:\s+as\s+(\w+))?', body):
+        imports.append(ModuleImport(module=im.group(1), imports=[im.group(2) or im.group(1)]))
+    
+    return ModuleSpec(name=name, version=version, exports=exports, imports=imports, dependencies=deps, capabilities=caps)
+
+
+def check_module_compatibility(spec: ModuleSpec, available: dict[str, ModuleSpec]) -> list[Diagnostic]:
+    """Check if module dependencies are satisfied."""
+    diagnostics = []
+    for dep_name, constraint in spec.dependencies.items():
+        if dep_name not in available:
+            diagnostics.append(Diagnostic(
+                'M101',
+                f"Missing dependency: {dep_name} {constraint}",
+                0
+            ))
+            continue
+        dep_spec = available[dep_name]
+        # Simple version check (would use semver in practice)
+        if constraint != dep_spec.version:
+            diagnostics.append(Diagnostic(
+                'M102',
+                f"Version mismatch for {dep_name}: required {constraint}, have {dep_spec.version}",
+                0,
+                severity='warning'
+            ))
+    return diagnostics
+
+
+# ---------------------------------------------------------------------------
+# Type System Integration
+# ---------------------------------------------------------------------------
+
+def integrate_advanced_types(checker: TypeChecker, source: str) -> list[Diagnostic]:
+    """Integrate all advanced type features into the type checker."""
+    diagnostics = []
+    
+    # Effect inference
+    for m in re.finditer(r'function\s+(\w+)', source):
+        func_name = m.group(1)
+        # Extract function body (simplified)
+        func_body = source[m.end():m.end()+500]
+        effects = infer_effects(func_body, func_name)
+        # Store effects on function (would need TypeRef extension)
+    
+    # Linear type checking
+    diagnostics.extend(check_linear_usage(source, {}))
+    
+    # Refinement type checking
+    for m in re.finditer(r'\{(\w+):\s*([^|]+)\|(.+)\}', source):
+        refinement = parse_refinement(m.group(0))
+        if refinement:
+            # Would check at usage sites
+            pass
+    
+    # Macro expansion (would happen before type checking)
+    expanded = STANDARD_MACROS.expand(source)
+    
+    return diagnostics
+

@@ -20,6 +20,19 @@ from pealang.frameworks import (
     service_contract_to_openapi,
     openapi_json,
     layered_architecture_check,
+    scaffold_k8s,
+    scaffold_helm_chart,
+    scaffold_terraform,
+    scaffold_cloudbuild,
+    scaffold_registry_config,
+    scaffold_wasm_production,
+    scaffold_edge_worker,
+    _get_multistage_dockerfile,
+    _get_k8s_deployment,
+    _get_k8s_service,
+    _get_k8s_hpa,
+    _get_istio_configs,
+    _get_otel_config,
 )
 
 
@@ -345,3 +358,181 @@ def test_openapi_disable_error_responses():
     responses = spec["paths"]["/orders"]["get"]["responses"]
     assert "400" not in responses
     assert "components" not in spec or "Error" not in spec.get("components", {}).get("schemas", {})
+
+
+# --- Phase 3: Platform & Deployment scaffolding tests ---
+
+def test_scaffold_k8s_basic():
+    out = scaffold_k8s("orders", framework="fastapi", port=8080, replicas=3)
+    assert out["name"] == "orders"
+    assert "Dockerfile" in out["files"]
+    assert "Dockerfile.dev" in out["files"]
+    assert "k8s/orders-deployment.yaml" in out["files"]
+    assert "k8s/orders-service.yaml" in out["files"]
+    assert "k8s/kustomization.yaml" in out["files"]
+    assert "replicas: 3" in out["files"]["k8s/orders-deployment.yaml"]
+    assert "containerPort: 8080" in out["files"]["k8s/orders-deployment.yaml"]
+    assert "FROM gcr.io/distroless/python3-debian12:nonroot" in out["files"]["Dockerfile"]
+
+
+def test_scaffold_k8s_with_hpa_and_ingress():
+    out = scaffold_k8s("orders", framework="fastapi", port=8080, replicas=3,
+                       include_hpa=True, include_ingress=True, ingress_host="orders.example.com")
+    assert "k8s/orders-hpa.yaml" in out["files"]
+    assert "k8s/orders-ingress.yaml" in out["files"]
+    assert "orders.example.com" in out["files"]["k8s/orders-ingress.yaml"]
+    assert "minReplicas: 3" in out["files"]["k8s/orders-hpa.yaml"]
+    assert "maxReplicas: 20" in out["files"]["k8s/orders-hpa.yaml"]
+
+
+def test_scaffold_k8s_with_otel_and_istio():
+    out = scaffold_k8s("orders", framework="fastapi", port=8080,
+                       include_otel=True, include_istio=True)
+    assert "otel/otel-config.yaml" in out["files"]
+    assert "otel/instrumentation.py" in out["files"]
+    assert "istio/orders-virtualservice.yaml" in out["files"]
+    assert "istio/orders-destinationrule.yaml" in out["files"]
+    assert "istio/orders-peerauth.yaml" in out["files"]
+    assert "istio/orders-authorization.yaml" in out["files"]
+    assert "mtls:" in out["files"]["istio/orders-peerauth.yaml"]
+
+
+def test_scaffold_helm_chart():
+    out = scaffold_helm_chart("orders", framework="fastapi", port=8080)
+    assert out["chart_name"] == "orders"
+    assert "helm/orders/Chart.yaml" in out["files"]
+    assert "helm/orders/values.yaml" in out["files"]
+    assert "helm/orders/templates/deployment.yaml" in out["files"]
+    assert "helm/orders/templates/service.yaml" in out["files"]
+    assert "helm/orders/templates/hpa.yaml" in out["files"]
+    assert "helm/orders/templates/ingress.yaml" in out["files"]
+    assert "helm/orders/templates/_helpers.tpl" in out["files"]
+    assert 'name: orders' in out["files"]["helm/orders/Chart.yaml"]
+
+
+def test_scaffold_terraform_aws():
+    out = scaffold_terraform("orders", cloud="aws", region="us-east-1")
+    assert "terraform/main.tf" in out["files"]
+    assert "terraform/variables.tf" in out["files"]
+    assert "terraform/outputs.tf" in out["files"]
+    assert "aws_ecr_repository" in out["files"]["terraform/main.tf"]
+    assert "aws_ecs_cluster" in out["files"]["terraform/main.tf"]
+    assert "aws_ecs_service" in out["files"]["terraform/main.tf"]
+    assert "us-east-1" in out["files"]["terraform/main.tf"]
+
+
+def test_scaffold_cloudbuild_gcp():
+    out = scaffold_cloudbuild("orders", cloud="gcp", region="us-central1")
+    assert "cloudbuild.yaml" in out["files"]
+    assert "cloudbuild.yaml.prod" in out["files"]
+    assert "gcr.io/cloud-builders/docker" in out["files"]["cloudbuild.yaml"]
+    # Check for gcloud run deploy in the YAML (split across lines)
+    content = out["files"]["cloudbuild.yaml"]
+    assert "gcloud" in content
+    assert "run" in content
+    assert "deploy" in content
+
+
+def test_scaffold_cloudbuild_aws():
+    out = scaffold_cloudbuild("orders", cloud="aws", region="us-east-1")
+    assert "buildspec.yml" in out["files"]
+    assert "ecr get-login-password" in out["files"]["buildspec.yml"]
+
+
+def test_scaffold_registry_config():
+    out = scaffold_registry_config("orders", registry_type="oci")
+    assert ".docker/config.json" in out["files"]
+    assert ".npmrc" in out["files"]
+    assert "pea-publish.yml" in out["files"]
+    assert "ghcr.io" in out["files"][".docker/config.json"]
+    assert "registry.pea.dev" in out["files"][".npmrc"]
+
+
+def test_scaffold_wasm_production():
+    out = scaffold_wasm_production("orders", target="wasm32-wasip1")
+    assert "wasm-build.yml" in out["files"]
+    assert "Dockerfile.wasm" in out["files"]
+    assert "wasm-component.wit" in out["files"]
+    assert "wasm32-wasip1" in out["files"]["wasm-build.yml"]
+    assert "wasm-opt" in out["files"]["wasm-build.yml"]
+
+
+def test_scaffold_edge_worker_cloudflare():
+    out = scaffold_edge_worker("orders", platform="cloudflare")
+    assert "wrangler.toml" in out["files"]
+    assert "worker.py" in out["files"]
+    assert "package.json" in out["files"]
+    assert "orders" in out["files"]["wrangler.toml"]
+
+
+def test_scaffold_edge_worker_vercel():
+    out = scaffold_edge_worker("orders", platform="vercel")
+    assert "vercel.json" in out["files"]
+    assert "api/index.py" in out["files"]
+    assert "python3.12" in out["files"]["vercel.json"]
+
+
+def test_scaffold_edge_worker_aws():
+    out = scaffold_edge_worker("orders", platform="aws")
+    assert "template.yaml" in out["files"]
+    assert "lambda_function.py" in out["files"]
+    assert "AWS::Serverless::Function" in out["files"]["template.yaml"]
+
+
+def test_multistage_dockerfile_distroless():
+    df = _get_multistage_dockerfile("fastapi", 8000, use_distroless=True)
+    assert "FROM gcr.io/distroless/python3-debian12:nonroot" in df
+    assert "FROM python:3.12-slim AS builder" in df
+
+
+def test_multistage_dockerfile_dev():
+    df = _get_multistage_dockerfile("fastapi", 8000, use_distroless=False)
+    assert "FROM python:3.12-slim" in df
+    assert "USER 10001:10001" in df
+    assert "gcr.io/distroless" not in df
+
+
+def test_k8s_deployment_yaml():
+    yaml = _get_k8s_deployment("orders", "fastapi", 8000, 3)
+    assert "replicas: 3" in yaml
+    assert "containerPort: 8000" in yaml
+    assert "livenessProbe:" in yaml
+    assert "readinessProbe:" in yaml
+    assert "/health" in yaml
+
+
+def test_k8s_service_yaml():
+    yaml = _get_k8s_service("orders", 8000)
+    assert "type: ClusterIP" in yaml
+    assert "targetPort: 8000" in yaml
+
+
+def test_k8s_hpa_yaml():
+    yaml = _get_k8s_hpa("orders", min_replicas=3, max_replicas=20)
+    assert "minReplicas: 3" in yaml
+    assert "maxReplicas: 20" in yaml
+    assert "averageUtilization: 70" in yaml
+
+
+def test_istio_configs():
+    configs = _get_istio_configs("orders", "default", 8000)
+    assert "orders-virtualservice.yaml" in configs
+    assert "orders-destinationrule.yaml" in configs
+    assert "orders-peerauth.yaml" in configs
+    assert "orders-authorization.yaml" in configs
+    assert "mtls:" in configs["orders-peerauth.yaml"]
+    assert "STRICT" in configs["orders-peerauth.yaml"]
+    assert "circuitBreaker:" in configs["orders-destinationrule.yaml"]
+
+
+def test_otel_configs():
+    configs = _get_otel_config("orders", "http://jaeger:4318/v1/traces")
+    assert "otel-config.yaml" in configs
+    assert "Dockerfile.otel" in configs
+    assert "instrumentation.py" in configs
+    assert "FastAPIInstrumentor" in configs["instrumentation.py"]
+
+
+def test_scaffold_k8s_invalid_name():
+    out = scaffold_k8s("bad name!", framework="fastapi")
+    assert "error" in out

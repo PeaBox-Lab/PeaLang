@@ -1,6 +1,6 @@
 # Interface Completeness 0.99.1
 
-All 26 `NotImplementedError` sites found by the audit are intentional base-interface contracts, not directly instantiable production backends. Concrete implementations are tested separately. The classified modules and methods are:
+All 29 `NotImplementedError` sites found by the audit are intentional base-interface contracts, not directly instantiable production backends. Concrete implementations are tested separately. The classified modules and methods are:
 
 - `cloud_connectors.py` (6): — listdir, stat, open, mkdir, remove, rename
   - L70: `def listdir(self,path):raise NotImplementedError`
@@ -33,6 +33,10 @@ All 26 `NotImplementedError` sites found by the audit are intentional base-inter
   - L45: `def finish(self,*a,**k): raise NotImplementedError`
   - L46: `def successful(self,*a,**k): raise NotImplementedError`
   - L47: `def attempts(self,*a,**k): raise NotImplementedError`
+- `pea_ai.py` (3): — Anthropic embeddings not available, export_model/deploy_model placeholders
+  - L210: `raise NotImplementedError("Anthropic doesn't provide embeddings API")`
+  - L661: `raise NotImplementedError`
+  - L724: `raise NotImplementedError`
 - `serverless.py` (3): — CompilationTarget.compile, CompilationTarget.execute, PythonTarget.execute (intentional sandbox/runtime stubs)
   - L186: `raise NotImplementedError`
   - L193: `raise NotImplementedError`

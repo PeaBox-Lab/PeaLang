@@ -176,6 +176,7 @@ from .native_testing import (run_source_tests as _nt_run_source_tests,
     to_junit_xml as _nt_to_junit_xml,
     expect as _nt_expect,
     build_native_testing_namespace as _nt_build_namespace)
+from .pea_ai import build_pea_ai_namespace as _pea_ai_build_namespace
 from .vm_optimizer import (OptimizationHints as _vm_optimization_hints,
     constant_fold as _vm_constant_fold,
     loop_unroll_hint as _vm_loop_unroll_hint,
@@ -3566,5 +3567,6 @@ def build_analysis_namespace() -> dict[str, Any]:
         "to_junit_xml": _nt_to_junit_xml,
         "expect": _nt_expect,
         "native_testing": _nt_build_namespace,
+        "pea_ai": _pea_ai_build_namespace(),
     }
 

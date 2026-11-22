@@ -12,6 +12,8 @@ from __future__ import annotations
 import json
 import re
 import time
+import os
+import base64
 from pathlib import Path
 from typing import Any
 
@@ -322,8 +324,1437 @@ def write_scaffold(name: str, kind: str = "backend", target_dir: str = ".",
 
 
 # ---------------------------------------------------------------------------
-# Architecture tooling (solution architects)
+# Platform & Deployment scaffolding (Phase 3)
 # ---------------------------------------------------------------------------
+
+def _get_multistage_dockerfile(framework: str, port: int, use_distroless: bool = False) -> str:
+    """Generate multi-stage Dockerfile for production."""
+    if framework == "fastapi":
+        if use_distroless:
+            return f'''# Build stage
+FROM python:3.12-slim AS builder
+WORKDIR /build
+COPY requirements.txt .
+RUN pip install --no-cache-dir --user -r requirements.txt
+
+# Runtime stage
+FROM gcr.io/distroless/python3-debian12:nonroot
+WORKDIR /app
+COPY --from=builder /root/.local /root/.local
+COPY . .
+ENV PATH=/root/.local/bin:$PATH
+EXPOSE {port}
+CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "{port}"]
+'''
+        else:
+            return f'''# Build stage
+FROM python:3.12-slim AS builder
+WORKDIR /build
+COPY requirements.txt .
+RUN pip install --no-cache-dir --user -r requirements.txt
+
+# Runtime stage
+FROM python:3.12-slim
+WORKDIR /app
+RUN groupadd --gid 10001 appuser && useradd --uid 10001 --gid 10001 --create-home appuser
+COPY --from=builder /root/.local /home/appuser/.local
+COPY --chown=appuser:appuser . .
+ENV PATH=/home/appuser/.local/bin:$PATH
+USER 10001:10001
+EXPOSE {port}
+CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "{port}"]
+'''
+    elif framework == "flask":
+        if use_distroless:
+            return f'''# Build stage
+FROM python:3.12-slim AS builder
+WORKDIR /build
+COPY requirements.txt .
+RUN pip install --no-cache-dir --user -r requirements.txt
+
+# Runtime stage
+FROM gcr.io/distroless/python3-debian12:nonroot
+WORKDIR /app
+COPY --from=builder /root/.local /root/.local
+COPY . .
+ENV PATH=/root/.local/bin:$PATH
+EXPOSE {port}
+CMD ["gunicorn", "-b", "0.0.0.0:{port}", "app.main:app"]
+'''
+        else:
+            return f'''# Build stage
+FROM python:3.12-slim AS builder
+WORKDIR /build
+COPY requirements.txt .
+RUN pip install --no-cache-dir --user -r requirements.txt
+
+# Runtime stage
+FROM python:3.12-slim
+WORKDIR /app
+RUN groupadd --gid 10001 appuser && useradd --uid 10001 --gid 10001 --create-home appuser
+COPY --from=builder /root/.local /home/appuser/.local
+COPY --chown=appuser:appuser . .
+ENV PATH=/home/appuser/.local/bin:$PATH
+USER 10001:10001
+EXPOSE {port}
+CMD ["gunicorn", "-b", "0.0.0.0:{port}", "app.main:app"]
+'''
+    else:
+        return f'''# Generic single-stage (extend for other frameworks)
+FROM python:3.12-slim
+WORKDIR /app
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+COPY . .
+EXPOSE {port}
+CMD ["python", "main.py"]
+'''
+
+
+def _get_k8s_deployment(name: str, framework: str, port: int, replicas: int = 3,
+                        image: str | None = None, namespace: str = "default",
+                        resources: dict | None = None) -> str:
+    """Generate Kubernetes Deployment YAML."""
+    img = image or f"{name}:latest"
+    res = resources or {"requests": {"cpu": "100m", "memory": "128Mi"}, "limits": {"cpu": "500m", "memory": "512Mi"}}
+    return f'''apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {name}
+  namespace: {namespace}
+  labels:
+    app: {name}
+    framework: {framework}
+spec:
+  replicas: {replicas}
+  selector:
+    matchLabels:
+      app: {name}
+  template:
+    metadata:
+      labels:
+        app: {name}
+        framework: {framework}
+    spec:
+      containers:
+      - name: {name}
+        image: {img}
+        ports:
+        - containerPort: {port}
+        resources:
+          requests:
+            cpu: "{res['requests']['cpu']}"
+            memory: "{res['requests']['memory']}"
+          limits:
+            cpu: "{res['limits']['cpu']}"
+            memory: "{res['limits']['memory']}"
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: {port}
+          initialDelaySeconds: 10
+          periodSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: {port}
+          initialDelaySeconds: 5
+          periodSeconds: 5
+        env:
+        - name: PORT
+          value: "{port}"
+'''
+
+
+def _get_k8s_service(name: str, port: int, service_type: str = "ClusterIP", namespace: str = "default") -> str:
+    """Generate Kubernetes Service YAML."""
+    return f'''apiVersion: v1
+kind: Service
+metadata:
+  name: {name}
+  namespace: {namespace}
+  labels:
+    app: {name}
+spec:
+  type: {service_type}
+  ports:
+  - port: 80
+    targetPort: {port}
+    protocol: TCP
+    name: http
+  selector:
+    app: {name}
+'''
+
+
+def _get_k8s_hpa(name: str, min_replicas: int = 3, max_replicas: int = 20,
+                 cpu_target: int = 70, namespace: str = "default") -> str:
+    """Generate Kubernetes HorizontalPodAutoscaler YAML."""
+    return f'''apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: {name}-hpa
+  namespace: {namespace}
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: {name}
+  minReplicas: {min_replicas}
+  maxReplicas: {max_replicas}
+  metrics:
+  - type: Resource
+    resource:
+      name: cpu
+      target:
+        type: Utilization
+        averageUtilization: {cpu_target}
+'''
+
+
+def _get_k8s_ingress(name: str, host: str, port: int = 80, namespace: str = "default",
+                     tls_secret: str | None = None) -> str:
+    """Generate Kubernetes Ingress YAML."""
+    tls_section = f'''
+  tls:
+  - hosts:
+    - {host}
+    secretName: {tls_secret}
+''' if tls_secret else ''
+    return f'''apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {name}-ingress
+  namespace: {namespace}
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+spec:{tls_section}
+  rules:
+  - host: {host}
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: {name}
+            port:
+              number: {port}
+'''
+
+
+def _get_otel_config(service_name: str, endpoint: str = "http://jaeger:4318/v1/traces",
+                     metrics_endpoint: str = "http://prometheus:9090",
+                     sample_rate: float = 1.0) -> dict[str, str]:
+    """Generate OpenTelemetry configuration files."""
+    return {
+        "otel-config.yaml": f'''receivers:
+  otlp:
+    protocols:
+      grpc:
+      http:
+exporters:
+  otlp:
+    endpoint: {endpoint}
+    tls:
+      insecure: true
+  prometheus:
+    endpoint: "{metrics_endpoint}"
+  logging:
+    loglevel: debug
+service:
+  pipelines:
+    traces:
+      receivers: [otlp]
+      exporters: [otlp, logging]
+    metrics:
+      receivers: [otlp]
+      exporters: [prometheus, logging]
+''',
+        "Dockerfile.otel": f'''# OpenTelemetry Collector sidecar
+FROM otel/opentelemetry-collector-contrib:latest
+COPY otel-config.yaml /etc/otel/config.yaml
+CMD ["--config=/etc/otel/config.yaml"]
+''',
+        "instrumentation.py": f'''# Add to your app for auto-instrumentation
+from opentelemetry import trace
+from opentelemetry.exporter.otlp.proto.grpc.trace_exporter import OTLPSpanExporter
+from opentelemetry.sdk.trace import TracerProvider
+from opentelemetry.sdk.trace.export import BatchSpanProcessor
+from opentelemetry.instrumentation.fastapi import FastAPIInstrumentor
+from opentelemetry.instrumentation.requests import RequestsInstrumentor
+
+trace.set_tracer_provider(TracerProvider())
+trace.get_tracer_provider().add_span_processor(
+    BatchSpanProcessor(OTLPSpanExporter(endpoint="{endpoint.replace('http://', '').replace('v1/traces', '')}"))
+)
+
+# Auto-instrument FastAPI
+def instrument_app(app):
+    FastAPIInstrumentor.instrument_app(app)
+    RequestsInstrumentor().instrument()
+    return app
+''',
+    }
+
+
+def _get_istio_configs(name: str, namespace: str = "default", port: int = 8000) -> dict[str, str]:
+    """Generate Istio service mesh configurations."""
+    return {
+        f"{name}-virtualservice.yaml": f'''apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name: {name}
+  namespace: {namespace}
+spec:
+  hosts:
+  - {name}
+  http:
+  - match:
+    - uri:
+        prefix: /
+    route:
+    - destination:
+        host: {name}.{namespace}.svc.cluster.local
+        port:
+          number: {port}
+    retries:
+      attempts: 3
+      perTryTimeout: 2s
+      retryOn: connect-failure,refused-stream,unavailable,cancelled,retriable-status-codes
+    timeout: 10s
+''',
+        f"{name}-destinationrule.yaml": f'''apiVersion: networking.istio.io/v1beta1
+kind: DestinationRule
+metadata:
+  name: {name}
+  namespace: {namespace}
+spec:
+  host: {name}.{namespace}.svc.cluster.local
+  trafficPolicy:
+    connectionPool:
+      tcp:
+        maxConnections: 100
+      http:
+        h2UpgradePolicy: UPGRADE
+        http1MaxPendingRequests: 100
+        http2MaxRequests: 1000
+    circuitBreaker:
+      consecutive5xxErrors: 5
+      interval: 30s
+      baseEjectionTime: 30s
+      maxEjectionPercent: 50
+    loadBalancer:
+      simple: LEAST_REQUEST
+''',
+        f"{name}-peerauth.yaml": f'''apiVersion: security.istio.io/v1beta1
+kind: PeerAuthentication
+metadata:
+  name: {name}
+  namespace: {namespace}
+spec:
+  selector:
+    matchLabels:
+      app: {name}
+  mtls:
+    mode: STRICT
+''',
+        f"{name}-authorization.yaml": f'''apiVersion: security.istio.io/v1beta1
+kind: AuthorizationPolicy
+metadata:
+  name: {name}
+  namespace: {namespace}
+spec:
+  selector:
+    matchLabels:
+      app: {name}
+  rules:
+  - to:
+    - operation:
+        methods: ["GET", "POST"]
+    - from:
+    - source:
+        principals: ["cluster.local/ns/{namespace}/sa/default"]
+''',
+    }
+
+
+def scaffold_k8s(name: str, framework: str = "fastapi", port: int = 8000,
+                 replicas: int = 3, namespace: str = "default",
+                 image: str | None = None, resources: dict | None = None,
+                 include_hpa: bool = True, include_ingress: bool = False,
+                 ingress_host: str | None = None, ingress_tls_secret: str | None = None,
+                 include_otel: bool = False, otel_endpoint: str = "http://jaeger:4318/v1/traces",
+                 include_istio: bool = False) -> dict[str, Any]:
+    """Generate complete Kubernetes manifests for a service."""
+    if not re.fullmatch(r"[A-Za-z_][A-Za-z0-9_-]{0,63}", name):
+        return {"error": f"Invalid service name: {name!r}"}
+    
+    files = {}
+    
+    # Multi-stage Dockerfile
+    files["Dockerfile"] = _get_multistage_dockerfile(framework, port, use_distroless=True)
+    files["Dockerfile.dev"] = _get_multistage_dockerfile(framework, port, use_distroless=False)
+    
+    # K8s manifests
+    files[f"k8s/{name}-deployment.yaml"] = _get_k8s_deployment(name, framework, port, replicas, image, namespace, resources)
+    files[f"k8s/{name}-service.yaml"] = _get_k8s_service(name, port, "ClusterIP", namespace)
+    
+    if include_hpa:
+        files[f"k8s/{name}-hpa.yaml"] = _get_k8s_hpa(name, namespace=namespace)
+    
+    if include_ingress and ingress_host:
+        files[f"k8s/{name}-ingress.yaml"] = _get_k8s_ingress(name, ingress_host, port, namespace, ingress_tls_secret)
+    
+    if include_otel:
+        otel_files = _get_otel_config(name, otel_endpoint)
+        for fname, content in otel_files.items():
+            files[f"otel/{fname}"] = content
+    
+    if include_istio:
+        istio_files = _get_istio_configs(name, namespace, port)
+        for fname, content in istio_files.items():
+            files[f"istio/{fname}"] = content
+    
+    # Kustomize
+    files["k8s/kustomization.yaml"] = f'''apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+- {name}-deployment.yaml
+- {name}-service.yaml
+{'  - ' + name + '-hpa.yaml' if include_hpa else ''}
+{'  - ' + name + '-ingress.yaml' if include_ingress else ''}
+commonLabels:
+  app: {name}
+  framework: {framework}
+'''
+    
+    # README
+    files["README.md"] = f'''# {name} - Kubernetes Deployment
+
+## Quick Start
+
+```bash
+# Build and push
+docker build -t {image or name}:latest .
+docker push {image or name}:latest
+
+# Deploy
+kubectl apply -k k8s/
+
+# Or with Helm (if using)
+helm upgrade --install {name} ./helm/
+```
+
+## Files
+
+- `Dockerfile` - Multi-stage production build (distroless)
+- `Dockerfile.dev` - Development build
+- `k8s/` - Kubernetes manifests (Deployment, Service, HPA, Ingress)
+- `k8s/kustomization.yaml` - Kustomize config
+- `otel/` - OpenTelemetry Collector config (if enabled)
+- `istio/` - Istio service mesh configs (if enabled)
+
+## Configuration
+
+- Service: `{name}`
+- Framework: `{framework}`
+- Port: `{port}`
+- Replicas: `{replicas}`
+- Namespace: `{namespace}`
+- Image: `{image or name}:latest`
+- Resources: {json.dumps(resources or {"requests": {"cpu": "100m", "memory": "128Mi"}, "limits": {"cpu": "500m", "memory": "512Mi"}})}
+'''
+    
+    return {"name": name, "framework": framework, "port": port,
+            "replicas": replicas, "namespace": namespace,
+            "files": files, "file_count": len(files)}
+
+
+def scaffold_helm_chart(name: str, framework: str = "fastapi", port: int = 8000,
+                        image: str | None = None, namespace: str = "default") -> dict[str, Any]:
+    """Generate a Helm chart for the service."""
+    if not re.fullmatch(r"[A-Za-z_][A-Za-z0-9_-]{0,63}", name):
+        return {"error": f"Invalid service name: {name!r}"}
+    
+    files = {}
+    chart_name = name.replace("-", "_")
+    
+    files[f"helm/{chart_name}/Chart.yaml"] = f'''apiVersion: v2
+name: {chart_name}
+description: Helm chart for {name} ({framework})
+type: application
+version: 0.1.0
+appVersion: "1.0.0"
+'''
+    
+    files[f"helm/{chart_name}/values.yaml"] = f'''# Default values for {chart_name}
+replicaCount: 3
+
+image:
+  repository: {image or name}
+  pullPolicy: IfNotPresent
+  tag: "latest"
+
+service:
+  type: ClusterIP
+  port: 80
+  targetPort: {port}
+
+ingress:
+  enabled: false
+  className: "nginx"
+  annotations: {{}}
+  hosts:
+    - host: {name}.example.com
+      paths:
+        - path: /
+          pathType: Prefix
+  tls: []
+
+resources:
+  limits:
+    cpu: 500m
+    memory: 512Mi
+  requests:
+    cpu: 100m
+    memory: 128Mi
+
+autoscaling:
+  enabled: true
+  minReplicas: 3
+  maxReplicas: 20
+  targetCPUUtilizationPercentage: 70
+
+nodeSelector: {{}}
+tolerations: []
+affinity: {{}}
+
+# OpenTelemetry
+otel:
+  enabled: false
+  endpoint: "http://jaeger:4318/v1/traces"
+
+# Istio
+istio:
+  enabled: false
+  mtls: strict
+'''
+    
+    files[f"helm/{chart_name}/templates/deployment.yaml"] = f'''apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "{chart_name}.fullname" . }}
+  labels:
+    {{- include "{chart_name}.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "{chart_name}.selectors" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "{chart_name}.selectors" . | nindent 8 }}
+    spec:
+      containers:
+        - name: {{ .Chart.Name }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: {port}
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: http
+            initialDelaySeconds: 10
+            periodSeconds: 10
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: http
+            initialDelaySeconds: 5
+            periodSeconds: 5
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+'''
+    
+    files[f"helm/{chart_name}/templates/service.yaml"] = f'''apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "{chart_name}.fullname" . }}
+  labels:
+    {{- include "{chart_name}.labels" . | nindent 4 }}
+spec:
+  type: {{ .Values.service.type }}
+  ports:
+    - port: {{ .Values.service.port }}
+      targetPort: {{ .Values.service.targetPort }}
+      protocol: TCP
+      name: http
+  selector:
+    {{- include "{chart_name}.selectors" . | nindent 4 }}
+'''
+    
+    files[f"helm/{chart_name}/templates/hpa.yaml"] = f'''{{- if .Values.autoscaling.enabled }}
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: {{ include "{chart_name}.fullname" . }}
+  labels:
+    {{- include "{chart_name}.labels" . | nindent 4 }}
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: {{ include "{chart_name}.fullname" . }}
+  minReplicas: {{ .Values.autoscaling.minReplicas }}
+  maxReplicas: {{ .Values.autoscaling.maxReplicas }}
+  metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: {{ .Values.autoscaling.targetCPUUtilizationPercentage }}
+{{- end }}
+'''
+    
+    files[f"helm/{chart_name}/templates/ingress.yaml"] = f'''{{- if .Values.ingress.enabled }}
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ include "{chart_name}.fullname" . }}
+  labels:
+    {{- include "{chart_name}.labels" . | nindent 4 }}
+  annotations:
+    {{- toYaml .Values.ingress.annotations | nindent 4 }}
+spec:
+  ingressClassName: {{ .Values.ingress.className }}
+  {{- if .Values.ingress.tls }}
+  tls:
+    {{- toYaml .Values.ingress.tls | nindent 4 }}
+  {{- end }}
+  rules:
+    {{- toYaml .Values.ingress.hosts | nindent 4 }}
+{{- end }}
+'''
+    
+    files[f"helm/{chart_name}/templates/_helpers.tpl"] = f'''{{- define "{chart_name}.name" -}}
+{{- default .Chart.Name .Values.nameOverride | trunc 63 | trimSuffix "-" }}
+{{- end }}
+
+{{- define "{chart_name}.fullname" -}}
+{{- if .Values.fullnameOverride }}
+{{- .Values.fullnameOverride | trunc 63 | trimSuffix "-" }}
+{{- else }}
+{{- $name := default .Chart.Name .Values.nameOverride }}
+{{- if contains $name .Release.Name }}
+{{- .Release.Name | trunc 63 | trimSuffix "-" }}
+{{- else }}
+{{- printf "%s-%s" .Release.Name $name | trunc 63 | trimSuffix "-" }}
+{{- end }}
+{{- end }}
+{{- end }}
+
+{{- define "{chart_name}.labels" -}}
+helm.sh/chart: {{ include "{chart_name}.chart" . }}
+{{ include "{chart_name}.selectors" . }}
+{{- if .Chart.AppVersion }}
+app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
+{{- end }}
+app.kubernetes.io/managed-by: {{ .Release.Service }}
+{{- end }}
+
+{{- define "{chart_name}.selectors" -}}
+app.kubernetes.io/name: {{ include "{chart_name}.name" . }}
+app.kubernetes.io/instance: {{ .Release.Name }}
+{{- end }}
+
+{{- define "{chart_name}.chart" -}}
+{{- printf "%s-%s" .Chart.Name .Chart.Version | trunc 63 | trimSuffix "-" }}
+{{- end }}
+'''
+    
+    return {"name": name, "chart_name": chart_name, "framework": framework,
+            "files": files, "file_count": len(files)}
+
+
+def scaffold_terraform(name: str, framework: str = "fastapi", cloud: str = "aws",
+                       region: str = "us-east-1", port: int = 8000) -> dict[str, Any]:
+    """Generate Terraform configuration for cloud deployment."""
+    if not re.fullmatch(r"[A-Za-z_][A-Za-z0-9_-]{0,63}", name):
+        return {"error": f"Invalid service name: {name!r}"}
+    
+    files = {}
+    
+    if cloud == "aws":
+        files["terraform/main.tf"] = f'''terraform {{
+  required_version = ">= 1.5"
+  required_providers {{
+    aws = {{
+      source  = "hashicorp/aws"
+      version = "~> 5.0"
+    }}
+  }}
+}}
+
+provider "aws" {{
+  region = "{region}"
+}}
+
+# ECR Repository
+resource "aws_ecr_repository" "app" {{
+  name                 = "{name}"
+  image_tag_mutability = "MUTABLE"
+  image_scanning_configuration {{
+    scan_on_push = true
+  }}
+}}
+
+# ECS Cluster
+resource "aws_ecs_cluster" "app" {{
+  name = "{name}"
+}}
+
+# Task Definition
+resource "aws_ecs_task_definition" "app" {{
+  family                   = "{name}"
+  network_mode             = "awsvpc"
+  requires_compatibilities = ["FARGATE"]
+  cpu                      = "256"
+  memory                   = "512"
+  execution_role_arn       = aws_iam_role.ecs_execution.arn
+  task_role_arn            = aws_iam_role.ecs_task.arn
+
+  container_definitions = jsonencode([
+    {{
+      name      = "{name}"
+      image     = "${{aws_ecr_repository.app.repository_url}}:latest"
+      cpu       = 256
+      memory    = 512
+      portMappings = [
+        {{
+          containerPort = {port}
+          protocol      = "tcp"
+        }}
+      ]
+      logConfiguration = {{
+        logDriver = "awslogs"
+        options = {{
+          "awslogs-group"         = "/ecs/{name}"
+          "awslogs-region"        = "{region}"
+          "awslogs-stream-prefix" = "ecs"
+        }}
+      }}
+      healthCheck = {{
+        command  = ["CMD-SHELL", "curl -f http://localhost:{port}/health || exit 1"]
+        interval = 30
+        timeout  = 5
+        retries  = 3
+      }}
+    }}
+  ]
+}}
+
+# Service
+resource "aws_ecs_service" "app" {{
+  name            = "{name}"
+  cluster         = aws_ecs_cluster.app.id
+  task_definition = aws_ecs_task_definition.app.arn
+  desired_count   = 3
+  launch_type     = "FARGATE"
+  network_configuration {{
+    subnets         = var.private_subnets
+    security_groups = [aws_security_group.ecs.id]
+    assign_public_ip = false
+  }}
+  load_balancer {{
+    target_group_arn = aws_lb_target_group.app.arn
+    container_name   = "{name}"
+    container_port   = {port}
+  }}
+}}
+
+# ALB
+resource "aws_lb" "app" {{
+  name               = "{name}"
+  internal           = false
+  load_balancer_type = "application"
+  security_groups    = [aws_security_group.alb.id]
+  subnets            = var.public_subnets
+}}
+
+resource "aws_lb_target_group" "app" {{
+  name        = "{name}"
+  port        = 80
+  protocol    = "HTTP"
+  vpc_id      = var.vpc_id
+  target_type = "ip"
+  health_check {{
+    path                = "/health"
+    healthy_threshold   = 2
+    unhealthy_threshold = 3
+    timeout             = 5
+    interval            = 30
+  }}
+}}
+
+resource "aws_lb_listener" "http" {{
+  load_balancer_arn = aws_lb.app.arn
+  port              = 80
+  protocol          = "HTTP"
+  default_action {{
+    type             = "forward"
+    target_group_arn = aws_lb_target_group.app.arn
+  }}
+}}
+
+# IAM Roles
+resource "aws_iam_role" "ecs_execution" {{
+  name = "{name}-ecs-execution"
+  assume_role_policy = jsonencode({{
+    Version = "2012-10-17"
+    Statement = [{{
+      Action = "sts:AssumeRole"
+      Effect = "Allow"
+      Principal = {{
+        Service = "ecs-tasks.amazonaws.com"
+      }}
+    }}]
+  }})
+}}
+
+resource "aws_iam_role" "ecs_task" {{
+  name = "{name}-ecs-task"
+  assume_role_policy = jsonencode({{
+    Version = "2012-10-17"
+    Statement = [{{
+      Action = "sts:AssumeRole"
+      Effect = "Allow"
+      Principal = {{
+        Service = "ecs-tasks.amazonaws.com"
+      }}
+    }}]
+  }})
+}}
+
+# Security Groups
+resource "aws_security_group" "ecs" {{
+  name        = "{name}-ecs"
+  description = "Security group for ECS tasks"
+  vpc_id      = var.vpc_id
+  ingress {{
+    from_port   = {port}
+    to_port     = {port}
+    protocol    = "tcp"
+    security_groups = [aws_security_group.alb.id]
+  }}
+  egress {{
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }}
+}}
+
+resource "aws_security_group" "alb" {{
+  name        = "{name}-alb"
+  description = "Security group for ALB"
+  vpc_id      = var.vpc_id
+  ingress {{
+    from_port   = 80
+    to_port     = 80
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }}
+  egress {{
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }}
+}}
+
+# CloudWatch Log Group
+resource "aws_cloudwatch_log_group" "ecs" {{
+  name = "/ecs/{name}"
+}}
+'''
+        files["terraform/variables.tf"] = f'''variable "vpc_id" {{
+  description = "VPC ID"
+  type        = string
+}}
+
+variable "private_subnets" {{
+  description = "Private subnet IDs"
+  type        = list(string)
+}}
+
+variable "public_subnets" {{
+  description = "Public subnet IDs"
+  type        = list(string)
+}}
+'''
+        files["terraform/outputs.tf"] = f'''output "ecr_repository_url" {{
+  value = aws_ecr_repository.app.repository_url
+}}
+
+output "ecs_cluster_name" {{
+  value = aws_ecs_cluster.app.name
+}}
+
+output "service_url" {{
+  value = "http://${{aws_lb.app.dns_name}}"
+}}
+'''
+    
+    return {"name": name, "cloud": cloud, "framework": framework,
+            "files": files, "file_count": len(files)}
+
+
+def scaffold_cloudbuild(name: str, framework: str = "fastapi", 
+                        cloud: str = "gcp", region: str = "us-central1") -> dict[str, Any]:
+    """Generate Cloud Build / CI configuration for container builds."""
+    files = {}
+    
+    if cloud == "gcp":
+        files["cloudbuild.yaml"] = f'''steps:
+# Build and push to Artifact Registry
+- name: 'gcr.io/cloud-builders/docker'
+  args: ['build', '-t', '{region}-docker.pkg.dev/$PROJECT_ID/{name}/{name}:$SHORT_SHA', '-t', '{region}-docker.pkg.dev/$PROJECT_ID/{name}/{name}:latest', '-f', 'Dockerfile', '.']
+  env:
+    - 'DOCKER_BUILDKIT=1'
+
+# Run tests
+- name: 'python:3.12-slim'
+  entrypoint: 'bash'
+  args:
+    - '-c'
+    - |
+      pip install -r requirements.txt
+      python -m pytest tests/ -v
+
+# Deploy to Cloud Run
+- name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+  entrypoint: 'gcloud'
+  args:
+    - 'run'
+    - 'deploy'
+    - '{name}'
+    - '--image={region}-docker.pkg.dev/$PROJECT_ID/{name}/{name}:$SHORT_SHA'
+    - '--region={region}'
+    - '--platform=managed'
+    - '--allow-unauthenticated'
+    - '--port=8080'
+    - '--cpu=1'
+    - '--memory=512Mi'
+    - '--min-instances=1'
+    - '--max-instances=100'
+    - '--set-env-vars=PORT=8080'
+
+images:
+- '{region}-docker.pkg.dev/$PROJECT_ID/{name}/{name}'
+
+options:
+  logging: CLOUD_LOGGING_ONLY
+  machineType: 'E2_HIGHCPU_8'
+'''
+        files["cloudbuild.yaml.prod"] = f'''# Production deployment with canary
+steps:
+- name: 'gcr.io/cloud-builders/docker'
+  args: ['build', '-t', '{region}-docker.pkg.dev/$PROJECT_ID/{name}/{name}:$SHORT_SHA', '-f', 'Dockerfile', '.']
+
+- name: 'python:3.12-slim'
+  entrypoint: 'bash'
+  args:
+    - '-c'
+    - |
+      pip install -r requirements.txt
+      python -m pytest tests/ -v
+
+# Canary deployment (10% traffic)
+- name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+  entrypoint: 'gcloud'
+  args:
+    - 'run'
+    - 'deploy'
+    - '{name}-canary'
+    - '--image={region}-docker.pkg.dev/$PROJECT_ID/{name}/{name}:$SHORT_SHA'
+    - '--region={region}'
+    - '--platform=managed'
+    - '--no-allow-unauthenticated'
+    - '--tag=canary'
+    - '--cpu=1'
+    - '--memory=512Mi'
+
+# Promote canary after validation
+- name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+  entrypoint: 'bash'
+  args:
+    - '-c'
+    - |
+      sleep 60
+      # Check canary health
+      CANARY_URL=$(gcloud run services describe {name}-canary --region={region} --format="value(status.url)")
+      if curl -f "$CANARY_URL/health"; then
+        gcloud run services update-traffic {name} --to-tags=canary=100 --region={region}
+      else
+        echo "Canary failed health check"
+        exit 1
+      fi
+
+images:
+- '{region}-docker.pkg.dev/$PROJECT_ID/{name}/{name}'
+'''
+    elif cloud == "aws":
+        files["buildspec.yml"] = f'''version: 0.2
+
+phases:
+  pre_build:
+    commands:
+      - echo Logging in to Amazon ECR...
+      - aws ecr get-login-password --region {region} | docker login --username AWS --password-stdin $ACCOUNT_ID.dkr.ecr.{region}.amazonaws.com
+      - REPOSITORY_URI=$ACCOUNT_ID.dkr.ecr.{region}.amazonaws.com/{name}
+      - IMAGE_TAG=$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | cut -c 1-7)
+  build:
+    commands:
+      - echo Build started on `date`
+      - echo Building the Docker image...
+      - docker build -t $REPOSITORY_URI:latest -t $REPOSITORY_URI:$IMAGE_TAG -f Dockerfile .
+      - echo Running tests...
+      - docker run --rm $REPOSITORY_URI:$IMAGE_TAG python -m pytest tests/ -v
+  post_build:
+    commands:
+      - echo Pushing the Docker images...
+      - docker push $REPOSITORY_URI:latest
+      - docker push $REPOSITORY_URI:$IMAGE_TAG
+      - echo Writing image definitions file...
+      - printf '[{{"name":"%s","imageUri":"%s"}}]' {name} $REPOSITORY_URI:$IMAGE_TAG > imagedefinitions.json
+artifacts:
+  files: imagedefinitions.json
+'''
+    
+    return {"name": name, "cloud": cloud, "framework": framework,
+            "files": files, "file_count": len(files)}
+
+
+# ---------------------------------------------------------------------------
+# Registry & Package Hub scaffolding
+# ---------------------------------------------------------------------------
+
+def scaffold_registry_config(name: str, registry_type: str = "oci",
+                             public: bool = True) -> dict[str, Any]:
+    """Generate registry configuration for package publishing."""
+    files = {}
+    
+    if registry_type == "oci":
+        files[".docker/config.json"] = f'''{{
+  "auths": {{
+    "ghcr.io": {{}},
+    "docker.io": {{}},
+    "{name}.azurecr.io": {{}}
+  }},
+  "credHelpers": {{
+    "gcr.io": "gcloud",
+    "ecr.aws": "ecr-login"
+  }},
+  "experimental": "enabled"
+}}
+'''
+        files[".npmrc"] = f'''@pea:registry=https://registry.pea.dev
+@pea:always-auth=true
+//registry.pea.dev/:_authToken=${{PEA_REGISTRY_TOKEN}}
+'''
+        files["pea-publish.yml"] = f'''# GitHub Action for publishing to Pea registry
+name: Publish to Pea Registry
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      
+      - name: Install PeaLang
+        run: pip install pealang
+      
+      - name: Build package
+        run: pea build .
+      
+      - name: Sign package
+        run: pea sign dist/*.whl --key ${{ secrets.PEA_SIGNING_KEY }}
+      
+      - name: Publish to registry
+        run: pea publish dist/*.whl --registry https://registry.pea.dev
+        env:
+          PEA_REGISTRY_TOKEN: ${{ secrets.PEA_REGISTRY_TOKEN }}
+'''
+    
+    return {"name": name, "registry_type": registry_type,
+            "files": files, "file_count": len(files)}
+
+
+# ---------------------------------------------------------------------------
+# WASM production scaffolding
+# ---------------------------------------------------------------------------
+
+def scaffold_wasm_production(name: str, framework: str = "fastapi",
+                             target: str = "wasm32-wasip1") -> dict[str, Any]:
+    """Generate WASM production build configuration."""
+    files = {}
+    
+    files["wasm-build.yml"] = f'''# GitHub Action for WASM build
+name: Build WASM
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Install Rust
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+          target: {target}
+      
+      - name: Install cargo-wasi
+        run: cargo install cargo-wasi
+      
+      - name: Build WASM
+        run: |
+          cargo wasi build --release
+      
+      - name: Optimize WASM
+        run: |
+          wasm-opt -Oz target/{target}/release/{name}.wasm -o {name}.wasm
+      
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: {name}-wasm
+          path: {name}.wasm
+          retention-days: 30
+'''
+    
+    files["Dockerfile.wasm"] = f'''# Multi-stage WASM build
+FROM rust:1.75 AS builder
+RUN rustup target add {target}
+RUN cargo install cargo-wasi wasm-opt
+
+WORKDIR /build
+COPY Cargo.toml Cargo.lock ./
+COPY src ./src
+
+RUN cargo wasi build --release
+RUN wasm-opt -Oz target/{target}/release/{name}.wasm -o {name}.wasm
+
+# Runtime stage - using wasmtime
+FROM ghcr.io/bytecodealliance/wasmtime:latest
+WORKDIR /app
+COPY --from=builder /build/{name}.wasm ./
+COPY --from=builder /build/pea.wasm ./
+
+EXPOSE 8080
+CMD ["wasmtime", "--dir=.", "--env=PORT=8080", "pea.wasm"]
+'''
+    
+    files["wasm-component.wit"] = f'''package pea:{name};
+
+interface pea-api {{
+  // HTTP handler
+  handle-request: func(request: http-request) -> http-response;
+  
+  // Health check
+  health: func() -> string;
+  
+  // Metrics
+  metrics: func() -> metrics-data;
+}}
+
+world pea-component {{
+  export pea-api;
+  import wasi:cli/environment@0.2.0;
+  import wasi:http/incoming-handler@0.2.0;
+  import wasi:logging/logging@0.2.0;
+}}
+'''
+    
+    return {"name": name, "framework": framework, "target": target,
+            "files": files, "file_count": len(files)}
+
+
+# ---------------------------------------------------------------------------
+# Edge/Serverless scaffolding
+# ---------------------------------------------------------------------------
+
+def scaffold_edge_worker(name: str, platform: str = "cloudflare",
+                         framework: str = "fastapi") -> dict[str, Any]:
+    """Generate Edge Worker / Serverless configuration."""
+    files = {}
+    
+    if platform == "cloudflare":
+        files["wrangler.toml"] = f'''name = "{name}"
+main = "worker.js"
+compatibility_date = "2024-01-01"
+
+[vars]
+ENVIRONMENT = "production"
+
+[build]
+command = "python -m pealang.wasm_build --target wasm32-wasip1"
+
+[triggers]
+crons = ["0 * * * *"]
+
+[[kv_namespaces]]
+binding = "CACHE"
+id = "your-kv-namespace-id"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "{name}-db"
+database_id = "your-database-id"
+'''
+        files["worker.py"] = f'''# Cloudflare Worker entry point for PeaLang
+import json
+import os
+
+# This runs in the Cloudflare Workers Python runtime
+# The actual PeaLang WASM module is loaded by the runtime
+
+def handler(request):
+    """Handle incoming HTTP request."""
+    try:
+        # Parse request
+        method = request.method
+        url = request.url
+        headers = dict(request.headers)
+        body = request.body if hasattr(request, 'body') else None
+        
+        # Route to PeaLang app
+        from pealang import execute
+        
+        # In production, the app would be pre-compiled
+        # This is a simplified example
+        return {{
+            "status": 200,
+            "headers": {{"Content-Type": "application/json"}},
+            "body": json.dumps({{
+                "message": "Hello from PeaLang on Cloudflare Workers",
+                "method": method,
+                "url": url
+            }})
+        }}
+    except Exception as e:
+        return {{
+            "status": 500,
+            "headers": {{"Content-Type": "application/json"}},
+            "body": json.dumps({{"error": str(e)}})
+        }}
+
+# Export for Workers runtime
+addEventListener("fetch", lambda event: event.respondWith(handler(event.request)))
+'''
+        files["package.json"] = f'''{{
+  "name": "{name}-worker",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {{
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy",
+    "build": "python -m pealang.wasm_build"
+  }},
+  "devDependencies": {{
+    "@cloudflare/workers-types": "^4.20240101.0",
+    "wrangler": "^3.0.0"
+  }}
+}}
+'''
+    elif platform == "vercel":
+        files["vercel.json"] = f'''{{
+  "buildCommand": "python -m pealang.wasm_build --target wasm32-wasip1",
+  "outputDirectory": "dist",
+  "framework": "python",
+  "functions": {{
+    "api/index.py": {{
+      "runtime": "python3.12",
+      "maxDuration": 30
+    }}
+  }},
+  "headers": [
+    {{
+      "source": "/(.*)",
+      "headers": [
+        {{"key": "X-Content-Type-Options", "value": "nosniff"}},
+        {{"key": "X-Frame-Options", "value": "DENY"}},
+        {{"key": "X-XSS-Protection", "value": "1; mode=block"}}
+      ]
+    }}
+  ]
+}}
+'''
+        files["api/index.py"] = f'''# Vercel Python Serverless Function
+import json
+from pealang import execute
+
+def handler(request):
+    try:
+        # In production, use pre-compiled WASM
+        result = execute("""
+import web
+app = web.app()
+
+@app.get("/health")
+def health(req):
+    return {{"status": "ok", "service": "{name}"}}
+
+app.serve("0.0.0.0", 8000)
+""", source_name="vercel.pea")
+        
+        # For serverless, we return the response directly
+        return {{
+            "statusCode": 200,
+            "headers": {{"Content-Type": "application/json"}},
+            "body": json.dumps({{"message": "PeaLang on Vercel"}})
+        }}
+    except Exception as e:
+        return {{
+            "statusCode": 500,
+            "headers": {{"Content-Type": "application/json"}},
+            "body": json.dumps({{"error": str(e)}})
+        }}
+
+# Vercel expects a handler function
+from http.server import BaseHTTPRequestHandler
+class handler(BaseHTTPRequestHandler):
+    def do_GET(self):
+        self.send_response(200)
+        self.send_header('Content-type', 'application/json')
+        self.end_headers()
+        self.wfile.write(json.dumps({{"message": "PeaLang on Vercel"}}).encode())
+'''
+    elif platform == "aws":
+        files["template.yaml"] = f'''AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: PeaLang Lambda function
+
+Globals:
+  Function:
+    Timeout: 30
+    MemorySize: 512
+    Runtime: python3.12
+    Environment:
+      Variables:
+        PORT: 8080
+
+Resources:
+  PeaLangFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: {name}
+      Handler: lambda_function.handler
+      CodeUri: .
+      Events:
+        ApiEvent:
+          Type: Api
+          Properties:
+            Path: /{{proxy+}}
+            Method: any
+      Policies:
+        - AWSLambdaBasicExecutionRole
+        - AWSXRayDaemonWriteAccess
+
+Outputs:
+  ApiUrl:
+    Description: "API Gateway endpoint URL"
+    Value: !Sub "https://${{ServerlessRestApi}}.execute-api.${{AWS::Region}}.amazonaws.com/Prod/"
+'''
+        files["lambda_function.py"] = f'''# AWS Lambda handler for PeaLang
+import json
+import os
+from pealang import execute
+
+def handler(event, context):
+    """Lambda entry point."""
+    try:
+        # Parse API Gateway event
+        http_method = event.get('httpMethod', 'GET')
+        path = event.get('path', '/')
+        headers = event.get('headers', {{}})
+        body = event.get('body', '')
+        query_params = event.get('queryStringParameters', {{}}) or {{}}
+        
+        # Route to PeaLang app (simplified)
+        # In production, use pre-compiled WASM module
+        
+        return {{
+            'statusCode': 200,
+            'headers': {{
+                'Content-Type': 'application/json',
+                'Access-Control-Allow-Origin': '*'
+            }},
+            'body': json.dumps({{
+                'message': 'PeaLang on AWS Lambda',
+                'method': http_method,
+                'path': path
+            }})
+        }}
+    except Exception as e:
+        return {{
+            'statusCode': 500,
+            'headers': {{'Content-Type': 'application/json'}},
+            'body': json.dumps({{'error': str(e)}})
+        }}
+'''
+    
+    return {"name": name, "platform": platform, "framework": framework,
+            "files": files, "file_count": len(files)}
+
+
+# ---------------------------------------------------------------------------
+# Update namespace builder
+# ---------------------------------------------------------------------------
+
+def build_frameworks_namespace() -> dict[str, Any]:
+    return {
+        "scaffold_backend": scaffold_backend,
+        "scaffold_fullstack": scaffold_fullstack,
+        "write_scaffold": write_scaffold,
+        "adr": adr,
+        "adr_index": adr_index,
+        "adr_transition": adr_transition,
+        "adr_filter": adr_filter,
+        "service_contract": service_contract,
+        "service_contract_to_openapi": service_contract_to_openapi,
+        "openapi_json": openapi_json,
+        "layered_architecture_check": layered_architecture_check,
+        # Platform & Deployment (Phase 3)
+        "scaffold_k8s": scaffold_k8s,
+        "scaffold_helm_chart": scaffold_helm_chart,
+        "scaffold_terraform": scaffold_terraform,
+        "scaffold_cloudbuild": scaffold_cloudbuild,
+        "scaffold_registry_config": scaffold_registry_config,
+        "scaffold_wasm_production": scaffold_wasm_production,
+        "scaffold_edge_worker": scaffold_edge_worker,
+    }
 
 def adr(title: str, context: str, decision: str,
         consequences: str, status: str = "accepted", adr_number: int | None = None) -> str:
