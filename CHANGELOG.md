@@ -114,6 +114,13 @@ All 1240 tests pass.
 - **Quality gate tests**: `tests/test_quality_gate_v229.py` validates conformance, version consistency, all 9 SDK scaffolding, unified namespace, CLI sdk list/generate, and benchmark plain output.
 - All 1267 tests pass.
 
+### Phase 24: Release Consolidation & SDK Examples (2.30.0)
+- **PUBLIC_API_SNAPSHOT.json regenerated**: Now includes all 1844 public symbols including host_bindings (19 functions) and frameworks (20 functions), with updated SHA256 digest.
+- **SDK example applications**: `examples/sdks/` contains example client code for all nine SDKs (node, go, python, browser, java, csharp, rust, ruby, php), each demonstrating `health()` and `invoke()` against a PeaLang runtime service.
+- **Example .pea source**: `examples/sdks/math_utils.pea` provides `add`, `multiply`, `greet`, and `factorial` functions for codegen demonstrations.
+- **SDK examples test**: `tests/test_sdk_examples_v230.py` validates that all 9 SDK example files exist and reference the math_utils module.
+- All 1271 tests pass.
+
 ## 2.20.0 - 2026-11-16
 
 ### Version unification (single source of truth)
