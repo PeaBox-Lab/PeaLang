@@ -43,6 +43,12 @@ All 1227 tests pass.
 - Added `tests/test_host_integration_v042.py`.
 - All 1228 tests pass.
 
+### Phase 13: Node host SDK scaffolding (2.17.0)
+- **Node SDK scaffolding**: `scaffold_node_sdk` generates `src/index.ts`, `package.json`, `tsconfig.json`, and `README.md` for Node host integration.
+- Added test coverage in `tests/test_host_integration_v042.py` for the Node SDK scaffold.
+
+All 1237 tests pass.
+
 
 
 ## 2.20.0 - 2026-11-16

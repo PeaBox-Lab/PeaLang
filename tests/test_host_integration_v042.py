@@ -19,6 +19,7 @@ from pealang.wasm_differential import (
     run_differential_fixtures,
 )
 from pealang.frameworks import write_scaffold
+from pealang.host_bindings import scaffold_node_sdk
 
 
 def _run(source: str, *args):
@@ -114,3 +115,11 @@ def test_benchmark_gate_missing_source(tmp_path):
     result = _run(str(tmp_path / "missing.pea"))
     assert result.returncode == 1
     assert "not found" in result.stdout
+
+
+def test_node_sdk_scaffold(tmp_path):
+    """Phase 13: Node host SDK scaffolding generates expected files."""
+    out = scaffold_node_sdk(str(tmp_path / "node-sdk"))
+    assert "error" not in out
+    expected_files = {"src/index.ts", "package.json", "tsconfig.json", "README.md"}
+    assert set(out["files"]) == expected_files, f"Got {set(out['files'])!r}"

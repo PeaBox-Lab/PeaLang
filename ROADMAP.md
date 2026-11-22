@@ -240,3 +240,8 @@ Make PeaLang the default extension language for:
 - **Three stable host integration tests**: Validate `host_bindings`, `wasm_runtime`, `browser_repl`, `browser_profile` compatibility.
 - Added `tests/test_host_integration_v042.py`.
 - All 1228 tests pass.
+
+## 2.17.0 - Node host SDK scaffolding (Phase 13)
+- **Node SDK scaffolding**: `scaffold_node_sdk` generates `src/index.ts`, `package.json`, `tsconfig.json`, and `README.md` for Node host integration.
+- Added test coverage in `tests/test_host_integration_v042.py`.
+- All 1237 tests pass.
