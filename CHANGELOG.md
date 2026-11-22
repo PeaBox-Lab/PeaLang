@@ -26,7 +26,11 @@
 ### Phase 9: Scaffold integration test
 - **`tests/test_scaffold_integration_v215.py`**: generates a FastAPI service with `write_scaffold`, runs the generated pytest suite in a subprocess, boots the app with uvicorn, and probes `/health`; skipped when FastAPI/uvicorn are absent.
 
-All 1224 tests pass.
+### Phase 10: Performance baseline gate
+- **`pea benchmark`** now accepts `--iterations N`, `--save-baseline <file>` and `--baseline <file>`. Comparing a run against a saved baseline reports the median regression and exits non-zero when it exceeds the 10% threshold, enabling CI performance gating.
+- Added `tests/test_benchmark_gate_v041.py`.
+
+All 1227 tests pass.
 
 
 
