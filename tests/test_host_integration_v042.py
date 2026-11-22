@@ -19,7 +19,7 @@ from pealang.wasm_differential import (
     run_differential_fixtures,
 )
 from pealang.frameworks import write_scaffold
-from pealang.host_bindings import scaffold_node_sdk, scaffold_go_sdk, scaffold_python_sdk, scaffold_browser_sdk, scaffold_java_sdk
+from pealang.host_bindings import scaffold_node_sdk, scaffold_go_sdk, scaffold_python_sdk, scaffold_browser_sdk, scaffold_java_sdk, scaffold_csharp_sdk
 
 
 def _run(source: str, *args):
@@ -186,6 +186,19 @@ def test_scaffold_java_sdk(tmp_path):
         "src/main/java/com/pealang/SdkClient.java",
         "pom.xml",
         "src/main/resources/application.yml",
+        "README.md",
+    }
+    assert set(out["files"]) == expected_files, f"Got {set(out['files'])!r}"
+
+
+def test_scaffold_csharp_sdk(tmp_path):
+    """Phase 19: C# host SDK scaffolding generates expected files."""
+    out = scaffold_csharp_sdk(str(tmp_path / "csharp-sdk"))
+    assert "error" not in out
+    expected_files = {
+        "pealang/SdkClient.cs",
+        "pealang.csproj",
+        "appsettings.json",
         "README.md",
     }
     assert set(out["files"]) == expected_files, f"Got {set(out['files'])!r}"

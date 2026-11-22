@@ -19,6 +19,7 @@ from pealang.host_bindings import (
     scaffold_python_sdk,
     scaffold_browser_sdk,
     scaffold_java_sdk,
+    scaffold_csharp_sdk,
 )
 
 EXPECTED_SDK_FILES = {
@@ -32,6 +33,12 @@ EXPECTED_SDK_FILES = {
         "src/main/resources/application.yml",
         "README.md",
     },
+    "csharp": {
+        "pealang/SdkClient.cs",
+        "pealang.csproj",
+        "appsettings.json",
+        "README.md",
+    },
 }
 
 SCAF_FN = {
@@ -40,6 +47,7 @@ SCAF_FN = {
     "python": scaffold_python_sdk,
     "browser": scaffold_browser_sdk,
     "java": scaffold_java_sdk,
+    "csharp": scaffold_csharp_sdk,
 }
 
 
@@ -52,7 +60,7 @@ def _run_cli(*args):
 
 
 def test_all_sdks_in_namespace():
-    """build_host_sdk_namespace exposes exactly the five scaffold functions."""
+    """build_host_sdk_namespace exposes all six scaffold functions."""
     ns = build_host_sdk_namespace()
     assert set(ns.keys()) == {
         "scaffold_node_sdk",
@@ -60,12 +68,13 @@ def test_all_sdks_in_namespace():
         "scaffold_python_sdk",
         "scaffold_browser_sdk",
         "scaffold_java_sdk",
+        "scaffold_csharp_sdk",
     }
 
 
 def test_all_sdks_in_cli_map():
     """HOST_SDK_NAMES maps each supported language to its scaffold function."""
-    assert set(HOST_SDK_NAMES.keys()) == {"node", "go", "python", "browser", "java"}
+    assert set(HOST_SDK_NAMES.keys()) == {"node", "go", "python", "browser", "java", "csharp"}
     for lang, fn in HOST_SDK_NAMES.items():
         out = fn(f"/tmp/pea-sdk-{lang}-test")
         assert "root" in out
@@ -80,6 +89,7 @@ def test_each_sdk_produces_expected_files(tmp_path):
         ("python", scaffold_python_sdk, EXPECTED_SDK_FILES["python"]),
         ("browser", scaffold_browser_sdk, EXPECTED_SDK_FILES["browser"]),
         ("java", scaffold_java_sdk, EXPECTED_SDK_FILES["java"]),
+        ("csharp", scaffold_csharp_sdk, EXPECTED_SDK_FILES["csharp"]),
     ]
     for lang, fn, expected in cases:
         out = fn(str(tmp_path / f"{lang}-sdk"))
@@ -91,13 +101,13 @@ def test_pea_sdk_list():
     """pea sdk list reports all available SDK languages."""
     result = _run_cli("sdk", "list")
     assert result.returncode == 0, result.stderr
-    for lang in ("node", "go", "python", "browser", "java"):
+    for lang in ("node", "go", "python", "browser", "java", "csharp"):
         assert lang in result.stdout
 
 
 def test_pea_sdk_generate_each_lang(tmp_path):
     """pea sdk generate <lang> <dir> creates files for every supported language."""
-    for lang in ("node", "go", "python", "browser", "java"):
+    for lang in ("node", "go", "python", "browser", "java", "csharp"):
         target = str(tmp_path / f"{lang}-sdk")
         result = _run_cli("sdk", "generate", lang, target)
         assert result.returncode == 0, f"{lang}: {result.stderr}"

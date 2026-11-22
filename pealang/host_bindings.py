@@ -410,6 +410,98 @@ public class SdkClient {
     }
 
 
+def scaffold_csharp_sdk(target_dir: str = "csharp-sdk") -> dict[str, Any]:
+    """Scaffold a C#/.NET host SDK directory structure.
+
+    Generates a .NET 8 starter project with a PeaLang runtime connector,
+    main client class, configuration, and build configuration.
+    """
+    root = Path(target_dir)
+    root.mkdir(parents=True, exist_ok=True)
+    (root / "pealang").mkdir(parents=True, exist_ok=True)
+    (root / "pealang" / "SdkClient.cs").write_text(
+        "using System;\\n"
+        "using System.Net.Http;\\n"
+        "using System.Text;\\n"
+        "using System.Text.Json;\\n\\n"
+        "namespace PeaLang;\\n\\n"
+        "public class SdkClient\\n"
+        "{\\n"
+        "    private readonly HttpClient _http;\\n"
+        "    private readonly string _baseUrl;\\n\\n"
+        "    public SdkClient(string baseUrl)\\n"
+        "    {\\n"
+        "        _baseUrl = baseUrl.TrimEnd('/');\\n"
+        "        _http = new HttpClient();\\n"
+        "    }\\n\\n"
+        "    public string Invoke(string module, string function, params string[] args)\\n"
+        "    {\\n"
+        "        var payload = JsonSerializer.Serialize(new\\n"
+        "        {\\n"
+        "            module = module,\\n"
+        "            function = function,\\n"
+        "            args = args\\n"
+        "        });\\n"
+        "        var content = new StringContent(payload, Encoding.UTF8, \"application/json\");\\n"
+        "        var response = _http.PostAsync($\"{_baseUrl}/v1/invoke\", content).Result;\\n"
+        "        if (!response.IsSuccessStatusCode)\\n"
+        "        {\\n"
+        "            throw new Exception($\"Invocation failed: {response.StatusCode}\");\\n"
+        "        }\\n"
+        "        return response.Content.ReadAsStringAsync().Result;\\n"
+        "    }\\n\\n"
+        "    public string Health()\\n"
+        "    {\\n"
+        "        var response = _http.GetAsync($\"{_baseUrl}/health\").Result;\\n"
+        "        if (!response.IsSuccessStatusCode)\\n"
+        "        {\\n"
+        "            throw new Exception($\"Health check failed: {response.StatusCode}\");\\n"
+        "        }\\n"
+        "        return response.Content.ReadAsStringAsync().Result;\\n"
+        "    }\\n"
+        "}\\n",
+        encoding="utf-8",
+    )
+    (root / "pealang.csproj").write_text(
+        "<Project Sdk=\"Microsoft.NET.Sdk\">\\n"
+        "  <PropertyGroup>\\n"
+        "    <OutputType>Exe</OutputType>\\n"
+        "    <TargetFramework>net8.0</TargetFramework>\\n"
+        "    <ImplicitUsings>enable</ImplicitUsings>\\n"
+        "    <Nullable>enable</Nullable>\\n"
+        "    <RootNamespace>PeaLang</RootNamespace>\\n"
+        "    <AssemblyName>pealang-csharp-sdk</AssemblyName>\\n"
+        "    <PealangSdkVersion>2.25.0</PealangSdkVersion>\\n"
+        "  </PropertyGroup>\\n\\n"
+        "  <ItemGroup>\\n"
+        "    <PackageReference Include=\"System.Text.Json\" Version=\"8.0.0\" />\\n"
+        "  </ItemGroup>\\n"
+        "</Project>\\n",
+        encoding="utf-8",
+    )
+    (root / "appsettings.json").write_text(
+        "{\\n"
+        "  \"PeaLang\": {\\n"
+        "    \"BaseUrl\": \"http://localhost:8080\"\\n"
+        "  }\\n"
+        "}\\n",
+        encoding="utf-8",
+    )
+    (root / "README.md").write_text(
+        "# PeaLang C# SDK\\n\\n.NET client for PeaLang runtime.\\n",
+        encoding="utf-8",
+    )
+    return {
+        "root": str(root),
+        "files": [
+            "pealang/SdkClient.cs",
+            "pealang.csproj",
+            "appsettings.json",
+            "README.md",
+        ],
+    }
+
+
 def import_openapi(spec: dict[str, Any] | str) -> dict[str, Any]:
     """Parse an OpenAPI spec and generate PeaLang connector scaffolding."""
     if isinstance(spec, str):
@@ -484,6 +576,7 @@ def build_host_sdk_namespace() -> dict[str, Any]:
         "scaffold_python_sdk": scaffold_python_sdk,
         "scaffold_browser_sdk": scaffold_browser_sdk,
         "scaffold_java_sdk": scaffold_java_sdk,
+        "scaffold_csharp_sdk": scaffold_csharp_sdk,
     }
 
 
@@ -494,4 +587,5 @@ HOST_SDK_NAMES = {
     "python": scaffold_python_sdk,
     "browser": scaffold_browser_sdk,
     "java": scaffold_java_sdk,
+    "csharp": scaffold_csharp_sdk,
 }

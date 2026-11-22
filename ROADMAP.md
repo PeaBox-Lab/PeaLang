@@ -269,7 +269,13 @@ Make PeaLang the default extension language for:
 - All 1243 tests pass.
 
 ### Phase 18: Unified Host SDK Compatibility & CLI (2.24.0)
-- **Unified SDK namespace**: `build_host_sdk_namespace()` exposes all five `scaffold_*_sdk` functions (node, go, python, browser, java).
+- **Unified SDK namespace**: `build_host_sdk_namespace()` exposes all six `scaffold_*_sdk` functions (node, go, python, browser, java, csharp).
 - **`pea sdk` CLI command**: `pea sdk list` lists available SDKs; `pea sdk generate <lang> <dir>` scaffolds a host SDK to disk.
 - **SDK compatibility tests**: `tests/test_sdk_compatibility.py` validates that every SDK emits its expected file set and that the CLI can list and generate each language.
 - All 1250 tests pass.
+
+### Phase 19: C# Host SDK scaffolding (2.25.0)
+- **C# SDK scaffolding**: `scaffold_csharp_sdk` generates `pealang/SdkClient.cs`, `pealang.csproj`, `appsettings.json`, and `README.md` for .NET host integration.
+- **SdkClient.cs**: HttpClient-based client with `Invoke()` and `Health()` methods targeting `/v1/invoke` and `/health`.
+- Added tests in `tests/test_host_integration_v042.py`, `tests/test_sdk_compatibility.py`, and `tests/test_host_bindings_v190.py`.
+- All 1251 tests pass.
