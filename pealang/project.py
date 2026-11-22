@@ -91,13 +91,20 @@ print analysis.describe(data, "score")
 print "Top scores:"
 for row in data { print row["name"] + ": " + row["score"] }
 ''',
-    'library': '''export function add(a, b) {
+    'library': '''function add(a, b) {
     return a + b
 }
+export add
 
-export function greet(name) {
+function greet(name) {
     return "Hello, " + name
 }
+export greet
+
+function version() {
+    return "0.1.0"
+}
+export version
 ''',
     'interop': '''let result = interop.run("python", ["--version"])
 print result

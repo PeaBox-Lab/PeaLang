@@ -314,7 +314,21 @@ def main(argv=None):
                     return 1
                 print('Audit: clean');return 0
 
-            if c=='build':p,h=build_package(root);print(f'{p}\nsha256 {h}');return 0
+            if c=='build':
+                p=argparse.ArgumentParser(prog='pea build')
+                p.add_argument('root',nargs='?',default='.')
+                p.add_argument('-o','--output')
+                p.add_argument('--library',action='store_true',help='Build a library package (.pelib)')
+                a=p.parse_args(argv[1:])
+                root_path=a.root
+                if a.library:
+                    from .package_manager import build_library
+                    out,h=build_library(root_path,a.output)
+                    print(f'{out}\nsha256 {h}')
+                else:
+                    out,h=build_package(root_path,a.output)
+                    print(f'{out}\nsha256 {h}')
+                return 0
 
         if c=='compile':
 

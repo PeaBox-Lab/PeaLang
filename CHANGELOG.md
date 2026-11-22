@@ -129,6 +129,15 @@ All 1240 tests pass.
 - Added tests in `tests/test_host_integration_v042.py`, `tests/test_sdk_compatibility.py`, `tests/test_host_bindings_v190.py`, and `tests/test_quality_gate_v229.py`.
 - All 1272 tests pass.
 
+### Phase 26: Library Build & Export Format (2.32.0)
+- **`build_library`**: Generates a `.pelib` package from a library project — a tar.gz archive containing `manifest.json`, `src/<lib>.pea` source, `src/<lib>.peac` compiled bytecode, `exports.json` export manifest, and `receipt.json` signature.
+- **`pea build --library`**: CLI command that builds a library package (`.pelib`) instead of an application package (`.peapkg`).
+- **Library package format**: `.pelib` archive with structured manifest, export declarations, bytecode, and cryptographic receipt for verification.
+- Added `build_library` to `package_manager.py` and `__init__.py` exports.
+- Added `test_build_library` to `tests/test_host_integration_v042.py`.
+- Updated CHANGELOG and ROADMAP with Phase 26 entry.
+- All 1273 tests pass.
+
 ## 2.20.0 - 2026-11-16
 
 ### Version unification (single source of truth)

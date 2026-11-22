@@ -112,7 +112,7 @@ __all__=['BytecodeModule','CodeObject','Instruction','Op','Compiler','CompileErr
 'SemanticAnalyzer','SemanticResult','FunctionContract','TypeChecker','TypeRef','Diagnostic','TypeCheckResult','parse_type','erase_types','RuntimeOptions','ExecutionResult','PeaRuntimeError','PeaPermissionError',
 'PeaResourceLimitError','to_pea','from_pea','__version__']
 
-from .package_manager import Version,satisfies,load_pea_toml,init_manifest,resolve,write_lock,audit,build_package,install
+from .package_manager import Version,satisfies,load_pea_toml,init_manifest,resolve,write_lock,audit,build_package,build_library,install
 
 from .runtime_service import RuntimeService,RuntimeResponse,ServiceError
 

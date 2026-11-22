@@ -90,6 +90,86 @@ def build_package(root='.',output=None):
  with open(out,'wb') as target:
   with gzip.GzipFile(filename='',mode='wb',fileobj=target,mtime=0) as gz:gz.write(raw.getvalue())
  return out,sha256_file(out)
+
+
+def build_library(root='.',output=None):
+ """Build a PeaLang library package (.pelib) from a library project.
+
+ Generates a tar.gz archive containing:
+   manifest.json - library metadata (name, version, exports, dependencies)
+   src/<lib>.pea - source code
+   src/<lib>.peac - compiled bytecode
+   exports.json - export manifest
+   receipt.json - signature/receipt
+ """
+ from .compiler import compile_source_to_bytecode
+
+ mf,data=load_pea_toml(root)
+ base=mf.parent
+ proj=data.get('project',{})
+ lib=data.get('library',{})
+ name=proj['name'];version=proj['version']
+ entry=proj.get('entry','src/main.pea')
+ entry_path=base/entry
+ exports=lib.get('exports',[])
+
+ if not entry_path.exists():
+  raise PeaError(f'Library entry point not found: {entry}')
+
+ source=entry_path.read_text(encoding='utf-8')
+ module=compile_source_to_bytecode(source,str(entry_path))
+ bytecode=module.to_dict()
+
+ out=Path(output or base/f'{name}-{version}.pelib').resolve()
+
+ import io, gzip, json as _json
+ raw=io.BytesIO()
+ with tarfile.open(fileobj=raw,mode='w',format=tarfile.PAX_FORMAT) as tf:
+  def add_file(arcname,content_bytes):
+   info=tarfile.TarInfo(arcname);info.size=len(content_bytes);info.mtime=0;info.uid=info.gid=0;info.uname=info.gname=''
+   tf.addfile(info,io.BytesIO(content_bytes))
+
+  # manifest.json
+  manifest={
+   'name':name,
+   'version':version,
+   'description':proj.get('description',''),
+   'entry':entry,
+   'exports':exports,
+   'library':True,
+   'format':'pelib',
+   'pealang':'>=0.35.0',
+  }
+  add_file('manifest.json',_json.dumps(manifest,indent=2).encode('utf-8'))
+
+  # source
+  add_file(entry,source.encode('utf-8'))
+
+  # bytecode
+  add_file(entry.replace('.pea','.peac'),_json.dumps(bytecode,indent=2).encode('utf-8'))
+
+  # exports.json
+  exports_manifest={
+   'exports':exports,
+   'entry':entry,
+  }
+  add_file('exports.json',_json.dumps(exports_manifest,indent=2).encode('utf-8'))
+
+  # receipt.json
+  content_hash=sha256_file(entry_path) if entry_path.exists() else ''
+  receipt={
+   'format':'pelib',
+   'name':name,
+   'version':version,
+   'source_hash':content_hash,
+   'exports':exports,
+  }
+  add_file('receipt.json',_json.dumps(receipt,indent=2).encode('utf-8'))
+
+ with open(out,'wb') as target:
+  with gzip.GzipFile(filename='',mode='wb',fileobj=target,mtime=0) as gz:gz.write(raw.getvalue())
+
+ return out,sha256_file(out)
 def install(root='.'):
  mf,_=load_pea_toml(root);lock_path=mf.parent/'pea.lock'
  if not lock_path.exists():lock_path,_=write_lock(mf.parent)

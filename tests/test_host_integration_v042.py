@@ -20,6 +20,7 @@ from pealang.wasm_differential import (
 )
 from pealang.frameworks import write_scaffold
 from pealang.host_bindings import scaffold_node_sdk, scaffold_go_sdk, scaffold_python_sdk, scaffold_browser_sdk, scaffold_java_sdk, scaffold_csharp_sdk, scaffold_rust_sdk, scaffold_ruby_sdk, scaffold_php_sdk, scaffold_library, generate_sdk_from_source
+from pealang.package_manager import build_library
 
 
 def _run(source: str, *args):
@@ -260,8 +261,61 @@ def test_scaffold_library(tmp_path):
     toml_content = (tmp_path / "mylib" / "pea.toml").read_text(encoding="utf-8")
     assert "[library]" in toml_content
     assert "exports" in toml_content
-    # Verify library source has export functions
+    # Verify library source has exported functions
     src_content = (tmp_path / "mylib" / "src" / "mylib.pea").read_text(encoding="utf-8")
-    assert "export function add" in src_content
-    assert "export function greet" in src_content
-    assert "export function version" in src_content
+    assert "function add" in src_content
+    assert "export add" in src_content
+    assert "function greet" in src_content
+    assert "export greet" in src_content
+    assert "function version" in src_content
+    assert "export version" in src_content
+
+
+def test_build_library(tmp_path):
+    """Phase 26: build_library creates a .pelib package from a library project."""
+    import shutil, os, tarfile, gzip, io
+
+    # Scaffold a library project
+    lib_dir = tmp_path / "mylib"
+    out = scaffold_library(str(lib_dir))
+    assert "error" not in out
+
+    # Build the library package
+    pkg_path, pkg_hash = build_library(str(lib_dir))
+    assert pkg_path.exists(), f"Package not created: {pkg_path}"
+    assert pkg_hash, "Package hash should not be empty"
+    assert pkg_path.suffix == '.pelib', f"Expected .pelib extension, got {pkg_path.suffix}"
+
+    # Verify package contents
+    with open(pkg_path, 'rb') as f:
+        data = gzip.decompress(f.read())
+    with tarfile.open(fileobj=io.BytesIO(data)) as tf:
+        names = {m.name for m in tf.getmembers()}
+        assert 'manifest.json' in names, f"manifest.json missing from package: {names}"
+        assert 'exports.json' in names, f"exports.json missing from package: {names}"
+        assert 'receipt.json' in names, f"receipt.json missing from package: {names}"
+        # Check source and bytecode are present
+        pea_files = [n for n in names if n.endswith('.pea')]
+        peac_files = [n for n in names if n.endswith('.peac')]
+        assert len(pea_files) == 1, f"Expected 1 .pea file, got {pea_files}"
+        assert len(peac_files) == 1, f"Expected 1 .peac file, got {peac_files}"
+
+    # Verify manifest content
+    with open(pkg_path, 'rb') as f:
+        data = gzip.decompress(f.read())
+    with tarfile.open(fileobj=io.BytesIO(data)) as tf:
+        manifest = json.loads(tf.extractfile('manifest.json').read())
+        assert manifest['name'] == 'mylib'
+        assert manifest['version'] == '0.1.0'
+        assert manifest['library'] is True
+        assert 'add' in manifest['exports']
+        assert 'greet' in manifest['exports']
+        assert 'version' in manifest['exports']
+
+        exports = json.loads(tf.extractfile('exports.json').read())
+        assert 'add' in exports['exports']
+
+        receipt = json.loads(tf.extractfile('receipt.json').read())
+        assert receipt['name'] == 'mylib'
+        assert receipt['version'] == '0.1.0'
+        assert 'source_hash' in receipt
