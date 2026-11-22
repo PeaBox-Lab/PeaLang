@@ -1770,18 +1770,22 @@ def adr(title: str, context: str, decision: str,
     )
 
 
-def adr_index(records: list[dict[str, str]]) -> str:
-    """Generate an index markdown for a list of ADRs."""
+def adr_index(records: list[dict[str, str]], status: str | None = None, owner: str | None = None) -> str:
+    """Generate an index markdown for a list of ADRs, optionally filtered by status/owner."""
     lines = ["# Architecture Decision Records", ""]
     for rec in records:
+        rec_status = rec.get("status", "unknown")
+        rec_owner = rec.get("owner")
+        if status is not None and str(rec_status or "").lower() != str(status).lower():
+            continue
+        if owner is not None and str(rec_owner or "") != str(owner):
+            continue
         num = rec.get("number", "?")
         title = rec.get("title", "Untitled")
-        status = rec.get("status", "unknown")
-        owner = rec.get("owner")
         superseded_by = rec.get("superseded_by")
-        line = f"- ADR-{num}: {title} — {status}"
-        if owner:
-            line += f" (owner: {owner})"
+        line = f"- ADR-{num}: {title} — {rec_status}"
+        if rec_owner:
+            line += f" (owner: {rec_owner})"
         if superseded_by:
             line += f" (superseded by ADR-{superseded_by})"
         supersedes = rec.get("supersedes")
