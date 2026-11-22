@@ -23,7 +23,10 @@
 - **Host capability ABI**: `HOST_ABI` / `host_capability_abi()` describe the imports, exports, policy and capability tags that Node/browser hosts must implement; `validate_artifact_abi()` rejects artifacts that declare unknown imports or exports.
 - Exposed through the analysis namespace as `host_capability_abi`, `validate_artifact_abi`, `execute_peac`, `differential_run`, `differential_fixtures`, `run_differential_fixtures`, and `wasm_differential`.
 
-All 1223 tests pass.
+### Phase 9: Scaffold integration test
+- **`tests/test_scaffold_integration_v215.py`**: generates a FastAPI service with `write_scaffold`, runs the generated pytest suite in a subprocess, boots the app with uvicorn, and probes `/health`; skipped when FastAPI/uvicorn are absent.
+
+All 1224 tests pass.
 
 
 
