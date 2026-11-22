@@ -245,3 +245,10 @@ Make PeaLang the default extension language for:
 - **Node SDK scaffolding**: `scaffold_node_sdk` generates `src/index.ts`, `package.json`, `tsconfig.json`, and `README.md` for Node host integration.
 - Added test coverage in `tests/test_host_integration_v042.py`.
 - All 1237 tests pass.
+
+## 2.18.0 - Go host SDK scaffolding + ABI filtering/validation (Phase 14)
+- **Go SDK scaffolding**: `scaffold_go_sdk` generates `pealang/client.go`, `go.mod`, and `README.md` for Go host integration.
+- **Host capability ABI filtering**: `host_capability_abi(capabilities)` now filters imports by declared capabilities (e.g., network-only, clock-only).
+- **Artifact ABI validation**: `validate_artifact_abi` reports unknown imports/exports when an artifact declares symbols outside `HOST_ABI`.
+- Added tests in `tests/test_host_integration_v042.py`: Go SDK scaffold, ABI capability filtering, unknown import/export rejection.
+- All 1240 tests pass.
