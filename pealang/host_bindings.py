@@ -300,6 +300,116 @@ def scaffold_browser_sdk(target_dir: str = "browser-sdk") -> dict[str, Any]:
 
 
 
+def scaffold_java_sdk(target_dir: str = "java-sdk") -> dict[str, Any]:
+    """Scaffold a Java host SDK directory structure.
+
+    Generates a Maven starter project with a PeaLang runtime connector,
+    main class, health endpoint, and build configuration.
+    """
+    root = Path(target_dir)
+    root.mkdir(parents=True, exist_ok=True)
+    (root / "src" / "main" / "java").mkdir(parents=True, exist_ok=True)
+    (root / "src" / "main" / "java" / "com" / "pealang").mkdir(parents=True, exist_ok=True)
+    (root / "src" / "main" / "resources").mkdir(parents=True, exist_ok=True)
+    (root / "pom.xml").write_text('''<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.pealang</groupId>
+    <artifactId>pealang-java-sdk</artifactId>
+    <version>1.0.0</version>
+    <properties>
+        <java.version>17</java.version>
+        <pealang.sdk.version>2.22.0</pealang.sdk.version>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.pealang</groupId>
+            <artifactId>pealang-runtime</artifactId>
+            <version>${pealang.sdk.version}</version>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.8.1</version>
+                <configuration>
+                    <release>${java.version}</release>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+</project>
+''', encoding="utf-8")
+    (root / "src" / "main" / "java" / "com" / "pealang" / "SdkClient.java").write_text(r'''package com.pealang;
+
+import com.pealang.runtime.PeaClient;
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
+
+public class SdkClient {
+    private final PeaClient client;
+    private final HttpClient http;
+
+    public SdkClient(String baseUrl) {
+        this.client = new PeaClient(baseUrl);
+        this.http = HttpClient.newHttpClient();
+    }
+
+    public String invoke(String module, String function, String... args) throws Exception {
+        String payload = "{\"module\":\"" + module + "\",\"function\":\"" + function + "\",\"args\":\"" + String.join(",", args) + "\"}";
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create(client.getBaseUrl() + "/v1/invoke"))
+                .header("Content-Type", "application/json")
+                .POST(HttpRequest.BodyPublishers.ofString(payload))
+                .build();
+        HttpResponse<String> response = http.send(request, HttpResponse.BodyHandlers.ofString());
+        if (response.statusCode() != 200) {
+            throw new RuntimeException("Invocation failed: " + response.body());
+        }
+        return response.body();
+    }
+
+    public String health() throws Exception {
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create(client.getBaseUrl() + "/health"))
+                .GET()
+                .build();
+        HttpResponse<String> response = http.send(request, HttpResponse.BodyHandlers.ofString());
+        if (response.statusCode() != 200) {
+            throw new RuntimeException("Health check failed: " + response.body());
+        }
+        return response.body();
+    }
+}
+''', encoding="utf-8")
+    (root / "src" / "main" / "resources" / "application.yml").write_text(
+        "server:\n  port: 8080\n\npealang:\n  base-url: http://localhost:8080\n",
+        encoding="utf-8",
+    )
+    (root / "README.md").write_text(
+        "# PeaLang Java SDK\n\nMaven-based Java client for PeaLang runtime.\n",
+        encoding="utf-8",
+    )
+    return {
+        "root": str(root),
+        "files": [
+            "src/main/java/com/pealang/SdkClient.java",
+            "pom.xml",
+            "src/main/resources/application.yml",
+            "README.md",
+        ],
+    }
+
+
 def import_openapi(spec: dict[str, Any] | str) -> dict[str, Any]:
     """Parse an OpenAPI spec and generate PeaLang connector scaffolding."""
     if isinstance(spec, str):

@@ -262,3 +262,8 @@ Make PeaLang the default extension language for:
 - **Browser SDK scaffolding**: `scaffold_browser_sdk` generates `src/browserClient.ts`, `src/browserLoader.ts`, `package.json`, and `README.md` for browser host integration.
 - Added test coverage in `tests/test_host_integration_v042.py` for the browser SDK scaffold.
 - All 1242 tests pass.
+
+### Phase 17: Java host SDK scaffolding (2.23.0)
+- **Java SDK scaffolding**: `scaffold_java_sdk` generates `src/main/java/com/pealang/SdkClient.java`, `pom.xml`, `src/main/resources/application.yml`, and `README.md` for Java host integration.
+- Added tests in `tests/test_host_integration_v042.py` for the Java SDK scaffold.
+- All 1243 tests pass.
