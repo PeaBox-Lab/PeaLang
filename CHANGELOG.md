@@ -9,7 +9,16 @@
 ### Phase 2: Developer Experience & Tooling (Partial)
 - **Formatter/Linter v2** (`pealang/formatter.py`): Configurable via `.peafmt.toml` / `pea.json` (indent_size, max_line_length, trailing_comma, brace_style, space_around_operators), incremental formatting support, new codemods (simplify_returns, remove_debug_prints, organize_imports, modernize_syntax), `format_and_lint()` one-pass helper.
 
-All 1182 tests pass.
+### Phase 6: Enhanced testing and migration
+- **`pea test`**: `--filter`, `--coverage`, `--watch`, `--json`, `--junit <file>`, and `--legacy` (execute `.pea` files and diff against `.out` expectations).
+- `discover_pea` now finds both `.pea` and `.py` test files.
+
+### Phase 7: Frameworks lifecycle and deployment packaging
+- **ADR lifecycle**: `adr_index` accepts optional `status` and `owner` filters and renders supersession links; `adr_transition` validates target status.
+- **`frameworks.write_scaffold`**: generates a `Containerfile` alongside every generated `Dockerfile` (backend and full-stack layouts) so scaffolds build with Podman/Buildah as well as Docker.
+- Health gate already surfaced through `pea doctor` / `pea readiness` via `devx.project_check`.
+
+All 1214 tests pass.
 
 
 

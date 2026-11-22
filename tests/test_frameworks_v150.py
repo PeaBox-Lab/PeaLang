@@ -180,6 +180,8 @@ def test_write_backend_scaffold(tmp_path):
     assert (target / "app" / "main.py").exists()
     assert (target / "requirements.txt").exists()
     assert "8080" in (target / "Dockerfile").read_text(encoding="utf-8")
+    assert (target / "Containerfile").exists()
+    assert "8080" in (target / "Containerfile").read_text(encoding="utf-8")
 
 
 def test_write_fullstack_scaffold(tmp_path):
@@ -189,6 +191,7 @@ def test_write_fullstack_scaffold(tmp_path):
     assert (target / "backend" / "app" / "main.py").exists()
     assert (target / "frontend" / "src" / "App.jsx").exists()
     assert (target / "frontend" / "package.json").exists()
+    assert (target / "backend" / "Containerfile").exists()
 
 
 def test_write_scaffold_invalid_kind(tmp_path):

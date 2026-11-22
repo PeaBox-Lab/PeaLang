@@ -313,8 +313,18 @@ def write_scaffold(name: str, kind: str = "backend", target_dir: str = ".",
             return {"error": f"Refusing to write outside target: {rel!r}"}
 
     root.mkdir(parents=True, exist_ok=True)
+    
+    # Ensure Containerfile exists alongside every Dockerfile (backend/fullstack)
+    files = gen["files"]
+    for rel in list(files.keys()):
+        if rel.split("/")[-1] == "Dockerfile":
+            prefix = rel[: -len("Dockerfile")]
+            containerfile = prefix + "Containerfile"
+            if containerfile not in files:
+                files[containerfile] = files[rel]
+    
     written = []
-    for rel, content in gen["files"].items():
+    for rel, content in files.items():
         dest = root / rel
         dest.parent.mkdir(parents=True, exist_ok=True)
         dest.write_text(content, encoding="utf-8")

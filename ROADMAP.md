@@ -226,9 +226,9 @@ Make PeaLang the default extension language for:
 - Full suite 1133 passing; 17 pre-existing failures remain unchanged
 
 ## 2.15.0 — Planned (next)
-- Wire `pea scaffold` output templates into release packaging (Containerfile end-to-end build of a generated FastAPI service)
-- OpenAPI emitter: `info.contact` metadata and explicit error response schemas (4xx/5xx)
+- ~~Wire `pea scaffold` output templates into release packaging (Containerfile end-to-end build of a generated FastAPI service)~~ — delivered: `write_scaffold` emits `Containerfile` beside each `Dockerfile`.
+- ~~OpenAPI emitter: `info.contact` metadata and explicit error response schemas (4xx/5xx)~~ — delivered.
 - Integration test: generate a FastAPI service, install, pytest, and serve behind uvicorn in CI
-- ADR lifecycle: `adr_index` filtering by status/owner and supersession links (see adr_transition/adr_filter)
-- Analysis-namespace health gate: surface `diagnose_source` health score through `pea doctor` / `pea readiness`
+- ~~ADR lifecycle: `adr_index` filtering by status/owner and supersession links (see adr_transition/adr_filter)~~ — delivered.
+- ~~Analysis-namespace health gate: surface `diagnose_source` health score through `pea doctor` / `pea readiness`~~ — delivered via `devx.project_check`.
 - Resolve the 17 pre-existing failures (test_packaging_hardening_v082, test_supply_chain_v062, test_security_closure_v0994)
