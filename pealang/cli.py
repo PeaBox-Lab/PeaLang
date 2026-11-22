@@ -153,8 +153,36 @@ def main(argv=None):
         if c=='benchmark':
 
             from .benchmark import benchmark_source
+            import json as _json
+            from pathlib import Path as _Path
 
-            path=Path(argv[1]);print(json.dumps(benchmark_source(path.read_text(encoding='utf-8'),20,str(path)),indent=2));return 0
+            path=_Path(argv[1]);iterations=20;baseline_path=None;save_baseline_path=None
+            i=2
+            while i+1<len(argv):
+                if argv[i]=='--iterations':iterations=int(argv[i+1]);i+=2;continue
+                if argv[i]=='--baseline':baseline_path=argv[i+1];i+=2;continue
+                if argv[i]=='--save-baseline':save_baseline_path=argv[i+1];i+=2;continue
+                break
+
+            if not path.exists():
+                print(f'benchmark source not found: {path}');return 1
+
+            result=benchmark_source(path.read_text(encoding='utf-8'),iterations,str(path))
+
+            if save_baseline_path is not None:
+                with open(str(save_baseline_path),'w',encoding='utf-8') as bf:_json.dump(result,bf,indent=2)
+                print(f'saved baseline to {save_baseline_path}');return 0
+
+            if baseline_path is not None and _Path(baseline_path).exists():
+                with open(str(baseline_path),encoding='utf-8') as bf:baseline=_json.load(bf)
+                baseline_median=float(baseline.get('median_ms') or baseline.get('mean_ms') or 0)
+                current_median=float(result.get('median_ms') or result.get('mean_ms') or 0)
+                regression_pct=0.0 if baseline_median==0 else ((current_median-baseline_median)/baseline_median)*100
+                ok=regression_pct<=0.10
+                print(_json.dumps({'baseline_median_ms':baseline_median,'current_median_ms':current_median,'regression_pct':regression_pct,'threshold_pct':10.0,'ok':ok},indent=2))
+                return 0 if ok else 1
+
+            print(json.dumps(result,indent=2));return 0
 
         if c=='serve':
 
