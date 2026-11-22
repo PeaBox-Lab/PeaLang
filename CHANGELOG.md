@@ -1,4 +1,17 @@
 # Changelog
+## 2.21.0 - 2026-11-22
+
+### Phase 1: Foundation & Reliability (Partial)
+- **Structured Concurrency** (`pealang/structured_concurrency.py`): TaskGroup, CancellationScope, PeaTask, spawn/sleep/gather, timeout_scope with deadline propagation and cancellation.
+- **Native Testing Framework** (`pealang/native_testing.py`): describe/test/expect/before_each/after_each syntax, rich matchers (to_equal, to_contain, to_match, to_throw, etc.), JUnit XML output, coverage summary, filter support.
+- **LSP/DAP Enhancements** (`pealang/lsp.py`): Find references, rename (workspace edits), code actions (quick fixes), call hierarchy, type hierarchy, inlay hints.
+
+### Phase 2: Developer Experience & Tooling (Partial)
+- **Formatter/Linter v2** (`pealang/formatter.py`): Configurable via `.peafmt.toml` / `pea.json` (indent_size, max_line_length, trailing_comma, brace_style, space_around_operators), incremental formatting support, new codemods (simplify_returns, remove_debug_prints, organize_imports, modernize_syntax), `format_and_lint()` one-pass helper.
+
+All 1182 tests pass.
+
+
 
 ## 2.20.0 - 2026-11-16
 

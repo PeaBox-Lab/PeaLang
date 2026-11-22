@@ -161,6 +161,21 @@ from .host_bindings import (register_host_function as _hb_register_host_function
     scaffold_node_sdk as _hb_scaffold_node_sdk,
     import_openapi as _hb_import_openapi,
     generate_connector_package as _hb_generate_connector_package)
+from .structured_concurrency import (CancellationError as _sc_cancellation_error,
+    CancellationScope as _sc_cancellation_scope,
+    TaskGroup as _sc_task_group,
+    PeaTask as _sc_pea_task,
+    spawn as _sc_spawn,
+    sleep as _sc_sleep,
+    gather as _sc_gather,
+    timeout_scope as _sc_timeout_scope,
+    build_structured_concurrency_namespace as _sc_build_namespace)
+from .native_testing import (run_source_tests as _nt_run_source_tests,
+    run_paths as _nt_run_paths,
+    coverage_summary as _nt_coverage_summary,
+    to_junit_xml as _nt_to_junit_xml,
+    expect as _nt_expect,
+    build_native_testing_namespace as _nt_build_namespace)
 from .vm_optimizer import (OptimizationHints as _vm_optimization_hints,
     constant_fold as _vm_constant_fold,
     loop_unroll_hint as _vm_loop_unroll_hint,
@@ -3534,5 +3549,22 @@ def build_analysis_namespace() -> dict[str, Any]:
         "optimize_batch_size": _perf_optimize_batch_size,
         "parallel_chunks": _perf_parallel_chunks,
         "fast_hash": _perf_fast_hash,
+        # Structured concurrency
+        "CancellationError": _sc_cancellation_error,
+        "CancellationScope": _sc_cancellation_scope,
+        "TaskGroup": _sc_task_group,
+        "PeaTask": _sc_pea_task,
+        "spawn": _sc_spawn,
+        "sleep": _sc_sleep,
+        "gather": _sc_gather,
+        "timeout_scope": _sc_timeout_scope,
+        "structured_concurrency": _sc_build_namespace,
+        # Native testing
+        "run_source_tests": _nt_run_source_tests,
+        "run_paths": _nt_run_paths,
+        "coverage_summary": _nt_coverage_summary,
+        "to_junit_xml": _nt_to_junit_xml,
+        "expect": _nt_expect,
+        "native_testing": _nt_build_namespace,
     }
 

@@ -3,12 +3,20 @@
 from pealang.formatter import (
     build_formatter_namespace,
     PeaFormatter,
+    FormatConfig,
     format_source_ast,
     PeaLinter,
+    LintConfig,
     lint_source_ast,
     codemod_remove_unused_imports,
     codemod_rename_variable,
     codemod_fix_naming,
+    codemod_remove_unused_variables,
+    codemod_simplify_returns,
+    codemod_remove_debug_prints,
+    codemod_organize_imports,
+    apply_codemods,
+    format_and_lint,
 )
 
 
@@ -20,7 +28,16 @@ def test_format_source_ast():
 
 
 def test_pea_formatter():
-    fmt = PeaFormatter(indent_size=4)
+    config = FormatConfig(indent_size=4)
+    fmt = PeaFormatter(config=config)
+    result = fmt.format("let x = 1")
+    assert isinstance(result, str)
+    assert len(result) > 0
+
+
+def test_pea_formatter_with_config():
+    config = FormatConfig(indent_size=2, brace_style="next_line")
+    fmt = PeaFormatter(config=config)
     result = fmt.format("let x = 1")
     assert isinstance(result, str)
     assert len(result) > 0
@@ -60,10 +77,30 @@ def test_codemod_remove_unused_imports():
     assert "import unused" not in result
 
 
+def test_new_codemods():
+    # Test new codemods are exported and work
+    src = "let x = 1\nlet y = 2\nreturn x\n"
+    result = apply_codemods(src, ["simplify_returns", "remove_debug_prints"])
+    assert isinstance(result, str)
+
+
+def test_format_and_lint():
+    src = "let x=1\nfunction foo() { return 1 }\n"
+    formatted, issues = format_and_lint(src)
+    assert isinstance(formatted, str)
+    assert isinstance(issues, list)
+
+
 def test_build_formatter_namespace():
     ns = build_formatter_namespace()
     assert "PeaFormatter" in ns
     assert "format_source_ast" in ns
     assert "PeaLinter" in ns
     assert "lint_source_ast" in ns
-    assert len(ns) == 7
+    assert "FormatConfig" in ns
+    assert "LintConfig" in ns
+    assert "codemod_remove_unused_imports" in ns
+    assert "codemod_fix_naming" in ns
+    assert "codemod_simplify_returns" in ns
+    assert "apply_codemods" in ns
+    assert "format_and_lint" in ns
