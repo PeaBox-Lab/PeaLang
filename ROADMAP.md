@@ -252,3 +252,8 @@ Make PeaLang the default extension language for:
 - **Artifact ABI validation**: `validate_artifact_abi` reports unknown imports/exports when an artifact declares symbols outside `HOST_ABI`.
 - Added tests in `tests/test_host_integration_v042.py`: Go SDK scaffold, ABI capability filtering, unknown import/export rejection.
 - All 1240 tests pass.
+
+### Phase 15: Python host SDK scaffolding (2.19.0)
+- **Python SDK scaffolding**: `scaffold_python_sdk` generates `pealang/client.py`, `pyproject.toml`, and `README.md` for Python host integration.
+- Added test coverage in `tests/test_host_integration_v042.py` for the Python SDK scaffold.
+- All 1241 tests pass.
