@@ -285,3 +285,10 @@ Make PeaLang the default extension language for:
 - **src/main.rs**: reqwest-based async client with `invoke()` and `health()` methods targeting `/v1/invoke` and `/health`.
 - Added tests in `tests/test_host_integration_v042.py`, `tests/test_sdk_compatibility.py`, and `tests/test_host_bindings_v190.py`.
 - All 1252 tests pass.
+
+### Phase 21: Codegen from .pea Source (2.27.0)
+- **`generate_sdk_from_source`**: Parses .pea source (Lexer + Parser) and emits typed host SDK clients for all seven languages (node, go, python, browser, java, csharp, rust).
+- **`extract_functions`**: Extracts `FunctionStmt` declarations (name + params) from parsed .pea AST.
+- **`pea sdk-codegen` CLI**: `pea sdk-codegen <source.pea> <lang> <dir>` generates a typed client from a .pea file.
+- Added tests in `tests/test_host_integration_v042.py`, `tests/test_sdk_compatibility.py`, and `tests/test_host_bindings_v190.py`.
+- All 1256 tests pass.

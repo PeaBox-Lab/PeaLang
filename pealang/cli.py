@@ -232,9 +232,51 @@ def main(argv=None):
 
                 return 0
 
-            print(f"Usage: pea sdk list|generate <lang> <dir>\nAvailable SDKs: {', '.join(sorted(HOST_SDK_NAMES.keys()))}")
+            print(f"Usage: pea sdk list|generate <lang> <dir>|codegen <source.pea> <lang> <dir>\nAvailable SDKs: {', '.join(sorted(HOST_SDK_NAMES.keys()))}")
 
             return 1
+
+        if c=='sdk-codegen':
+
+            from .host_bindings import generate_sdk_from_source
+
+            source_path=argv[1] if len(argv)>1 else None
+
+            lang=argv[2] if len(argv)>2 else None
+
+            target=argv[3] if len(argv)>3 else f"{lang}-sdk"
+
+            if not source_path or not lang:
+
+                print("Usage: pea sdk-codegen <source.pea> <lang> <dir>")
+
+                return 1
+
+            src_path=Path(source_path)
+
+            if not src_path.exists():
+
+                print(f"source not found: {src_path}")
+
+                return 1
+
+            source=src_path.read_text(encoding="utf-8")
+
+            out=generate_sdk_from_source(source, lang, target)
+
+            if "error" in out:
+
+                print(out["error"])
+
+                return 1
+
+            print(f"Generated {lang} SDK from {src_path} at {out['root']}:")
+
+            for f in out['files']:
+
+                print(f"  {f}")
+
+            return 0
 
         if c=='pkg-init':
 

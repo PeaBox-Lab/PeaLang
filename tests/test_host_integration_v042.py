@@ -19,7 +19,7 @@ from pealang.wasm_differential import (
     run_differential_fixtures,
 )
 from pealang.frameworks import write_scaffold
-from pealang.host_bindings import scaffold_node_sdk, scaffold_go_sdk, scaffold_python_sdk, scaffold_browser_sdk, scaffold_java_sdk, scaffold_csharp_sdk, scaffold_rust_sdk
+from pealang.host_bindings import scaffold_node_sdk, scaffold_go_sdk, scaffold_python_sdk, scaffold_browser_sdk, scaffold_java_sdk, scaffold_csharp_sdk, scaffold_rust_sdk, generate_sdk_from_source
 
 
 def _run(source: str, *args):
@@ -214,3 +214,15 @@ def test_scaffold_rust_sdk(tmp_path):
         "README.md",
     }
     assert set(out["files"]) == expected_files, f"Got {set(out['files'])!r}"
+
+
+def test_generate_sdk_from_source(tmp_path):
+    """Phase 21: generate_sdk_from_source creates typed clients from .pea source."""
+    source = "function add(a, b) {\n  return a + b\n}\nfunction greet(name) {\n  print \"Hello \" + name\n}"
+    out = generate_sdk_from_source(source, "python", str(tmp_path / "codegen-python"))
+    assert "error" not in out
+    expected_files = {"pealang/client.py", "pyproject.toml", "README.md"}
+    assert set(out["files"]) == expected_files, f"Got {set(out['files'])!r}"
+    client = Path(tmp_path / "codegen-python" / "pealang" / "client.py").read_text(encoding="utf-8")
+    assert "add" in client
+    assert "greet" in client

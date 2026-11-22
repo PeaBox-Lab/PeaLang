@@ -16,6 +16,7 @@ from pealang.host_bindings import (
     scaffold_node_sdk,
     import_openapi,
     generate_connector_package,
+    generate_sdk_from_source,
 )
 
 
@@ -101,11 +102,27 @@ def test_build_host_bindings_namespace():
 def test_build_host_sdk_namespace():
     """Phase 18: unified host SDK namespace exposes all scaffold_*_sdk functions."""
     ns = build_host_sdk_namespace()
-    expected = {"scaffold_node_sdk", "scaffold_go_sdk", "scaffold_python_sdk", "scaffold_browser_sdk", "scaffold_java_sdk", "scaffold_csharp_sdk", "scaffold_rust_sdk"}
+    expected = {"scaffold_node_sdk", "scaffold_go_sdk", "scaffold_python_sdk", "scaffold_browser_sdk", "scaffold_java_sdk", "scaffold_csharp_sdk", "scaffold_rust_sdk", "generate_sdk_from_source"}
     assert set(ns.keys()) == expected, f"Got {set(ns.keys())!r}"
-    # Every exposed function should be callable and return a valid scaffold dict
+    # Every scaffold function should be callable and return a valid scaffold dict
     for name, fn in ns.items():
+        if name == "generate_sdk_from_source":
+            continue  # different signature, tested separately
         out = fn(f"/tmp/pea-sdk-test-{name}")
         assert "root" in out, f"{name} missing root"
         assert "files" in out, f"{name} missing files"
         assert isinstance(out["files"], list), f"{name} files not a list"
+
+
+def test_generate_sdk_from_source():
+    """Phase 21: generate_sdk_from_source parses .pea source and emits typed clients."""
+    source = "function add(a, b) {\n  return a + b\n}\nfunction greet(name) {\n  print \"Hello \" + name\n}"
+    for lang in ("node", "go", "python", "browser", "java", "csharp", "rust"):
+        out = generate_sdk_from_source(source, lang, f"/tmp/pea-codegen-{lang}")
+        assert "error" not in out, f"{lang}: {out}"
+        assert "root" in out
+        assert "files" in out
+        assert isinstance(out["files"], list)
+        # Verify all files exist on disk
+        for rel in out["files"]:
+            assert Path(out["root"], rel).exists(), f"{lang}: missing {rel}"

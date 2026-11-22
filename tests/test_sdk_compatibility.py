@@ -21,6 +21,7 @@ from pealang.host_bindings import (
     scaffold_java_sdk,
     scaffold_csharp_sdk,
     scaffold_rust_sdk,
+    generate_sdk_from_source,
 )
 
 EXPECTED_SDK_FILES = {
@@ -67,7 +68,7 @@ def _run_cli(*args):
 
 
 def test_all_sdks_in_namespace():
-    """build_host_sdk_namespace exposes all seven scaffold functions."""
+    """build_host_sdk_namespace exposes all seven scaffold functions plus codegen."""
     ns = build_host_sdk_namespace()
     assert set(ns.keys()) == {
         "scaffold_node_sdk",
@@ -77,6 +78,7 @@ def test_all_sdks_in_namespace():
         "scaffold_java_sdk",
         "scaffold_csharp_sdk",
         "scaffold_rust_sdk",
+        "generate_sdk_from_source",
     }
 
 
@@ -129,3 +131,37 @@ def test_pea_sdk_generate_unknown_lang():
     result = _run_cli("sdk", "generate", "cobol", "/tmp/pea-cobol")
     assert result.returncode == 1
     assert "Unknown SDK language" in result.stdout or "Unknown SDK language" in result.stderr
+
+
+def test_generate_sdk_from_source_each_lang(tmp_path):
+    """generate_sdk_from_source produces typed clients for every language."""
+    source = "function add(a, b) {\n  return a + b\n}\nfunction greet(name) {\n  print \"Hello \" + name\n}"
+    for lang in ("node", "go", "python", "browser", "java", "csharp", "rust"):
+        target = str(tmp_path / f"codegen-{lang}")
+        out = generate_sdk_from_source(source, lang, target)
+        assert "error" not in out, f"{lang}: {out}"
+        assert len(out["files"]) > 0, f"{lang}: no files generated"
+        for rel in out["files"]:
+            assert Path(target, rel).exists(), f"{lang}: missing {rel}"
+
+
+def test_generate_sdk_from_source_contains_function_names(tmp_path):
+    """Generated client code references functions declared in the .pea source."""
+    source = "function add(a, b) {\n  return a + b\n}\nfunction multiply(x, y) {\n  return x * y\n}"
+    target = str(tmp_path / "codegen-node")
+    out = generate_sdk_from_source(source, "node", target)
+    client = Path(target, "src/client.ts").read_text(encoding="utf-8")
+    assert "add" in client
+    assert "multiply" in client
+    assert "health" in client
+
+
+def test_pea_sdk_codegen_cli(tmp_path):
+    """pea sdk-codegen <source> <lang> <dir> works via CLI."""
+    source_file = tmp_path / "test.pea"
+    source_file.write_text("function add(a, b) {\n  return a + b\n}", encoding="utf-8")
+    target = str(tmp_path / "codegen-cli")
+    result = _run_cli("sdk-codegen", str(source_file), "python", target)
+    assert result.returncode == 0, result.stderr
+    assert Path(target, "pealang/client.py").exists()
+    assert Path(target, "pyproject.toml").exists()
