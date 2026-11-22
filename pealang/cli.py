@@ -178,7 +178,7 @@ def main(argv=None):
                 baseline_median=float(baseline.get('median_ms') or baseline.get('mean_ms') or 0)
                 current_median=float(result.get('median_ms') or result.get('mean_ms') or 0)
                 regression_pct=0.0 if baseline_median==0 else ((current_median-baseline_median)/baseline_median)*100
-                ok=regression_pct<=0.10
+                ok=regression_pct<=10.0
                 print(_json.dumps({'baseline_median_ms':baseline_median,'current_median_ms':current_median,'regression_pct':regression_pct,'threshold_pct':10.0,'ok':ok},indent=2))
                 return 0 if ok else 1
 

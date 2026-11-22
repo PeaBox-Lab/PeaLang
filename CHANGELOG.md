@@ -30,6 +30,9 @@
 - **`pea benchmark`** now accepts `--iterations N`, `--save-baseline <file>` and `--baseline <file>`. Comparing a run against a saved baseline reports the median regression and exits non-zero when it exceeds the 10% threshold, enabling CI performance gating.
 - Added `tests/test_benchmark_gate_v041.py`.
 
+### Phase 11: CI conformance & performance gate (0.40 CI evidence)
+- **`.github/workflows/performance-gate.yml`**: runs `pea conformance` and `pea benchmark` on every push/PR to `main`, uploads the conformance and performance reports as artifacts.
+
 All 1227 tests pass.
 
 
