@@ -32,11 +32,11 @@ The original roadmap goal is not yet complete. The implementation has covered mu
 - `pea migrate`
 - compatibility/deprecation warnings
 
-## 0.39 - Cross-runtime portability
-- WebAssembly VM prototype
-- browser-safe PEAC runtime
-- Python VM/WASM differential fixtures
-- Node/browser host capability ABI
+## 0.39 - Cross-runtime portability - delivered
+- WebAssembly VM prototype (`pealang/wasm.py`, `pealang/wasm_runtime.py`)
+- browser-safe PEAC runtime and capability bridges
+- Python VM/WASM differential fixtures (`pealang/wasm_differential.py`)
+- Node/browser host capability ABI (`HOST_ABI`, `host_capability_abi`, `validate_artifact_abi`)
 
 ## 0.40 - Conformance and platform gate - implementation delivered; CI evidence pending
 - 500+ conformance tests

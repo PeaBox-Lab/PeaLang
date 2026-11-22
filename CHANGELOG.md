@@ -18,7 +18,12 @@
 - **`frameworks.write_scaffold`**: generates a `Containerfile` alongside every generated `Dockerfile` (backend and full-stack layouts) so scaffolds build with Podman/Buildah as well as Docker.
 - Health gate already surfaced through `pea doctor` / `pea readiness` via `devx.project_check`.
 
-All 1214 tests pass.
+### Phase 8: Cross-runtime portability
+- **`pealang/wasm_differential.py`**: Python VM/PEAWASM differential fixtures. Five built-in programs run on the stack VM and again after a lossless `PEAC -> PEAWASM -> PEAC` round trip; outputs must match.
+- **Host capability ABI**: `HOST_ABI` / `host_capability_abi()` describe the imports, exports, policy and capability tags that Node/browser hosts must implement; `validate_artifact_abi()` rejects artifacts that declare unknown imports or exports.
+- Exposed through the analysis namespace as `host_capability_abi`, `validate_artifact_abi`, `execute_peac`, `differential_run`, `differential_fixtures`, `run_differential_fixtures`, and `wasm_differential`.
+
+All 1223 tests pass.
 
 
 
