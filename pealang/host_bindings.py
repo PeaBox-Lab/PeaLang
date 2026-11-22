@@ -247,9 +247,58 @@ __all__ = ["PeaClient"]
     return {"root": str(root), "files": ["pealang/client.py", "pyproject.toml", "README.md"]}
 
 
-# ---------------------------------------------------------------------------
-# OpenAPI/GraphQL importer
-# ---------------------------------------------------------------------------
+def scaffold_browser_sdk(target_dir: str = "browser-sdk") -> dict[str, Any]:
+    """Scaffold a browser host SDK directory structure.
+
+    Emits the browser runtime bridge (WebAssembly instantiation + host
+    capability bridge) plus a small TypeScript client so browser hosts can
+    load a ``PEAWASM`` artifact and invoke the exported ``pea_run`` / ``pea_health``
+    functions.
+    """
+    root = Path(target_dir)
+    root.mkdir(parents=True, exist_ok=True)
+    (root / "src").mkdir(exist_ok=True)
+    (root / "src" / "browserClient.ts").write_text(
+        "// PeaLang browser host SDK: WebAssembly loading + runtime bridge\n"
+        "export interface BrowserWasmModule {\n"
+        "  exports: { pea_run: (...args: any[]) => any; pea_health: (...args: any[]) => any };\n"
+        "}\n\n"
+        "export function createBrowserWasmModule(url: string, capabilities: string[] = []) {\n"
+        "  // Placeholder for real artifact fetching/instantiation; hosts provide bytes.\n"
+        "  throw new Error(\"browser_sdk: artifact bytes must be provided via a real loader\");\n"
+        "}\n",
+        encoding="utf-8",
+    )
+    (root / "src" / "browserLoader.ts").write_text(
+        "// PeaLang browser loader: fetch + instantiate PEAWASM artifact.\n"
+        "export async function loadPeaWasm(url: string, imports: Record<string, unknown> = {}) {\n"
+        "  const res = await fetch(url);\n"
+        "  const bytes = await res.arrayBuffer();\n"
+        "  const mod = await WebAssembly.instantiate(bytes, imports);\n"
+        "  return mod;\n"
+        "}\n",
+        encoding="utf-8",
+    )
+    (root / "package.json").write_text(
+        json.dumps({
+            "name": "pealang-browser-sdk",
+            "version": "1.0.0",
+            "main": "src/browserClient.ts",
+            "types": "src/browserClient.ts",
+            "scripts": {"build": "tsc", "test": "jest"},
+        }, indent=2),
+        encoding="utf-8",
+    )
+    (root / "README.md").write_text(
+        "# PeaLang Browser SDK\n\nBrowser client for PeaLang runtime via WebAssembly.\n",
+        encoding="utf-8",
+    )
+    return {
+        "root": str(root),
+        "files": ["src/browserClient.ts", "src/browserLoader.ts", "package.json", "README.md"],
+    }
+
+
 
 def import_openapi(spec: dict[str, Any] | str) -> dict[str, Any]:
     """Parse an OpenAPI spec and generate PeaLang connector scaffolding."""

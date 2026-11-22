@@ -19,7 +19,7 @@ from pealang.wasm_differential import (
     run_differential_fixtures,
 )
 from pealang.frameworks import write_scaffold
-from pealang.host_bindings import scaffold_node_sdk, scaffold_go_sdk, scaffold_python_sdk
+from pealang.host_bindings import scaffold_node_sdk, scaffold_go_sdk, scaffold_python_sdk, scaffold_browser_sdk
 
 
 def _run(source: str, *args):
@@ -167,4 +167,12 @@ def test_scaffold_python_sdk(tmp_path):
     out = scaffold_python_sdk(str(tmp_path / "python-sdk"))
     assert "error" not in out
     expected_files = {"pealang/client.py", "pyproject.toml", "README.md"}
+    assert set(out["files"]) == expected_files, f"Got {set(out['files'])!r}"
+
+
+def test_scaffold_browser_sdk(tmp_path):
+    """Phase 16: Browser SDK scaffolding generates expected files."""
+    out = scaffold_browser_sdk(str(tmp_path / "browser-sdk"))
+    assert "error" not in out
+    expected_files = {"src/browserClient.ts", "src/browserLoader.ts", "package.json", "README.md"}
     assert set(out["files"]) == expected_files, f"Got {set(out['files'])!r}"
