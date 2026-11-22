@@ -107,6 +107,39 @@ def test_pea_registry_cli_help(tmp_path):
     assert "Usage" in result.stdout or "Usage" in result.stderr
 
 
+def test_pea_publish_cli_help(tmp_path):
+    """0.41: `pea publish` CLI command shows usage."""
+    result = subprocess.run(
+        [sys.executable, "-m", "pealang.cli", "publish"],
+        capture_output=True, text=True,
+        cwd=str(Path(__file__).resolve().parent.parent),
+    )
+    assert result.returncode == 1
+    assert "Usage: pea publish" in result.stdout
+
+
+def test_pea_search_cli_help(tmp_path):
+    """0.41: `pea search` CLI command shows usage."""
+    result = subprocess.run(
+        [sys.executable, "-m", "pealang.cli", "search"],
+        capture_output=True, text=True,
+        cwd=str(Path(__file__).resolve().parent.parent),
+    )
+    assert result.returncode == 1
+    assert "Usage: pea search" in result.stdout
+
+
+def test_pea_login_cli_help(tmp_path):
+    """0.41: `pea login` CLI command shows usage."""
+    result = subprocess.run(
+        [sys.executable, "-m", "pealang.cli", "login"],
+        capture_output=True, text=True,
+        cwd=str(Path(__file__).resolve().parent.parent),
+    )
+    assert result.returncode == 1
+    assert "Usage: pea login" in result.stdout
+
+
 def test_pea_benchmark_plain_output(tmp_path):
     """0.41: `pea benchmark` plain output produces valid JSON."""
     src = tmp_path / "bench.pea"

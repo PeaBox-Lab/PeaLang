@@ -342,3 +342,14 @@ Make PeaLang the default extension language for:
 - **Storage**: Directory-based package storage with per-package directories.
 - **Tests**: `test_registry_server_upload_download`, `test_registry_server_auth_required`, `test_registry_server_duplicate_rejected`, `test_pea_registry_cli_help`.
 - All 1277 tests pass.
+
+### Phase 28: Publish & Discover CLI (2.34.0)
+- **`pea publish <path>`**: CLI command to build and publish a library `.pelib` package to a registry. Reads `pea.toml` for name/version, builds via `build_library`, and uploads via `PUT /api/v1/packages/<name>/<version>`.
+- **`pea search <query>`**: Search registry packages by name, displaying matches with version and sha256.
+- **`pea browse`**: List all packages in the registry with latest versions.
+- **`pea info <package>`**: Show package details from registry (versions, sha256, published dates). Falls back to version info when called with no package name.
+- **`pea login <token>`**: Store registry bearer token in `~/.pealang/registry_tokens.json` for authenticated uploads.
+- **`pea logout`**: Remove stored registry token.
+- **Token persistence**: Tokens stored per-registry in `~/.pealang/registry_tokens.json`, auto-loaded by `publish`.
+- **Tests**: `test_pea_publish_help`, `test_pea_search_help`, `test_pea_browse_help`, `test_pea_info_help`, `test_pea_login_help`, `test_pea_logout`, `test_pea_publish_cli`.
+- All 1287 tests pass.

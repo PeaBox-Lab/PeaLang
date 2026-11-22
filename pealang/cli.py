@@ -627,10 +627,40 @@ def main(argv=None):
             else: print(f'PeaLang {__version__}')
             return 0
         if c=='info':
-            from .stdlib import stdlib_manifest
-            sm=stdlib_manifest();mods=sm.get('modules',sm)
-            info={'version':__version__,'stdlib':list(mods.keys()) if isinstance(mods,dict) else mods,'commands':['run','eval','repl','check','lint','fmt','test','compile','vm','dis','init','new','serve-web','doctor','health','diagnose','help','templates','info','project','serve','stdlib','typecheck','typecheck-project','docs','analyze','web-openapi','openapi','openapi-contract','hash','tree','env','quickstart','scaffold','readiness','audit']}
-            print(json.dumps(info,indent=2));return 0
+            if len(argv)>1:
+                # Package info from registry
+                import urllib.request, urllib.error, json as _json
+
+                name=argv[1]
+                registry='http://127.0.0.1:8788'
+
+                i=2
+                while i+1<len(argv):
+                    if argv[i]=='--registry':registry=argv[i+1];i+=2;continue
+                    i+=1
+
+                url=f'{registry}/api/v1/packages/{name}'
+                try:
+                    with urllib.request.urlopen(url) as resp:
+                        info=_json.loads(resp.read().decode())
+                        print(f'Package: {info["name"]}')
+                        for v in info.get('versions',[]):
+                            print(f'  {v["version"]} (sha256={v["sha256"][:16]}..., published={v.get("published","?")})')
+                except urllib.error.HTTPError as e:
+                    if e.code==404:
+                        print(f'Package {name} not found')
+                    else:
+                        print(f'Info failed: {e.code} {e.read().decode()}')
+                    return 1
+                except Exception as e:
+                    print(f'Info failed: {e}');return 1
+
+                return 0
+            else:
+                from .stdlib import stdlib_manifest
+                sm=stdlib_manifest();mods=sm.get('modules',sm)
+                info={'version':__version__,'stdlib':list(mods.keys()) if isinstance(mods,dict) else mods,'commands':['run','eval','repl','check','lint','fmt','test','compile','vm','dis','init','new','serve-web','doctor','health','diagnose','help','templates','info','project','serve','stdlib','typecheck','typecheck-project','docs','analyze','web-openapi','openapi','openapi-contract','hash','tree','env','quickstart','scaffold','readiness','audit']}
+                print(json.dumps(info,indent=2));return 0
 
         if c=='project':print(json.dumps(project_info(argv[1] if len(argv)>1 else '.'),indent=2));return 0
 
@@ -862,6 +892,186 @@ def main(argv=None):
 
             print('Usage: pea registry serve [--host HOST] [--port PORT] [--storage DIR] [--name NAME]');return 1
 
+        if c=='publish':
+
+            from .package_manager import build_library, load_pea_toml
+            import urllib.request, urllib.error, json as _json
+
+            path=argv[1] if len(argv)>1 else None
+            registry='http://127.0.0.1:8788'
+            token=None
+
+            i=2
+            while i+1<len(argv):
+                if argv[i]=='--registry':registry=argv[i+1];i+=2;continue
+                if argv[i]=='--token':token=argv[i+1];i+=2;continue
+                i+=1
+
+            if not path:
+                print('Usage: pea publish <path> [--registry URL] [--token TOKEN]');return 1
+
+            root=Path(path).resolve()
+            mf,data=load_pea_toml(root)
+            name=data['project']['name'];version=data['project']['version']
+
+            # Build the library package
+            out,h=build_library(root)
+            package_bytes=Path(out).read_bytes()
+
+            # Get token from stored tokens if not provided
+            if not token:
+                token_file=Path.home()/'.pealang'/'registry_tokens.json'
+                if token_file.exists():
+                    try:
+                        tokens=_json.loads(token_file.read_text())
+                        token=tokens.get(registry)
+                    except Exception:
+                        token=None
+
+            if not token:
+                print('Error: No registry token. Use --token or pea login first.');return 1
+
+            # Upload to registry
+            url=f'{registry}/api/v1/packages/{name}/{version}'
+            req=urllib.request.Request(url,data=package_bytes,method='PUT')
+            req.add_header('Authorization','Bearer '+token)
+            req.add_header('Content-Type','application/octet-stream')
+
+            try:
+                with urllib.request.urlopen(req) as resp:
+                    if resp.status==201:
+                        result=_json.loads(resp.read().decode())
+                        print(f'Published {result["name"]} {result["version"]} (sha256={result["sha256"]})')
+                    else:
+                        print(f'Upload failed: HTTP {resp.status}');return 1
+            except urllib.error.HTTPError as e:
+                body=e.read().decode() if e.fp else ''
+                print(f'Upload failed: HTTP {e.code} {body}');return 1
+            except Exception as e:
+                print(f'Upload failed: {e}');return 1
+
+            return 0
+
+        if c=='search':
+
+            import urllib.request, json as _json
+
+            query=argv[1] if len(argv)>1 else None
+            registry='http://127.0.0.1:8788'
+
+            i=2
+            while i+1<len(argv):
+                if argv[i]=='--registry':registry=argv[i+1];i+=2;continue
+                i+=1
+
+            if not query:
+                print('Usage: pea search <query> [--registry URL]');return 1
+
+            url=f'{registry}/api/v1/packages'
+            try:
+                with urllib.request.urlopen(url) as resp:
+                    data=_json.loads(resp.read().decode())
+                    pkgs=data.get('packages',{})
+                    matches={k:v for k,v in pkgs.items() if query.lower() in k.lower()}
+                    if not matches:
+                        print(f'No packages matching "{query}"')
+                    else:
+                        for name,versions in sorted(matches.items()):
+                            for v in versions:
+                                print(f'{name} {v["version"]} (sha256={v["sha256"][:12]}...)')
+            except Exception as e:
+                print(f'Search failed: {e}');return 1
+
+            return 0
+
+        if c=='browse':
+
+            import urllib.request, json as _json
+
+            registry='http://127.0.0.1:8788'
+
+            i=1
+            while i+1<len(argv):
+                if argv[i]=='--registry':registry=argv[i+1];i+=2;continue
+                i+=1
+
+            url=f'{registry}/api/v1/packages'
+            try:
+                with urllib.request.urlopen(url) as resp:
+                    data=_json.loads(resp.read().decode())
+                    pkgs=data.get('packages',{})
+                    if not pkgs:
+                        print('No packages available')
+                    else:
+                        for name,versions in sorted(pkgs.items()):
+                            latest=versions[0] if versions else {}
+                            print(f'{name} {latest.get("version","?")} (sha256={latest.get("sha256","?")[:12]}...)')
+            except Exception as e:
+                print(f'Browse failed: {e}');return 1
+
+            return 0
+
+        if c=='login':
+
+            import json as _json
+
+            token=argv[1] if len(argv)>1 else None
+            registry='http://127.0.0.1:8788'
+
+            i=2
+            while i+1<len(argv):
+                if argv[i]=='--registry':registry=argv[i+1];i+=2;continue
+                i+=1
+
+            if not token:
+                print('Usage: pea login <token> [--registry URL]');return 1
+
+            token_dir=Path.home()/'.pealang'
+            token_dir.mkdir(parents=True,exist_ok=True)
+            token_file=token_dir/'registry_tokens.json'
+
+            tokens={}
+            if token_file.exists():
+                try:
+                    tokens=_json.loads(token_file.read_text())
+                except Exception:
+                    tokens={}
+
+            tokens[registry]=token
+            token_file.write_text(_json.dumps(tokens,indent=2))
+            print(f'Logged in to {registry}')
+
+            return 0
+
+        if c=='logout':
+
+            import json as _json
+
+            registry='http://127.0.0.1:8788'
+
+            i=1
+            while i+1<len(argv):
+                if argv[i]=='--registry':registry=argv[i+1];i+=2;continue
+                i+=1
+
+            token_file=Path.home()/'.pealang'/'registry_tokens.json'
+
+            if token_file.exists():
+                try:
+                    tokens=_json.loads(token_file.read_text())
+                except Exception:
+                    tokens={}
+                if registry in tokens:
+                    del tokens[registry]
+                    token_file.write_text(_json.dumps(tokens,indent=2))
+                    print(f'Logged out from {registry}')
+                else:
+                    print(f'Not logged in to {registry}')
+            else:
+                print(f'Not logged in to {registry}')
+
+            return 0
+
         if len(argv)==1 and argv[0].endswith('.peac'):
 
             from .bytecode import BytecodeModule
@@ -874,7 +1084,7 @@ def main(argv=None):
 
         if allow:argv.remove('--allow-process')
 
-        if len(argv)!=1:print('Usage: pea [run|eval|repl|check|lint|fmt|test|compile|vm|dis|init|new|serve-web|doctor|health|help|quickstart|scaffold|templates|info|project|docs|registry|analyze|web-openapi|hash|tree|env|typecheck|typecheck-project|readiness|audit|stdlib] ...',file=sys.stderr);return 2
+        if len(argv)!=1:print('Usage: pea [run|eval|repl|check|lint|fmt|test|compile|vm|dis|init|new|serve-web|doctor|health|help|quickstart|scaffold|templates|info|project|docs|registry|publish|search|browse|login|logout|analyze|web-openapi|hash|tree|env|typecheck|typecheck-project|readiness|audit|stdlib] ...',file=sys.stderr);return 2
 
         return run_file(argv[0],allow)
 
