@@ -181,6 +181,16 @@ All 1240 tests pass.
 - **Tests**: `test_dev_portal_template_list`, `test_dev_portal_get_template`, `test_dev_portal_list_extensions`, `test_pea_portal_help`.
 - All 1296 tests pass.
 
+### Phase 31: Language Extension Type System (2.37.0)
+- **`pealang/extension_type_system.py`**: `ExtensionTypeSystem` class integrating extension types with the type system.
+- **`ExtensionTypeRef`**: Type reference class for extension types, compatible with `TypeRef`.
+- **Type resolution**: `get_type_ref()`, `resolve_method()`, `has_type()`, `list_types()` for extension type lookup.
+- **Method validation**: `check_method_call()` validates method arity on extension types.
+- **Protocol contracts**: `get_extension_protocol()` creates `ProtocolContract` for extension types.
+- **Interpreter integration**: Extension types registered in global environment; constructor functions callable from PeaLang source.
+- **Tests**: `test_extension_type_system`, `test_pea_ext_type_info`.
+- All 1296 tests pass.
+
 ## 2.20.0 - 2026-11-16
 
 ### Version unification (single source of truth)

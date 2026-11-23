@@ -673,3 +673,61 @@ def test_pea_portal_help(tmp_path):
     )
     assert result.returncode == 0
     assert "portal module ok" in result.stdout
+
+
+def test_extension_type_system(tmp_path):
+    """Phase 31: Extension type system integrates with interpreter."""
+    from pealang.extension_registry import ExtensionRegistry
+    from pealang.extension_type_system import ExtensionTypeSystem
+    from pealang.interpreter import Interpreter
+    from pealang.parser import parse_source
+
+    reg = ExtensionRegistry()
+    reg.register_type('MyType', lambda x: {'value': x}, {'double': lambda self: self['value'] * 2})
+
+    interp = Interpreter()
+    interp.extension_registry = reg
+    interp.extension_type_system = ExtensionTypeSystem(reg)
+    for name, ext_type in reg.types.items():
+        if ext_type.constructor is not None:
+            interp.global_env.define(name, ext_type.constructor, True)
+
+    # Test type construction
+    code = 'let x = MyType(5); print x.value'
+    program = parse_source(code, 'test.pea')
+    result = interp.run(program)
+    assert result is None  # print returns None
+
+    # Test type system integration
+    ts = interp.extension_type_system
+    assert ts.has_type('MyType')
+    type_ref = ts.get_type_ref('MyType')
+    assert type_ref is not None
+    assert type_ref.name == 'MyType'
+
+    # Test method resolution
+    method = ts.resolve_method('MyType', 'double')
+    assert method is not None
+    assert method({'value': 5}) == 10
+
+    # Type validation
+    assert ts.check_method_call('MyType', 'double', []) is True
+    assert ts.check_method_call('MyType', 'nonexistent', []) is False
+
+
+def test_pea_ext_type_info(tmp_path):
+    """Phase 31: pea ext info shows type information."""
+    import subprocess, sys
+    result = subprocess.run(
+        [sys.executable, "-c",
+         "from pealang.extension_registry import ExtensionRegistry; "
+         "reg = ExtensionRegistry(); "
+         "reg.register_type('TestType', lambda x: {'v': x}, {'double': lambda s: s['v']*2}); "
+         "t = reg.get_type('TestType'); "
+         "print(f'Type: {t.name}, methods: {list(t.methods.keys())}')"],
+        capture_output=True, text=True,
+        cwd=str(Path(__file__).resolve().parent.parent),
+    )
+    assert result.returncode == 0
+    assert 'TestType' in result.stdout
+    assert 'double' in result.stdout
