@@ -20,6 +20,7 @@ from .project import load_manifest, resolve_module
 from .agents import ToolRegistry,AgentRuntime
 from .help import help as _pea_help
 from .extension_registry import ExtensionRegistry
+from .extension_type_system import ExtensionTypeSystem
 from .exceptions import (PeaException, NameError, ValueError, TypeError, IndexError,
     ZeroDivisionError, ScopeError, AssertionError, AttributeError, ImportError, UserError)
 class ReturnSignal(Exception):
@@ -436,10 +437,15 @@ class Interpreter:
         self.tool_registry=ToolRegistry(self.invoke_user_function);self.agent_runtime=AgentRuntime(self.ai_service,self.tool_registry);self.global_env.define('tool',{'register':self.tool_registry.register,'list':self.tool_registry.list,'describe':self.tool_registry.describe,'call':self.tool_registry.call},True);self.global_env.define('agent',{'define':self.agent_runtime.define,'run':self.agent_runtime.run,'tool':self.agent_runtime.tool},True)
         self.skill_registry=SkillRegistry(self.base_dir);self.global_env.define('skill',{'load':self.skill_registry.load,'list':self.skill_registry.list,'get':self.skill_registry.get,'render':self.skill_registry.render},True)
         self.extension_registry=ExtensionRegistry()
+        self.extension_type_system=ExtensionTypeSystem(self.extension_registry)
         # Register extension functions in global environment so they're found as variables
         for name, ext_func in self.extension_registry.functions.items():
             if ext_func.func is not None:
                 self.global_env.define(name, ext_func.func, True)
+        # Register extension types in global environment so constructors can be called
+        for name, ext_type in self.extension_registry.types.items():
+            if ext_type.constructor is not None:
+                self.global_env.define(name, ext_type.constructor, True)
     def _append(self,a,v):a.append(v);return a
     def load_extensions_from_manifest(self, manifest: dict) -> None:
         """Load extensions declared in a pea.toml manifest's [extensions] section."""
@@ -448,6 +454,10 @@ class Interpreter:
         for name, ext_func in self.extension_registry.functions.items():
             if ext_func.func is not None:
                 self.global_env.define(name, ext_func.func, True)
+        # Register extension types in global environment so constructors can be called
+        for name, ext_type in self.extension_registry.types.items():
+            if ext_type.constructor is not None:
+                self.global_env.define(name, ext_type.constructor, True)
     def _write(self,p,c):Path(p).write_text(str(c),encoding='utf-8');return p
     def stringify(self,v):
         if v is None:return 'null'
