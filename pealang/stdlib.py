@@ -22,6 +22,19 @@ import urllib.error
 import concurrent.futures
 import warnings
 from .errors import PeaError
+from .extension_lifecycle import ExtensionLifecycleManager, create_lifecycle_manager
+from .stdlib_extensions import (
+    _sql_select, _sql_insert, _sql_update, _sql_delete, _sql_create_table, _sql_drop_table,
+    _cache_get, _cache_set, _cache_delete, _cache_clear, _cache_has, _cache_keys, _cache_size,
+    _uuid_v4, _uuid_v4_full, _uuid_v1, _uuid_v3, _uuid_v5, _uuid_random,
+    _cli_parse, _cli_has, _cli_get,
+    _config_parse_ini, _config_parse_json, _config_parse_toml, _config_parse_yaml, _config_get,
+    _template_render, _template_render_file,
+    _serialize_json, _serialize_json_loads, _serialize_csv, _serialize_csv_parse,
+    _graph_create,
+    _queue_create, _priority_queue_create,
+    _env_get, _env_set, _env_unset, _env_has, _env_keys,
+)
 
 
 class Namespace(dict):
@@ -33,6 +46,11 @@ class Namespace(dict):
         if self.legacy_call is None:
             raise PeaError('Namespace is not directly callable')
         return self.legacy_call(*a)
+
+    def __getattr__(self, name):
+        if name in self:
+            return self[name]
+        raise AttributeError(f"Namespace has no attribute '{name}'")
 
 
 def _ns(legacy_call=None, **x):
@@ -72,6 +90,16 @@ MODULES = {
     'std.interop': StdModuleSpec('std.interop', description='Cross-language interoperability'),
     'std.ux': StdModuleSpec('std.ux', description='User-experience and diagnostics helpers'),
     'std.stats': StdModuleSpec('std.stats', description='Numerical, statistical and modelling toolkit'),
+    'std.sql': StdModuleSpec('std.sql', description='SQL query builder'),
+    'std.cache': StdModuleSpec('std.cache', description='In-memory cache with TTL support'),
+    'std.uuid': StdModuleSpec('std.uuid', description='UUID generation'),
+    'std.cli': StdModuleSpec('std.cli', description='Command-line argument parsing'),
+    'std.config': StdModuleSpec('std.config', description='Configuration file parsing (ini, json, toml, yaml)'),
+    'std.template': StdModuleSpec('std.template', description='Simple template engine'),
+    'std.serialize': StdModuleSpec('std.serialize', description='Serialization (json, csv)'),
+    'std.graph': StdModuleSpec('std.graph', description='Graph data structures and algorithms'),
+    'std.queue': StdModuleSpec('std.queue', description='Queue and priority queue data structures'),
+    'std.env': StdModuleSpec('std.env', description='Environment variable handling'),
 }
 
 
@@ -314,6 +342,67 @@ def _module_values():
         'std.interop': build_interop_namespace(),
         'std.ux': build_ux_namespace(),
         'std.stats': build_stats_namespace(),
+        'std.sql': _ns(
+            select=_sql_select,
+            insert=_sql_insert,
+            update=_sql_update,
+            delete=_sql_delete,
+            create_table=_sql_create_table,
+            drop_table=_sql_drop_table,
+        ),
+        'std.cache': _ns(
+            get=_cache_get,
+            set=_cache_set,
+            delete=_cache_delete,
+            clear=_cache_clear,
+            has=_cache_has,
+            keys=_cache_keys,
+            size=_cache_size,
+        ),
+        'std.uuid': _ns(
+            v4=_uuid_v4,
+            v4_full=_uuid_v4_full,
+            v1=_uuid_v1,
+            v3=_uuid_v3,
+            v5=_uuid_v5,
+            random=_uuid_random,
+        ),
+        'std.cli': _ns(
+            parse=_cli_parse,
+            has=_cli_has,
+            get=_cli_get,
+        ),
+        'std.config': _ns(
+            parse_ini=_config_parse_ini,
+            parse_json=_config_parse_json,
+            parse_toml=_config_parse_toml,
+            parse_yaml=_config_parse_yaml,
+            get=_config_get,
+        ),
+        'std.template': _ns(
+            render=_template_render,
+            render_file=_template_render_file,
+        ),
+        'std.serialize': _ns(
+            json_dumps=_serialize_json,
+            json_loads=_serialize_json_loads,
+            csv_dumps=_serialize_csv,
+            csv_loads=_serialize_csv_parse,
+        ),
+        'std.graph': _ns(
+            create=_graph_create,
+        ),
+        'std.queue': _ns(
+            create=_queue_create,
+            priority_create=_priority_queue_create,
+        ),
+        'std.env': _ns(
+            get=_env_get,
+            set=_env_set,
+            unset=_env_unset,
+            has=_env_has,
+            keys=_env_keys,
+        ),
     }
 
 
