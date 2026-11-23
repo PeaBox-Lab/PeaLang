@@ -526,3 +526,99 @@ def test_pea_publish_cli(tmp_path):
     # but the command structure should be correct
     assert result.returncode == 1
     assert "Upload failed" in result.stdout or "Upload failed" in result.stderr
+
+
+def test_extension_registry(tmp_path):
+    """Phase 29: Extension registry core functionality."""
+    from pealang.extension_registry import ExtensionRegistry
+
+    reg = ExtensionRegistry()
+
+    # Register function
+    reg.register_function('my_add', lambda a, b: a + b, 2, 'Add two numbers')
+    assert 'my_add' in reg.list_functions()
+    f = reg.resolve_function('my_add')
+    assert f is not None
+    assert f(3, 4) == 7
+
+    # Register type
+    reg.register_type('MyType', lambda x: {'value': x}, {'double': lambda s: s['value'] * 2})
+    assert 'MyType' in reg.list_types()
+    t = reg.get_type('MyType')
+    assert t is not None
+    assert t.name == 'MyType'
+
+    # Register operator
+    reg.register_operator('++', lambda a, b: a + b + 1, 10, 'Custom operator')
+    assert '++' in reg.list_operators()
+    op = reg.get_operator('++')
+    assert op is not None
+    assert op.func(5, 3) == 9
+
+    # Register namespace
+    reg.register_namespace('std.myext', {'hello': lambda: 'hello'})
+    assert 'std.myext' in reg.list_namespaces()
+    ns = reg.get_namespace('std.myext')
+    assert ns is not None
+    assert ns.name == 'std.myext'
+
+    # List all
+    all_info = reg.list_all()
+    assert 'my_add' in all_info['functions']
+    assert 'MyType' in all_info['types']
+    assert '++' in all_info['operators']
+    assert 'std.myext' in all_info['namespaces']
+
+
+def test_interpreter_extension_function(tmp_path):
+    """Phase 29: Extension functions callable from PeaLang source."""
+    from pealang.interpreter import Interpreter
+    from pealang.parser import parse_source
+
+    interp = Interpreter()
+    interp.extension_registry.register_function('ext_double', lambda x: x * 2, 1, 'Double a number')
+    interp.global_env.define('ext_double', interp.extension_registry.functions['ext_double'].func, True)
+
+    code = 'print ext_double(21)'
+    program = parse_source(code, 'test.pea')
+    result = interp.run(program)
+    assert result is None  # print returns None
+
+
+def test_pea_ext_list(tmp_path):
+    """Phase 29: pea ext list shows extension registry."""
+    import subprocess, sys
+    result = subprocess.run(
+        [sys.executable, "-m", "pealang.cli", "ext", "list"],
+        capture_output=True, text=True,
+        cwd=str(Path(__file__).resolve().parent.parent),
+    )
+    assert result.returncode == 0
+    assert "Extension functions:" in result.stdout
+    assert "Extension types:" in result.stdout
+    assert "Extension operators:" in result.stdout
+    assert "Extension namespaces:" in result.stdout
+
+
+def test_pea_ext_info_not_found(tmp_path):
+    """Phase 29: pea ext info for non-existent extension."""
+    import subprocess, sys
+    result = subprocess.run(
+        [sys.executable, "-m", "pealang.cli", "ext", "info", "nonexistent"],
+        capture_output=True, text=True,
+        cwd=str(Path(__file__).resolve().parent.parent),
+    )
+    assert result.returncode == 1
+    assert "Extension not found" in result.stdout
+
+
+def test_pea_ext_load_invalid(tmp_path):
+    """Phase 29: pea ext load for non-existent module."""
+    import subprocess, sys
+    result = subprocess.run(
+        [sys.executable, "-m", "pealang.cli", "ext", "load", "nonexistent_module"],
+        capture_output=True, text=True,
+        cwd=str(Path(__file__).resolve().parent.parent),
+    )
+    assert result.returncode == 1
+    assert "Failed to load extension module" in result.stdout or "Failed to load extension module" in result.stderr

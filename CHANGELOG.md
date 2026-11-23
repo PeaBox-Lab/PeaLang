@@ -159,6 +159,19 @@ All 1240 tests pass.
 - **Tests**: `test_pea_publish_help`, `test_pea_search_help`, `test_pea_browse_help`, `test_pea_info_help`, `test_pea_login_help`, `test_pea_logout`, `test_pea_publish_cli`.
 - All 1287 tests pass.
 
+### Phase 29: Language Extension Hooks (2.35.0)
+- **`pealang/extension_registry.py`**: Extension registry system for custom functions, types, operators, and namespaces.
+- **`pea ext list`**: List all registered extensions.
+- **`pea ext load <module>`**: Load extension functions from a Python module.
+- **`pea ext info <name>`**: Show details about a registered extension.
+- **Extension functions**: Registered functions are callable from PeaLang source code.
+- **Extension operators**: Custom infix operators registered in the registry.
+- **Extension namespaces**: Named namespaces (e.g., `std.myextension`) for grouping symbols.
+- **`pea.toml` extension support**: Library templates include `[extensions]` section with `functions`, `types`, `operators`, `namespaces` fields.
+- **Interpreter integration**: Extension functions registered in global environment; operators checked in `apply()`.
+- **Tests**: `test_extension_registry`, `test_interpreter_extension_function`, `test_pea_ext_list`, `test_pea_ext_info_not_found`, `test_pea_ext_load_invalid`.
+- All 1292 tests pass.
+
 ## 2.20.0 - 2026-11-16
 
 ### Version unification (single source of truth)

@@ -892,6 +892,144 @@ def main(argv=None):
 
             print('Usage: pea registry serve [--host HOST] [--port PORT] [--storage DIR] [--name NAME]');return 1
 
+        if c=='ext':
+
+            from .extension_registry import ExtensionRegistry
+
+            sub=argv[1] if len(argv)>1 else None
+
+            if sub=='list':
+
+                from .interpreter import Interpreter
+
+                interp=Interpreter()
+
+                ns=interp.extension_registry.list_all()
+
+                print('Extension functions:')
+
+                for name in ns['functions']:
+
+                    print(f'  {name}')
+
+                print('Extension types:')
+
+                for name in ns['types']:
+
+                    print(f'  {name}')
+
+                print('Extension operators:')
+
+                for name in ns['operators']:
+
+                    print(f'  {name}')
+
+                print('Extension namespaces:')
+
+                for name in ns['namespaces']:
+
+                    print(f'  {name}')
+
+                print('Loaded modules:')
+
+                for name in ns['loaded_modules']:
+
+                    print(f'  {name}')
+
+                return 0
+
+            if sub=='load':
+
+                mod_name=argv[2] if len(argv)>2 else None
+
+                if not mod_name:
+
+                    print('Usage: pea ext load <module_name>');return 1
+
+                from .interpreter import Interpreter
+
+                interp=Interpreter()
+
+                try:
+
+                    mod=__import__(mod_name)
+
+                    interp.extension_registry.register_module(mod_name,mod)
+
+                    # Register functions in global env
+
+                    for name,fn in interp.extension_registry.functions.items():
+
+                        if fn.func is not None:
+
+                            interp.global_env.define(name,fn.func,True)
+
+                    print(f'Loaded extension module: {mod_name}')
+
+                except ImportError as e:
+
+                    print(f'Failed to load extension module: {e}');return 1
+
+                return 0
+
+            if sub=='info':
+
+                name=argv[2] if len(argv)>2 else None
+
+                if not name:
+
+                    print('Usage: pea ext info <name>');return 1
+
+                from .interpreter import Interpreter
+
+                interp=Interpreter()
+
+                ext_func=interp.extension_registry.get_function(name)
+
+                ext_type=interp.extension_registry.get_type(name)
+
+                ext_op=interp.extension_registry.get_operator(name)
+
+                ext_ns=interp.extension_registry.get_namespace(name)
+
+                if ext_func:
+
+                    print(f'Function: {ext_func.name}')
+
+                    print(f'  Arg count: {ext_func.arg_count}')
+
+                    print(f'  Doc: {ext_func.doc}')
+
+                elif ext_type:
+
+                    print(f'Type: {ext_type.name}')
+
+                    print(f'  Methods: {", ".join(ext_type.methods.keys())}')
+
+                    print(f'  Doc: {ext_type.doc}')
+
+                elif ext_op:
+
+                    print(f'Operator: {ext_op.symbol}')
+
+                    print(f'  Precedence: {ext_op.precedence}')
+
+                    print(f'  Doc: {ext_op.doc}')
+
+                elif ext_ns:
+
+                    print(f'Namespace: {ext_ns.name}')
+
+                    print(f'  Symbols: {", ".join(ext_ns.symbols.keys())}')
+
+                else:
+
+                    print(f'Extension not found: {name}');return 1
+
+                return 0
+
+            print('Usage: pea ext list|load <module>|info <name>');return 1
+
         if c=='publish':
 
             from .package_manager import build_library, load_pea_toml
@@ -1084,7 +1222,7 @@ def main(argv=None):
 
         if allow:argv.remove('--allow-process')
 
-        if len(argv)!=1:print('Usage: pea [run|eval|repl|check|lint|fmt|test|compile|vm|dis|init|new|serve-web|doctor|health|help|quickstart|scaffold|templates|info|project|docs|registry|publish|search|browse|login|logout|analyze|web-openapi|hash|tree|env|typecheck|typecheck-project|readiness|audit|stdlib] ...',file=sys.stderr);return 2
+        if len(argv)!=1:print('Usage: pea [run|eval|repl|check|lint|fmt|test|compile|vm|dis|init|new|serve-web|doctor|health|help|quickstart|scaffold|templates|info|project|docs|registry|publish|search|browse|login|logout|ext|analyze|web-openapi|hash|tree|env|typecheck|typecheck-project|readiness|audit|stdlib] ...',file=sys.stderr);return 2
 
         return run_file(argv[0],allow)
 

@@ -19,6 +19,7 @@ from .skills import SkillRegistry
 from .project import load_manifest, resolve_module
 from .agents import ToolRegistry,AgentRuntime
 from .help import help as _pea_help
+from .extension_registry import ExtensionRegistry
 from .exceptions import (PeaException, NameError, ValueError, TypeError, IndexError,
     ZeroDivisionError, ScopeError, AssertionError, AttributeError, ImportError, UserError)
 class ReturnSignal(Exception):
@@ -434,7 +435,19 @@ class Interpreter:
         self.stats_namespace=build_stats_namespace();self.global_env.define('stats',self.stats_namespace,True)
         self.tool_registry=ToolRegistry(self.invoke_user_function);self.agent_runtime=AgentRuntime(self.ai_service,self.tool_registry);self.global_env.define('tool',{'register':self.tool_registry.register,'list':self.tool_registry.list,'describe':self.tool_registry.describe,'call':self.tool_registry.call},True);self.global_env.define('agent',{'define':self.agent_runtime.define,'run':self.agent_runtime.run,'tool':self.agent_runtime.tool},True)
         self.skill_registry=SkillRegistry(self.base_dir);self.global_env.define('skill',{'load':self.skill_registry.load,'list':self.skill_registry.list,'get':self.skill_registry.get,'render':self.skill_registry.render},True)
+        self.extension_registry=ExtensionRegistry()
+        # Register extension functions in global environment so they're found as variables
+        for name, ext_func in self.extension_registry.functions.items():
+            if ext_func.func is not None:
+                self.global_env.define(name, ext_func.func, True)
     def _append(self,a,v):a.append(v);return a
+    def load_extensions_from_manifest(self, manifest: dict) -> None:
+        """Load extensions declared in a pea.toml manifest's [extensions] section."""
+        self.extension_registry.load_from_manifest(manifest)
+        # Re-register any functions that now have implementations
+        for name, ext_func in self.extension_registry.functions.items():
+            if ext_func.func is not None:
+                self.global_env.define(name, ext_func.func, True)
     def _write(self,p,c):Path(p).write_text(str(c),encoding='utf-8');return p
     def stringify(self,v):
         if v is None:return 'null'
@@ -674,6 +687,11 @@ class Interpreter:
         raise ValueError('Invalid assignment target',getattr(t,'span',node.span),self.source_name)
     def truth(self,v):return bool(v)
     def apply(self,op,a,b,node=None):
+        # Check extension registry for custom operators first
+        ext_op=self.extension_registry.resolve_operator(op)
+        if ext_op is not None:
+            try:return ext_op(a,b)
+            except Exception as ex:raise _map_builtin_exception(ex, span=getattr(node, 'span', None), source=self.source_name) from ex
         try:
             return {'+':lambda:a+b,'-':lambda:a-b,'*':lambda:a*b,'/':lambda:a/b,'%':lambda:a%b,'**':lambda:a**b,'==':lambda:a==b,'!=':lambda:a!=b,'<':lambda:a<b,'<=':lambda:a<=b,'>':lambda:a>b,'>=':lambda:a>=b,'in':lambda:a in b,'not in':lambda:a not in b}[op]()
         except KeyError:raise TypeError(f'Unknown operator {op}',getattr(node,'span',None),self.source_name)
