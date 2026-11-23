@@ -366,3 +366,12 @@ Make PeaLang the default extension language for:
 - **Interpreter integration**: Extension functions registered in global environment; operators checked in `apply()`.
 - **Tests**: `test_extension_registry`, `test_interpreter_extension_function`, `test_pea_ext_list`, `test_pea_ext_info_not_found`, `test_pea_ext_load_invalid`.
 - All 1292 tests pass.
+
+### Phase 30: Developer Portal (2.36.0)
+- **`pealang/dev_portal.py`**: Self-hosted developer portal web server with template gallery and library authoring guide.
+- **`pea portal`**: CLI command to run the developer portal server on configurable host/port/storage.
+- **Template gallery**: `GET /api/templates` lists all scaffold templates with previews; `GET /api/templates/<name>` returns template content.
+- **Extension browser**: `GET /api/extensions` lists all registered extension functions, types, operators, and namespaces.
+- **Index page**: HTML portal with template gallery, API endpoints reference, and quick command reference.
+- **Tests**: `test_dev_portal_template_list`, `test_dev_portal_get_template`, `test_dev_portal_list_extensions`, `test_pea_portal_help`.
+- All 1296 tests pass.

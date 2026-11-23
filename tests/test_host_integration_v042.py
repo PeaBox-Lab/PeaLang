@@ -622,3 +622,54 @@ def test_pea_ext_load_invalid(tmp_path):
     )
     assert result.returncode == 1
     assert "Failed to load extension module" in result.stdout or "Failed to load extension module" in result.stderr
+
+
+def test_dev_portal_template_list(tmp_path):
+    """Phase 30: Developer portal template gallery lists templates."""
+    from pealang.dev_portal import DeveloperPortalServer
+
+    server = DeveloperPortalServer(host='127.0.0.1', port=9999, storage_dir=str(tmp_path / 'portal'))
+    templates = server.list_templates()
+    assert len(templates) > 0
+    assert 'default' in templates
+    assert 'webapp' in templates
+    assert 'api' in templates
+    assert 'analysis' in templates
+    assert 'library' in templates
+    assert 'cli' in templates
+
+
+def test_dev_portal_get_template(tmp_path):
+    """Phase 30: Developer portal returns template content."""
+    from pealang.dev_portal import DeveloperPortalServer
+
+    server = DeveloperPortalServer(host='127.0.0.1', port=9999, storage_dir=str(tmp_path / 'portal'))
+    tmpl = server.get_template('library')
+    assert 'error' not in tmpl
+    assert tmpl['name'] == 'library'
+    assert 'content' in tmpl
+    assert len(tmpl['content']) > 0
+
+
+def test_dev_portal_list_extensions(tmp_path):
+    """Phase 30: Developer portal lists extensions."""
+    from pealang.dev_portal import DeveloperPortalServer
+
+    server = DeveloperPortalServer(host='127.0.0.1', port=9999, storage_dir=str(tmp_path / 'portal'))
+    exts = server.list_extensions()
+    assert 'functions' in exts
+    assert 'types' in exts
+    assert 'operators' in exts
+    assert 'namespaces' in exts
+
+
+def test_pea_portal_help(tmp_path):
+    """Phase 30: pea portal module can be imported."""
+    import subprocess, sys
+    result = subprocess.run(
+        [sys.executable, "-c", "from pealang.dev_portal import serve; print('portal module ok')"],
+        capture_output=True, text=True,
+        cwd=str(Path(__file__).resolve().parent.parent),
+    )
+    assert result.returncode == 0
+    assert "portal module ok" in result.stdout

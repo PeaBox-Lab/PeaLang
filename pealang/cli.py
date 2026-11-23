@@ -1210,6 +1210,28 @@ def main(argv=None):
 
             return 0
 
+        if c=='portal':
+
+            from .dev_portal import serve
+
+            host='127.0.0.1';port=8789;storage='./portal-storage'
+
+            i=1
+
+            while i+1<len(argv):
+
+                if argv[i]=='--host':host=argv[i+1];i+=2;continue
+
+                if argv[i]=='--port':port=int(argv[i+1]);i+=2;continue
+
+                if argv[i]=='--storage':storage=argv[i+1];i+=2;continue
+
+                i+=1
+
+            serve(host=host,port=port,storage_dir=storage)
+
+            return 0
+
         if len(argv)==1 and argv[0].endswith('.peac'):
 
             from .bytecode import BytecodeModule
@@ -1222,7 +1244,7 @@ def main(argv=None):
 
         if allow:argv.remove('--allow-process')
 
-        if len(argv)!=1:print('Usage: pea [run|eval|repl|check|lint|fmt|test|compile|vm|dis|init|new|serve-web|doctor|health|help|quickstart|scaffold|templates|info|project|docs|registry|publish|search|browse|login|logout|ext|analyze|web-openapi|hash|tree|env|typecheck|typecheck-project|readiness|audit|stdlib] ...',file=sys.stderr);return 2
+        if len(argv)!=1:print('Usage: pea [run|eval|repl|check|lint|fmt|test|compile|vm|dis|init|new|serve-web|doctor|health|help|quickstart|scaffold|templates|info|project|docs|registry|publish|search|browse|login|logout|ext|portal|analyze|web-openapi|hash|tree|env|typecheck|typecheck-project|readiness|audit|stdlib] ...',file=sys.stderr);return 2
 
         return run_file(argv[0],allow)
 
