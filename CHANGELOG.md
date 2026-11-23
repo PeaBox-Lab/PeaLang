@@ -179,7 +179,7 @@ All 1240 tests pass.
 - **Extension browser**: `GET /api/extensions` lists all registered extension functions, types, operators, and namespaces.
 - **Index page**: HTML portal with template gallery, API endpoints reference, and quick command reference.
 - **Tests**: `test_dev_portal_template_list`, `test_dev_portal_get_template`, `test_dev_portal_list_extensions`, `test_pea_portal_help`.
-- All 1296 tests pass.
+- All 1298 tests pass.
 
 ### Phase 31: Language Extension Type System (2.37.0)
 - **`pealang/extension_type_system.py`**: `ExtensionTypeSystem` class integrating extension types with the type system.
@@ -189,7 +189,7 @@ All 1240 tests pass.
 - **Protocol contracts**: `get_extension_protocol()` creates `ProtocolContract` for extension types.
 - **Interpreter integration**: Extension types registered in global environment; constructor functions callable from PeaLang source.
 - **Tests**: `test_extension_type_system`, `test_pea_ext_type_info`.
-- All 1296 tests pass.
+- All 1298 tests pass.
 
 ## 2.20.0 - 2026-11-16
 

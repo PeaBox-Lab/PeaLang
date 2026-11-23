@@ -374,4 +374,4 @@ Make PeaLang the default extension language for:
 - **Extension browser**: `GET /api/extensions` lists all registered extension functions, types, operators, and namespaces.
 - **Index page**: HTML portal with template gallery, API endpoints reference, and quick command reference.
 - **Tests**: `test_dev_portal_template_list`, `test_dev_portal_get_template`, `test_dev_portal_list_extensions`, `test_pea_portal_help`.
-- All 1296 tests pass.
+- All 1298 tests pass.
