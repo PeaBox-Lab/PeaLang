@@ -179,7 +179,7 @@ All 1240 tests pass.
 - **Extension browser**: `GET /api/extensions` lists all registered extension functions, types, operators, and namespaces.
 - **Index page**: HTML portal with template gallery, API endpoints reference, and quick command reference.
 - **Tests**: `test_dev_portal_template_list`, `test_dev_portal_get_template`, `test_dev_portal_list_extensions`, `test_pea_portal_help`.
-- All 1298 tests pass.
+- All 1296 tests pass.
 
 ### Phase 31: Language Extension Type System (2.37.0)
 - **`pealang/extension_type_system.py`**: `ExtensionTypeSystem` class integrating extension types with the type system.
@@ -190,6 +190,20 @@ All 1240 tests pass.
 - **Interpreter integration**: Extension types registered in global environment; constructor functions callable from PeaLang source.
 - **Tests**: `test_extension_type_system`, `test_pea_ext_type_info`.
 - All 1298 tests pass.
+
+### Phase 32: Publish & Discover CLI (2.34.0) [REMOVED - already in Phase 28]
+
+### Phase 32: Extension Marketplace (2.38.0)
+- **`pealang/marketplace.py`**: Extension marketplace for discovering, rating, and reviewing PeaLang libraries.
+- **`pea market list`**: List all libraries in the marketplace with downloads and ratings.
+- **`pea market search <query>`**: Search libraries by name or description.
+- **`pea market info <name>`**: Show detailed information about a library.
+- **`pea market rate <name> <version> <rating>`**: Rate a library (1-5 stars) with optional review.
+- **Marketplace data**: Library entries with name, version, description, author, downloads, rating, tags.
+- **Rating system**: 1-5 star ratings with reviewer comments, aggregated into average ratings.
+- **Download tracking**: Track download counts per library.
+- **Tests**: `test_marketplace_register_list`, `test_marketplace_search`, `test_marketplace_rate`, `test_pea_market_list`, `test_pea_market_search`, `test_pea_market_info`.
+- All 1304 tests pass.
 
 ## 2.20.0 - 2026-11-16
 

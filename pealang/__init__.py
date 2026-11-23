@@ -113,6 +113,7 @@ __all__=['BytecodeModule','CodeObject','Instruction','Op','Compiler','CompileErr
 'PeaResourceLimitError','to_pea','from_pea','__version__']
 
 from .package_manager import Version,satisfies,load_pea_toml,init_manifest,resolve,write_lock,audit,build_package,build_library,install
+from .marketplace import create_marketplace
 
 from .runtime_service import RuntimeService,RuntimeResponse,ServiceError
 

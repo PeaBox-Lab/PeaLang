@@ -1230,7 +1230,117 @@ def main(argv=None):
 
             serve(host=host,port=port,storage_dir=storage)
 
+            serve(host=host,port=port,storage_dir=storage)
+
             return 0
+
+        if c=='market':
+
+            from .marketplace import create_marketplace
+            import json as _json
+
+            sub=argv[1] if len(argv)>1 else None
+
+            if sub=='list':
+
+                tag=argv[2] if len(argv)>2 else None
+                author=argv[3] if len(argv)>3 else None
+                sort=argv[4] if len(argv)>4 else 'downloads'
+
+                mp=create_marketplace()
+                libs=mp.list_libraries(tag=tag, author=author, sort_by=sort)
+
+                for lib in libs:
+                    print(f'{lib.name} {lib.version} - {lib.description[:60]}')
+                    print(f'  Author: {lib.author} | Downloads: {lib.downloads} | Rating: {lib.rating:.1f} ({lib.rating_count})')
+                    print(f'  Tags: {", ".join(lib.tags)}')
+                    print()
+
+                return 0
+
+            if sub=='search':
+
+                query=argv[2] if len(argv)>2 else None
+
+                if not query:
+
+                    print('Usage: pea market search <query>');return 1
+
+                mp=create_marketplace()
+                results=mp.search_libraries(query)
+
+                if not results:
+                    print(f'No libraries matching "{query}"')
+                else:
+                    for lib in results:
+                        print(f'{lib.name} {lib.version} - {lib.description[:60]}')
+                        print(f'  Author: {lib.author} | Downloads: {lib.downloads} | Rating: {lib.rating:.1f}')
+
+                return 0
+
+            if sub=='rate':
+
+                name=argv[2] if len(argv)>2 else None
+                version=argv[3] if len(argv)>3 else None
+                rating=argv[4] if len(argv)>4 else None
+                reviewer=argv[5] if len(argv)>5 else 'anonymous'
+                comment=argv[6] if len(argv)>6 else ''
+
+                if not name or not version or not rating:
+
+                    print('Usage: pea market rate <name> <version> <rating> [reviewer] [comment]');return 1
+
+                try:
+
+                    rating_int=int(rating)
+
+                except ValueError:
+
+                    print(f'Invalid rating: {rating}');return 1
+
+                mp=create_marketplace()
+
+                try:
+
+                    r=mp.rate_library(name, version, rating_int, reviewer, comment)
+
+                    print(f'Rated {name} {version}: {r.rating}/5 by {r.reviewer}')
+
+                except ValueError as e:
+
+                    print(f'Error: {e}');return 1
+
+                return 0
+
+            if sub=='info':
+
+                name=argv[2] if len(argv)>2 else None
+
+                if not name:
+
+                    print('Usage: pea market info <name>');return 1
+
+                mp=create_marketplace()
+
+                lib=mp.get_library(name)
+
+                if not lib:
+
+                    print(f'Library {name} not found');return 1
+
+                print(f'{lib.name} {lib.version}')
+                print(f'  Author: {lib.author}')
+                print(f'  Description: {lib.description}')
+                print(f'  Downloads: {lib.downloads}')
+                print(f'  Rating: {lib.rating:.1f} ({lib.rating_count} ratings)')
+                print(f'  Tags: {", ".join(lib.tags)}')
+                if lib.license: print(f'  License: {lib.license}')
+                if lib.homepage: print(f'  Homepage: {lib.homepage}')
+                if lib.repository: print(f'  Repository: {lib.repository}')
+
+                return 0
+
+            print('Usage: pea market list|search|rate|info');return 1
 
         if len(argv)==1 and argv[0].endswith('.peac'):
 
@@ -1244,7 +1354,7 @@ def main(argv=None):
 
         if allow:argv.remove('--allow-process')
 
-        if len(argv)!=1:print('Usage: pea [run|eval|repl|check|lint|fmt|test|compile|vm|dis|init|new|serve-web|doctor|health|help|quickstart|scaffold|templates|info|project|docs|registry|publish|search|browse|login|logout|ext|portal|analyze|web-openapi|hash|tree|env|typecheck|typecheck-project|readiness|audit|stdlib] ...',file=sys.stderr);return 2
+        if len(argv)!=1:print('Usage: pea [run|eval|repl|check|lint|fmt|test|compile|vm|dis|init|new|serve-web|doctor|health|help|quickstart|scaffold|templates|info|project|docs|registry|publish|search|browse|login|logout|ext|portal|market|analyze|web-openapi|hash|tree|env|typecheck|typecheck-project|readiness|audit|stdlib] ...',file=sys.stderr);return 2
 
         return run_file(argv[0],allow)
 

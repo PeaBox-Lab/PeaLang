@@ -375,3 +375,14 @@ Make PeaLang the default extension language for:
 - **Index page**: HTML portal with template gallery, API endpoints reference, and quick command reference.
 - **Tests**: `test_dev_portal_template_list`, `test_dev_portal_get_template`, `test_dev_portal_list_extensions`, `test_pea_portal_help`.
 - All 1298 tests pass.
+### Phase 32: Extension Marketplace (2.39.0)
+- **pealang/marketplace.py**: Extension marketplace for discovering, rating, and reviewing PeaLang libraries.
+- **pea market list**: List all libraries in the marketplace with downloads and ratings.
+- **pea market search <query>**: Search libraries by name or description.
+- **pea market info <name>**: Show detailed information about a library.
+- **pea market rate <name> <version> <rating>**: Rate a library (1-5 stars) with optional review.
+- **Marketplace data**: Library entries with name, version, description, author, downloads, rating, tags.
+- **Rating system**: 1-5 star ratings with reviewer comments, aggregated into average ratings.
+- **Download tracking**: Track download counts per library.
+- **Tests**: test_marketplace_register_list, test_marketplace_search, test_marketplace_rate, test_pea_market_list, test_pea_market_search, test_pea_market_info.
+- All 1304 tests pass.

@@ -731,3 +731,129 @@ def test_pea_ext_type_info(tmp_path):
     assert result.returncode == 0
     assert 'TestType' in result.stdout
     assert 'double' in result.stdout
+
+
+def test_marketplace_register_list(tmp_path):
+    """Phase 32: Marketplace register and list libraries."""
+    from pealang.marketplace import create_marketplace
+    import tempfile
+
+    storage = str(tmp_path / "marketplace")
+    mp = create_marketplace(storage)
+
+    lib = mp.register_library(
+        name="testlib",
+        version="1.0.0",
+        description="A test library",
+        author="testuser",
+        tags=["utility", "math"],
+    )
+    assert lib.name == "testlib"
+    assert lib.version == "1.0.0"
+    assert lib.description == "A test library"
+    assert lib.author == "testuser"
+    assert "utility" in lib.tags
+
+    libs = mp.list_libraries()
+    assert len(libs) == 1
+    assert libs[0].name == "testlib"
+
+
+def test_marketplace_search(tmp_path):
+    """Phase 32: Marketplace search libraries."""
+    from pealang.marketplace import create_marketplace
+    import tempfile
+
+    storage = str(tmp_path / "marketplace2")
+    mp = create_marketplace(storage)
+
+    mp.register_library(
+        name="mathlib",
+        version="1.0.0",
+        description="Math utilities library",
+        author="mathuser",
+        tags=["math", "utility"],
+    )
+    mp.register_library(
+        name="stringlib",
+        version="0.5.0",
+        description="String manipulation library",
+        author="stringuser",
+        tags=["string", "utility"],
+    )
+
+    results = mp.search_libraries("math")
+    assert len(results) == 1
+    assert results[0].name == "mathlib"
+
+    results = mp.search_libraries("library")
+    assert len(results) == 2
+
+
+def test_marketplace_rate(tmp_path):
+    """Phase 32: Marketplace rate libraries."""
+    from pealang.marketplace import create_marketplace
+    import tempfile
+
+    storage = str(tmp_path / "marketplace3")
+    mp = create_marketplace(storage)
+
+    mp.register_library(
+        name="ratelib",
+        version="1.0.0",
+        description="A library to rate",
+        author="author",
+        tags=["test"],
+    )
+
+    r = mp.rate_library("ratelib", "1.0.0", 5, "reviewer1", "Great!")
+    assert r.rating == 5
+    assert r.reviewer == "reviewer1"
+    assert r.comment == "Great!"
+
+    lib = mp.get_library("ratelib")
+    assert lib.rating == 5.0
+    assert lib.rating_count == 1
+
+    # Second rating
+    r2 = mp.rate_library("ratelib", "1.0.0", 3, "reviewer2", "OK")
+    assert r2.rating == 3
+
+    lib = mp.get_library("ratelib")
+    assert lib.rating_count == 2
+    assert abs(lib.rating - 4.0) < 0.01  # (5+3)/2 = 4
+
+
+def test_pea_market_list(tmp_path):
+    """Phase 32: pea market list CLI."""
+    import subprocess, sys
+    result = subprocess.run(
+        [sys.executable, "-m", "pealang.cli", "market", "list"],
+        capture_output=True, text=True,
+        cwd=str(Path(__file__).resolve().parent.parent),
+    )
+    # Should succeed even with no libraries
+    assert result.returncode == 0
+
+
+def test_pea_market_search(tmp_path):
+    """Phase 32: pea market search CLI."""
+    import subprocess, sys
+    result = subprocess.run(
+        [sys.executable, "-m", "pealang.cli", "market", "search", "testlib"],
+        capture_output=True, text=True,
+        cwd=str(Path(__file__).resolve().parent.parent),
+    )
+    assert result.returncode == 0
+
+
+def test_pea_market_info(tmp_path):
+    """Phase 32: pea market info CLI."""
+    import subprocess, sys
+    result = subprocess.run(
+        [sys.executable, "-m", "pealang.cli", "market", "info", "nonexistent"],
+        capture_output=True, text=True,
+        cwd=str(Path(__file__).resolve().parent.parent),
+    )
+    assert result.returncode == 1
+    assert "not found" in result.stdout or "not found" in result.stderr
