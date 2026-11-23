@@ -1028,7 +1028,156 @@ def main(argv=None):
 
                 return 0
 
-            print('Usage: pea ext list|load <module>|info <name>');return 1
+            if sub=='deprecate':
+
+                from .extension_lifecycle import ExtensionLifecycleManager
+
+                name=argv[2] if len(argv)>2 else None
+                version=argv[3] if len(argv)>3 else None
+
+                if not name or not version:
+
+                    print('Usage: pea ext deprecate <name> <version> [--message <msg>] [--replacement <name>] [--migration-guide <path>] [--removal-version <ver>] [--removal-date <date>]');return 1
+
+                # Parse optional args
+                message=""
+                replacement=None
+                migration_guide=None
+                removal_version=None
+                removal_date=None
+
+                i=4
+                while i+1<len(argv):
+
+                    if argv[i]=='--message':message=argv[i+1];i+=2;continue
+
+                    if argv[i]=='--replacement':replacement=argv[i+1];i+=2;continue
+
+                    if argv[i]=='--migration-guide':migration_guide=argv[i+1];i+=2;continue
+
+                    if argv[i]=='--removal-version':removal_version=argv[i+1];i+=2;continue
+
+                    if argv[i]=='--removal-date':removal_date=int(argv[i+1]);i+=2;continue
+
+                    i+=1
+
+                lm=ExtensionLifecycleManager()
+
+                dep=lm.deprecate(name, version, message=message, replacement=replacement, migration_guide=migration_guide, removal_version=removal_version, removal_date=removal_date)
+
+                print(f'Deprecated {name}@{version}')
+
+                if dep.message:
+
+                    print(f'  Message: {dep.message}')
+
+                if dep.replacement:
+
+                    print(f'  Replacement: {dep.replacement}')
+
+                if dep.migration_guide:
+
+                    print(f'  Migration guide: {dep.migration_guide}')
+
+                if dep.removal_version:
+
+                    print(f'  Removal version: {dep.removal_version}')
+
+                return 0
+
+            if sub=='lifecycle':
+
+                from .extension_lifecycle import ExtensionLifecycleManager
+
+                name=argv[2] if len(argv)>2 else None
+
+                if not name:
+
+                    print('Usage: pea ext lifecycle <name>');return 1
+
+                lm=ExtensionLifecycleManager()
+
+                deps=[d for d in lm.list_deprecated() if d.name==name]
+
+                print(f'Extension: {name}')
+
+                versions=lm.versions.get(name,[])
+
+                if versions:
+
+                    print(f'  Versions: {", ".join(v.version for v in versions)}')
+
+                if deps:
+
+                    print('  Deprecated versions:')
+
+                    for d in deps:
+
+                        print(f'    {d.deprecated_version} - {d.message or "(no message)"}')
+
+                        if d.replacement:
+
+                            print(f'      Replacement: {d.replacement}')
+
+                        if d.migration_guide:
+
+                            print(f'      Migration guide: {d.migration_guide}')
+
+                        if d.removal_version:
+
+                            print(f'      Removal version: {d.removal_version}')
+
+                else:
+
+                    print('  No deprecated versions')
+
+                return 0
+
+            if sub=='migrate':
+
+                from .extension_lifecycle import ExtensionLifecycleManager
+
+                name=argv[2] if len(argv)>2 else None
+
+                from_version=argv[3] if len(argv)>3 else None
+
+                to_version=argv[4] if len(argv)>4 else None
+
+                if not name or not from_version or not to_version:
+
+                    print('Usage: pea ext migrate <name> <from_version> <to_version>');return 1
+
+                lm=ExtensionLifecycleManager()
+
+                result=lm.check_compatibility(name, from_version, to_version)
+
+                print(f'Compatibility: {name} {from_version} -> {to_version}')
+
+                print(f'  Compatible: {result["compatible"]}')
+
+                if result.get('from_deprecated'):
+
+                    print(f'  Warning: {from_version} is deprecated')
+
+                if result.get('to_deprecated'):
+
+                    print(f'  Warning: {to_version} is deprecated')
+
+                if result.get('major_changed'):
+
+                    print(f'  Warning: Major version change detected')
+
+                if result.get('migration_guide'):
+
+                    print(f'  Migration guide: {result["migration_guide"]}')
+
+                if result.get('replacement'):
+
+                    print(f'  Replacement: {result["replacement"]}')
+
+                return 0
+
+            print('Usage: pea ext list|load <module>|info <name>|deprecate <name> <version>|lifecycle <name>|migrate <name> <from> <to>');return 1
 
         if c=='publish':
 

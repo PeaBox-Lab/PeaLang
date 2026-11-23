@@ -205,6 +205,16 @@ All 1240 tests pass.
 - **Tests**: `test_marketplace_register_list`, `test_marketplace_search`, `test_marketplace_rate`, `test_pea_market_list`, `test_pea_market_search`, `test_pea_market_info`.
 - All 1304 tests pass.
 
+### Phase 33: Extension Lifecycle & Deprecation Management (2.40.0)
+- **`pealang/extension_lifecycle.py`**: Extension lifecycle management with deprecation warnings, migration paths, and version compatibility checking.
+- **`pea ext deprecate <name> <version>`**: Mark an extension version as deprecated with optional replacement and migration guide.
+- **`pea ext lifecycle <name>`**: Show deprecation status for all versions of an extension.
+- **`pea ext migrate <name> <from_version> <to_version>`**: Check compatibility between two extension versions.
+- **Deprecation warnings**: Interpreter warns when deprecated extensions are used.
+- **`extension_registry.load_from_manifest`**: Load extension declarations from `pea.toml` `[extensions]` section.
+- **Tests**: `test_extension_registry`, `test_interpreter_extension_function`, `test_pea_ext_list`, `test_pea_ext_info_not_found`, `test_pea_ext_load_invalid`, `test_extension_type_system`, `test_pea_ext_type_info`, `test_extension_registry_lifecycle`, `test_pea_ext_lifecycle`.
+- All 1306 tests pass.
+
 ## 2.20.0 - 2026-11-16
 
 ### Version unification (single source of truth)

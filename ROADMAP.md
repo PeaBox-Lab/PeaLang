@@ -386,3 +386,24 @@ Make PeaLang the default extension language for:
 - **Download tracking**: Track download counts per library.
 - **Tests**: test_marketplace_register_list, test_marketplace_search, test_marketplace_rate, test_pea_market_list, test_pea_market_search, test_pea_market_info.
 - All 1304 tests pass.
+### Phase 32: Extension Marketplace (2.39.0)
+- **pealang/marketplace.py**: Extension marketplace for discovering, rating, and reviewing PeaLang libraries.
+- **pea market list**: List all libraries in the marketplace with downloads and ratings.
+- **pea market search <query>**: Search libraries by name or description.
+- **pea market info <name>**: Show detailed information about a library.
+- **pea market rate <name> <version> <rating>**: Rate a library (1-5 stars) with optional review.
+- **Marketplace data**: Library entries with name, version, description, author, downloads, rating, tags.
+- **Rating system**: 1-5 star ratings with reviewer comments, aggregated into average ratings.
+- **Download tracking**: Track download counts per library.
+- **Tests**: test_marketplace_register_list, test_marketplace_search, test_marketplace_rate, test_pea_market_list, test_pea_market_search, test_pea_market_info.
+- All 1304 tests pass.
+
+### Phase 33: Extension Lifecycle & Deprecation Management (2.40.0)
+- **`pealang/extension_lifecycle.py`**: Extension lifecycle management with deprecation warnings, migration paths, and version compatibility checking.
+- **`pea ext deprecate <name> <version>`**: Mark an extension version as deprecated with optional replacement and migration guide.
+- **`pea ext lifecycle <name>`**: Show deprecation status for all versions of an extension.
+- **`pea ext migrate <name> <from_version> <to_version>`**: Check compatibility between two extension versions.
+- **Deprecation warnings**: Interpreter warns when deprecated extensions are used.
+- **`extension_registry.load_from_manifest`**: Load extension declarations from `pea.toml` `[extensions]` section.
+- **Tests**: `test_extension_registry`, `test_interpreter_extension_function`, `test_pea_ext_list`, `test_pea_ext_info_not_found`, `test_pea_ext_load_invalid`, `test_extension_type_system`, `test_pea_ext_type_info`, `test_extension_registry_lifecycle`, `test_pea_ext_lifecycle`.
+- All 1306 tests pass.

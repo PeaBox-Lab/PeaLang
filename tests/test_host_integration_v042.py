@@ -857,3 +857,53 @@ def test_pea_market_info(tmp_path):
     )
     assert result.returncode == 1
     assert "not found" in result.stdout or "not found" in result.stderr
+
+def test_extension_lifecycle(tmp_path):
+    """Phase 32: Extension lifecycle - deprecation and validation."""
+    from pealang.extension_lifecycle import ExtensionLifecycleManager
+
+    lm = ExtensionLifecycleManager(str(tmp_path / "lifecycle"))
+    lm.register_version('mylib', '1.0.0')
+    lm.register_version('mylib', '2.0.0')
+    lm.deprecate('mylib', '1.0.0', message='Use v2 instead', replacement='mylib@2.0.0')
+
+    assert lm.is_deprecated('mylib', '1.0.0') is True
+    assert lm.is_deprecated('mylib', '2.0.0') is False
+
+    dep = lm.get_deprecation('mylib', '1.0.0')
+    assert dep is not None
+    assert dep.message == 'Use v2 instead'
+    assert dep.replacement == 'mylib@2.0.0'
+
+    # Test compatibility check
+    result = lm.check_compatibility('mylib', '1.0.0', '2.0.0')
+    assert result['compatible'] is False
+    assert result['from_deprecated'] is True
+    assert result['replacement'] == 'mylib@2.0.0'
+
+    # Test migration path
+    migration = lm.get_migration_path('mylib', '1.0.0')
+    assert migration is not None
+    assert migration['to_version'] == '2.0.0'
+
+    # List deprecated
+    deprecated = lm.list_deprecated()
+    assert len(deprecated) == 1
+    assert deprecated[0].extension_name == 'mylib'
+
+
+def test_pea_ext_lifecycle(tmp_path):
+    """Phase 32: pea ext lifecycle CLI command."""
+    import subprocess, sys
+    result = subprocess.run(
+        [sys.executable, '-c',
+         'from pealang.extension_lifecycle import ExtensionLifecycleManager; '
+         'lm = ExtensionLifecycleManager(); '
+         'lm.register_version("testlib", "1.0.0"); '
+         'lm.deprecate("testlib", "1.0.0", message="deprecated"); '
+         'print(lm.is_deprecated("testlib", "1.0.0"))'],
+        capture_output=True, text=True,
+        cwd=str(Path(__file__).resolve().parent.parent),
+    )
+    assert result.returncode == 0
+    assert 'True' in result.stdout
