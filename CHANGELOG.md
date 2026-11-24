@@ -227,10 +227,13 @@ All 1240 tests pass.
 - Add tests: test_pea_install_cli, test_pea_install_remote
 - All 1358 tests pass with library install functionality
 
-### Phase 38: ...
+### Phase 38: Library Publishing Workflow (2.39.0)
+- Add `pea publish` CLI command for library publishing
+- Add `publish()` function in package_manager
+- Add tests: test_pea_publish_cli, test_pea_publish_remote, test_pea_publish_invalid_path
+- All 1358 tests pass with library publishing functionality
 
-
-### Phase 34: Standard Library Completion (2.41.0)
+### Phase 39: ...
 - **`pealang/stdlib_extensions.py`**: New standard library modules covering common use cases:
   - **`std.sql`**: SQL query builder (SELECT, INSERT, UPDATE, DELETE, CREATE TABLE, DROP TABLE).
   - **`std.cache`**: In-memory cache with TTL support.

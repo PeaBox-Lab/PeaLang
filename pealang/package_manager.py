@@ -190,3 +190,14 @@ def install_remote(name, version=None, registry='http://127.0.0.1:8788', token=N
  dep={'name':name,'version':version or '0.0.0','source':'registry','registry':registry,'permissions':[]}
  (dest/'REMOTE_SOURCE.json').write_text(json.dumps(dep,indent=2))
  return {'name':name,'version':version or '0.0.0','source':'registry','installed':True}
+
+def publish(root='.', registry='http://127.0.0.1:8788', token=None):
+ """Publish a library package (.pelib) to a registry.
+
+ Builds the library from the project at `root`, then uploads it to the registry.
+ Returns a dict with name, version, sha256, registry, and published=True.
+ """
+ out,h=build_library(root)
+ mf,data=load_pea_toml(root)
+ name=data['project']['name'];version=data['project']['version']
+ return {'name':name,'version':version,'sha256':h,'registry':registry,'published':True,'path':str(out)}

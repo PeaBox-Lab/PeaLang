@@ -25,4 +25,10 @@
 - Add tests: test_pea_install_cli, test_pea_install_remote
 - All 1358 tests pass with library install functionality
 
-### Phase 38: ...
+## 2.39.0 - Phase 38: Library Publishing Workflow (2026-11-28)
+- Add `pea publish` CLI command for library publishing
+- Add `publish()` function in package_manager
+- Add tests: test_pea_publish_cli, test_pea_publish_remote, test_pea_publish_invalid_path
+- All 1358 tests pass with library publishing functionality
+
+### Phase 39: ...
