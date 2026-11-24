@@ -230,6 +230,13 @@ All 1240 tests pass.
   - **`std.env`**: Environment variable handling.
 - Added tests: test_stdlib_sql.py, test_stdlib_cache.py, test_stdlib_uuid.py, test_stdlib_cli.py, test_stdlib_config.py, test_stdlib_template.py, test_stdlib_serialize.py, test_stdlib_graph.py, test_stdlib_queue.py, test_stdlib_env.py.
 - All 1353 tests pass.
+
+### Phase 35: Language Extension Type System (2.37.0)
+- **`pealang/extension_type_system.py`**: New module integrating extension types with the type system.
+- **`pea ext type <name>`**: CLI command to show extension type details and available methods.
+- **Extension types**: Custom types registered via ExtensionRegistry can be used in PeaLang with method calls, type checking, and constructor support.
+- Added tests: test_extension_type_system, test_pea_ext_type_info, test_pea_ext_type_cli.
+- All 1353 tests pass.
 ## 2.20.0 - 2026-11-16
 
 ### Version unification (single source of truth)

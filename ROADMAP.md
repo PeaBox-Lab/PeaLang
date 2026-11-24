@@ -1,8 +1,7 @@
-## 2.41.0 - Phase 34: Standard Library Completion (2026-11-24)
-- Add 9 new standard library modules: std.sql, std.cache, std.uuid, std.cli, std.config, std.template, std.serialize, std.graph, std.queue, std.env
-- Fix std.config JSON/TOML parse (was using undefined `p` instead of `path`)
-- Fix std.template render_file (same undefined `p` bug)
-- Fix std.queue priority queue (was pushing max-heap; now max-priority pops first)
-- Add stdlib.Namespace.__getattribute__ so attribute access falls back to dict keys
-- Add 10 test files covering each new module
-- Update CHANGELOG.md with Phase 34 entry (1353 tests pass)
+## 2.37.0 - Phase 35: Language Extension Type System (2026-11-25)
+- Add `ExtensionTypeSystem` class integrating extension types with the interpreter's type system
+- Add `pea ext type <name>` CLI command to show type details and methods
+- Add `pea ext type info <name>` for detailed type inspection
+- Register built-in extension types (Option, Result, Error) with methods
+- Add tests: test_extension_type_system, test_pea_ext_type_info, test_pea_ext_type_cli
+- All 1353 tests pass with type system integration
