@@ -250,6 +250,12 @@ All 1240 tests pass.
 - Add `resolve_module()` support for installed libraries in `.pea_modules/<spec>`
 - All 1371 tests pass with library runtime loading functionality
 
+## 2.41.0 - Phase 42: Project Version Query (2026-11-30)
+- Add `pea version <path>` to query a project/library version from pea.toml
+- Add `pea version --json` for machine-readable output
+- Add `pea version -v` short flag
+- All 1374 tests pass with version query functionality
+
 ### Phase 34: Standard Library Completion (2.41.0)
   - **`std.sql`**: SQL query builder (SELECT, INSERT, UPDATE, DELETE, CREATE TABLE, DROP TABLE).
   - **`std.cache`**: In-memory cache with TTL support.

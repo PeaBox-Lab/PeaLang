@@ -9,6 +9,7 @@ from .tooling import format_file,check_source,discover_pea,generate_docs
 from .project import load_manifest,init_project,add_dependency,remove_dependency,project_info
 
 from . import __version__
+from .package_manager import load_pea_toml
 
 def _print_error(e):
     frames = getattr(e, "frames", None)
@@ -637,8 +638,19 @@ def main(argv=None):
             if not src:print('Usage: pea eval -e "print 1+1" | pea eval -f file.pea',file=sys.stderr);return 2
             execute(src,source_name=a.file or '<eval>');return 0
         if c in ('version','-v'):
-            if '--json' in argv[1:]: print(json.dumps({'version':__version__},indent=2))
-            else: print(f'PeaLang {__version__}')
+            if '--json' in argv[1:]:
+                print(json.dumps({'version':__version__},indent=2))
+            elif c=='-v' or (len(argv)>1 and argv[1]=='-v'):
+                print(f'PeaLang {__version__}')
+            elif len(argv)>1:
+                # Version for a specific project/library
+                path=argv[1]
+                root=Path(path).resolve()
+                mf,data=load_pea_toml(root)
+                name=data['project']['name'];version=data['project']['version']
+                print(f'Project "{name}" version: {version}')
+            else:
+                print(f'PeaLang {__version__}')
             return 0
         if c=='info':
             if len(argv)>1:
@@ -1241,7 +1253,7 @@ def main(argv=None):
 
         if c=='lib':
 
-            from .package_manager import build_library, load_pea_toml, quality_check
+            from .package_manager import build_library, quality_check
             import urllib.request, urllib.error, json as _json
 
             sub=argv[1] if len(argv)>1 else None
@@ -1315,7 +1327,7 @@ def main(argv=None):
 
         if c=='publish':
 
-            from .package_manager import build_library, load_pea_toml
+            from .package_manager import build_library
             import urllib.request, urllib.error, json as _json
 
             path=argv[1] if len(argv)>1 else None
