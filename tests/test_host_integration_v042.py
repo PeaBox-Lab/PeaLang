@@ -842,6 +842,30 @@ def test_marketplace_rate(tmp_path):
     assert abs(lib.rating - 4.0) < 0.01  # (5+3)/2 = 4
 
 
+def test_pea_market_register(tmp_path):
+    """Phase 32: pea market register CLI."""
+    import subprocess, sys
+    result = subprocess.run(
+        [sys.executable, "-m", "pealang.cli", "market", "register", "testlib", "1.0.0", "Test Description", "testuser", "tag1,tag2"],
+        capture_output=True, text=True,
+        cwd=str(Path(__file__).resolve().parent.parent),
+    )
+    assert result.returncode == 0
+    assert "Registered testlib 1.0.0" in result.stdout
+
+
+def test_pea_market_download(tmp_path):
+    """Phase 32: pea market download CLI."""
+    import subprocess, sys
+    result = subprocess.run(
+        [sys.executable, "-m", "pealang.cli", "market", "download", "testlib"],
+        capture_output=True, text=True,
+        cwd=str(Path(__file__).resolve().parent.parent),
+    )
+    assert result.returncode == 0
+    assert "Recorded download for testlib" in result.stdout
+
+
 def test_pea_market_list(tmp_path):
     """Phase 32: pea market list CLI."""
     import subprocess, sys

@@ -216,6 +216,14 @@ All 1240 tests pass.
 - All 1306 tests pass.
 
 
+### Phase 36: Marketplace CLI Extension (2026-11-26)
+- Add `pea market register <name> <version> ...` CLI command to create marketplace entries
+- Add `pea market download <name>` CLI command to record library downloads
+- Extend `create_marketplace()` usage for CLI subcommands
+
+### Phase 37: ...
+
+
 ### Phase 34: Standard Library Completion (2.41.0)
 - **`pealang/stdlib_extensions.py`**: New standard library modules covering common use cases:
   - **`std.sql`**: SQL query builder (SELECT, INSERT, UPDATE, DELETE, CREATE TABLE, DROP TABLE).

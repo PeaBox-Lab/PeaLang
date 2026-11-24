@@ -1535,7 +1535,32 @@ def main(argv=None):
 
                 return 0
 
-            print('Usage: pea market list|search|rate|info');return 1
+            if sub=='register':
+
+                name=argv[2] if len(argv)>2 else None
+                version=argv[3] if len(argv)>3 else None
+                description=argv[4] if len(argv)>4 else None
+                author=argv[5] if len(argv)>5 else None
+                tags=argv[6].split(',') if len(argv)>6 else []
+
+                if not name or not version or not description or not author:
+                    print('Usage: pea market register <name> <version> <description> <author> [tags]');return 1
+
+                mp=create_marketplace()
+                lib=mp.register_library(name, version, description, author, tags)
+                print(f'Registered {lib.name} {lib.version}')
+                return 0
+
+            if sub=='download':
+                name=argv[2] if len(argv)>2 else None
+                if not name:
+                    print('Usage: pea market download <name>');return 1
+                mp=create_marketplace()
+                mp.download_library(name)
+                print(f'Recorded download for {name}')
+                return 0
+
+            print('Usage: pea market list|search|rate|info|register|download');return 1
 
         if len(argv)==1 and argv[0].endswith('.peac'):
 
