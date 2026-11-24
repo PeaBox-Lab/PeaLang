@@ -285,7 +285,7 @@ def main(argv=None):
 
             print(init_manifest(argv[1] if len(argv)>1 else '.'));return 0
 
-        if c in ('lock','install','uninstall','audit','quality','build','deps'):
+        if c in ('lock','install','uninstall','audit','quality','build','deps','update'):
 
             from .package_manager import write_lock,install,uninstall,audit,build_package,install_remote,quality_check,check_lock,list_dependencies
 
@@ -346,6 +346,13 @@ def main(argv=None):
                     for x in issues:print('AUDIT '+x)
                     return 1
                 print('Audit: clean');return 0
+
+            if c=='update':
+                from .package_manager import update
+                args=[a for a in argv[1:] if not a.startswith('-')]
+                root=args[0] if args else '.'
+                result=update(root)
+                print(json.dumps(result,indent=2));return 0 if result['ok'] else 1
 
             if c=='build':
                 p=argparse.ArgumentParser(prog='pea build')

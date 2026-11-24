@@ -268,6 +268,11 @@ All 1240 tests pass.
 - Add `pea uninstall <name> [path]` CLI command
 - All 1378 tests pass with library uninstall functionality
 
+## 2.41.0 - Phase 45: Library Update (2026-11-30)
+- Add `update()` function in package_manager to refresh installed libraries from pea.lock
+- Add `pea update [path]` CLI command
+- All 1380 tests pass with library update functionality
+
 ### Phase 34: Standard Library Completion (2.41.0)
   - **`std.sql`**: SQL query builder (SELECT, INSERT, UPDATE, DELETE, CREATE TABLE, DROP TABLE).
   - **`std.cache`**: In-memory cache with TTL support.

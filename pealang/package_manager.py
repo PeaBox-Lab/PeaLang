@@ -245,6 +245,27 @@ def uninstall(name, root='.'):
   shutil.rmtree(dest,ignore_errors=True)
   return {'name':name,'removed':True}
 
+def update(root='.'):
+  """Update installed libraries from pea.lock."""
+  mf,_=load_pea_toml(root)
+  lock_path=mf.parent/'pea.lock'
+  if not lock_path.exists():
+    return {'ok':False,'issues':['pea.lock not found'],'updated':[]}
+  lock=json.loads(lock_path.read_text())
+  target=mf.parent/'.pea_modules'
+  target.mkdir(exist_ok=True)
+  updated=[]
+  for dep in lock.get('dependencies',[]):
+    name=dep.get('name') if isinstance(dep,dict) else dep
+    dest=target/name
+    if isinstance(dep,dict) and dep.get('source')=='path':
+      src=(mf.parent/dep.get('path','')).resolve()
+      if src.is_dir():
+        shutil.rmtree(dest,ignore_errors=True)
+        shutil.copytree(src,dest,ignore=shutil.ignore_patterns('.git','.venv','__pycache__','.pea_modules','*.peapkg'))
+    updated.append(name)
+  return {'ok':True,'updated':updated}
+
 def publish(root='.', registry='http://127.0.0.1:8788', token=None):
  """Publish a library package (.pelib) to a registry.
 
