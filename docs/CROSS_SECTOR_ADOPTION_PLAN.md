@@ -92,6 +92,10 @@ Every phase must satisfy all of these:
 
 ## Now building
 
-**Phase 52 — Lockfile Refresh** is the first build of Wave 0. Deterministic locks
-and drift detection are the minimum requirement for reproducible, auditable work
-in banking, data, cloud, games, mobile, and embedded delivery pipelines.
+**Phase 52 — Lockfile Refresh** is complete: deterministic locks and drift
+detection provide the reproducible, auditable baseline required by banking, data,
+cloud, games, mobile, and embedded delivery pipelines.
+
+**Phase 53 — Registry-Backed Resolution** is the next Wave 0 build: cached registry
+metadata, semver constraint selection, and offline resolution turn package ranges
+into concrete, checksummed lockfile entries.

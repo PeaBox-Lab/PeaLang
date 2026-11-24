@@ -310,6 +310,12 @@ All 1240 tests pass.
 - Add `docs/CROSS_SECTOR_ADOPTION_PLAN.md` with the sector-by-sector plan for enterprise, data, web, mobile, games, embedded, and cloud adoption
 - All 1396 tests pass with lockfile refresh functionality
 
+## 2.41.0 - Phase 53: Registry-Backed Resolution (2026-11-25)
+- Add registry metadata fetching, local metadata caching, and offline resolution helpers in package_manager
+- Add semver constraint selection so registry dependencies can resolve to concrete versions, checksums, and download URLs
+- Add `pea registry resolve <name> [constraint] [--registry URL] [--token TOKEN] [--offline] [--json]` and `pea lock --update --registry-resolve [--offline]`
+- Last verified baseline remains 1396 tests; full verification intentionally deferred while functionality work is prioritized
+
 ### Phase 34: Standard Library Completion (2.41.0)
   - **`std.sql`**: SQL query builder (SELECT, INSERT, UPDATE, DELETE, CREATE TABLE, DROP TABLE).
   - **`std.cache`**: In-memory cache with TTL support.

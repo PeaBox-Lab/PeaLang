@@ -560,6 +560,8 @@ pea info mylib                                             # show registry packa
 pea lock                                 # generate pea.lock from pea.toml
 pea lock --check                         # detailed drift report (CI-friendly exit code)
 pea lock --update                        # deterministically refresh pea.lock from pea.toml
+pea lock --update --registry-resolve     # resolve registry semver ranges to concrete versions
+pea registry resolve mylib ^1.0 --json  # inspect available versions and select a match
 pea deps                                 # list project dependencies
 pea deps --tree                          # show the nested dependency tree (warns on cycles/conflicts)
 pea deps --tree --json                   # machine-readable graph safety report

@@ -2,12 +2,14 @@
 from __future__ import annotations
 from dataclasses import dataclass,asdict
 from pathlib import Path
-import hashlib,json,os,re,shutil,tarfile,tempfile
+import hashlib,json,os,re,shutil,tarfile,tempfile,time,urllib.request,urllib.error
 try:
  tomllib=__import__('tomllib')
 except ModuleNotFoundError:  # Python 3.10 has no tomllib
  import tomli as tomllib
 from .errors import PeaError
+
+DEFAULT_REGISTRY='http://127.0.0.1:8788'
 
 @dataclass(frozen=True,order=True)
 class Version:
@@ -30,6 +32,79 @@ def satisfies(version,constraint):
  if c.startswith('>'):return v>Version.parse(c[1:])
  if c.startswith('<'):return v<Version.parse(c[1:])
  return v==Version.parse(c.lstrip('='))
+def registry_cache_dir():
+  """Directory used for registry metadata and offline resolution."""
+  return Path.home()/'.pealang'/'registry_cache'
+def registry_cache_path(name,registry=DEFAULT_REGISTRY):
+  key=re.sub(r'[^A-Za-z0-9_.-]','_',f'{registry}::{name}')
+  return registry_cache_dir()/f'{key}.json'
+def fetch_registry_versions(name,registry=DEFAULT_REGISTRY,token=None,offline=False,timeout=5):
+  """Fetch and cache available versions of a registry package."""
+  path=registry_cache_path(name,registry)
+  if offline:
+   if not path.is_file():raise PeaError(f'No cached registry metadata for {name} at {registry}')
+   cached=json.loads(path.read_text(encoding='utf-8'))
+   versions=cached.get('versions',[])
+   return {'name':name,'registry':registry,'versions':versions,'cached':True,'offline':True}
+  request=urllib.request.Request(f'{registry.rstrip("/")}/api/v1/packages/{name}')
+  if token:request.add_header('Authorization',f'Bearer {token}')
+  try:
+   with urllib.request.urlopen(request,timeout=timeout) as response:
+    info=json.loads(response.read().decode('utf-8'))
+  except urllib.error.HTTPError as e:
+   if e.code==404:raise PeaError(f'Package {name} not found on registry {registry}')
+   raise PeaError(f'Registry request failed for {name}: HTTP {e.code}')
+  except (urllib.error.URLError,OSError,ValueError) as e:
+   raise PeaError(f'Registry request failed for {name}: {e}')
+  versions=[]
+  for item in info.get('versions',[]):
+   version=str(item.get('version',''))
+   Version.parse(version)
+   versions.append({
+    'version':version,
+    'sha256':item.get('sha256',''),
+    'published':item.get('published'),
+    'url':item.get('url',''),
+    'signature_url':item.get('signature_url',''),
+   })
+  versions.sort(key=lambda item:Version.parse(item['version']),reverse=True)
+  result={'name':name,'registry':registry,'versions':versions,'cached':False,'offline':False,'fetched_at':int(time.time())}
+  path.parent.mkdir(parents=True,exist_ok=True)
+  path.write_text(json.dumps(result,indent=2,sort_keys=True)+'\n',encoding='utf-8')
+  return result
+def select_registry_version(versions,constraint='*'):
+  """Select the highest available version satisfying a semver constraint."""
+  candidates=[]
+  for item in versions:
+   version=str(item.get('version','') if isinstance(item,dict) else item)
+   try:
+    if satisfies(version,constraint):candidates.append((Version.parse(version),item))
+   except PeaError:
+    continue
+  if not candidates:
+   available=', '.join(str(item.get('version',item)) for item in versions)
+   raise PeaError(f'No registry version of package satisfies {constraint!r}; available: {available or "none"}')
+  candidates.sort(key=lambda pair:pair[0],reverse=True)
+  return candidates[0][1]
+def resolve_registry_dependency(name,spec,registry=None,token=None,offline=False):
+  """Resolve one registry dependency to a concrete version and checksum."""
+  registry=spec.get('registry') or registry or DEFAULT_REGISTRY
+  constraint=spec.get('version') or spec.get('constraint') or '*'
+  info=fetch_registry_versions(name,registry,token=token,offline=offline)
+  selected=select_registry_version(info['versions'],constraint)
+  return {
+   'name':name,
+   'version':selected.get('version',constraint),
+   'source':'registry',
+   'registry':registry,
+   'sha256':selected.get('sha256',''),
+   'url':selected.get('url',''),
+   'signature_url':selected.get('signature_url',''),
+   'published':selected.get('published'),
+   'permissions':spec.get('permissions',[]),
+   'resolved_by':'registry',
+   'offline':offline,
+  }
 def sha256_file(path):
  h=hashlib.sha256()
  with open(path,'rb') as f:
@@ -57,7 +132,7 @@ def init_manifest(root='.',name=None):
  if p.exists():raise PeaError('pea.toml already exists')
  n=name or root.name;p.write_text(f'[project]\nname = "{n}"\nversion = "0.1.0"\nentry = "src/main.pea"\npealang = ">=0.35.0"\n\n[dependencies]\n\n[permissions]\nallow = []\n',encoding='utf-8');(root/'src').mkdir(exist_ok=True);(root/'src/main.pea').write_text(f'print "Hello from {n}"\n');return p
 def dependency_entries(data):return data.get('dependencies',{})
-def resolve(root='.'):
+def resolve(root='.',*,registry_resolve=False,offline=False,registry=None,token=None):
  mf,data=load_pea_toml(root);resolved=[]
  for name,spec in sorted(dependency_entries(data).items()):
   spec={'path':spec} if isinstance(spec,str) else dict(spec)
@@ -68,12 +143,15 @@ def resolve(root='.'):
   elif 'git' in spec:
    resolved.append({'name':name,'version':spec.get('version','0.0.0'),'source':'git','git':spec['git'],'rev':spec.get('rev'),'permissions':spec.get('permissions',[])})
   elif 'registry' in spec:
-   resolved.append({'name':name,'version':spec.get('version','0.0.0'),'source':'registry','registry':spec['registry'],'permissions':spec.get('permissions',[])})
+   if registry_resolve:
+    resolved.append(resolve_registry_dependency(name,spec,registry=registry,token=token,offline=offline))
+   else:
+    resolved.append({'name':name,'version':spec.get('version','0.0.0'),'source':'registry','registry':spec['registry'],'permissions':spec.get('permissions',[])})
   else:raise PeaError(f"Dependency '{name}' needs path, git, or registry")
  return {'lock_version':1,'pealang':'0.35.0','package':data['project'],'dependencies':resolved}
-def write_lock(root='.'):
- mf,_=load_pea_toml(root);lock=resolve(mf.parent);p=mf.parent/'pea.lock';p.write_text(json.dumps(lock,indent=2,sort_keys=True)+'\n');return p,lock
-def lock_drift(root='.'):
+def write_lock(root='.',*,registry_resolve=False,offline=False,registry=None,token=None):
+ mf,_=load_pea_toml(root);lock=resolve(mf.parent,registry_resolve=registry_resolve,offline=offline,registry=registry,token=token);p=mf.parent/'pea.lock';p.write_text(json.dumps(lock,indent=2,sort_keys=True)+'\n');return p,lock
+def lock_drift(root='.',*,offline=False,registry=None,token=None):
   """Report detailed drift between pea.toml and pea.lock."""
   mf,data=load_pea_toml(root)
   lock_path=mf.parent/'pea.lock'
@@ -82,7 +160,8 @@ def lock_drift(root='.'):
   lock=json.loads(lock_path.read_text(encoding='utf-8'))
   deps=lock.get('dependencies',[])
   try:
-   expected=resolve(mf.parent)
+   registry_resolved=any(isinstance(d,dict) and d.get('resolved_by')=='registry' for d in deps)
+   expected=resolve(mf.parent,registry_resolve=registry_resolved,offline=offline or registry_resolved,registry=registry,token=token)
   except PeaError as e:
    return {'ok':False,'issues':[f'Cannot resolve lock: {e}'],'deps':deps,'changes':[],'sha256':sha256_file(lock_path)}
   issues=[];changes=[]
@@ -98,19 +177,19 @@ def lock_drift(root='.'):
   for name in sorted(set(new_deps)-set(old_deps)):
    issues.append(f"Dependency '{name}' in pea.toml but not in lock")
   for name in sorted(set(old_deps)&set(new_deps)):
-   for key in ('version','source','path','git','rev','registry','manifest_sha256','permissions'):
+   for key in ('version','source','path','git','rev','registry','manifest_sha256','sha256','url','signature_url','permissions','resolved_by'):
     old_value=old_deps[name].get(key);new_value=new_deps[name].get(key)
     if old_value!=new_value:
      change={'field':f'{name}.{key}','expected':new_value,'actual':old_value}
      changes.append(change);issues.append(f"Dependency '{name}' drift in {key}: lock={old_value!r}, manifest={new_value!r}")
   return {'ok':not issues,'issues':issues,'deps':deps,'changes':changes,'sha256':sha256_file(lock_path)}
-def check_lock(root='.'):
+def check_lock(root='.',*,offline=False,registry=None,token=None):
   """Validate pea.lock against pea.toml: verify all deps are present and consistent."""
-  report=lock_drift(root)
+  report=lock_drift(root,offline=offline,registry=registry,token=token)
   return {'ok':report['ok'],'issues':report['issues'],'deps':report['deps']}
-def refresh_lock(root='.'):
+def refresh_lock(root='.',*,registry_resolve=False,offline=False,registry=None,token=None):
   """Rebuild pea.lock from pea.toml and return a deterministic report."""
-  path,lock=write_lock(root)
+  path,lock=write_lock(root,registry_resolve=registry_resolve,offline=offline,registry=registry,token=token)
   return {'ok':True,'updated':True,'lock':str(path),'sha256':sha256_file(path),'dependencies':lock.get('dependencies',[])}
 def list_dependencies(root='.'):
   """List all declared dependencies from pea.toml with their sources."""
@@ -355,7 +434,7 @@ def install(root='.'):
   installed.append(dep['name'])
  return installed
 
-def install_remote(name, version=None, registry='http://127.0.0.1:8788', token=None):
+def install_remote(name, version=None, registry=DEFAULT_REGISTRY, token=None):
  """Install a library from a remote registry into a project's .pea_modules."""
  mf,_=load_pea_toml('.');target=mf.parent/'.pea_modules';target.mkdir(exist_ok=True)
  dest=target/name
@@ -451,7 +530,7 @@ def clean(root='.', all=False):
       removed.append('pea.lock')
   return {'ok':True,'removed':removed}
 
-def publish(root='.', registry='http://127.0.0.1:8788', token=None):
+def publish(root='.', registry=DEFAULT_REGISTRY, token=None):
  """Publish a library package (.pelib) to a registry.
 
  Builds the library from the project at `root`, then uploads it to the registry.

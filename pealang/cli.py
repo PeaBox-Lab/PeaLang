@@ -294,13 +294,26 @@ def main(argv=None):
             root=rootnext[0] if rootnext else '.'
 
             if c=='lock':
-                if '--update' in argv[1:]:
-                    result=refresh_lock(root)
+                args=argv[1:]
+                def _option(flag,default=None):
+                    for i,a in enumerate(args):
+                        if a==flag and i+1<len(args):return args[i+1]
+                    return default
+                root_candidates=[]
+                i=0
+                while i<len(args):
+                    if args[i] in ('--registry','--token'):i+=2;continue
+                    if not args[i].startswith('-'):root_candidates.append(args[i])
+                    i+=1
+                root=root_candidates[0] if root_candidates else '.'
+                offline='--offline' in args
+                if '--update' in args:
+                    result=refresh_lock(root,registry_resolve='--registry-resolve' in args,offline=offline,registry=_option('--registry'),token=_option('--token'))
                     print(json.dumps(result,indent=2));return 0
                 if '--check' in argv:
-                    result=lock_drift(root)
+                    result=lock_drift(root,offline=offline,registry=_option('--registry'),token=_option('--token'))
                     print(json.dumps(result,indent=2));return 0 if result['ok'] else 1
-                p,_=write_lock(root);print(p);return 0
+                p,_=write_lock(root,registry_resolve='--registry-resolve' in args,offline=offline,registry=_option('--registry'),token=_option('--token'));print(p);return 0
 
             if c=='deps':
                 if '--tree' in argv[1:]:
@@ -946,6 +959,32 @@ def main(argv=None):
 
                 return 0
 
+            if sub=='resolve':
+
+                from .package_manager import DEFAULT_REGISTRY,fetch_registry_versions,select_registry_version
+
+                name=argv[2] if len(argv)>2 else None
+                constraint=argv[3] if len(argv)>3 else '*'
+                registry=DEFAULT_REGISTRY;token=None;offline=False;as_json=False
+
+                i=4
+                while i<len(argv):
+                    if argv[i]=='--registry' and i+1<len(argv):registry=argv[i+1];i+=2;continue
+                    if argv[i]=='--token' and i+1<len(argv):token=argv[i+1];i+=2;continue
+                    if argv[i]=='--offline':offline=True;i+=1;continue
+                    if argv[i]=='--json':as_json=True;i+=1;continue
+                    i+=1
+
+                if not name:
+                    print('Usage: pea registry resolve <name> [constraint] [--registry URL] [--token TOKEN] [--offline] [--json]');return 1
+
+                info=fetch_registry_versions(name,registry,token=token,offline=offline)
+                selected=select_registry_version(info['versions'],constraint)
+                report={'name':name,'constraint':constraint,'registry':registry,'selected':selected,'versions':info['versions'],'cached':info['cached'],'offline':offline}
+                if as_json:print(json.dumps(report,indent=2))
+                else:print(f"{name} {selected['version']} from {registry} sha256={selected.get('sha256','')}")
+                return 0
+
             if sub=='register-publisher':
 
                 token=argv[2] if len(argv)>2 else None
@@ -966,7 +1005,7 @@ def main(argv=None):
 
                 return 0
 
-            print('Usage: pea registry serve [--host HOST] [--port PORT] [--storage DIR] [--name NAME]');return 1
+            print('Usage: pea registry serve|resolve|register-publisher ...');return 1
 
         if c=='ext':
 
