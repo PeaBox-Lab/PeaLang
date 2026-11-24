@@ -285,9 +285,9 @@ def main(argv=None):
 
             print(init_manifest(argv[1] if len(argv)>1 else '.'));return 0
 
-        if c in ('lock','install','audit','quality','build','deps'):
+        if c in ('lock','install','uninstall','audit','quality','build','deps'):
 
-            from .package_manager import write_lock,install,audit,build_package,install_remote,quality_check,check_lock,list_dependencies
+            from .package_manager import write_lock,install,uninstall,audit,build_package,install_remote,quality_check,check_lock,list_dependencies
 
             # Find root: first non-flag argument after argv[0]
             rootnext=[a for a in argv[1:] if not a.startswith('-')]
@@ -310,6 +310,15 @@ def main(argv=None):
                 result=install_remote(name, version, token=None)
                 print(f'Installed: {name}')
                 return 0
+
+            if c=='uninstall':
+                name=argv[1] if len(argv)>1 else None
+                proj=argv[2] if len(argv)>2 else '.'
+                if not name:
+                    print('Usage: pea uninstall <name> [path]');return 1
+                result=uninstall(name, proj)
+                print(json.dumps(result,indent=2))
+                return 0 if result['removed'] else 1
 
             if c=='quality':
                 from .package_manager import quality_check

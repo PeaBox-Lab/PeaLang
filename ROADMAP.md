@@ -66,4 +66,9 @@
 - Add `pea deps [path]` CLI command for dependency listing
 - All 1376 tests pass with lockfile validation and dependency listing
 
+## 2.41.0 - Phase 44: Library Uninstall (2026-11-30)
+- Add `uninstall()` function in package_manager to remove libraries from `.pea_modules`
+- Add `pea uninstall <name> [path]` CLI command
+- All 1378 tests pass with library uninstall functionality
+
 ### Phase 34: Standard Library Completion (2.41.0)

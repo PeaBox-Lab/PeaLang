@@ -234,6 +234,17 @@ def install_remote(name, version=None, registry='http://127.0.0.1:8788', token=N
  (dest/'REMOTE_SOURCE.json').write_text(json.dumps(dep,indent=2))
  return {'name':name,'version':version or '0.0.0','source':'registry','installed':True}
 
+def uninstall(name, root='.'):
+  """Remove a library from .pea_modules directory."""
+  mf,_=load_pea_toml(root);target=mf.parent/'.pea_modules'
+  dest=target/name
+  if not (mf.parent/'pea.toml').exists():
+    raise PeaError(f"Project '{root}' has no pea.toml")
+  if not dest.exists():
+    raise PeaError(f"Library '{name}' is not installed")
+  shutil.rmtree(dest,ignore_errors=True)
+  return {'name':name,'removed':True}
+
 def publish(root='.', registry='http://127.0.0.1:8788', token=None):
  """Publish a library package (.pelib) to a registry.
 
