@@ -246,6 +246,10 @@ All 1240 tests pass.
 - Add `pea lib publish <path>` to build and publish to registry
 - All 1368 tests pass with library end-to-end functionality
 
+## 2.41.0 - Phase 41: Library Runtime Loading (2026-11-30)
+- Add `resolve_module()` support for installed libraries in `.pea_modules/<spec>`
+- All 1371 tests pass with library runtime loading functionality
+
 ### Phase 34: Standard Library Completion (2.41.0)
   - **`std.sql`**: SQL query builder (SELECT, INSERT, UPDATE, DELETE, CREATE TABLE, DROP TABLE).
   - **`std.cache`**: In-memory cache with TTL support.

@@ -451,6 +451,39 @@ def resolve_module(spec, current_dir, project_root=None, dependencies=None):
     if local.is_file():
         return local.resolve()
 
+    # Check .pea_modules/<spec> for installed libraries
+    pea_mod = (root / '.pea_modules' / spec)
+    if pea_mod.is_dir():
+        # Look for pea.toml manifest first (preferred)
+        manifest = pea_mod / 'pea.toml'
+        if manifest.is_file():
+            try:
+                import tomllib as _toml
+                data = _toml.loads(manifest.read_text(encoding='utf-8'))
+                proj = data.get('project', {})
+                entry = proj.get('entry', 'main.pea')
+                entry_path = pea_mod / entry
+                if entry_path.is_file():
+                    return entry_path.resolve()
+            except Exception:
+                pass
+        # Look for an entry point in the installed library
+        entry = pea_mod / 'main.pea'
+        if entry.is_file():
+            return entry.resolve()
+        # Check for REMOTE_SOURCE.json to find entry
+        remote_source = pea_mod / 'REMOTE_SOURCE.json'
+        if remote_source.is_file():
+            import json as _json
+            try:
+                rs = _json.loads(remote_source.read_text(encoding='utf-8'))
+                entry_name = rs.get('entry', 'main.pea')
+                entry_path = pea_mod / entry_name
+                if entry_path.is_file():
+                    return entry_path.resolve()
+            except Exception:
+                pass
+
     dep = (dependencies or {}).get(spec)
     if dep:
         base = Path(dep.get('path', ''))

@@ -44,3 +44,13 @@
 - Add `pea lib quality <path>` to run quality checks
 - Add `pea lib publish <path>` to build and publish to registry
 - All 1368 tests pass with library end-to-end functionality
+
+## 2.41.0 - Phase 41: Library Runtime Loading (2026-11-30)
+- Add `pea lib new <name>` CLI command to scaffold library projects
+- Add `pea lib build <path>` to build library package (.pelib)
+- Add `pea lib quality <path>` to run quality checks
+- Add `pea lib publish <path>` to build and publish to registry
+- Add `resolve_module()` support for installed libraries in `.pea_modules/<spec>`
+- All 1371 tests pass with library runtime loading functionality
+
+### Phase 34: Standard Library Completion (2.41.0)
