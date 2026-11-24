@@ -29,6 +29,12 @@
 - Add `pea publish` CLI command for library publishing
 - Add `publish()` function in package_manager
 - Add tests: test_pea_publish_cli, test_pea_publish_remote, test_pea_publish_invalid_path
-- All 1358 tests pass with library publishing functionality
+- All 1361 tests pass with library publishing functionality
 
-### Phase 39: ...
+## 2.40.0 - Phase 39: Library Quality Gates (2026-11-29)
+- Add `pea quality` CLI command for library quality checks
+- Add `quality_check()` function in package_manager
+- Add tests: test_pea_quality_cli, test_quality_check_function, test_quality_check_valid_project
+- All 1364 tests pass with library quality gates
+
+### Phase 40: ...

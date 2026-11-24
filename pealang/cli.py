@@ -284,9 +284,9 @@ def main(argv=None):
 
             print(init_manifest(argv[1] if len(argv)>1 else '.'));return 0
 
-        if c in ('lock','install','audit','build'):
+        if c in ('lock','install','audit','quality','build'):
 
-            from .package_manager import write_lock,install,audit,build_package,install_remote
+            from .package_manager import write_lock,install,audit,build_package,install_remote,quality_check
 
             root=argv[1] if len(argv)>1 else '.'
 
@@ -300,6 +300,13 @@ def main(argv=None):
                 result=install_remote(name, version, token=None)
                 print(f'Installed: {name}')
                 return 0
+
+            if c=='quality':
+                from .package_manager import quality_check
+                root=argv[1] if len(argv)>1 else '.'
+                result=quality_check(root)
+                print(json.dumps(result,indent=2))
+                return 0 if result['ok'] else 1
 
             if c=='audit':
                 # Package audit for pea.toml projects; repo closure audit otherwise.

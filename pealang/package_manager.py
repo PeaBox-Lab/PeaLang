@@ -201,3 +201,46 @@ def publish(root='.', registry='http://127.0.0.1:8788', token=None):
  mf,data=load_pea_toml(root)
  name=data['project']['name'];version=data['project']['version']
  return {'name':name,'version':version,'sha256':h,'registry':registry,'published':True,'path':str(out)}
+
+def quality_check(root='.'):
+ """Run quality checks on a library project.
+
+ Checks:
+   - pea.toml exists and has required fields
+   - entry point file exists
+   - exports are declared in [library]
+   - tests directory exists
+   - README.md exists
+   - LICENSE exists (for published libraries)
+
+ Returns a dict with 'ok' boolean and list of 'issues'.
+ """
+ issues=[]
+ mf,data=load_pea_toml(root)
+ base=mf.parent
+ proj=data.get('project',{})
+ lib=data.get('library',{})
+ name=proj.get('name','')
+ version=proj.get('version','')
+ entry=proj.get('entry','')
+
+ if not name: issues.append('Missing project name')
+ if not version: issues.append('Missing project version')
+ if not entry: issues.append('Missing project entry point')
+ else:
+   ep=base/entry
+   if not ep.exists(): issues.append(f'Entry point not found: {entry}')
+
+ exports=lib.get('exports',[])
+ if not exports: issues.append('No exports declared in [library] section')
+
+ tests_dir=base/'tests'
+ if not tests_dir.exists(): issues.append('No tests directory found')
+
+ readme=base/'README.md'
+ if not readme.exists(): issues.append('No README.md found')
+
+ license_file=base/'LICENSE'
+ if not license_file.exists(): issues.append('No LICENSE file found')
+
+ return {'ok':len(issues)==0,'issues':issues,'name':name,'version':version,'exports':exports}
