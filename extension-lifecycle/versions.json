@@ -1,0 +1,52 @@
+{
+  "testlib": [
+    {
+      "name": "testlib",
+      "version": "1.0.0",
+      "released_at": 1795511513,
+      "deprecated": true,
+      "deprecation": {
+        "extension_name": "testlib",
+        "deprecated_version": "1.0.0",
+        "deprecated_at": 1795512051,
+        "removal_version": null,
+        "removal_date": null,
+        "message": "deprecated",
+        "migration_guide": null,
+        "replacement": null
+      }
+    },
+    {
+      "name": "testlib",
+      "version": "1.0.0",
+      "released_at": 1795511840,
+      "deprecated": true,
+      "deprecation": {
+        "extension_name": "testlib",
+        "deprecated_version": "1.0.0",
+        "deprecated_at": 1795512051,
+        "removal_version": null,
+        "removal_date": null,
+        "message": "deprecated",
+        "migration_guide": null,
+        "replacement": null
+      }
+    },
+    {
+      "name": "testlib",
+      "version": "1.0.0",
+      "released_at": 1795512051,
+      "deprecated": true,
+      "deprecation": {
+        "extension_name": "testlib",
+        "deprecated_version": "1.0.0",
+        "deprecated_at": 1795512051,
+        "removal_version": null,
+        "removal_date": null,
+        "message": "deprecated",
+        "migration_guide": null,
+        "replacement": null
+      }
+    }
+  ]
+}

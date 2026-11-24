@@ -1,0 +1,16 @@
+cryptography>=42
+
+[fastapi]
+fastapi>=0.110
+pydantic>=2.0
+uvicorn>=0.27
+
+[jupyter]
+ipykernel>=6.29
+
+[onnx]
+onnxruntime>=1.18
+numpy>=1.26
+
+[torch]
+torch>=2.2

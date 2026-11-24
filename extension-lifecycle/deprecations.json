@@ -1,0 +1,12 @@
+{
+  "testlib@1.0.0": {
+    "extension_name": "testlib",
+    "deprecated_version": "1.0.0",
+    "deprecated_at": 1795512051,
+    "removal_version": null,
+    "removal_date": null,
+    "message": "deprecated",
+    "migration_guide": null,
+    "replacement": null
+  }
+}
