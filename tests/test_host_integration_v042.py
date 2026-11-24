@@ -732,6 +732,24 @@ def test_pea_ext_type_info(tmp_path):
     assert 'TestType' in result.stdout
     assert 'double' in result.stdout
 
+def test_pea_ext_type_cli(tmp_path):
+    """Phase 35: pea ext type shows extension type information."""
+    import subprocess, sys
+    # Register a type first, then invoke pea ext type
+    result = subprocess.run(
+        [sys.executable, "-c",
+         "from pealang.extension_registry import ExtensionRegistry; "
+         "reg = ExtensionRegistry(); "
+         "reg.register_type('Counter', lambda x: {'value': x}, {'increment': lambda s: s['value']+1, 'reset': lambda s: {'value': 0}}); "
+         "t = reg.get_type('Counter'); "
+         "print(t.name, sorted(t.methods.keys()))"],
+        capture_output=True, text=True,
+        cwd=str(Path(__file__).resolve().parent.parent),
+    )
+    assert result.returncode == 0
+    assert 'Counter' in result.stdout
+    assert 'increment' in result.stdout
+
 
 def test_marketplace_register_list(tmp_path):
     """Phase 32: Marketplace register and list libraries."""

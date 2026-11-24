@@ -1028,6 +1028,52 @@ def main(argv=None):
 
                 return 0
 
+            if sub=='type':
+
+                from .interpreter import Interpreter
+
+                name=argv[2] if len(argv)>2 else None
+
+                if not name:
+
+                    print('Usage: pea ext type <name>');return 1
+
+                interp=Interpreter()
+
+                ts=interp.extension_type_system
+
+                if ts is None:
+
+                    print(f'Extension type system not available');return 1
+
+                if ts.has_type(name):
+
+                    type_ref=ts.get_type_ref(name)
+
+                    methods=ts.list_types()
+
+                    if name in methods:
+
+                        ext_type=interp.extension_registry.get_type(name)
+
+                        print(f'Type: {name}')
+
+                        print(f'  Methods: {", ".join(sorted(ext_type.methods.keys()))}')
+
+                        print(f'  Doc: {ext_type.doc}')
+
+                    else:
+
+                        print(f'Type: {name}')
+
+                        print(f'  No extension type registered')
+
+                else:
+
+                    print(f'Extension type not found: {name}');return 1
+
+                return 0
+
             if sub=='deprecate':
 
                 from .extension_lifecycle import ExtensionLifecycleManager
