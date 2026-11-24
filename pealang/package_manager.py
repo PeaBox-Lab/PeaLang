@@ -248,6 +248,34 @@ def build_library(root='.',output=None):
   with gzip.GzipFile(filename='',mode='wb',fileobj=target,mtime=0) as gz:gz.write(raw.getvalue())
 
  return out,sha256_file(out)
+def inspect_library(package):
+ """Inspect a built .pelib package without installing it."""
+ p=Path(package).resolve()
+ if not p.is_file():raise PeaError(f'Library package not found: {package}')
+ with tarfile.open(p,'r:gz') as tf:
+  names=tf.getnames()
+  def read_json(name,default=None):
+   if name not in names:return default
+   member=tf.extractfile(name)
+   return json.loads(member.read().decode('utf-8')) if member else default
+  manifest=read_json('manifest.json')
+  exports=read_json('exports.json',{}).get('exports',[]) or []
+  receipt=read_json('receipt.json')
+ if not isinstance(manifest,dict) or not manifest.get('name'):
+  raise PeaError(f'Invalid library package: {package}')
+ return {
+  'ok':True,
+  'package':p.name,
+  'sha256':sha256_file(p),
+  'name':manifest['name'],
+  'version':manifest.get('version',''),
+  'description':manifest.get('description',''),
+  'format':manifest.get('format','pelib'),
+  'entry':manifest.get('entry',''),
+  'exports':exports,
+  'receipt':receipt,
+  'files':names,
+ }
 def install(root='.'):
  mf,_=load_pea_toml(root);lock_path=mf.parent/'pea.lock'
  if not lock_path.exists():lock_path,_=write_lock(mf.parent)

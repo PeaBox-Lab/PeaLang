@@ -538,6 +538,7 @@ pea lib quality mylib                    # run quality gates on a library
 pea publish mylib [--registry URL] [--token TOKEN]        # publish to a registry
 pea publish mylib --dry-run                                # build + verify without uploading
 pea lib publish mylib --dry-run                            # same, via the lib subcommand
+pea lib inspect mylib-0.1.0.pelib [--json]                 # inspect a built package without installing
 pea install mylib [@version]                               # install from default registry
 pea info mylib                                             # show registry package info
 ```

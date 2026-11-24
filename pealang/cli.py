@@ -1293,7 +1293,7 @@ def main(argv=None):
 
         if c=='lib':
 
-            from .package_manager import build_library, quality_check
+            from .package_manager import build_library, quality_check, inspect_library
             import urllib.request, urllib.error, json as _json
 
             sub=argv[1] if len(argv)>1 else None
@@ -1318,6 +1318,28 @@ def main(argv=None):
                 path=argv[2] if len(argv)>2 else '.'
                 result=quality_check(path)
                 print(json.dumps(result,indent=2));return 0 if result['ok'] else 1
+
+            if sub=='inspect':
+                path=None
+                as_json=False
+                i=2
+                while i<len(argv):
+                    arg=argv[i]
+                    if arg=='--json':as_json=True;i+=1;continue
+                    if path is None:path=arg
+                    i+=1
+                if not path:
+                    print('Usage: pea lib inspect <package.pelib> [--json]');return 1
+                info=inspect_library(path)
+                if as_json:
+                    print(json.dumps(info,indent=2))
+                else:
+                    print(f"Package: {info['name']} {info['version']}")
+                    print(f"Format: {info['format']}")
+                    print(f"Exports: {', '.join(info['exports']) or '(none)'}")
+                    print(f"Files: {len(info['files'])}")
+                    print(f"SHA-256: {info['sha256']}")
+                return 0
 
             if sub=='publish':
                 path=None

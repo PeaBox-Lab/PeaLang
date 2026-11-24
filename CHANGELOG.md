@@ -294,6 +294,11 @@ All 1240 tests pass.
 - Fix Python 3.10/3.11 CI failures: guard `tarfile.extractall(filter='data')` with a fallback and relax float formatting assertions in use-case tests
 - All 1387 tests pass with publish dry-run functionality
 
+## 2.41.0 - Phase 50: Library Package Inspection (2026-11-25)
+- Add `inspect_library()` in package_manager to read `.pelib` metadata, exports, file list, and SHA-256 without installing
+- Add `pea lib inspect <package.pelib> [--json]` CLI command
+- All 1389 tests pass with library package inspection functionality
+
 ### Phase 34: Standard Library Completion (2.41.0)
   - **`std.sql`**: SQL query builder (SELECT, INSERT, UPDATE, DELETE, CREATE TABLE, DROP TABLE).
   - **`std.cache`**: In-memory cache with TTL support.
