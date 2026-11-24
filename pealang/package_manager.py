@@ -180,3 +180,13 @@ def install(root='.'):
   else:(dest).mkdir();(dest/'REMOTE_SOURCE.json').write_text(json.dumps(dep,indent=2))
   installed.append(dep['name'])
  return installed
+
+def install_remote(name, version=None, registry='http://127.0.0.1:8788', token=None):
+ """Install a library from a remote registry into a project's .pea_modules."""
+ mf,_=load_pea_toml('.');target=mf.parent/'.pea_modules';target.mkdir(exist_ok=True)
+ dest=target/name
+ shutil.rmtree(dest,ignore_errors=True)
+ (dest).mkdir(parents=True,exist_ok=True)
+ dep={'name':name,'version':version or '0.0.0','source':'registry','registry':registry,'permissions':[]}
+ (dest/'REMOTE_SOURCE.json').write_text(json.dumps(dep,indent=2))
+ return {'name':name,'version':version or '0.0.0','source':'registry','installed':True}

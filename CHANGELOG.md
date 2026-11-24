@@ -221,7 +221,13 @@ All 1240 tests pass.
 - Add `pea market download <name>` CLI command to record library downloads
 - Extend `create_marketplace()` usage for CLI subcommands
 
-### Phase 37: ...
+### Phase 37: Library Install & Runtime (2.39.0)
+- Add `pea install <name>[@version]` CLI command to install libraries from registry into project
+- Add `install_remote()` function in package_manager for remote library installation
+- Add tests: test_pea_install_cli, test_pea_install_remote
+- All 1358 tests pass with library install functionality
+
+### Phase 38: ...
 
 
 ### Phase 34: Standard Library Completion (2.41.0)

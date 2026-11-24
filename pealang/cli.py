@@ -286,13 +286,20 @@ def main(argv=None):
 
         if c in ('lock','install','audit','build'):
 
-            from .package_manager import write_lock,install,audit,build_package
+            from .package_manager import write_lock,install,audit,build_package,install_remote
 
             root=argv[1] if len(argv)>1 else '.'
 
             if c=='lock':p,_=write_lock(root);print(p);return 0
 
-            if c=='install':print('Installed: '+', '.join(install(root)));return 0
+            if c=='install':
+                name=argv[1] if len(argv)>1 else None
+                version=argv[2] if len(argv)>2 else None
+                if not name:
+                    print('Usage: pea install <name> [@version]');return 1
+                result=install_remote(name, version, token=None)
+                print(f'Installed: {name}')
+                return 0
 
             if c=='audit':
                 # Package audit for pea.toml projects; repo closure audit otherwise.
