@@ -91,4 +91,10 @@
 - Add `pea clean [path] [--all]` CLI command
 - All 1385 tests pass with library clean functionality
 
+## 2.41.0 - Phase 49: Publish Dry-Run (2026-11-25)
+- Add `--dry-run` flag to `pea publish` and `pea lib publish` to build library packages without uploading
+- Refresh all four `.github/workflows` files with current action versions, explicit job names, and `master`/`main` branch coverage
+- Fix Python 3.10/3.11 CI failures: guard `tarfile.extractall(filter='data')` with a fallback and relax float formatting assertions in use-case tests
+- All 1387 tests pass with publish dry-run functionality
+
 ### Phase 34: Standard Library Completion (2.41.0)

@@ -1,29 +1,35 @@
 name: Java and Node Matrix
-on: [push, pull_request]
+
+on:
+  push:
+  pull_request:
+
 permissions:
   contents: read
 
 jobs:
   java:
+    name: java (${{ matrix.java }})
+    runs-on: ubuntu-latest
     strategy:
       matrix:
         java: ['17', '21']
-    runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-java@v4
+      - uses: actions/checkout@v7
+      - uses: actions/setup-java@v6
         with:
           distribution: temurin
           java-version: ${{ matrix.java }}
       - run: mvn -f java-sdk/pom.xml test
   node:
+    name: node (${{ matrix.node }})
+    runs-on: ubuntu-latest
     strategy:
       matrix:
         node: ['20', '22', '24']
-    runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
         with:
           node-version: ${{ matrix.node }}
       - run: npm install

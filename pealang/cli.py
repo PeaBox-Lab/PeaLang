@@ -1320,20 +1320,27 @@ def main(argv=None):
                 print(json.dumps(result,indent=2));return 0 if result['ok'] else 1
 
             if sub=='publish':
-                path=argv[2] if len(argv)>2 else '.'
+                path=None
                 registry='http://127.0.0.1:8788'
                 token=None
-                i=3
-                while i+1<len(argv):
-                    if argv[i]=='--registry':registry=argv[i+1];i+=2;continue
-                    if argv[i]=='--token':token=argv[i+1];i+=2;continue
+                dry_run=False
+                i=2
+                while i<len(argv):
+                    arg=argv[i]
+                    if arg=='--registry' and i+1<len(argv):registry=argv[i+1];i+=2;continue
+                    if arg=='--token' and i+1<len(argv):token=argv[i+1];i+=2;continue
+                    if arg=='--dry-run':dry_run=True;i+=1;continue
+                    if path is None:path=arg
                     i+=1
                 if not path:
-                    print('Usage: pea lib publish <path> [--registry URL] [--token TOKEN]');return 1
+                    print('Usage: pea lib publish <path> [--registry URL] [--token TOKEN] [--dry-run]');return 1
                 root=Path(path).resolve()
                 mf,data=load_pea_toml(root)
                 name=data['project']['name'];version=data['project']['version']
                 out,h=build_library(root)
+                if dry_run:
+                    print(f'Dry-run: built library at {out} sha256={h}')
+                    return 0
                 package_bytes=Path(out).read_bytes()
                 if not token:
                     token_file=Path.home()/'.pealang'/'registry_tokens.json'
@@ -1370,18 +1377,22 @@ def main(argv=None):
             from .package_manager import build_library
             import urllib.request, urllib.error, json as _json
 
-            path=argv[1] if len(argv)>1 else None
+            path=None
             registry='http://127.0.0.1:8788'
             token=None
+            dry_run=False
 
-            i=2
-            while i+1<len(argv):
-                if argv[i]=='--registry':registry=argv[i+1];i+=2;continue
-                if argv[i]=='--token':token=argv[i+1];i+=2;continue
+            i=1
+            while i<len(argv):
+                arg=argv[i]
+                if arg=='--registry' and i+1<len(argv):registry=argv[i+1];i+=2;continue
+                if arg=='--token' and i+1<len(argv):token=argv[i+1];i+=2;continue
+                if arg=='--dry-run':dry_run=True;i+=1;continue
+                if path is None:path=arg
                 i+=1
 
             if not path:
-                print('Usage: pea publish <path> [--registry URL] [--token TOKEN]');return 1
+                print('Usage: pea publish <path> [--registry URL] [--token TOKEN] [--dry-run]');return 1
 
             root=Path(path).resolve()
             mf,data=load_pea_toml(root)
@@ -1390,6 +1401,9 @@ def main(argv=None):
             # Build the library package
             out,h=build_library(root)
             package_bytes=Path(out).read_bytes()
+            if dry_run:
+                print(f'Dry-run: built library at {out} sha256={h}')
+                return 0
 
             # Get token from stored tokens if not provided
             if not token:

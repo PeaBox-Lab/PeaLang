@@ -9,7 +9,9 @@ def safe_extract(package,destination):
    target=(dest/m.name).resolve()
    if dest not in target.parents and target!=dest:raise PeaError(f'Unsafe package path: {m.name}')
    if m.issym() or m.islnk():raise PeaError(f'Package links are not allowed: {m.name}')
-  tf.extractall(dest,filter='data')
+  try:tf.extractall(dest,filter='data')
+  except TypeError:  # Python < 3.12 has no tarfile extraction filters
+   tf.extractall(dest)
  return dest
 def write_receipt(destination,package,signature=None,key_id=None,source='local'):
  receipt={'installed_at':int(time.time()),'package':Path(package).name,'sha256':file_hash(package),'signature':str(signature) if signature else None,'key_id':key_id,'source':source}

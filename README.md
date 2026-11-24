@@ -519,6 +519,52 @@ pea repl
 
 Namespaces: `web`/`std.web`, `analysis`/`std.analysis`, `stats`/`std.stats`, `interop`/`std.interop`, `ux`/`std.ux`.
 
+## Library Lifecycle
+
+PeaLang ships a complete library workflow — from scaffolding a project to publishing it to a registry and managing it as a dependency. All commands operate on a project's `pea.toml` manifest and `pea.lock` lockfile.
+
+### Scaffolding and building
+
+```bash
+pea lib new mylib --template library     # scaffold a new library project
+pea lib build mylib [-o out.pelib]       # build a .pelib package
+pea build mylib --library                # equivalent build via the general command
+pea lib quality mylib                    # run quality gates on a library
+```
+
+### Publishing and installing
+
+```bash
+pea publish mylib [--registry URL] [--token TOKEN]        # publish to a registry
+pea publish mylib --dry-run                                # build + verify without uploading
+pea lib publish mylib --dry-run                            # same, via the lib subcommand
+pea install mylib [@version]                               # install from default registry
+pea info mylib                                             # show registry package info
+```
+
+### Dependency management
+
+```bash
+pea lock                                 # generate pea.lock from pea.toml
+pea lock --check                         # verify pea.lock is current
+pea deps                                 # list project dependencies
+pea deps --tree                          # show the nested dependency tree
+pea install                              # install all dependencies from pea.lock
+pea update [path]                        # refresh installed libraries from pea.lock
+pea outdated [path]                      # report missing/outdated/up-to-date libraries
+pea uninstall <name> [path]              # remove a single installed library
+pea clean [path] [--all]                 # remove .pea_modules (and optionally pea.lock)
+```
+
+### Project queries
+
+```bash
+pea version <path>                       # query a project/library version
+pea audit [path]                         # audit permissions and lockfile integrity
+```
+
+Every dependency command emits structured JSON where useful, making scripts and CI pipelines straightforward to build on top of the lifecycle.
+
 ## Use Cases
 
 PeaLang is built to deliver complex programs across data, web, and polyglot
