@@ -73,22 +73,45 @@ def resolve(root='.'):
  return {'lock_version':1,'pealang':'0.35.0','package':data['project'],'dependencies':resolved}
 def write_lock(root='.'):
  mf,_=load_pea_toml(root);lock=resolve(mf.parent);p=mf.parent/'pea.lock';p.write_text(json.dumps(lock,indent=2,sort_keys=True)+'\n');return p,lock
-def check_lock(root='.'):
-  """Validate pea.lock against pea.toml: verify all deps are present and consistent."""
+def lock_drift(root='.'):
+  """Report detailed drift between pea.toml and pea.lock."""
   mf,data=load_pea_toml(root)
   lock_path=mf.parent/'pea.lock'
   if not lock_path.exists():
-    return {'ok':False,'issues':['pea.lock not found'],'deps':[]}
-  lock=json.loads(lock_path.read_text())
+    return {'ok':False,'issues':['pea.lock not found'],'deps':[],'changes':[],'sha256':''}
+  lock=json.loads(lock_path.read_text(encoding='utf-8'))
   deps=lock.get('dependencies',[])
-  issues=[]
-  for dep in deps:
-    if dep.get('name') not in data.get('dependencies',{}):
-      issues.append(f"Dependency '{dep['name']}' in lock but not in pea.toml")
-  for name in data.get('dependencies',{}):
-    if not any(d.get('name')==name for d in deps):
-      issues.append(f"Dependency '{name}' in pea.toml but not in lock")
-  return {'ok':len(issues)==0,'issues':issues,'deps':deps}
+  try:
+   expected=resolve(mf.parent)
+  except PeaError as e:
+   return {'ok':False,'issues':[f'Cannot resolve lock: {e}'],'deps':deps,'changes':[],'sha256':sha256_file(lock_path)}
+  issues=[];changes=[]
+  old_pkg=lock.get('package',{});new_pkg=expected.get('package',{})
+  for key in ('name','version','entry'):
+   if old_pkg.get(key)!=new_pkg.get(key):
+    change={'field':f'project.{key}','expected':new_pkg.get(key),'actual':old_pkg.get(key)}
+    changes.append(change);issues.append(f"Project {key} drift: lock={old_pkg.get(key)!r}, manifest={new_pkg.get(key)!r}")
+  old_deps={d.get('name'):d for d in deps if d.get('name')}
+  new_deps={d.get('name'):d for d in expected.get('dependencies',[]) if d.get('name')}
+  for name in sorted(set(old_deps)-set(new_deps)):
+   issues.append(f"Dependency '{name}' in lock but not in pea.toml")
+  for name in sorted(set(new_deps)-set(old_deps)):
+   issues.append(f"Dependency '{name}' in pea.toml but not in lock")
+  for name in sorted(set(old_deps)&set(new_deps)):
+   for key in ('version','source','path','git','rev','registry','manifest_sha256','permissions'):
+    old_value=old_deps[name].get(key);new_value=new_deps[name].get(key)
+    if old_value!=new_value:
+     change={'field':f'{name}.{key}','expected':new_value,'actual':old_value}
+     changes.append(change);issues.append(f"Dependency '{name}' drift in {key}: lock={old_value!r}, manifest={new_value!r}")
+  return {'ok':not issues,'issues':issues,'deps':deps,'changes':changes,'sha256':sha256_file(lock_path)}
+def check_lock(root='.'):
+  """Validate pea.lock against pea.toml: verify all deps are present and consistent."""
+  report=lock_drift(root)
+  return {'ok':report['ok'],'issues':report['issues'],'deps':report['deps']}
+def refresh_lock(root='.'):
+  """Rebuild pea.lock from pea.toml and return a deterministic report."""
+  path,lock=write_lock(root)
+  return {'ok':True,'updated':True,'lock':str(path),'sha256':sha256_file(path),'dependencies':lock.get('dependencies',[])}
 def list_dependencies(root='.'):
   """List all declared dependencies from pea.toml with their sources."""
   mf,data=load_pea_toml(root)

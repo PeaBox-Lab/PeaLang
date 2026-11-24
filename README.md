@@ -12,7 +12,7 @@ PeaLang is designed to complement existing ecosystems such as Python, FastAPI, J
 
 `2.21.0` is the current unified release after the v0.99.6 security-hardening baseline and the 2.x feature build-out (optimizer, JIT, AI/ML, developer tooling, frameworks scaffolding, and examples). Historical release notes are kept in `docs/releases/` for provenance, but they do not define the current version.
 
-See `ROADMAP.md` for the forward-looking plan and `CHANGELOG.md` for per-feature history.
+See `ROADMAP.md` for the forward-looking plan, `CHANGELOG.md` for per-feature history, and `docs/CROSS_SECTOR_ADOPTION_PLAN.md` for the plan to make PeaLang credible across enterprise, data, web, mobile, games, embedded, and cloud sectors.
 
 ### Design Principles
 
@@ -558,7 +558,8 @@ pea info mylib                                             # show registry packa
 
 ```bash
 pea lock                                 # generate pea.lock from pea.toml
-pea lock --check                         # verify pea.lock is current
+pea lock --check                         # detailed drift report (CI-friendly exit code)
+pea lock --update                        # deterministically refresh pea.lock from pea.toml
 pea deps                                 # list project dependencies
 pea deps --tree                          # show the nested dependency tree (warns on cycles/conflicts)
 pea deps --tree --json                   # machine-readable graph safety report

@@ -304,6 +304,12 @@ All 1240 tests pass.
 - Extend `pea deps --tree` with cycle/conflict warnings and `pea deps --tree --json` for a machine-readable safety report
 - All 1392 tests pass with dependency graph safety functionality
 
+## 2.41.0 - Phase 52: Lockfile Refresh (2026-11-25)
+- Add detailed `lock_drift()` reporting for project metadata, dependency sets, versions, sources, paths, revisions, and manifest checksums
+- Add `refresh_lock()` and `pea lock --update` for deterministic lockfile regeneration with a machine-readable report
+- Add `docs/CROSS_SECTOR_ADOPTION_PLAN.md` with the sector-by-sector plan for enterprise, data, web, mobile, games, embedded, and cloud adoption
+- All 1396 tests pass with lockfile refresh functionality
+
 ### Phase 34: Standard Library Completion (2.41.0)
   - **`std.sql`**: SQL query builder (SELECT, INSERT, UPDATE, DELETE, CREATE TABLE, DROP TABLE).
   - **`std.cache`**: In-memory cache with TTL support.

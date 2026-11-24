@@ -287,15 +287,18 @@ def main(argv=None):
 
         if c in ('lock','install','uninstall','audit','quality','build','deps','update','outdated','clean'):
 
-            from .package_manager import write_lock,install,uninstall,audit,build_package,install_remote,quality_check,check_lock,list_dependencies,outdated,dependency_tree,dependency_graph,clean
+            from .package_manager import write_lock,install,uninstall,audit,build_package,install_remote,quality_check,check_lock,lock_drift,refresh_lock,list_dependencies,outdated,dependency_tree,dependency_graph,clean
 
             # Find root: first non-flag argument after argv[0]
             rootnext=[a for a in argv[1:] if not a.startswith('-')]
             root=rootnext[0] if rootnext else '.'
 
             if c=='lock':
+                if '--update' in argv[1:]:
+                    result=refresh_lock(root)
+                    print(json.dumps(result,indent=2));return 0
                 if '--check' in argv:
-                    result=check_lock(root)
+                    result=lock_drift(root)
                     print(json.dumps(result,indent=2));return 0 if result['ok'] else 1
                 p,_=write_lock(root);print(p);return 0
 
