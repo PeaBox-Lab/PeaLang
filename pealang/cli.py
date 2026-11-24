@@ -287,7 +287,7 @@ def main(argv=None):
 
         if c in ('lock','install','uninstall','audit','quality','build','deps','update','outdated'):
 
-            from .package_manager import write_lock,install,uninstall,audit,build_package,install_remote,quality_check,check_lock,list_dependencies,outdated
+            from .package_manager import write_lock,install,uninstall,audit,build_package,install_remote,quality_check,check_lock,list_dependencies,outdated,dependency_tree,dependency_tree
 
             # Find root: first non-flag argument after argv[0]
             rootnext=[a for a in argv[1:] if not a.startswith('-')]
@@ -300,6 +300,9 @@ def main(argv=None):
                 p,_=write_lock(root);print(p);return 0
 
             if c=='deps':
+                if '--tree' in argv[1:]:
+                    result=dependency_tree(root)
+                    print(json.dumps(result,indent=2));return 0
                 print(json.dumps(list_dependencies(root),indent=2));return 0
 
             if c=='install':

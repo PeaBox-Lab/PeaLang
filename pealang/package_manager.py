@@ -116,6 +116,31 @@ def list_dependencies(root='.'):
       entry['lock']=lock_deps[name]
     result.append(entry)
   return {'project':data.get('project',{}),'dependencies':result}
+def dependency_tree(root='.', _seen=None):
+  """Build a nested dependency tree from pea.toml (recursing into path deps)."""
+  _seen = _seen or set()
+  mf,data=load_pea_toml(root)
+  tree=[]
+  for name,spec in sorted(dependency_entries(data).items()):
+    node={'name':name}
+    if isinstance(spec,str):
+      node['source']='path'
+      node['path']=spec
+    elif 'git' in spec:
+      node['source']='git'
+      node['git']=spec['git']
+    elif 'registry' in spec:
+      node['source']='registry'
+      node['registry']=spec['registry']
+    else:
+      node['source']='unknown'
+    if 'path' in spec:
+      src=(mf.parent/spec['path']).resolve()
+      if src.is_dir() and str(src) not in _seen:
+        _seen.add(str(src))
+        node['children']=dependency_tree(str(src), _seen)
+    tree.append(node)
+  return tree
 def audit(root='.'):
  mf,data=load_pea_toml(root);issues=[];allowed=set(data.get('permissions',{}).get('allow',[]));lock_path=mf.parent/'pea.lock'
  if not lock_path.exists():issues.append('Lock file missing')

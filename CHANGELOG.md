@@ -278,6 +278,11 @@ All 1240 tests pass.
 - Add `pea outdated [path]` CLI command
 - All 1382 tests pass with library outdated functionality
 
+## 2.41.0 - Phase 47: Dependency Tree (2026-11-30)
+- Add `dependency_tree()` in package_manager to recursively build the dependency tree from pea.toml (recurse into path dependencies)
+- Add `pea deps --tree [path]` CLI command for dependency tree output
+- All 1383 tests pass with dependency tree functionality
+
 ### Phase 34: Standard Library Completion (2.41.0)
   - **`std.sql`**: SQL query builder (SELECT, INSERT, UPDATE, DELETE, CREATE TABLE, DROP TABLE).
   - **`std.cache`**: In-memory cache with TTL support.
