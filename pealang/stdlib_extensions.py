@@ -286,7 +286,7 @@ def _config_parse_ini(path: str) -> dict[str, dict[str, str]]:
 def _config_parse_json(path: str) -> dict[str, Any]:
     """Parse a JSON file."""
     import json as _json
-    return _json.loads(Path(p).read_text(encoding='utf-8'))
+    return _json.loads(Path(path).read_text(encoding='utf-8'))
 
 
 def _config_parse_toml(path: str) -> dict[str, Any]:
@@ -358,7 +358,7 @@ def _template_render(template: str, context: dict[str, Any]) -> str:
 
 def _template_render_file(path: str, context: dict[str, Any]) -> str:
     """Render a template file."""
-    return _template_render(Path(p).read_text(encoding='utf-8'), context)
+    return _template_render(Path(path).read_text(encoding='utf-8'), context)
 
 
 # ============================================================================
@@ -509,7 +509,7 @@ class _PriorityQueue:
         self._counter = 0
 
     def push(self, item: Any, priority: int = 0) -> None:
-        heappush(self._heap, (priority, self._counter, item))
+        heappush(self._heap, (-priority, self._counter, item))
         self._counter += 1
 
     def pop(self) -> Any:

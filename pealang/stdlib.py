@@ -42,6 +42,16 @@ class Namespace(dict):
         super().__init__(*a, **k)
         self.legacy_call = legacy_call
 
+    def __getattribute__(self, name):
+        # Private attributes go straight to normal lookup
+        if name.startswith('_'):
+            return super().__getattribute__(name)
+        # Check if it's a key in our dict first
+        if name in self:
+            return self[name]
+        # Fall back to normal attribute access (methods, etc.)
+        return super().__getattribute__(name)
+
     def __call__(self, *a):
         if self.legacy_call is None:
             raise PeaError('Namespace is not directly callable')

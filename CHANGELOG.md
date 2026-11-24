@@ -215,6 +215,21 @@ All 1240 tests pass.
 - **Tests**: `test_extension_registry`, `test_interpreter_extension_function`, `test_pea_ext_list`, `test_pea_ext_info_not_found`, `test_pea_ext_load_invalid`, `test_extension_type_system`, `test_pea_ext_type_info`, `test_extension_registry_lifecycle`, `test_pea_ext_lifecycle`.
 - All 1306 tests pass.
 
+
+### Phase 34: Standard Library Completion (2.41.0)
+- **`pealang/stdlib_extensions.py`**: New standard library modules covering common use cases:
+  - **`std.sql`**: SQL query builder (SELECT, INSERT, UPDATE, DELETE, CREATE TABLE, DROP TABLE).
+  - **`std.cache`**: In-memory cache with TTL support.
+  - **`std.uuid`**: UUID generation (v1, v3, v4, v5).
+  - **`std.cli`**: Command-line argument parsing.
+  - **`std.config`**: Configuration file parsing (INI, JSON, TOML, YAML).
+  - **`std.template`**: Simple template engine with variable substitution.
+  - **`std.serialize`**: JSON and CSV serialization/deserialization.
+  - **`std.graph`**: Graph data structures with BFS, DFS, shortest path.
+  - **`std.queue`**: Queue and priority queue data structures.
+  - **`std.env`**: Environment variable handling.
+- Added tests: test_stdlib_sql.py, test_stdlib_cache.py, test_stdlib_uuid.py, test_stdlib_cli.py, test_stdlib_config.py, test_stdlib_template.py, test_stdlib_serialize.py, test_stdlib_graph.py, test_stdlib_queue.py, test_stdlib_env.py.
+- All 1353 tests pass.
 ## 2.20.0 - 2026-11-16
 
 ### Version unification (single source of truth)
