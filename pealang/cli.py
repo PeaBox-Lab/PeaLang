@@ -285,9 +285,9 @@ def main(argv=None):
 
             print(init_manifest(argv[1] if len(argv)>1 else '.'));return 0
 
-        if c in ('lock','install','uninstall','audit','quality','build','deps','update'):
+        if c in ('lock','install','uninstall','audit','quality','build','deps','update','outdated'):
 
-            from .package_manager import write_lock,install,uninstall,audit,build_package,install_remote,quality_check,check_lock,list_dependencies
+            from .package_manager import write_lock,install,uninstall,audit,build_package,install_remote,quality_check,check_lock,list_dependencies,outdated
 
             # Find root: first non-flag argument after argv[0]
             rootnext=[a for a in argv[1:] if not a.startswith('-')]
@@ -352,6 +352,12 @@ def main(argv=None):
                 args=[a for a in argv[1:] if not a.startswith('-')]
                 root=args[0] if args else '.'
                 result=update(root)
+                print(json.dumps(result,indent=2));return 0 if result['ok'] else 1
+
+            if c=='outdated':
+                from .package_manager import outdated
+                root=argv[1] if len(argv)>1 and not argv[1].startswith('-') else '.'
+                result=outdated(root)
                 print(json.dumps(result,indent=2));return 0 if result['ok'] else 1
 
             if c=='build':

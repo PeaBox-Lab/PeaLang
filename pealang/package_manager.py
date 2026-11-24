@@ -2,7 +2,7 @@
 from __future__ import annotations
 from dataclasses import dataclass,asdict
 from pathlib import Path
-import hashlib,json,re,shutil,tarfile,tempfile
+import hashlib,json,os,re,shutil,tarfile,tempfile
 try:
  tomllib=__import__('tomllib')
 except ModuleNotFoundError:  # Python 3.10 has no tomllib
@@ -35,6 +35,16 @@ def sha256_file(path):
  with open(path,'rb') as f:
   for block in iter(lambda:f.read(65536),b''):h.update(block)
  return h.hexdigest()
+def dir_sha256(path):
+  h=hashlib.sha256()
+  for root,dirs,files in os.walk(path):
+    for f in files:
+      fpath=os.path.join(root,f)
+      rel=os.path.relpath(fpath,path)
+      h.update(f'path:{rel}'.encode('utf-8'))
+      h.update(open(fpath,'rb').read())
+  return h.hexdigest()
+
 def load_pea_toml(root='.'):
  p=Path(root).resolve();p=p if p.is_dir() else p.parent;f=p/'pea.toml'
  if not f.is_file():raise PeaError('pea.toml not found')
@@ -265,6 +275,44 @@ def update(root='.'):
         shutil.copytree(src,dest,ignore=shutil.ignore_patterns('.git','.venv','__pycache__','.pea_modules','*.peapkg'))
     updated.append(name)
   return {'ok':True,'updated':updated}
+
+def outdated(root='.'):
+  """Report installed libraries that are missing, outdated, or up to date."""
+  mf,_=load_pea_toml(root)
+  lock_path=mf.parent/'pea.lock'
+  if not lock_path.exists():
+    return {'ok':False,'issues':['pea.lock not found'],'dependencies':[],'outdated_count':0}
+  lock=json.loads(lock_path.read_text())
+  deps=lock.get('dependencies',[])
+  target=mf.parent/'.pea_modules'
+  results=[]
+  for dep in deps:
+    entry={'name':dep.get('name') if isinstance(dep,dict) else dep,'status':'ok'}
+    if not isinstance(dep,dict):dep={}
+    dest=target/entry['name']
+    if not dest.is_dir():
+      entry['status']='missing';results.append(entry);continue
+    if dep.get('source')=='path':
+      src=(mf.parent/dep.get('path','') or '.').resolve()
+      if not src.is_dir():
+        entry['status']='source-missing';results.append(entry);continue
+      src_mf,src_data=load_pea_toml(str(src))
+      entry['source_version']=src_data.get('project',{}).get('version')
+      if entry['source_version']!=dep.get('version'):
+        entry['status']='outdated';entry['reason']='source version mismatch';results.append(entry);continue
+      entry['source_sha256']=dir_sha256(src)
+      entry['installed_sha256']=dir_sha256(dest)
+      if entry['source_sha256']!=entry['installed_sha256']:
+        entry['status']='outdated';entry['reason']='installed sources differ from project source';results.append(entry);continue
+    else:
+      rs=dest/'REMOTE_SOURCE.json'
+      installed_dep=json.loads(rs.read_text()) if rs.is_file() else {}
+      entry['installed_version']=installed_dep.get('version')
+      if installed_dep.get('version')!=dep.get('version'):
+        entry['status']='outdated';entry['reason']='installed version differs from locked version';results.append(entry);continue
+    results.append(entry)
+  outdated_items=[r for r in results if r.get('status')!='ok']
+  return {'ok':len(outdated_items)==0,'issues':[],'dependencies':results,'outdated_count':len(outdated_items)}
 
 def publish(root='.', registry='http://127.0.0.1:8788', token=None):
  """Publish a library package (.pelib) to a registry.

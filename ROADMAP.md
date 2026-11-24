@@ -76,4 +76,9 @@
 - Add `pea update [path]` CLI command
 - All 1380 tests pass with library update functionality
 
+## 2.41.0 - Phase 46: Library Outdated (2026-11-30)
+- Add `outdated()` function in package_manager to report libraries that are missing, outdated, or up to date
+- Add `pea outdated [path]` CLI command
+- All 1382 tests pass with library outdated functionality
+
 ### Phase 34: Standard Library Completion (2.41.0)
