@@ -14,6 +14,17 @@ PeaLang is designed to complement existing ecosystems such as Python, FastAPI, J
 
 See `ROADMAP.md` for the forward-looking plan and `CHANGELOG.md` for per-feature history.
 
+### Design Principles
+
+PeaLang is built incrementally around a small set of promises:
+
+- **Simple**: readable syntax and a low-ceremony CLI.
+- **Usable**: batteries-included stdlib for data, web, automation, and interop.
+- **Scalable**: modules, packages, lockfiles, dependency graphs, and workspace-oriented tooling.
+- **Robust**: optional static typing, compiler/VM checks, conformance tests, and reproducible packages.
+- **Secure**: capability-controlled execution, resource limits, signed packages, and supply-chain checks.
+- **Extendable**: embeddable runtime plus host bindings for Python, Java, TypeScript, React, Go, Rust, and WebAssembly.
+
 ## What's New in 1.0.0-experience
 
 ### Language Ergonomics
@@ -549,7 +560,8 @@ pea info mylib                                             # show registry packa
 pea lock                                 # generate pea.lock from pea.toml
 pea lock --check                         # verify pea.lock is current
 pea deps                                 # list project dependencies
-pea deps --tree                          # show the nested dependency tree
+pea deps --tree                          # show the nested dependency tree (warns on cycles/conflicts)
+pea deps --tree --json                   # machine-readable graph safety report
 pea install                              # install all dependencies from pea.lock
 pea update [path]                        # refresh installed libraries from pea.lock
 pea outdated [path]                      # report missing/outdated/up-to-date libraries

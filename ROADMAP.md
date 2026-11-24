@@ -102,4 +102,9 @@
 - Add `pea lib inspect <package.pelib> [--json]` CLI command
 - All 1389 tests pass with library package inspection functionality
 
+## 2.41.0 - Phase 51: Dependency Graph Safety (2026-11-25)
+- Add `dependency_graph()` in package_manager to detect dependency cycles, duplicate names, and conflicting versions
+- Extend `pea deps --tree` with cycle/conflict warnings and `pea deps --tree --json` for a machine-readable safety report
+- All 1392 tests pass with dependency graph safety functionality
+
 ### Phase 34: Standard Library Completion (2.41.0)

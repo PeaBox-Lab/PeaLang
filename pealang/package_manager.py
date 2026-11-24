@@ -141,6 +141,51 @@ def dependency_tree(root='.', _seen=None):
         node['children']=dependency_tree(str(src), _seen)
     tree.append(node)
   return tree
+def dependency_graph(root='.'):
+  """Analyze the dependency graph for cycles, duplicates, and version conflicts."""
+  cycles=[];occurrences={};versions={};seen=set();stack_paths=[];stack_names=[]
+  def spec_dict(spec):
+   return {'path':spec} if isinstance(spec,str) else dict(spec)
+  def walk(path):
+   mf,data=load_pea_toml(path)
+   nodes=[]
+   for name,raw_spec in sorted(dependency_entries(data).items()):
+    spec=spec_dict(raw_spec)
+    node={'name':name}
+    version=spec.get('version') or spec.get('rev') or '*'
+    if 'path' in spec:
+     src=(mf.parent/spec['path']).resolve()
+     node['source']='path';node['path']=spec['path']
+     try:
+      _,dep_data=load_pea_toml(src)
+      version=dep_data.get('project',{}).get('version',version)
+     except PeaError:
+      pass
+     node['version']=version
+     if src.is_dir():
+      if str(src) in stack_paths:
+       idx=stack_paths.index(str(src))
+       cycle_names=stack_names[idx:]+[name]
+       node['cycle']=True;node['cycle_path']=cycle_names
+       cycles.append({'name':name,'path':str(src),'cycle':cycle_names})
+      elif str(src) not in seen:
+       seen.add(str(src));stack_paths.append(str(src));stack_names.append(name)
+       node['children']=walk(str(src))
+       stack_paths.pop();stack_names.pop()
+    elif 'git' in spec:
+     node['source']='git';node['git']=spec['git'];node['version']=version
+    elif 'registry' in spec:
+     node['source']='registry';node['registry']=spec['registry'];node['version']=version
+    else:
+     node['source']='unknown';node['version']=version
+    occurrences[name]=occurrences.get(name,0)+1
+    versions.setdefault(name,set()).add(str(version))
+    nodes.append(node)
+   return nodes
+  tree=walk(root)
+  conflicts=[{'name':name,'versions':sorted(found)} for name,found in sorted(versions.items()) if len(found)>1]
+  duplicates=[{'name':name,'count':count} for name,count in sorted(occurrences.items()) if count>1]
+  return {'ok':not cycles and not conflicts,'tree':tree,'cycles':cycles,'conflicts':conflicts,'duplicates':duplicates}
 def audit(root='.'):
  mf,data=load_pea_toml(root);issues=[];allowed=set(data.get('permissions',{}).get('allow',[]));lock_path=mf.parent/'pea.lock'
  if not lock_path.exists():issues.append('Lock file missing')

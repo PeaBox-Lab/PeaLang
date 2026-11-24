@@ -287,7 +287,7 @@ def main(argv=None):
 
         if c in ('lock','install','uninstall','audit','quality','build','deps','update','outdated','clean'):
 
-            from .package_manager import write_lock,install,uninstall,audit,build_package,install_remote,quality_check,check_lock,list_dependencies,outdated,dependency_tree,clean
+            from .package_manager import write_lock,install,uninstall,audit,build_package,install_remote,quality_check,check_lock,list_dependencies,outdated,dependency_tree,dependency_graph,clean
 
             # Find root: first non-flag argument after argv[0]
             rootnext=[a for a in argv[1:] if not a.startswith('-')]
@@ -301,8 +301,15 @@ def main(argv=None):
 
             if c=='deps':
                 if '--tree' in argv[1:]:
-                    result=dependency_tree(root)
-                    print(json.dumps(result,indent=2));return 0
+                    report=dependency_graph(root)
+                    if '--json' in argv[1:]:
+                        print(json.dumps(report,indent=2));return 0 if report['ok'] else 1
+                    print(json.dumps(report['tree'],indent=2))
+                    for cycle in report['cycles']:
+                        print('Warning: dependency cycle: '+' -> '.join(cycle['cycle']),file=sys.stderr)
+                    for conflict in report['conflicts']:
+                        print(f"Warning: conflicting versions for {conflict['name']}: {', '.join(conflict['versions'])}",file=sys.stderr)
+                    return 0
                 print(json.dumps(list_dependencies(root),indent=2));return 0
 
             if c=='install':
