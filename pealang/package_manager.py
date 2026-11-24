@@ -339,6 +339,22 @@ def outdated(root='.'):
   outdated_items=[r for r in results if r.get('status')!='ok']
   return {'ok':len(outdated_items)==0,'issues':[],'dependencies':results,'outdated_count':len(outdated_items)}
 
+def clean(root='.', all=False):
+  """Remove .pea_modules (and optionally pea.lock) from a project."""
+  mf,_=load_pea_toml(root)
+  base=mf.parent
+  removed=[]
+  mods=base/'.pea_modules'
+  if mods.is_dir():
+    shutil.rmtree(mods,ignore_errors=True)
+    removed.append('.pea_modules')
+  if all:
+    lock=base/'pea.lock'
+    if lock.is_file():
+      lock.unlink()
+      removed.append('pea.lock')
+  return {'ok':True,'removed':removed}
+
 def publish(root='.', registry='http://127.0.0.1:8788', token=None):
  """Publish a library package (.pelib) to a registry.
 

@@ -86,4 +86,9 @@
 - Add `pea deps --tree [path]` CLI command for dependency tree output
 - All 1383 tests pass with dependency tree functionality
 
+## 2.41.0 - Phase 48: Library Clean (2026-11-30)
+- Add `clean()` function in package_manager to remove `.pea_modules` (and optionally `pea.lock`) from a project
+- Add `pea clean [path] [--all]` CLI command
+- All 1385 tests pass with library clean functionality
+
 ### Phase 34: Standard Library Completion (2.41.0)
