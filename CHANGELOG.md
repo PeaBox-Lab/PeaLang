@@ -239,6 +239,13 @@ All 1240 tests pass.
 - Add tests: test_pea_quality_cli, test_quality_check_function, test_quality_check_valid_project
 - All 1364 tests pass with library quality gates
 
+### Phase 40: Library End-to-End (2026-11-30)
+- Add `pea lib new <name>` CLI command to scaffold library projects
+- Add `pea lib build <path>` to build library package (.pelib)
+- Add `pea lib quality <path>` to run quality checks
+- Add `pea lib publish <path>` to build and publish to registry
+- All 1368 tests pass with library end-to-end functionality
+
 ### Phase 34: Standard Library Completion (2.41.0)
   - **`std.sql`**: SQL query builder (SELECT, INSERT, UPDATE, DELETE, CREATE TABLE, DROP TABLE).
   - **`std.cache`**: In-memory cache with TTL support.

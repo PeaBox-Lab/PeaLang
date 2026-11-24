@@ -1239,6 +1239,80 @@ def main(argv=None):
 
             print('Usage: pea ext list|load <module>|info <name>|deprecate <name> <version>|lifecycle <name>|migrate <name> <from> <to>');return 1
 
+        if c=='lib':
+
+            from .package_manager import build_library, load_pea_toml, quality_check
+            import urllib.request, urllib.error, json as _json
+
+            sub=argv[1] if len(argv)>1 else None
+
+            if sub=='new':
+                p=argparse.ArgumentParser(prog='pea lib new')
+                p.add_argument('name')
+                p.add_argument('--template',default='library')
+                a=p.parse_args(argv[2:])
+                out=init_project(a.name,a.name,a.template,{})
+                print(out);return 0
+
+            if sub=='build':
+                p=argparse.ArgumentParser(prog='pea lib build')
+                p.add_argument('path',nargs='?',default='.')
+                p.add_argument('-o','--output')
+                a=p.parse_args(argv[2:])
+                out,h=build_library(a.path,a.output)
+                print(f'{out}\nsha256 {h}');return 0
+
+            if sub=='quality':
+                path=argv[2] if len(argv)>2 else '.'
+                result=quality_check(path)
+                print(json.dumps(result,indent=2));return 0 if result['ok'] else 1
+
+            if sub=='publish':
+                path=argv[2] if len(argv)>2 else '.'
+                registry='http://127.0.0.1:8788'
+                token=None
+                i=3
+                while i+1<len(argv):
+                    if argv[i]=='--registry':registry=argv[i+1];i+=2;continue
+                    if argv[i]=='--token':token=argv[i+1];i+=2;continue
+                    i+=1
+                if not path:
+                    print('Usage: pea lib publish <path> [--registry URL] [--token TOKEN]');return 1
+                root=Path(path).resolve()
+                mf,data=load_pea_toml(root)
+                name=data['project']['name'];version=data['project']['version']
+                out,h=build_library(root)
+                package_bytes=Path(out).read_bytes()
+                if not token:
+                    token_file=Path.home()/'.pealang'/'registry_tokens.json'
+                    if token_file.exists():
+                        try:
+                            tokens=_json.loads(token_file.read_text())
+                            token=tokens.get(registry)
+                        except Exception:
+                            token=None
+                if not token:
+                    print('Error: No registry token. Use --token or pea login first.');return 1
+                url=f'{registry}/api/v1/packages/{name}/{version}'
+                req=urllib.request.Request(url,data=package_bytes,method='PUT')
+                req.add_header('Authorization','Bearer '+token)
+                req.add_header('Content-Type','application/octet-stream')
+                try:
+                    with urllib.request.urlopen(req) as resp:
+                        if resp.status==201:
+                            result=_json.loads(resp.read().decode())
+                            print(f'Published {result["name"]} {result["version"]} (sha256={result["sha256"]})')
+                        else:
+                            print(f'Upload failed: HTTP {resp.status}');return 1
+                except urllib.error.HTTPError as e:
+                    body=e.read().decode() if e.fp else ''
+                    print(f'Upload failed: HTTP {e.code} {body}');return 1
+                except Exception as e:
+                    print(f'Upload failed: {e}');return 1
+                return 0
+
+            print('Usage: pea lib new <name> | pea lib build <path> [-o output] | pea lib quality <path> | pea lib publish <path> [--registry URL] [--token TOKEN]');return 1
+
         if c=='publish':
 
             from .package_manager import build_library, load_pea_toml
