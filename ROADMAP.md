@@ -59,4 +59,11 @@
 - Add `pea version -v` short flag
 - All 1374 tests pass with version query functionality
 
+## 2.41.0 - Phase 43: Lockfile Validation & Dependency Listing (2026-11-30)
+- Add `check_lock()` in package_manager to validate pea.lock against pea.toml
+- Add `list_dependencies()` in package_manager to list deps with lock metadata
+- Add `pea lock --check [path]` CLI command for lockfile consistency validation
+- Add `pea deps [path]` CLI command for dependency listing
+- All 1376 tests pass with lockfile validation and dependency listing
+
 ### Phase 34: Standard Library Completion (2.41.0)

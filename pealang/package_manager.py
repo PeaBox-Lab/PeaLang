@@ -63,6 +63,49 @@ def resolve(root='.'):
  return {'lock_version':1,'pealang':'0.35.0','package':data['project'],'dependencies':resolved}
 def write_lock(root='.'):
  mf,_=load_pea_toml(root);lock=resolve(mf.parent);p=mf.parent/'pea.lock';p.write_text(json.dumps(lock,indent=2,sort_keys=True)+'\n');return p,lock
+def check_lock(root='.'):
+  """Validate pea.lock against pea.toml: verify all deps are present and consistent."""
+  mf,data=load_pea_toml(root)
+  lock_path=mf.parent/'pea.lock'
+  if not lock_path.exists():
+    return {'ok':False,'issues':['pea.lock not found'],'deps':[]}
+  lock=json.loads(lock_path.read_text())
+  deps=lock.get('dependencies',[])
+  issues=[]
+  for dep in deps:
+    if dep.get('name') not in data.get('dependencies',{}):
+      issues.append(f"Dependency '{dep['name']}' in lock but not in pea.toml")
+  for name in data.get('dependencies',{}):
+    if not any(d.get('name')==name for d in deps):
+      issues.append(f"Dependency '{name}' in pea.toml but not in lock")
+  return {'ok':len(issues)==0,'issues':issues,'deps':deps}
+def list_dependencies(root='.'):
+  """List all declared dependencies from pea.toml with their sources."""
+  mf,data=load_pea_toml(root)
+  deps=data.get('dependencies',{})
+  lock_path=mf.parent/'pea.lock'
+  lock_deps={}
+  if lock_path.exists():
+    lock=json.loads(lock_path.read_text())
+    for d in lock.get('dependencies',[]):
+      lock_deps[d['name']]=d
+  result=[]
+  for name,spec in deps.items():
+    if isinstance(spec,str):
+      source='path'
+    elif 'path' in spec:
+      source='path'
+    elif 'git' in spec:
+      source='git'
+    elif 'registry' in spec:
+      source='registry'
+    else:
+      source='unknown'
+    entry={'name':name,'source':source}
+    if name in lock_deps:
+      entry['lock']=lock_deps[name]
+    result.append(entry)
+  return {'project':data.get('project',{}),'dependencies':result}
 def audit(root='.'):
  mf,data=load_pea_toml(root);issues=[];allowed=set(data.get('permissions',{}).get('allow',[]));lock_path=mf.parent/'pea.lock'
  if not lock_path.exists():issues.append('Lock file missing')

@@ -285,13 +285,22 @@ def main(argv=None):
 
             print(init_manifest(argv[1] if len(argv)>1 else '.'));return 0
 
-        if c in ('lock','install','audit','quality','build'):
+        if c in ('lock','install','audit','quality','build','deps'):
 
-            from .package_manager import write_lock,install,audit,build_package,install_remote,quality_check
+            from .package_manager import write_lock,install,audit,build_package,install_remote,quality_check,check_lock,list_dependencies
 
-            root=argv[1] if len(argv)>1 else '.'
+            # Find root: first non-flag argument after argv[0]
+            rootnext=[a for a in argv[1:] if not a.startswith('-')]
+            root=rootnext[0] if rootnext else '.'
 
-            if c=='lock':p,_=write_lock(root);print(p);return 0
+            if c=='lock':
+                if '--check' in argv:
+                    result=check_lock(root)
+                    print(json.dumps(result,indent=2));return 0 if result['ok'] else 1
+                p,_=write_lock(root);print(p);return 0
+
+            if c=='deps':
+                print(json.dumps(list_dependencies(root),indent=2));return 0
 
             if c=='install':
                 name=argv[1] if len(argv)>1 else None
