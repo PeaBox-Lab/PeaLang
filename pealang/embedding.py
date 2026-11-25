@@ -6,6 +6,7 @@ import time
 from typing import Any, Callable, Mapping
 from .errors import PeaError
 from .interpreter import Interpreter, UserFunction
+from .iterators import PeaIterator
 from .parser import parse_source
 from .resource_limits import ResourceBudget,ResourceLimits,ResourceLimitExceeded,estimated_size
 
@@ -45,6 +46,7 @@ class HostFunction:
 
 def to_pea(value: Any) -> Any:
     if value is None or isinstance(value, (bool, int, float, str)): return value
+    if isinstance(value, PeaIterator): return value
     if is_dataclass(value): return {k: to_pea(v) for k,v in asdict(value).items()}
     if hasattr(value, 'model_dump'): return to_pea(value.model_dump())
     if isinstance(value, Mapping): return {str(k): to_pea(v) for k,v in value.items()}

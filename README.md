@@ -752,6 +752,24 @@ and trait declarations are erased before runtime and are exposed through
 `SemanticResult` and `analyze_project()`. Protocol diagnostics are available via
 `pea semantic` and `pea typecheck-project`.
 
+### Iterators
+
+```pea
+let it = iter([1, 2])
+print next(it)          # 1
+print has_next(it)      # true
+for x in it { print x } # 2
+```
+
+`iter()` returns a lazy `PeaIterator` with non-consuming `peek()` and
+`has_next()` checks. `next()` returns a value or an optional default when the
+iterator is exhausted. The same iterator helpers work in the interpreter,
+bytecode VM, and async VM; loops close iterators deterministically, including
+on `break`. Static analysis accepts `Iterable<T>` and `Iterator<T>` annotations,
+infers element types from `iter()` and `next()`, and reports `I201` for values
+known not to be iterable. Existing eager helpers such as `range`, `enumerate`,
+`zip`, `map`, and `filter` are unchanged.
+
 ### Project queries
 
 ```bash

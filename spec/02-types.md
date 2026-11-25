@@ -1,6 +1,8 @@
 # Types
 
-Core type names are `Any`, `Never`, `Null`, `Bool`, `Int`, `Float`, `Number`, `String`, `List<T>`, `Map<K,V>`, `Set<T>`, `Tuple<T...>`, `Result<T,E>`, `Option<T>`, `Future<T>`, and `Function`. Type annotations are optional. `T?` denotes nullable `T`; `A | B` denotes a union. Records are structural data declarations.
+Core type names are `Any`, `Never`, `Null`, `Bool`, `Int`, `Float`, `Number`, `String`, `List<T>`, `Map<K,V>`, `Set<T>`, `Tuple<T...>`, `Result<T,E>`, `Option<T>`, `Future<T>`, `Iterable<T>`, `Iterator<T>`, and `Function`. Type annotations are optional. `T?` denotes nullable `T`; `A | B` denotes a union. Records are structural data declarations.
+
+`List<T>`, `Set<T>`, `Tuple<T...>`, `Iterable<T>`, and `Iterator<T>` iterate as `T`; `Map<K,V>` iterates as `K`; and `String` iterates as `String`. `Iterator<T>` is compatible with `Iterable<T>`. The `iter()` builtin returns `Iterator<T>`, `next()` and `peek()` return nullable elements, and `has_next()` returns `Bool`. Static analysis reports `I201` when a `for` target is known to be non-iterable.
 
 Generic function declarations may declare type parameters and protocol bounds, for example `function show<T: Printable>(value: T) -> String`. Static analysis scopes those type parameters, preserves generic contracts, infers bindings at call sites, and checks declared bounds. Generic-aware compatibility compares nested type arguments recursively while legacy broad compatibility remains available through `compatible()`. Runtime execution still erases annotations and generic parameter lists.
 

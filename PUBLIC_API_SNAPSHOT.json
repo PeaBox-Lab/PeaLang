@@ -8714,6 +8714,42 @@
       "signature": "(source,output=?,interpreter=?,source_name=?,base_dir=?,allow_process=?,project_root=?,dependencies=?)"
     },
     {
+      "module": "pealang.iterators",
+      "name": "PeaIterator",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.iterators",
+      "name": "make_iterator",
+      "kind": "function",
+      "signature": "(value)"
+    },
+    {
+      "module": "pealang.iterators",
+      "name": "iterator_next",
+      "kind": "function",
+      "signature": "(iterator,default=?)"
+    },
+    {
+      "module": "pealang.iterators",
+      "name": "has_next",
+      "kind": "function",
+      "signature": "(iterator)"
+    },
+    {
+      "module": "pealang.iterators",
+      "name": "peek",
+      "kind": "function",
+      "signature": "(iterator)"
+    },
+    {
+      "module": "pealang.iterators",
+      "name": "close_iterator",
+      "kind": "function",
+      "signature": "(iterator)"
+    },
+    {
       "module": "pealang.runtime_http",
       "name": "Handler",
       "kind": "class",
@@ -9852,6 +9888,12 @@
       "name": "split_top",
       "kind": "function",
       "signature": "(text,sep)"
+    },
+    {
+      "module": "pealang.type_system",
+      "name": "iterable_element_type",
+      "kind": "function",
+      "signature": "(t)"
     },
     {
       "module": "pealang.type_system",

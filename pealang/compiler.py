@@ -67,8 +67,9 @@ class Compiler:
    for i in ctx['breaks']:self.patch(i,target)
    return
   if isinstance(s,ForStmt):
-   self.expr(s.iterable);self.emit(Op.ITER,node=s);start=len(self.code.instructions);end=self.emit(Op.ITER_NEXT,{'name':s.name,'end':None},s);ctx={'continue':start,'breaks':[]};self.loops.append(ctx);self.block(s.body);self.loops.pop();self.emit(Op.JUMP,start,s);target=len(self.code.instructions);self.code.instructions[end].arg['end']=target
-   for i in ctx['breaks']:self.patch(i,target)
+   if getattr(s,'pattern',None):raise CompileError('Destructuring for is not supported in bytecode')
+   self.expr(s.iterable);self.emit(Op.ITER,node=s);start=len(self.code.instructions);end=self.emit(Op.ITER_NEXT,{'name':s.name,'end':None},s);ctx={'continue':start,'breaks':[]};self.loops.append(ctx);self.block(s.body);self.loops.pop();self.emit(Op.JUMP,start,s);cleanup=len(self.code.instructions);self.emit(Op.CLOSE_ITER,node=s);target=len(self.code.instructions);self.code.instructions[end].arg['end']=target
+   for i in ctx['breaks']:self.patch(i,cleanup)
    return
   if isinstance(s,BreakStmt):
    if not self.loops:raise CompileError('break outside loop')

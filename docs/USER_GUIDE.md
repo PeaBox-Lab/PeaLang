@@ -80,6 +80,17 @@ let values = [v for [k,v] in pairs]
 let squares = {k: v*v for [k,v] in items({"a":2,"b":3})}
 ```
 
+### Explicit iterators
+```pea
+let it = iter([1,2,3])
+print has_next(it)      # true
+print next(it)          # 1
+for x in it { print x } # 2, 3
+```
+`iter()` returns a lazy iterator with non-consuming `has_next()` and `peek()`.
+`next(it, default)` returns `default` at exhaustion. Iterators work in the
+interpreter, bytecode VM, and async VM; existing eager helpers are unchanged.
+
 ### Optional chaining and null coalescing
 ```pea
 let city = user?.profile?.city ?? "unknown"

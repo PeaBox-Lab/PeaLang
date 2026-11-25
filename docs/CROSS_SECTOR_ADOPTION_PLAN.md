@@ -56,6 +56,13 @@ and conformance diagnostics scoped to protocols actually used as generic bounds.
 Extension types can now publish name-only protocol contracts, and all contracts
 remain static and erased before execution.
 
+**Phase 64 — Iterators** turns iteration into an explicit shared protocol.
+Interpreter, bytecode VM, and async VM expose `iter`, `next`, `has_next`, and
+`peek`;
+loops use one cleanup path so `break` no longer leaks VM stack values. Static
+analysis understands `Iterable<T>` and `Iterator<T>`, while existing eager
+helpers and comprehensions keep their current behavior.
+
 ### Wave 2 — Runtime and performance (Phases 71–80)
 
 Bytecode optimizer, fast interpreter, JIT, native backend, WASM backend, parallel

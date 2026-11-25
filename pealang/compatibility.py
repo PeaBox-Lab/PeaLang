@@ -13,6 +13,7 @@ FEATURES={
  'modules':Feature('modules','0.8',Stability.STABLE),
  'typing.optional':Feature('typing.optional','0.19',Stability.PREVIEW),
  'vm.peac':Feature('vm.peac','0.20',Stability.PREVIEW),
+  'language.iterators':Feature('language.iterators','2.41',Stability.PREVIEW),
  'async.await':Feature('async.await','0.26',Stability.PREVIEW),
  'embedding.python':Feature('embedding.python','0.18',Stability.STABLE),
  'embedding.fastapi':Feature('embedding.fastapi','0.25',Stability.PREVIEW),

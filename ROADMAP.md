@@ -191,4 +191,11 @@
 - Repair extension type protocol generation and align the public API and docs
 - Last verified baseline remains 1396 tests; targeted regression and protocol/traits tests smoke-tested
 
+## 2.41.0 - Phase 64: Iterators (2026-11-25)
+- Add explicit iterator objects and `iter`/`next`/`has_next`/`peek` builtins across interpreter and VM paths
+- Add bytecode iterator cleanup and a clear compile error for unsupported destructuring loops
+- Add `Iterable<T>`/`Iterator<T>` static contracts and `I201` non-iterable diagnostics
+- Expose iterator helpers through the public API and compatibility feature registry
+- Last verified baseline remains 1396 tests; targeted regression and iterator tests smoke-tested
+
 ### Phase 34: Standard Library Completion (2.41.0)

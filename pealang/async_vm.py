@@ -5,6 +5,7 @@ from dataclasses import dataclass
 from .vm import VirtualMachine,AsyncSuspension,VMFunction,Frame,VMError
 from .compiler import compile_source_to_bytecode
 from .embedding import RuntimeOptions,to_pea,from_pea,PeaPermissionError
+from .iterators import make_iterator,iterator_next,has_next,peek
 from .structured_concurrency import TaskGroup,CancellationScope,gather_structured
 @dataclass
 class CancellationToken:
@@ -15,7 +16,7 @@ class CancellationToken:
 class AsyncVirtualMachine(VirtualMachine):
  async def run_async(self,module,globals=None,timeout=None,cancellation=None):
   cancellation=cancellation or CancellationToken();self.module=module
-  env=dict(globals or {});env.update({'len':len,'str':str,'int':int,'number':float,'upper':lambda x:str(x).upper(),'lower':lambda x:str(x).lower(),'all':self._all})
+  env=dict(globals or {});env.update({'len':len,'str':str,'int':int,'number':float,'upper':lambda x:str(x).upper(),'lower':lambda x:str(x).lower(),'iter':make_iterator,'next':iterator_next,'has_next':has_next,'peek':peek,'all':self._all})
   self.frames=[Frame(module.code,env,name='<module>')]
   async def drive():
    while True:

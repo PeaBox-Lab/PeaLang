@@ -390,6 +390,16 @@ All 1240 tests pass.
 - Repair the extension-type protocol hook and publish the structural conformance helpers through the public API
 - Last verified baseline remains 1396 tests; targeted regression and protocol/traits tests smoke-tested
 
+## 2.41.0 - Phase 64: Iterators (2026-11-25)
+- Add `PeaIterator` with non-consuming lookahead, `peek()`, `has_next()`, and explicit `close()`
+- Add `iter()`, `next()`, `has_next()`, and `peek()` builtins to the interpreter, bytecode VM, async VM, and public API
+- Route `for` loops and comprehensions through the shared iterator helper with deterministic cleanup
+- Add `CLOSE_ITER` bytecode cleanup so `break` no longer leaks iterators on the VM stack
+- Reject destructuring `for` in bytecode compilation with a clear `CompileError` instead of miscompiling
+- Add static `Iterable<T>`/`Iterator<T>` contracts, compatible annotations, `iter`/`next` inference, and `I201` diagnostics
+- Add a `language.iterators` preview feature flag and update help, specs, and guides
+- Last verified baseline remains 1396 tests; targeted regression and iterator tests smoke-tested
+
 ### Phase 34: Standard Library Completion (2.41.0)
   - **`std.sql`**: SQL query builder (SELECT, INSERT, UPDATE, DELETE, CREATE TABLE, DROP TABLE).
   - **`std.cache`**: In-memory cache with TTL support.

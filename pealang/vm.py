@@ -4,6 +4,7 @@ from dataclasses import dataclass,field
 from pathlib import Path
 from .bytecode import BytecodeModule,Op
 from .error_values import build_error, error_value_from_raw, matches_error
+from .iterators import make_iterator,iterator_next,has_next,peek,close_iterator,ITER_EXHAUSTED
 class VMError(Exception):pass
 @dataclass
 class AsyncSuspension:
@@ -26,7 +27,7 @@ class VirtualMachine:
   self.output=output or print;self.max_instructions=max_instructions;self.debug_hook=debug_hook;self.module_loader=module_loader;self.instrumentation=instrumentation;self.reset()
  def reset(self):self.instructions=0;self.stack=[];self.frames=[];self.exports={};self.paused=False;self.breakpoints=set();self.last_event=None;self.module_cache={}
  def run(self,module,globals=None):
-  self.module=module;env=dict(globals or {});env.update({'len':len,'str':str,'int':int,'number':float,'upper':lambda x:str(x).upper(),'lower':lambda x:str(x).lower(),'append':lambda a,x:(a.append(x) or a),'error':build_error})
+  self.module=module;env=dict(globals or {});env.update({'len':len,'str':str,'int':int,'number':float,'upper':lambda x:str(x).upper(),'lower':lambda x:str(x).lower(),'append':lambda a,x:(a.append(x) or a),'iter':make_iterator,'next':iterator_next,'has_next':has_next,'peek':peek,'error':build_error})
   self.frames=[Frame(module.code,env,name='<module>')];return self.loop()
  def pop(self):
   if not self.stack:raise VMError('Stack underflow')
@@ -51,6 +52,9 @@ class VirtualMachine:
    env=dict(callee.closure);env.update(code.defaults);env.update(zip(code.params,args));self.frames.append(Frame(code,env,name=callee.name,stack_base=len(self.stack)));return None
   if callable(callee):self.stack.append(callee(*args));return None
   raise VMError('Value is not callable')
+ def _discard_stack(self,index):
+  for value in self.stack[index:]:close_iterator(value)
+  del self.stack[index:]
  def _structured_throw(self,thrown):
   record=error_value_from_raw(thrown.value)
   if not record.get('source'):record['source']=thrown.source or self.module.source_name
@@ -62,12 +66,12 @@ class VirtualMachine:
   while self.frames:
    f=self.frames[-1]
    if f.handlers:
-    h=f.handlers.pop();del self.stack[h.stack_size:]
+    h=f.handlers.pop();self._discard_stack(h.stack_size)
     if h.catch_type and not matches_error(record,h.catch_type):continue
     if h.catch is not None:
      if h.name:f.env[h.name]=record
      f.ip=h.catch;return True
-   self.frames.pop()
+   self._discard_stack(f.stack_base);self.frames.pop()
   return False
  def _load_module(self,path,alias,frame):
   base=Path(frame.code.source_name).parent;resolved=(base/path).resolve() if not Path(path).is_absolute() else Path(path)
@@ -121,10 +125,12 @@ class VirtualMachine:
     elif op==Op.JUMP.value:f.ip=ins.arg
     elif op==Op.JUMP_IF_FALSE.value:
      if not self.truth(self.pop()):f.ip=ins.arg
-    elif op==Op.ITER.value:self.stack.append(iter(self.pop()))
+    elif op==Op.ITER.value:self.stack.append(make_iterator(self.pop()))
     elif op==Op.ITER_NEXT.value:
-     try:f.env[ins.arg['name']]=next(self.stack[-1])
-     except StopIteration:self.stack.pop();f.ip=ins.arg['end']
+     value=iterator_next(self.stack[-1],ITER_EXHAUSTED)
+     if value is ITER_EXHAUSTED:close_iterator(self.stack.pop());f.ip=ins.arg['end']
+     else:f.env[ins.arg['name']]=value
+    elif op==Op.CLOSE_ITER.value:close_iterator(self.pop())
     elif op==Op.FUNCTION.value:self.stack.append(VMFunction(ins.arg,self.module,f.env))
     elif op==Op.CALL.value:
      callee,args=self.pop_args(ins.arg);self._invoke(callee,args)
@@ -133,7 +139,7 @@ class VirtualMachine:
      if hasattr(value,'__await__'):return AsyncSuspension(value,f.code.source_name,ins.line)
      self.stack.append(value)
     elif op==Op.RETURN.value:
-     value=self.pop();self.frames.pop();self.stack.append(value) if self.frames else None;ret=value
+     value=self.pop();self._discard_stack(f.stack_base);self.frames.pop();self.stack.append(value) if self.frames else None;ret=value
     elif op==Op.PUSH_HANDLER.value:f.handlers.append(Handler(ins.arg.get('catch'),ins.arg.get('finally'),ins.arg['end'],ins.arg.get('name'),len(self.stack),ins.arg.get('catch_type')))
     elif op==Op.POP_HANDLER.value:
      if f.handlers:f.handlers.pop()

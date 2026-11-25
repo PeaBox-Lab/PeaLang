@@ -4,7 +4,7 @@ from dataclasses import dataclass,field,replace
 import re
 from typing import Any
 
-BUILTINS={'Any','Never','Null','Bool','Int','Float','Number','String','List','Map','Set','Tuple','Result','Option','Future','Function'}
+BUILTINS={'Any','Never','Null','Bool','Int','Float','Number','String','List','Map','Set','Tuple','Result','Option','Future','Function','Iterable','Iterator'}
 @dataclass(frozen=True)
 class TypeRef:
     name:str
@@ -44,6 +44,13 @@ def split_top(text,sep):
         depth+= ch=='<';depth-= ch=='>'
         if ch==sep and depth==0:out.append(text[start:i].strip());start=i+1
     out.append(text[start:].strip());return [x for x in out if x]
+
+def iterable_element_type(t:TypeRef)->TypeRef|None:
+    """Return the element type produced when iterating over *t*, if known."""
+    if t.name in ('List','Set','Tuple','Iterable','Iterator') and t.args:return t.args[0]
+    if t.name=='Map' and t.args:return t.args[0]
+    if t.name=='String':return TypeRef('String')
+    return None
 def infer_literal(text:str)->TypeRef:
     t=text.strip()
     if t=='null':return TypeRef('Null')
@@ -58,6 +65,10 @@ def compatible(expected:TypeRef,actual:TypeRef)->bool:
     if expected.name=='Any' or actual.name=='Any':return True
     if actual.name=='Null':return expected.nullable or expected.name in ('Null','Option')
     if expected.name=='Number' and actual.name in ('Int','Float','Number'):return True
+    if expected.name in ('Iterable','Iterator') and expected.args:
+        if expected.name=='Iterator' and actual.name!='Iterator':return False
+        elem=iterable_element_type(actual)
+        return elem is None or compatible(expected.args[0],elem)
     if expected.name=='Union':return any(compatible(x,actual) for x in expected.args)
     return expected.name==actual.name
 
@@ -69,6 +80,10 @@ def compatible_generic(expected:TypeRef,actual:TypeRef,type_params=frozenset())-
     if actual.nullable and not expected.nullable:return False
     if actual.name=='Null':return expected.nullable or expected.name in ('Null','Option')
     if expected.name=='Number' and actual.name in ('Int','Float','Number'):return True
+    if expected.name in ('Iterable','Iterator') and expected.args:
+        if expected.name=='Iterator' and actual.name!='Iterator':return False
+        elem=iterable_element_type(actual)
+        return elem is None or compatible_generic(expected.args[0],elem,type_params)
     if expected.name=='Union':return any(compatible_generic(x,actual,type_params) for x in expected.args)
     if expected.name!=actual.name:return False
     if len(expected.args)!=len(actual.args):return False
@@ -248,6 +263,7 @@ class SemanticAnalyzer:
                 all_records[name] = {'constructors': constructors}
         
         self._check_records(source,result)
+        self._check_iteration(source,result)
         self._check_calls(source,result,all_contracts)
         
         # Cross-module context
@@ -280,6 +296,18 @@ class SemanticAnalyzer:
         lit=infer_literal(expr)
         if lit.name!='Any':return lit
         if expr in env:return env[expr]
+        m=re.fullmatch(r'(iter|next|has_next|peek)\(([^()]*)\)',expr)  # lgtm[py/polynomial-redos]
+        if m:
+            fn,raw=m.groups();actual=self.infer_expr(raw,env,r)
+            if fn=='iter':
+                elem=iterable_element_type(actual) or TypeRef('Any')
+                return TypeRef('Iterator',(elem,))
+            if fn=='has_next':return TypeRef('Bool')
+            if fn in ('next','peek'):
+                if actual.name=='Iterator' and actual.args:
+                    elem=actual.args[0];return TypeRef(elem.name,elem.args,True)
+                elem=iterable_element_type(actual)
+                return TypeRef(elem.name,elem.args,True) if elem else TypeRef('Any')
         m=re.fullmatch(r'(\w+)\.(\w+)',expr)  # lgtm[py/polynomial-redos]
         if m and m.group(1) in env:
             owner=env[m.group(1)];fields=r.records.get(owner.name,{})
@@ -309,6 +337,16 @@ class SemanticAnalyzer:
                 elif not compatible(t,fields[name]):r.diagnostics.append(Diagnostic('R202',f"Field '{name}' expects {t}, got {fields[name]}",source[:m.start()].count('\n')+1))
             for name in fields:
                 if name not in expected:r.diagnostics.append(Diagnostic('R203',f"Unknown field '{name}' for record '{record}'",source[:m.start()].count('\n')+1))
+
+    def _check_iteration(self,source,r):
+        env=dict(r.symbols)
+        pattern=r'for[ \t]+(?:[A-Za-z_]\w*|\[[^\]]*\]|\{[^}]*\})[ \t]+in[ \t]+(.+?)[ \t]*\{'
+        for line_no,line in enumerate(source.splitlines(),1):
+            m=re.match(pattern,line.split('//',1)[0].strip())
+            if not m:continue
+            actual=self.infer_expr(m.group(1),env,r)
+            if actual.name=='Any' or iterable_element_type(actual) is not None:continue
+            r.diagnostics.append(Diagnostic('I201',f"Value of type {actual} is not iterable",line_no))
 
     def _check_calls(self,source,r,protocols=None):
         protocols=protocols or {}
