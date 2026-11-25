@@ -445,6 +445,49 @@ def main(argv=None):
                     print(f'{out}\nsha256 {h}')
                 return 0
 
+        if c=='workspace':
+            from .workspace import init_workspace,add_workspace_member,workspace_members,workspace_graph,workspace_lock
+            sub=argv[1] if len(argv)>1 else None
+            args=argv[2:]
+            def _opt(flag,default=None):
+                for i,a in enumerate(args):
+                    if a==flag and i+1<len(args):return args[i+1]
+                return default
+            def _pos(value_flags=()):
+                skip=set()
+                for flag in value_flags:
+                    for i,a in enumerate(args):
+                        if a==flag and i+1<len(args):skip.add(i+1)
+                return [a for i,a in enumerate(args) if not a.startswith('-') and i not in skip]
+
+            if sub=='init':
+                path=_pos()[0] if _pos() else '.'
+                created=init_workspace(path,_opt('--name'))
+                print(json.dumps({'ok':True,'workspace':str(created)},indent=2));return 0
+            if sub=='add':
+                positional=_pos()
+                if len(positional)<2:
+                    print('Usage: pea workspace add <workspace-path> <member-path>');return 1
+                print(json.dumps(add_workspace_member(positional[0],positional[1]),indent=2));return 0
+            if sub=='list':
+                positional=_pos()
+                print(json.dumps(workspace_members(positional[0] if positional else '.'),indent=2));return 0
+            if sub=='graph':
+                positional=_pos()
+                report=workspace_graph(positional[0] if positional else '.')
+                print(json.dumps(report,indent=2));return 0 if report['ok'] else 1
+            if sub=='lock':
+                positional=_pos(('--registry','--token'))
+                result=workspace_lock(
+                    positional[0] if positional else '.',
+                    registry_resolve='--registry-resolve' in args,
+                    offline='--offline' in args,
+                    registry=_opt('--registry'),
+                    token=_opt('--token'),
+                )
+                print(json.dumps(result,indent=2));return 0
+            print('Usage: pea workspace init|add|list|graph|lock ...');return 1
+
         if c=='compile':
 
             from .compiler import compile_source_to_bytecode
@@ -2081,7 +2124,7 @@ def main(argv=None):
 
         if allow:argv.remove('--allow-process')
 
-        if len(argv)!=1:print('Usage: pea [run|eval|repl|check|lint|fmt|test|compile|vm|dis|init|new|serve-web|doctor|health|help|quickstart|scaffold|templates|info|project|docs|registry|publish|search|browse|login|logout|ext|portal|market|analyze|web-openapi|hash|tree|env|typecheck|typecheck-project|readiness|audit|stdlib] ...',file=sys.stderr);return 2
+        if len(argv)!=1:print('Usage: pea [run|eval|repl|check|lint|fmt|test|compile|vm|dis|init|new|serve-web|doctor|health|help|quickstart|scaffold|templates|info|project|docs|registry|publish|search|browse|login|logout|ext|portal|market|analyze|web-openapi|hash|tree|env|typecheck|typecheck-project|readiness|audit|workspace|stdlib] ...',file=sys.stderr);return 2
 
         return run_file(argv[0],allow)
 

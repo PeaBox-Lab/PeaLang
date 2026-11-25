@@ -344,6 +344,14 @@ All 1240 tests pass.
 - Publish advisory and policy helpers through the public `pealang` API
 - Last verified baseline remains 1396 tests; functionality smoke-tested with vulnerable-version, ignored-advisory, and denied-license scenarios
 
+## 2.41.0 - Phase 58: Workspaces and Multi-Package Projects (2026-11-25)
+- Add `pea.workspace.toml` discovery, creation, and member management with `WORKSPACE_FILE`/`WORKSPACE_LOCK` constants
+- Add `workspace_members()` and `workspace_graph()` for deterministic member metadata, local links, cycle detection, duplicate-name detection, and build order
+- Extend `resolve()` so `workspace = true` dependencies resolve to local workspace members
+- Add `workspace_lock()` to refresh every member `pea.lock` and write a deterministic `pea.workspace.lock` with checksums
+- Add `pea workspace init|add|list|graph|lock` CLI commands and public API exports
+- Last verified baseline remains 1396 tests; functionality smoke-tested with member add/list, graph ordering, cycle rejection, and workspace locking
+
 ### Phase 34: Standard Library Completion (2.41.0)
   - **`std.sql`**: SQL query builder (SELECT, INSERT, UPDATE, DELETE, CREATE TABLE, DROP TABLE).
   - **`std.cache`**: In-memory cache with TTL support.

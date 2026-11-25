@@ -113,3 +113,7 @@ callers.
 **Phase 57 — Dependency Security Policy** adds local advisory scanning, severity
 thresholds, ignored-advisory handling, and license allow/deny rules to `pea deps`,
 giving regulated teams a CI-friendly gate before install, build, or deployment.
+
+**Phase 58 — Workspaces and Multi-Package Projects** adds local member graphs,
+cycle detection, deterministic build order, and workspace-wide lockfiles so large
+enterprise and cloud codebases can manage many PeaLang packages as one unit.

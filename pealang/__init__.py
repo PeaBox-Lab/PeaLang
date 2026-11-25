@@ -131,6 +131,7 @@ from .registry import PackageCache,install_verified,remote_install,verify_regist
 from .registry_index import PackageRecord,RegistryIndex,NamespacePolicy,RegistryState,build_index,validate_index,namespace_from_package
 from .registry_auth import registry_token,bearer_headers
 from .dependency_security import Advisory,SecurityPolicy,load_advisories,load_security_policy,scan_dependencies,severity_rank
+from .workspace import WORKSPACE_FILE,WORKSPACE_LOCK,find_workspace,init_workspace,add_workspace_member,load_workspace,workspace_members,workspace_graph,workspace_lock
 
 from .compatibility import Stability,Feature,FEATURES,feature_status,stable_features,validate_deprecation
 from .specification import SPEC_VERSION,verify_spec

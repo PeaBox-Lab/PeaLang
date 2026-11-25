@@ -625,6 +625,32 @@ Defaults are loaded from `.pealang/advisories.json` and
 `.pealang/security-policy.json`, then from `~/.pealang/`. The command exits with
 status 1 when a blocking advisory or license violation is found.
 
+### Workspaces
+
+```bash
+pea workspace init [path] [--name NAME]                     # create pea.workspace.toml
+pea workspace add <workspace-path> <member-path>             # add a member project
+pea workspace list [path] [--json]                           # list members and manifests
+pea workspace graph [path]                                   # check local links and cycles
+pea workspace lock [path] [--registry-resolve] [--offline]   # refresh all member locks
+```
+
+Workspace manifests are TOML files named `pea.workspace.toml`:
+
+```toml
+[workspace]
+name = "platform"
+members = [
+  "libs/core",
+  "apps/api",
+]
+```
+
+Path dependencies that point at another member, and `workspace = true` dependencies,
+become local workspace links. `pea workspace graph` detects cycles and duplicate
+member names; `pea workspace lock` writes each member's `pea.lock` plus a deterministic
+`pea.workspace.lock` with the build order and manifest/lock checksums.
+
 ### Project queries
 
 ```bash

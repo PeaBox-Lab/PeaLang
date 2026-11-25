@@ -141,6 +141,20 @@ def resolve(root='.',*,registry_resolve=False,offline=False,registry=None,token=
    p=(mf.parent/spec['path']).resolve();dm,dd=load_pea_toml(p);ver=dd['project']['version'];constraint=spec.get('version','*')
    if not satisfies(ver,constraint):raise PeaError(f'{name} {ver} does not satisfy {constraint}')
    resolved.append({'name':name,'version':ver,'source':'path','path':str(p.relative_to(mf.parent) if p.is_relative_to(mf.parent) else p),'manifest_sha256':sha256_file(dm),'permissions':dd.get('permissions',{}).get('allow',[])})
+  elif spec.get('workspace'):
+   from .workspace import load_workspace
+   target=None
+   for candidate in load_workspace(mf.parent)['members']:
+    try:
+     _,candidate_data=load_pea_toml(candidate)
+    except PeaError:
+     continue
+    if candidate_data.get('project',{}).get('name')==name:
+     target=candidate;break
+   if target is None:raise PeaError(f'Workspace member {name} not found')
+   dm,dd=load_pea_toml(target);ver=dd['project']['version'];constraint=spec.get('version','*')
+   if not satisfies(ver,constraint):raise PeaError(f'{name} {ver} does not satisfy {constraint}')
+   resolved.append({'name':name,'version':ver,'source':'path','path':str(target.relative_to(mf.parent) if target.is_relative_to(mf.parent) else target),'workspace':True,'manifest_sha256':sha256_file(dm),'permissions':dd.get('permissions',{}).get('allow',[])})
   elif 'git' in spec:
    resolved.append({'name':name,'version':spec.get('version','0.0.0'),'source':'git','git':spec['git'],'rev':spec.get('rev'),'permissions':spec.get('permissions',[])})
   elif 'registry' in spec:
