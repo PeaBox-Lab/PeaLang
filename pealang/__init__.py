@@ -9,7 +9,7 @@ from .errors import ERROR_VALUE_SCHEMA,ErrorValue,SourceSpan
 from .error_values import (build_error,is_error_value,error_value_from_exception,
     error_value_from_raw,exception_from_error_value,matches_error)
 from .iterators import PeaIterator,make_iterator,iterator_next,has_next,peek,close_iterator
-from .type_system import TypeChecker,TypeRef,Diagnostic,TypeCheckResult,SemanticAnalyzer,SemanticResult,FunctionContract,parse_type,erase_types,compatible_generic,iterable_element_type
+from .type_system import TypeChecker,TypeRef,Diagnostic,TypeCheckResult,SemanticAnalyzer,SemanticResult,FunctionContract,parse_type,erase_types,compatible_generic,iterable_element_type,future_element_type
 from .embedding import (PeaRuntime,PeaModule,RuntimeOptions,ExecutionResult,
     PeaRuntimeError,PeaPermissionError,PeaResourceLimitError,to_pea,from_pea)
 from .web import (PeaWebApp,WebRequest,WebResponse,json_response,html_response,text_response,redirect,error_response,normalize_response)
@@ -113,8 +113,8 @@ from .target_encoding import (build_target_namespace,
 from .ux import doctor as ux_doctor, explain_error as ux_explain
 __version__ = "2.21.0"
 __all__=['BytecodeModule','CodeObject','Instruction','Op','Compiler','CompileError','compile_source_to_bytecode','VirtualMachine','VMError','AsyncSuspension','AsyncVirtualMachine','AsyncVMRuntime','AsyncVMModule','CancellationToken','VMRuntime','VMModule','disassemble','execute','compile_source','Interpreter','PeaError','PeaRuntime','PeaModule',
-'PeaIterator','make_iterator','iterator_next','has_next','peek','close_iterator','SemanticAnalyzer','SemanticResult','FunctionContract','TypeChecker','TypeRef','Diagnostic','TypeCheckResult','parse_type','erase_types','compatible_generic','iterable_element_type','GenericFunctionContract','ProtocolContract','parse_protocols','parse_traits','protocol_conforms','check_record_protocol_conformance','function_field_type','parse_generic_functions','infer_generic_bindings','instantiate_generic','check_generic_application','check_generic_bounds','infer_type_arguments','option_type','result_type','future_type','analyze_project','RuntimeOptions','ExecutionResult','PeaRuntimeError','PeaPermissionError',
-'PeaResourceLimitError','to_pea','from_pea','__version__']
+'PeaIterator','make_iterator','iterator_next','has_next','peek','close_iterator','SemanticAnalyzer','SemanticResult','FunctionContract','TypeChecker','TypeRef','Diagnostic','TypeCheckResult','parse_type','erase_types','compatible_generic','iterable_element_type','future_element_type','GenericFunctionContract','ProtocolContract','parse_protocols','parse_traits','protocol_conforms','check_record_protocol_conformance','function_field_type','parse_generic_functions','infer_generic_bindings','instantiate_generic','check_generic_application','check_generic_bounds','infer_type_arguments','option_type','result_type','future_type','analyze_project','RuntimeOptions','ExecutionResult','PeaRuntimeError','PeaPermissionError',
+'PeaResourceLimitError','to_pea','from_pea','CancellationScope','PeaTask','TaskGroup','gather_structured','spawn_task','build_async_vm_concurrency_namespace','build_structured_concurrency_namespace','__version__']
 
 from .package_manager import Version,satisfies,DEFAULT_REGISTRY,registry_cache_dir,registry_cache_path,fetch_registry_versions,select_registry_version,resolve_registry_dependency,load_pea_toml,init_manifest,resolve,write_lock,check_lock,lock_drift,refresh_lock,audit,build_package,build_library,sign_library,inspect_library,verify_library_provenance,reproducible_build_check,install,install_remote,install_remote_verified,publish,quality_check,uninstall,update,dependency_tree,dependency_graph,outdated,clean
 from .marketplace import create_marketplace
@@ -150,7 +150,8 @@ from .type_system import (GenericFunctionContract,ProtocolContract,substitute_ty
     check_record_protocol_conformance,function_field_type,option_type,result_type,future_type,analyze_project)
 
 from .resource_limits import ResourceLimits,ResourceUsage,ResourceBudget,ResourceLimitExceeded,estimated_size
-from .structured_concurrency import CancellationScope,PeaTask,TaskGroup,gather_structured
+from .structured_concurrency import (CancellationScope,PeaTask,TaskGroup,gather_structured,
+    spawn_task,build_async_vm_concurrency_namespace,build_structured_concurrency_namespace)
 
 from .native_testing import NativeTestResult,split_tests,run_source_tests,run_paths,coverage_summary
 from .migration import MigrationChange,migrate_text,migrate_path

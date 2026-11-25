@@ -400,6 +400,16 @@ All 1240 tests pass.
 - Add a `language.iterators` preview feature flag and update help, specs, and guides
 - Last verified baseline remains 1396 tests; targeted regression and iterator tests smoke-tested
 
+## 2.41.0 - Phase 65: Async and Concurrency v2 (2026-11-25)
+- Add a `concurrency` namespace to async VM programs with `sleep`, `spawn`, `gather`, `timeout`, `result`, and `cancel`
+- Propagate `CancellationToken` cancellation through structured child scopes and spawned tasks
+- Add synchronous `spawn_task()` plus a dedicated async VM concurrency namespace builder to the public API
+- Treat `async function` declarations as `Future<T>` contracts and infer `await` expressions from them
+- Add `A201` diagnostics for awaiting values known not to be futures
+- Erase annotations on `async function` declarations before runtime parsing
+- Add a `language.async_v2` preview feature flag and update help, specs, and guides
+- Last verified baseline remains 1396 tests; targeted regression and async/concurrency tests smoke-tested
+
 ### Phase 34: Standard Library Completion (2.41.0)
   - **`std.sql`**: SQL query builder (SELECT, INSERT, UPDATE, DELETE, CREATE TABLE, DROP TABLE).
   - **`std.cache`**: In-memory cache with TTL support.

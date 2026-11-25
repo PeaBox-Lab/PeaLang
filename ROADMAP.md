@@ -198,4 +198,11 @@
 - Expose iterator helpers through the public API and compatibility feature registry
 - Last verified baseline remains 1396 tests; targeted regression and iterator tests smoke-tested
 
+## 2.41.0 - Phase 65: Async and Concurrency v2 (2026-11-25)
+- Expose structured `concurrency` helpers to async VM programs
+- Propagate cancellation tokens into structured scopes and spawned tasks
+- Add `Future<T>` contracts for async functions, `await` inference, and `A201` diagnostics
+- Erase async function annotations before runtime and align the public API and docs
+- Last verified baseline remains 1396 tests; targeted regression and async/concurrency tests smoke-tested
+
 ### Phase 34: Standard Library Completion (2.41.0)

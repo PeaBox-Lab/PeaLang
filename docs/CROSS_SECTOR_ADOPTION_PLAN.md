@@ -63,6 +63,12 @@ loops use one cleanup path so `break` no longer leaks VM stack values. Static
 analysis understands `Iterable<T>` and `Iterator<T>`, while existing eager
 helpers and comprehensions keep their current behavior.
 
+**Phase 65 — Async/Concurrency v2** exposes a `concurrency` namespace inside the
+async VM for spawning, gathering, timeouts, and cancellation. Cancellation
+tokens now propagate into structured child scopes, and static analysis models
+`async function` declarations as `Future<T>` so `await` can infer element types
+and report `A201` for known non-futures.
+
 ### Wave 2 — Runtime and performance (Phases 71–80)
 
 Bytecode optimizer, fast interpreter, JIT, native backend, WASM backend, parallel

@@ -91,6 +91,21 @@ for x in it { print x } # 2, 3
 `next(it, default)` returns `default` at exhaustion. Iterators work in the
 interpreter, bytecode VM, and async VM; existing eager helpers are unchanged.
 
+### Structured async concurrency
+```pea
+async function fetch_all() {
+    let jobs = [api.fetch("users"), api.fetch("orders")]
+    return await concurrency.gather(jobs)
+}
+
+let task = concurrency.spawn(api.fetch("metrics"))
+let value = await concurrency.result(task)
+```
+`concurrency` also provides `sleep`, `timeout`, and `cancel`. Spawned tasks
+inherit a structured cancellation scope, so cancelling the VM token cancels
+its children. Static analysis treats async functions as `Future<T>` and checks
+`await` expressions with `A201`.
+
 ### Optional chaining and null coalescing
 ```pea
 let city = user?.profile?.city ?? "unknown"

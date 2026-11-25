@@ -51,6 +51,11 @@ def iterable_element_type(t:TypeRef)->TypeRef|None:
     if t.name=='Map' and t.args:return t.args[0]
     if t.name=='String':return TypeRef('String')
     return None
+
+def future_element_type(t:TypeRef)->TypeRef|None:
+    """Return the awaited element type of *t*, if known."""
+    if t.name=='Future' and t.args:return t.args[0]
+    return None
 def infer_literal(text:str)->TypeRef:
     t=text.strip()
     if t=='null':return TypeRef('Null')
@@ -138,7 +143,7 @@ class TypeChecker:
                 actual=infer_literal(m.group(2));expected=r.symbols[m.group(1)]
                 if not compatible(expected,actual):r.diagnostics.append(Diagnostic('T202',f"Cannot assign {actual} to {expected} variable '{m.group(1)}'",ln))
             # Function signature validation
-            m=re.match(r'function[ \t]+([A-Za-z_]\w*)(?:[ \t]*<[^<>]+>)?[ \t]*\(([^()]*)\)[ \t]*(?:->[ \t]*([^{}\n]+))?',clean)
+            m=re.match(r'(?:async[ \t]+)?function[ \t]+([A-Za-z_]\w*)(?:[ \t]*<[^<>]+>)?[ \t]*\(([^()]*)\)[ \t]*(?:->[ \t]*([^{}\n]+))?',clean)
             if m:
                 for p in split_top(m.group(2),','):
                     if ':' in p:
@@ -160,11 +165,11 @@ def erase_types(source:str)->str:
     # Remove protocol/trait declarations and generic parameter lists before runtime parsing.
     source=re.sub(r'(?m)^[ \t]*(?:protocol|trait)[ \t]+[A-Za-z_]\w*[ \t]*=?[ \t]*\{[^{}]*\}[ \t]*(?:\n|$)','',source)  # lgtm[py/polynomial-redos]
     source=re.sub(r'(?m)^[ \t]*trait[ \t]+[A-Za-z_]\w*[ \t]*(?:\n|$)','',source)  # lgtm[py/polynomial-redos]
-    source=re.sub(r'(function\s+\w+)\s*<[^>]+>',r'\1',source)
+    source=re.sub(r'((?:async\s+)?function\s+\w+)\s*<[^>]+>',r'\1',source)
     # Remove record declarations before runtime parsing.
     source=re.sub(r'(?m)^[ \t]*type[ \t]+[A-Za-z_]\w*[ \t]*=[ \t]*\{[^{}]*\}[ \t]*(?:\n|$)','',source)
     # Function return annotations.
-    source=re.sub(r'(function[ \t]+[A-Za-z_]\w*[ \t]*\([^()]*\))[ \t]*->[ \t]*[A-Za-z_]\w*(?:[ \t]*<[^<>{}\n]+>)?\??',r'\1',source)
+    source=re.sub(r'(((?:async[ \t]+)?function[ \t]+[A-Za-z_]\w*[ \t]*\([^()]*\))[ \t]*->[ \t]*[A-Za-z_]\w*(?:[ \t]*<[^<>{}\n]+>)?\??)',r'\2',source)
     # Parameter annotations, preserving defaults and separators.
     def params(m):
         inner=re.sub(r'(\b[A-Za-z_]\w*)[ \t]*:[ \t]*[A-Za-z_]\w*(?:[ \t]*<[^<>,)=\n]+>)?\??',r'\1',m.group(1))
@@ -180,6 +185,7 @@ class FunctionContract:
     params:list[tuple[str,TypeRef]]
     return_type:TypeRef
     line:int
+    is_async:bool=False
 
 @dataclass
 class SemanticResult(TypeCheckResult):
@@ -200,7 +206,7 @@ class SemanticAnalyzer:
         for gf in generics.values():known.update(gf.type_params)
         for name, gf in generics.items():
             result.generics[name] = gf
-            result.functions[name] = FunctionContract(name, gf.params, gf.return_type, 0)
+            result.functions[name] = FunctionContract(name, gf.params, gf.return_type, 0, gf.is_async)
         
         # Parse protocols and marker traits.
         protocols = parse_protocols(source)
@@ -217,8 +223,9 @@ class SemanticAnalyzer:
         i=0
         while i<len(lines):
             line=lines[i]
-            generic_match=re.search(r'function[ \t]+([A-Za-z_]\w*)[ \t]*<([^<>]+)>[ \t]*\(([^()]*)\)[ \t]*(?:->[ \t]*([^{}\n]+))?[ \t]*\{',line)
-            plain_match=None if generic_match else re.search(r'function[ \t]+([A-Za-z_]\w*)[ \t]*\(([^()]*)\)[ \t]*(?:->[ \t]*([^{}\n]+))?[ \t]*\{',line)
+            generic_match=re.search(r'(?:async[ \t]+)?function[ \t]+([A-Za-z_]\w*)[ \t]*<([^<>]+)>[ \t]*\(([^()]*)\)[ \t]*(?:->[ \t]*([^{}\n]+))?[ \t]*\{',line)
+            plain_match=None if generic_match else re.search(r'(?:async[ \t]+)?function[ \t]+([A-Za-z_]\w*)[ \t]*\(([^()]*)\)[ \t]*(?:->[ \t]*([^{}\n]+))?[ \t]*\{',line)
+            is_async=bool(re.match(r'[ \t]*async\b',line))
             if generic_match:name,tps,raw_params,raw_ret=generic_match.groups()
             elif plain_match:name,raw_params,raw_ret=plain_match.groups();tps=None
             else:i+=1;continue
@@ -231,16 +238,16 @@ class SemanticAnalyzer:
                 if ':' in item:
                     ptype=parse_type(item.split(':',1)[1].split('=',1)[0].strip())
                 params.append((pname,ptype))
-            ret=parse_type(raw_ret.strip()) if raw_ret else TypeRef('Any')
-            result.functions[name]=FunctionContract(name,params,ret,i+1)
+            declared=parse_type(raw_ret.strip()) if raw_ret else TypeRef('Any')
+            result.functions[name]=FunctionContract(name,params,declared,i+1,is_async)
             if generic_match and name in result.generics:
-                result.generics[name]=replace(result.generics[name],params=tuple(params),return_type=ret,line=i+1)
+                result.generics[name]=replace(result.generics[name],params=tuple(params),return_type=declared,line=i+1)
             depth=line.count('{')-line.count('}');body=[];j=i+1
             while j<len(lines) and depth>0:
                 depth+=lines[j].count('{')-lines[j].count('}')
                 if depth>0:body.append((j+1,lines[j]))
                 j+=1
-            self._check_function(name,params,ret,body,result,known)
+            self._check_function(name,params,declared,body,result,known)
             i=j
         
         # Check protocol/trait conformance only where a generic bound references it.
@@ -264,6 +271,7 @@ class SemanticAnalyzer:
         
         self._check_records(source,result)
         self._check_iteration(source,result)
+        self._check_awaits(source,result)
         self._check_calls(source,result,all_contracts)
         
         # Cross-module context
@@ -293,6 +301,11 @@ class SemanticAnalyzer:
 
     def infer_expr(self,expr,env,r):
         expr=expr.strip().rstrip('}')
+        m=re.fullmatch(r'await[ \t]+(.+)',expr)
+        if m:
+            awaited=self.infer_expr(m.group(1),env,r)
+            elem=future_element_type(awaited)
+            return elem if elem else TypeRef('Any')
         lit=infer_literal(expr)
         if lit.name!='Any':return lit
         if expr in env:return env[expr]
@@ -315,7 +328,9 @@ class SemanticAnalyzer:
             if owner.nullable:r.diagnostics.append(Diagnostic('N201',f"'{m.group(1)}' may be null",1))
             return fields[m.group(2)]
         m=re.fullmatch(r'([A-Za-z_]\w*)\(([^()]*)\)',expr)  # lgtm[py/polynomial-redos]
-        if m and m.group(1) in r.functions:return r.functions[m.group(1)].return_type
+        if m and m.group(1) in r.functions:
+            fn=r.functions[m.group(1)]
+            return r.functions[m.group(1)].return_type if not fn.is_async else future_type(fn.return_type)
         for op in ('+','-','*','/','%'):
             if op in expr:
                 parts=expr.split(op,1);a=self.infer_expr(parts[0],env,r);b=self.infer_expr(parts[1],env,r)
@@ -347,6 +362,15 @@ class SemanticAnalyzer:
             actual=self.infer_expr(m.group(1),env,r)
             if actual.name=='Any' or iterable_element_type(actual) is not None:continue
             r.diagnostics.append(Diagnostic('I201',f"Value of type {actual} is not iterable",line_no))
+
+    def _check_awaits(self,source,r):
+        env=dict(r.symbols)
+        for line_no,line in enumerate(source.splitlines(),1):
+            clean=line.split('//',1)[0]
+            for m in re.finditer(r'\bawait[ \t]+([A-Za-z_]\w*(?:\([^()]*\))?)',clean):
+                actual=self.infer_expr(m.group(1),env,r)
+                if actual.name!='Any' and future_element_type(actual) is None:
+                    r.diagnostics.append(Diagnostic('A201',f"Value of type {actual} is not awaitable",line_no))
 
     def _check_calls(self,source,r,protocols=None):
         protocols=protocols or {}
@@ -417,6 +441,7 @@ class GenericFunctionContract:
     return_type:TypeRef
     bounds:dict[str,tuple[str,...]]=field(default_factory=dict)
     line:int=0
+    is_async:bool=False
 
 @dataclass(frozen=True)
 class ProtocolContract:
@@ -447,7 +472,7 @@ def instantiate_generic(generic: GenericFunctionContract, bindings: dict[str,Typ
     """Instantiate a generic function with concrete type bindings."""
     params = tuple((name, substitute_type(t, bindings)) for name, t in generic.params)
     ret = substitute_type(generic.return_type, bindings)
-    return FunctionContract(generic.name, params, ret, 0)
+    return FunctionContract(generic.name, params, ret, 0, generic.is_async)
 
 
 def check_generic_bounds(generic: GenericFunctionContract, bindings: dict[str,TypeRef],
@@ -501,7 +526,7 @@ def infer_type_arguments(generic: GenericFunctionContract, actual_args: list[Typ
 
 def parse_generic_functions(source:str):
     out={}
-    pattern=r'function[ \t]+([A-Za-z_]\w*)[ \t]*<([^<>]+)>[ \t]*\(([^()]*)\)[ \t]*(?:->[ \t]*([^{}\n]+))?[ \t]*\{'
+    pattern=r'(?:async[ \t]+)?function[ \t]+([A-Za-z_]\w*)[ \t]*<([^<>]+)>[ \t]*\(([^()]*)\)[ \t]*(?:->[ \t]*([^{}\n]+))?[ \t]*\{'
     for m in re.finditer(pattern,source):
         name,tps,raw_params,raw_ret=m.groups();type_params=[];bounds={}
         for raw_param in tps.split(','):
@@ -520,7 +545,8 @@ def parse_generic_functions(source:str):
         line=source[:m.start()].count('\n')+1
         out[name]=GenericFunctionContract(
             name,tuple(type_params),tuple(params),
-            parse_type(raw_ret.strip()) if raw_ret else TypeRef('Any'),bounds,line)
+            parse_type(raw_ret.strip()) if raw_ret else TypeRef('Any'),bounds,line,
+            is_async=bool(re.match(r'\s*async\b',source[m.start():m.end()])))
     return out
 
 def _parse_contract_declarations(source:str,keyword:str)->dict[str,'ProtocolContract']:

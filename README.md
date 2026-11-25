@@ -770,6 +770,27 @@ infers element types from `iter()` and `next()`, and reports `I201` for values
 known not to be iterable. Existing eager helpers such as `range`, `enumerate`,
 `zip`, `map`, and `filter` are unchanged.
 
+### Structured async concurrency
+
+```pea
+async function load_all() {
+    let jobs = [api.fetch("a"), api.fetch("b")]
+    return await concurrency.gather(jobs)
+}
+
+async function with_deadline() {
+    return await concurrency.timeout(1.5, api.fetch("slow"))
+}
+```
+
+The async VM now exposes a `concurrency` namespace with `sleep`, `spawn`,
+`gather`, `timeout`, `result`, and `cancel`. Spawned tasks inherit a structured
+cancellation scope, and a VM `CancellationToken` cancels that whole scope.
+Static analysis represents `async function` results as `Future<T>`, infers the
+value type of `await`, and reports `A201` when a known non-future is awaited.
+Async annotations are erased before runtime parsing, so existing programs are
+unchanged.
+
 ### Project queries
 
 ```bash

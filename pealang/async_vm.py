@@ -1,24 +1,32 @@
 """Native cooperative async execution for PeaLang bytecode."""
 from __future__ import annotations
 import asyncio
-from dataclasses import dataclass
+from dataclasses import dataclass,field
 from .vm import VirtualMachine,AsyncSuspension,VMFunction,Frame,VMError
 from .compiler import compile_source_to_bytecode
 from .embedding import RuntimeOptions,to_pea,from_pea,PeaPermissionError
 from .iterators import make_iterator,iterator_next,has_next,peek
-from .structured_concurrency import TaskGroup,CancellationScope,gather_structured
+from .structured_concurrency import (TaskGroup,CancellationScope,gather_structured,
+    set_current_scope,build_async_vm_concurrency_namespace)
 @dataclass
 class CancellationToken:
  cancelled:bool=False
- def cancel(self):self.cancelled=True
+ scope:CancellationScope=field(default_factory=CancellationScope)
+ def cancel(self):self.cancelled=True;self.scope.cancel()
  def throw_if_cancelled(self):
   if self.cancelled:raise asyncio.CancelledError('PeaLang execution cancelled')
+
+def _cancellation_scope(cancellation):
+ scope=getattr(cancellation,'scope',None)
+ return scope if isinstance(scope,CancellationScope) else CancellationScope()
+
 class AsyncVirtualMachine(VirtualMachine):
  async def run_async(self,module,globals=None,timeout=None,cancellation=None):
   cancellation=cancellation or CancellationToken();self.module=module
-  env=dict(globals or {});env.update({'len':len,'str':str,'int':int,'number':float,'upper':lambda x:str(x).upper(),'lower':lambda x:str(x).lower(),'iter':make_iterator,'next':iterator_next,'has_next':has_next,'peek':peek,'all':self._all})
+  env=dict(globals or {});env.setdefault('concurrency',build_async_vm_concurrency_namespace());env.update({'len':len,'str':str,'int':int,'number':float,'upper':lambda x:str(x).upper(),'lower':lambda x:str(x).lower(),'iter':make_iterator,'next':iterator_next,'has_next':has_next,'peek':peek,'all':self._all})
   self.frames=[Frame(module.code,env,name='<module>')]
   async def drive():
+   set_current_scope(_cancellation_scope(cancellation))
    while True:
     cancellation.throw_if_cancelled();result=self.loop()
     if isinstance(result,AsyncSuspension):
@@ -50,6 +58,7 @@ class AsyncVMRuntime:
   module=compile_source_to_bytecode(source,source_name);vm=AsyncVirtualMachine(self.output,self.options.max_instructions);await vm.run_async(module,self._globals(),self.options.max_execution_ms/1000);return AsyncVMModule(self,vm,module)
  async def _drive(self,vm,cancellation=None):
   async def drive():
+   if cancellation:set_current_scope(_cancellation_scope(cancellation))
    while True:
     if cancellation:cancellation.throw_if_cancelled()
     result=vm.loop()

@@ -156,6 +156,21 @@ def set_current_scope(scope: CancellationScope) -> None:
 
 # --- Language-level primitives exposed to PeaLang programs ---
 
+def spawn_task(awaitable: Awaitable, *, name: str = "") -> PeaTask:
+    """Spawn an awaitable immediately and return a task handle."""
+    scope = current_scope()
+    child = scope.child()
+
+    async def runner():
+        child.throw_if_cancelled()
+        return await awaitable
+
+    task = asyncio.create_task(runner())
+    if name:
+        task.set_name(name)
+    return PeaTask(task=task, scope=child)
+
+
 async def spawn(awaitable: Awaitable, *, name: str = "") -> PeaTask:
     """Spawn a task in the current scope (or new root scope)."""
     scope = current_scope()
@@ -204,11 +219,52 @@ def build_structured_concurrency_namespace() -> dict[str, Any]:
         "TaskGroup": TaskGroup,
         "PeaTask": PeaTask,
         "spawn": spawn,
+        "spawn_task": spawn_task,
         "sleep": sleep,
         "gather": gather,
         "timeout_scope": timeout_scope,
         "current_scope": current_scope,
         "set_current_scope": set_current_scope,
+    }
+
+
+def build_async_vm_concurrency_namespace() -> dict[str, Any]:
+    """Concurrency helpers exposed to PeaLang async VM programs."""
+    def as_list(value: Any) -> list[Any]:
+        if isinstance(value, (list, tuple)):
+            return list(value)
+        return [value]
+
+    async def gather_all(values: Any) -> list[Any]:
+        return await gather(*as_list(values))
+
+    async def timeout(seconds: float, awaitable: Awaitable) -> Any:
+        scope = current_scope().child(deadline=time.monotonic() + seconds)
+
+        async def runner():
+            scope.throw_if_cancelled()
+            return await awaitable
+
+        return await asyncio.wait_for(runner(), seconds)
+
+    async def result(task: PeaTask) -> Any:
+        return await task.result()
+
+    def cancel(task: PeaTask) -> bool:
+        task.cancel()
+        return True
+
+    return {
+        "CancellationScope": CancellationScope,
+        "PeaTask": PeaTask,
+        "TaskGroup": TaskGroup,
+        "sleep": sleep,
+        "spawn": spawn_task,
+        "gather": gather_all,
+        "timeout": timeout,
+        "result": result,
+        "cancel": cancel,
+        "current_scope": current_scope,
     }
 
 

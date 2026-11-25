@@ -6,4 +6,9 @@ Core type names are `Any`, `Never`, `Null`, `Bool`, `Int`, `Float`, `Number`, `S
 
 Generic function declarations may declare type parameters and protocol bounds, for example `function show<T: Printable>(value: T) -> String`. Static analysis scopes those type parameters, preserves generic contracts, infers bindings at call sites, and checks declared bounds. Generic-aware compatibility compares nested type arguments recursively while legacy broad compatibility remains available through `compatible()`. Runtime execution still erases annotations and generic parameter lists.
 
+An `async function` declared to return `T` is typed as `Future<T>` at call
+sites. `await` unwraps a `Future<T>` to `T` and reports `A201` when the awaited
+value is known not to be a future. Async annotations are erased before runtime
+parsing.
+
 Protocols may be written as `protocol Name { ... }` or `protocol Name = { ... }`. Record function fields are encoded as `Function<P1,...,Pn,R>`, where the last argument is the return type; bare `Function` is a wildcard for backward compatibility. Structural conformance emits `P201` (missing member), `P202` (non-function field), `P203` (arity), `P204` (parameter type), and `P205` (return type). Traits are marker contracts written as `trait Name` or `trait Name {}`. Conformance is checked only when a protocol or trait is referenced by a generic bound. All declarations are static and erased before execution.

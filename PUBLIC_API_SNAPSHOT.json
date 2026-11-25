@@ -9345,6 +9345,12 @@
     },
     {
       "module": "pealang.structured_concurrency",
+      "name": "spawn_task",
+      "kind": "function",
+      "signature": "(awaitable)"
+    },
+    {
+      "module": "pealang.structured_concurrency",
       "name": "sleep",
       "kind": "function",
       "signature": "(seconds)"
@@ -9358,6 +9364,12 @@
     {
       "module": "pealang.structured_concurrency",
       "name": "build_structured_concurrency_namespace",
+      "kind": "function",
+      "signature": "()"
+    },
+    {
+      "module": "pealang.structured_concurrency",
+      "name": "build_async_vm_concurrency_namespace",
       "kind": "function",
       "signature": "()"
     },
@@ -9892,6 +9904,12 @@
     {
       "module": "pealang.type_system",
       "name": "iterable_element_type",
+      "kind": "function",
+      "signature": "(t)"
+    },
+    {
+      "module": "pealang.type_system",
+      "name": "future_element_type",
       "kind": "function",
       "signature": "(t)"
     },
