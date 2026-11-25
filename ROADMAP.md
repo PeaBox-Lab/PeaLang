@@ -140,4 +140,11 @@
 - Add `pea registry namespace create|allow|list`, `--storage` for registry publisher registration, and token-aware `pea info` / `pea search`
 - Last verified baseline remains 1396 tests; functionality smoke-tested with private publish, hidden/visible reads, and unauthorized namespace rejection
 
+## 2.41.0 - Phase 57: Dependency Security Policy (2026-11-25)
+- Add `Advisory` and `SecurityPolicy` models with local JSON advisory/policy loading from project or user config
+- Add `scan_dependencies()` to check locked dependencies against vulnerable version ranges, severity thresholds, ignored advisories, and license allow/deny rules
+- Add `pea deps --security [path] [--advisories FILE] [--policy FILE]` with structured findings and CI-friendly exit codes
+- Publish advisory and policy helpers through the public `pealang` API
+- Last verified baseline remains 1396 tests; functionality smoke-tested with vulnerable-version, ignored-advisory, and denied-license scenarios
+
 ### Phase 34: Standard Library Completion (2.41.0)

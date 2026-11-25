@@ -609,12 +609,21 @@ pea registry resolve mylib ^1.0 --json  # inspect available versions and select 
 pea deps                                 # list project dependencies
 pea deps --tree                          # show the nested dependency tree (warns on cycles/conflicts)
 pea deps --tree --json                   # machine-readable graph safety report
+pea deps --security [path] [--advisories FILE] [--policy FILE]  # advisory + license scan
 pea install                              # install all dependencies from pea.lock
 pea update [path]                        # refresh installed libraries from pea.lock
 pea outdated [path]                      # report missing/outdated/up-to-date libraries
 pea uninstall <name> [path]              # remove a single installed library
 pea clean [path] [--all]                 # remove .pea_modules (and optionally pea.lock)
 ```
+
+`pea deps --security` checks `pea.lock` against local advisory and license policy
+files. Advisories are JSON objects with `id`, `package`, `affected`, `severity`,
+`summary`, and optional `fixed_version`. Policies support `max_severity`,
+`allow_licenses`, `deny_licenses`, `require_license`, and `ignore_advisories`.
+Defaults are loaded from `.pealang/advisories.json` and
+`.pealang/security-policy.json`, then from `~/.pealang/`. The command exits with
+status 1 when a blocking advisory or license violation is found.
 
 ### Project queries
 

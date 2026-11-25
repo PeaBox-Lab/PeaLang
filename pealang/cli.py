@@ -316,6 +316,26 @@ def main(argv=None):
                 p,_=write_lock(root,registry_resolve='--registry-resolve' in args,offline=offline,registry=_option('--registry'),token=_option('--token'));print(p);return 0
 
             if c=='deps':
+                if '--security' in argv[1:]:
+                    from .dependency_security import scan_dependencies
+                    args=argv[1:]
+                    def _opt(flag,default=None):
+                        for i,a in enumerate(args):
+                            if a==flag and i+1<len(args):return args[i+1]
+                        return default
+                    skip=set()
+                    for flag in ('--advisories','--policy'):
+                        for i,a in enumerate(args):
+                            if a==flag and i+1<len(args):skip.add(i+1)
+                    positional=[a for i,a in enumerate(args) if not a.startswith('-') and i not in skip]
+                    scan_root=positional[0] if positional else '.'
+                    report=scan_dependencies(
+                        scan_root,
+                        advisory_path=_opt('--advisories'),
+                        policy_path=_opt('--policy'),
+                    )
+                    print(json.dumps(report,indent=2))
+                    return 0 if report['ok'] else 1
                 if '--tree' in argv[1:]:
                     report=dependency_graph(root)
                     if '--json' in argv[1:]:

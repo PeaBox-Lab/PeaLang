@@ -109,3 +109,7 @@ regulated enterprise, finance, cloud, and embedded delivery pipelines.
 private visibility, and authorized reader lists so internal libraries can live on a
 self-hosted registry without exposing names, versions, or packages to anonymous
 callers.
+
+**Phase 57 — Dependency Security Policy** adds local advisory scanning, severity
+thresholds, ignored-advisory handling, and license allow/deny rules to `pea deps`,
+giving regulated teams a CI-friendly gate before install, build, or deployment.
