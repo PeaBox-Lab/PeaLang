@@ -8,6 +8,7 @@ from .embedding import RuntimeOptions,to_pea,from_pea,PeaPermissionError
 from .iterators import make_iterator,iterator_next,has_next,peek
 from .structured_concurrency import (TaskGroup,CancellationScope,gather_structured,
     set_current_scope,build_async_vm_concurrency_namespace)
+from .project import ModuleResolver,load_manifest
 @dataclass
 class CancellationToken:
  cancelled:bool=False
@@ -42,7 +43,7 @@ class AsyncVMModule:
   code=self.module.functions[fn.name];env=dict(fn.closure);env.update(code.defaults);env.update(zip(code.params,[to_pea(x) for x in args]));self.vm.frames=[Frame(code,env,name=fn.name)]
   value=await self.runtime._drive(self.vm,cancellation);return from_pea(value,output_type) if output_type else value
 class AsyncVMRuntime:
- def __init__(self,options=None,output=None):self.options=options or RuntimeOptions();self.output=output;self.host={}
+ def __init__(self,options=None,output=None,project_root=None,dependencies=None,module_resolver=None):self.options=options or RuntimeOptions();self.output=output;self.host={};self.module_resolver=module_resolver or ModuleResolver(project_root,dependencies)
  def register_async_function(self,name,function,permission=None):self.host[name]=(function,permission);return self
  def _globals(self):
   root={}
@@ -55,7 +56,11 @@ class AsyncVMRuntime:
    node[parts[-1]]=wrapper
   return root
  async def load_async(self,source,source_name='<async>'):
-  module=compile_source_to_bytecode(source,source_name);vm=AsyncVirtualMachine(self.output,self.options.max_instructions);await vm.run_async(module,self._globals(),self.options.max_execution_ms/1000);return AsyncVMModule(self,vm,module)
+  resolver=self.module_resolver
+  if not resolver.project_root and source_name and not str(source_name).startswith('<'):
+   manifest,data=load_manifest(source_name)
+   if manifest:resolver=ModuleResolver(manifest.parent,data.get('dependencies'))
+  module=compile_source_to_bytecode(source,source_name);vm=AsyncVirtualMachine(self.output,self.options.max_instructions,module_resolver=resolver);await vm.run_async(module,self._globals(),self.options.max_execution_ms/1000);return AsyncVMModule(self,vm,module)
  async def _drive(self,vm,cancellation=None):
   async def drive():
    if cancellation:set_current_scope(_cancellation_scope(cancellation))

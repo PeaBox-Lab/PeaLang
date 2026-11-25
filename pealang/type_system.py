@@ -685,10 +685,59 @@ def option_type(t):return TypeRef('Option',(t,))
 def result_type(ok,err):return TypeRef('Result',(ok,err))
 def future_type(t):return TypeRef('Future',(t,))
 
+def _build_module_graph(paths):
+    """Collect imports, exports, and import cycles across a set of source files."""
+    from pathlib import Path
+    from .project import resolve_module,load_manifest
+    project_root=None;dependencies={}
+    if paths:
+        manifest,data=load_manifest(str(Path(paths[0])))
+        if manifest:
+            project_root=manifest.parent;dependencies=data.get('dependencies',{})
+    nodes={}
+    for raw in paths:
+        p=Path(raw).resolve();src=p.read_text(encoding='utf-8')
+        imports=[]
+        for line_no,line in enumerate(src.splitlines(),1):
+            for match in re.finditer(r'import\s+"([^"]+)"(?:\s+as\s+([A-Za-z_]\w*))?',line):
+                imports.append({'spec':match.group(1),'alias':match.group(2),'line':line_no})
+        exports=sorted(set(re.findall(r'(?m)^\s*export\s+([A-Za-z_]\w*)\s*$',src)))
+        nodes[str(p)]={'path':p,'imports':imports,'exports':exports}
+    diagnostics=[];edges={}
+    for key,node in nodes.items():
+        targets=[]
+        for imp in node['imports']:
+            resolved=resolve_module(imp['spec'],node['path'].parent,project_root,dependencies).resolve()
+            imp['resolved']=str(resolved)
+            if not resolved.is_file() and str(resolved) not in nodes:
+                diagnostics.append(Diagnostic('M201',f"Unresolved module import '{imp['spec']}'",imp['line']))
+            targets.append(str(resolved))
+        edges[key]=targets
+    cycles=[];visiting=[];visited=set()
+    def visit(key):
+        if key in visiting:
+            cycle=visiting[visiting.index(key):]+[key]
+            if cycle not in cycles:cycles.append(cycle)
+            return
+        if key in visited:return
+        visited.add(key);visiting.append(key)
+        for target in edges.get(key,[]):
+            if target in nodes:visit(target)
+        visiting.pop()
+    for key in nodes:visit(key)
+    for cycle in cycles:
+        names=' -> '.join(Path(item).name for item in cycle)
+        diagnostics.append(Diagnostic('M203',f'Circular module import: {names}',0))
+    return {'nodes':{k:{'imports':v['imports'],'exports':v['exports']} for k,v in nodes.items()},
+            'edges':edges,'cycles':cycles,'diagnostics':diagnostics}
+
+
 def analyze_project(paths):
     """Cross-module contract collector/checker for .pea source files."""
     from pathlib import Path
     result={'files':{},'functions':{},'generics':{},'protocols':{},'traits':{},'records':{},'diagnostics':[]}
+    result['modules']=_build_module_graph(paths)
+    result['diagnostics'].extend(('<module graph>',d) for d in result['modules']['diagnostics'])
     all_records = {}
     all_protocols = {}
     all_traits = {}

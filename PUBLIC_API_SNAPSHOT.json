@@ -7761,9 +7761,33 @@
     },
     {
       "module": "pealang.project",
+      "name": "module_candidates",
+      "kind": "function",
+      "signature": "(spec)"
+    },
+    {
+      "module": "pealang.project",
       "name": "resolve_module",
       "kind": "function",
       "signature": "(spec,current_dir,project_root=?,dependencies=?)"
+    },
+    {
+      "module": "pealang.project",
+      "name": "ModuleResolution",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.project",
+      "name": "module_alias",
+      "kind": "function",
+      "signature": "(spec,alias=?)"
+    },
+    {
+      "module": "pealang.project",
+      "name": "ModuleResolver",
+      "kind": "class",
+      "signature": ""
     },
     {
       "module": "pealang.project",

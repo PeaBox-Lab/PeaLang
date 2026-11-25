@@ -438,22 +438,38 @@ def project_info(start: str = '.'):
     return {'root': str(mf.parent), 'manifest': str(mf), **data}
 
 
+def module_candidates(spec):
+    """Return file-style candidates for an import specifier, in priority order."""
+    normalized = str(spec).replace('\\', '/')
+    if normalized.endswith('.pea') or '/' in normalized or normalized.startswith('.'):
+        return [normalized]
+    dotted = normalized.replace('.', '/')
+    return [normalized, dotted, f'{dotted}/__init__.pea']
+
+
+def _candidate_file(base, candidate):
+    p = base / candidate
+    if p.suffix != '.pea':
+        p = p.with_suffix('.pea')
+    return p
+
+
 def resolve_module(spec, current_dir, project_root=None, dependencies=None):
     spec = str(spec)
     if spec.startswith('./') or spec.startswith('../') or '/' in spec or spec.endswith('.pea'):
-        p = (Path(current_dir) / spec).resolve()
-        if p.suffix != '.pea':
-            p = p.with_suffix('.pea')
-        return p
+        return _candidate_file(Path(current_dir), spec).resolve()
 
     root = Path(project_root or current_dir)
-    local = (root / 'modules' / spec).with_suffix('.pea')
-    if local.is_file():
-        return local.resolve()
+    for candidate in module_candidates(spec):
+        local = _candidate_file(root / 'modules', candidate)
+        if local.is_file():
+            return local.resolve()
 
     # Check .pea_modules/<spec> for installed libraries
-    pea_mod = (root / '.pea_modules' / spec)
-    if pea_mod.is_dir():
+    for candidate in module_candidates(spec):
+        pea_mod = root / '.pea_modules' / candidate
+        if not pea_mod.is_dir():
+            continue
         # Look for pea.toml manifest first (preferred)
         manifest = pea_mod / 'pea.toml'
         if manifest.is_file():
@@ -486,6 +502,8 @@ def resolve_module(spec, current_dir, project_root=None, dependencies=None):
 
     dep = (dependencies or {}).get(spec)
     if dep:
+        if isinstance(dep, str):
+            dep = {'path': dep}
         base = Path(dep.get('path', ''))
         if not base.is_absolute():
             base = (root / base).resolve()
@@ -497,7 +515,67 @@ def resolve_module(spec, current_dir, project_root=None, dependencies=None):
             p = p / 'main.pea'
         return p.resolve()
 
-    return (Path(current_dir) / spec).with_suffix('.pea').resolve()
+    for candidate in module_candidates(spec):
+        local = _candidate_file(Path(current_dir), candidate)
+        if local.is_file():
+            return local.resolve()
+    return _candidate_file(Path(current_dir), spec).resolve()
+
+
+@dataclass(frozen=True)
+class ModuleResolution:
+    """Canonical identity for a resolved PeaLang import."""
+
+    spec: str
+    path: Path
+    alias: str
+
+    @property
+    def key(self):
+        return str(self.path)
+
+
+def module_alias(spec, alias=None):
+    """Return the default binding name for an import specifier."""
+    if alias:
+        return alias
+    name = str(spec).replace('\\', '/').rsplit('/', 1)[-1]
+    if name.endswith('.pea'):
+        name = name[:-4]
+    parts = [part for part in re.split(r'[.\-]', name) if part]
+    return parts[-1] if parts else name
+
+
+class ModuleResolver:
+    """Shared path resolution, alias derivation, and import-cycle detection."""
+
+    def __init__(self, project_root=None, dependencies=None):
+        self.project_root = Path(project_root).resolve() if project_root else None
+        raw_deps = dependencies or {}
+        self.dependencies = {
+            name: ({'path': value} if isinstance(value, str) else dict(value))
+            for name, value in raw_deps.items()
+        }
+        self.cache = {}
+        self.loading = set()
+
+    def resolve(self, spec, current_dir, alias=None):
+        path = resolve_module(spec, current_dir, self.project_root, self.dependencies).resolve()
+        return ModuleResolution(str(spec), path, module_alias(spec, alias))
+
+    def begin(self, resolution):
+        if resolution.key in self.loading:
+            raise PeaError(f"Circular module import: {resolution.spec}")
+        self.loading.add(resolution.key)
+
+    def finish(self, resolution):
+        self.loading.discard(resolution.key)
+
+    def cached(self, key):
+        return self.cache.get(key)
+
+    def remember(self, key, exports):
+        self.cache[key] = dict(exports)
 
 
 # --- Migration support ---

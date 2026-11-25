@@ -17,7 +17,7 @@ def set_current_interpreter(interp):
 from .stdlib import build_standard_library
 from .ai import build_ai_namespace
 from .skills import SkillRegistry
-from .project import load_manifest, resolve_module
+from .project import load_manifest, resolve_module, ModuleResolver
 from .agents import ToolRegistry,AgentRuntime
 from .help import help as _pea_help
 from .extension_registry import ExtensionRegistry
@@ -59,7 +59,7 @@ def _map_builtin_exception(exc, span=None, source=None):
 
 class Interpreter:
     def __init__(self,output=None,base_dir=None,allow_process=False,project_root=None,dependencies=None,debug_hook=None,permissions=None):
-        self.output=output or print;self.debug_hook=debug_hook;self.call_stack=[];self.global_env=Env();self.env=self.global_env;self.module_exports=None;self.base_dir=Path(base_dir or '.').resolve();self.source_name='<input>';self.imported=set();self.project_root=Path(project_root).resolve() if project_root else self.base_dir;self.dependencies=dependencies or {}
+        self.output=output or print;self.debug_hook=debug_hook;self.call_stack=[];self.global_env=Env();self.env=self.global_env;self.module_exports=None;self.base_dir=Path(base_dir or '.').resolve();self.source_name='<input>';self.imported=set();self.project_root=Path(project_root).resolve() if project_root else self.base_dir;self.dependencies=dependencies or {};self.module_resolver=ModuleResolver(self.project_root,self.dependencies)
         def _enumerate(iterable,start=0): return [[i,v] for i,v in enumerate(iterable,int(start))]
         def _zip(*args): return [list(x) for x in zip(*args)]
         def _sorted(iterable,key=None,reverse=False):
@@ -564,18 +564,33 @@ class Interpreter:
         except (PeaError,ReturnSignal,BreakSignal,ContinueSignal):raise
         except Exception as ex:raise _map_builtin_exception(ex, span=s.span, source=self.source_name) from ex
     def import_file(self,name,node,alias=None):
-        path=resolve_module(name,self.base_dir,self.project_root,self.dependencies)
+        resolution=self.module_resolver.resolve(name,self.base_dir,alias);path=resolution.path
         if not path.is_file():raise ImportError(f"Module not found: {name}",node.span,self.source_name)
+        key=resolution.key
         if alias is None:
             if path in self.imported:return None
-            self.imported.add(path);src=path.read_text(encoding='utf-8');oldbase=self.base_dir;oldskill=self.skill_registry.base_dir;self.base_dir=path.parent;self.skill_registry.base_dir=path.parent
-            try:return self.run(parse_source(src,str(path)),str(path))
-            finally:self.base_dir=oldbase;self.skill_registry.base_dir=oldskill
-        src=path.read_text(encoding='utf-8');module_env=Env(self.global_env);oldenv=self.env;oldbase=self.base_dir;oldskill=self.skill_registry.base_dir;oldexports=self.module_exports
-        self.env=module_env;self.base_dir=path.parent;self.skill_registry.base_dir=path.parent;self.module_exports=set()
+            self.imported.add(path)
+        else:
+            cached=self.module_resolver.cached(key)
+            if cached is not None:
+                self.global_env.define(alias,cached,True);return cached
+        if key in self.module_resolver.loading:
+            if alias is None:return None
+            raise ImportError(f"Circular module import: {name}",node.span,self.source_name)
+        self.module_resolver.begin(resolution)
         try:
-            self.run(parse_source(src,str(path)),str(path));names=self.module_exports;values={n:module_env.values[n] for n in names if n in module_env.values};self.global_env.define(alias,values,True);return values
-        finally:self.env=oldenv;self.base_dir=oldbase;self.skill_registry.base_dir=oldskill;self.module_exports=oldexports
+            src=path.read_text(encoding='utf-8')
+            if alias is None:
+                oldbase=self.base_dir;oldskill=self.skill_registry.base_dir;self.base_dir=path.parent;self.skill_registry.base_dir=path.parent
+                try:return self.run(parse_source(src,str(path)),str(path))
+                finally:self.base_dir=oldbase;self.skill_registry.base_dir=oldskill
+            module_env=Env(self.global_env);oldenv=self.env;oldbase=self.base_dir;oldskill=self.skill_registry.base_dir;oldexports=self.module_exports
+            self.env=module_env;self.base_dir=path.parent;self.skill_registry.base_dir=path.parent;self.module_exports=set()
+            try:
+                self.run(parse_source(src,str(path)),str(path));names=self.module_exports;values={n:module_env.values[n] for n in names if n in module_env.values}
+                self.global_env.define(alias,values,True);self.module_resolver.remember(key,values);return values
+            finally:self.env=oldenv;self.base_dir=oldbase;self.skill_registry.base_dir=oldskill;self.module_exports=oldexports
+        finally:self.module_resolver.finish(resolution)
 
     def invoke_user_function(self, f, args, call_span=None, call_source=None):
         frame = {"name": getattr(f, 'name', '<anonymous>'),

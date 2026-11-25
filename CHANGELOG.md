@@ -410,6 +410,14 @@ All 1240 tests pass.
 - Add a `language.async_v2` preview feature flag and update help, specs, and guides
 - Last verified baseline remains 1396 tests; targeted regression and async/concurrency tests smoke-tested
 
+## 2.41.0 - Phase 66: Module System v2 (2026-11-25)
+- Add a shared `ModuleResolver` with dotted module paths, `__init__.pea` candidates, alias derivation, and dependency normalization
+- Resolve project manifests automatically in the bytecode VM and expose explicit resolvers to VM and async VM hosts
+- Cache aliased imports in the interpreter and detect circular imports across interpreter and VM paths
+- Add static module graphs to project analysis with `M201` unresolved-import and `M203` cycle diagnostics
+- Add a `language.modules_v2` preview feature flag and update help, specs, and guides
+- Last verified baseline remains 1396 tests; targeted regression and module tests smoke-tested
+
 ### Phase 34: Standard Library Completion (2.41.0)
   - **`std.sql`**: SQL query builder (SELECT, INSERT, UPDATE, DELETE, CREATE TABLE, DROP TABLE).
   - **`std.cache`**: In-memory cache with TTL support.

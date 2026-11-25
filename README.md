@@ -791,6 +791,20 @@ value type of `await`, and reports `A201` when a known non-future is awaited.
 Async annotations are erased before runtime parsing, so existing programs are
 unchanged.
 
+### Module resolution
+
+```pea
+import "api.client" as client
+print client.value
+```
+
+Imports now share one resolver across the interpreter, bytecode VM, and async
+VM. Dotted specifiers resolve to `modules/api/client.pea` or
+`modules/api/client/__init__.pea`, and project manifests supply dependency
+paths. Aliased imports are cached and circular imports are reported clearly.
+Project analysis exposes the module graph and reports `M201` for unresolved
+imports and `M203` for cycles.
+
 ### Project queries
 
 ```bash

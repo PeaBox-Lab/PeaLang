@@ -69,6 +69,12 @@ tokens now propagate into structured child scopes, and static analysis models
 `async function` declarations as `Future<T>` so `await` can infer element types
 and report `A201` for known non-futures.
 
+**Phase 66 — Module System v2** shares one resolver across the interpreter,
+bytecode VM, and async VM. Imports now accept dotted project paths with
+`__init__.pea` candidates, use project manifests and normalized dependencies,
+cache aliased imports, and reject cycles. Project analysis exposes a module
+graph with `M201` unresolved-import and `M203` cycle diagnostics.
+
 ### Wave 2 — Runtime and performance (Phases 71–80)
 
 Bytecode optimizer, fast interpreter, JIT, native backend, WASM backend, parallel

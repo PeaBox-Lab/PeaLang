@@ -205,4 +205,11 @@
 - Erase async function annotations before runtime and align the public API and docs
 - Last verified baseline remains 1396 tests; targeted regression and async/concurrency tests smoke-tested
 
+## 2.41.0 - Phase 66: Module System v2 (2026-11-25)
+- Add shared module resolution with dotted paths, project manifests, aliases, caches, and cycle checks
+- Align interpreter, bytecode VM, and async VM imports behind one resolver
+- Add static module graphs with `M201` and `M203` diagnostics
+- Add a `language.modules_v2` preview feature flag and update public docs
+- Last verified baseline remains 1396 tests; targeted regression and module tests smoke-tested
+
 ### Phase 34: Standard Library Completion (2.41.0)

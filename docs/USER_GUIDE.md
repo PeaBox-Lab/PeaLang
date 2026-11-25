@@ -106,6 +106,17 @@ inherit a structured cancellation scope, so cancelling the VM token cancels
 its children. Static analysis treats async functions as `Future<T>` and checks
 `await` expressions with `A201`.
 
+### Module resolution
+```pea
+import "api.client" as client
+print client.value
+```
+Dotted module names resolve under `modules/` (including `__init__.pea`) or a
+dependency declared in `pea.json`. The interpreter, VM, and async VM share the
+same resolver, so aliased imports are cached and cycles are reported. Project
+analysis exposes a module graph with `M201` unresolved-import and `M203` cycle
+diagnostics.
+
 ### Optional chaining and null coalescing
 ```pea
 let city = user?.profile?.city ?? "unknown"

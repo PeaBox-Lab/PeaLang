@@ -5,6 +5,7 @@ from pathlib import Path
 from .bytecode import BytecodeModule,Op
 from .error_values import build_error, error_value_from_raw, matches_error
 from .iterators import make_iterator,iterator_next,has_next,peek,close_iterator,ITER_EXHAUSTED
+from .project import ModuleResolver,load_manifest
 class VMError(Exception):pass
 @dataclass
 class AsyncSuspension:
@@ -23,9 +24,9 @@ class Handler:catch:int|None;finally_ip:int|None;end:int;name:str|None;stack_siz
 @dataclass
 class Frame:code:object;env:dict;ip:int=0;name:str='<module>';stack_base:int=0;handlers:list[Handler]=field(default_factory=list)
 class VirtualMachine:
- def __init__(self,output=None,max_instructions=100000,debug_hook=None,module_loader=None,instrumentation=None):
-  self.output=output or print;self.max_instructions=max_instructions;self.debug_hook=debug_hook;self.module_loader=module_loader;self.instrumentation=instrumentation;self.reset()
- def reset(self):self.instructions=0;self.stack=[];self.frames=[];self.exports={};self.paused=False;self.breakpoints=set();self.last_event=None;self.module_cache={}
+ def __init__(self,output=None,max_instructions=100000,debug_hook=None,module_loader=None,instrumentation=None,module_resolver=None):
+  self.output=output or print;self.max_instructions=max_instructions;self.debug_hook=debug_hook;self.module_loader=module_loader;self.instrumentation=instrumentation;self.module_resolver=module_resolver;self.reset()
+ def reset(self):self.instructions=0;self.stack=[];self.frames=[];self.exports={};self.paused=False;self.breakpoints=set();self.last_event=None;self.module_cache={};self.module_loading=set()
  def run(self,module,globals=None):
   self.module=module;env=dict(globals or {});env.update({'len':len,'str':str,'int':int,'number':float,'upper':lambda x:str(x).upper(),'lower':lambda x:str(x).lower(),'append':lambda a,x:(a.append(x) or a),'iter':make_iterator,'next':iterator_next,'has_next':has_next,'peek':peek,'error':build_error})
   self.frames=[Frame(module.code,env,name='<module>')];return self.loop()
@@ -73,17 +74,33 @@ class VirtualMachine:
      f.ip=h.catch;return True
    self._discard_stack(f.stack_base);self.frames.pop()
   return False
+ def _resolver_for_frame(self,frame):
+  if self.module_resolver is not None:return self.module_resolver
+  name=str(frame.code.source_name or '')
+  if not name or name.startswith('<'):return None
+  manifest,data=load_manifest(name)
+  if not manifest:return None
+  self.module_resolver=ModuleResolver(manifest.parent,data.get('dependencies'))
+  return self.module_resolver
  def _load_module(self,path,alias,frame):
-  base=Path(frame.code.source_name).parent;resolved=(base/path).resolve() if not Path(path).is_absolute() else Path(path)
-  key=str(resolved)
+  base=Path(str(frame.code.source_name or '.')).parent;resolver=self._resolver_for_frame(frame)
+  if resolver:
+   resolution=resolver.resolve(path,base,alias);resolved=resolution.path;key=resolution.key;binding=resolution.alias
+  else:
+   resolved=(base/path).resolve() if not Path(path).is_absolute() else Path(path);key=str(resolved);binding=alias or Path(path).stem
+  if not self.module_loader and not resolved.is_file():raise VMError(f"Module not found: {path}")
   if key in self.module_cache:exports=self.module_cache[key]
   else:
-   if self.module_loader:module=self.module_loader(key)
-   else:
-    from .compiler import compile_source_to_bytecode
-    module=compile_source_to_bytecode(resolved.read_text(encoding='utf-8'),key)
-   child=VirtualMachine(self.output,self.max_instructions-self.instructions,module_loader=self.module_loader);child.module_cache=self.module_cache;child.run(module,frame.env);exports=dict(child.exports);self.instructions+=child.instructions;self.module_cache[key]=exports
-  frame.env[alias or Path(path).stem]=exports
+   if key in self.module_loading:raise VMError(f"Circular module import: {path}")
+   self.module_loading.add(key)
+   try:
+    if self.module_loader:module=self.module_loader(key)
+    else:
+     from .compiler import compile_source_to_bytecode
+     module=compile_source_to_bytecode(resolved.read_text(encoding='utf-8'),key)
+    child=VirtualMachine(self.output,self.max_instructions-self.instructions,module_loader=self.module_loader,module_resolver=resolver);child.module_cache=self.module_cache;child.module_loading=self.module_loading;child.run(module,frame.env);exports=dict(child.exports);self.instructions+=child.instructions;self.module_cache[key]=exports
+   finally:self.module_loading.discard(key)
+  frame.env[binding]=exports
  def loop(self):
   ret=None
   while self.frames:
