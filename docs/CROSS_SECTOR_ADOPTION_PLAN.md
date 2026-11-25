@@ -88,6 +88,12 @@ nesting inherits limits, and cleanup runs on both normal and exceptional exits.
 Hosts receive the same `ResourceScope`/`ResourceScopeManager` primitives, while
 static analysis reports `R201`/`R202` for duplicate or reassigned bindings.
 
+**Phase 69 — Conformance Suite** adds a curated portable suite for the language
+core. Cases run on the interpreter, bytecode VM, macro expander, and static
+project analysis with normalized outputs and stable diagnostic-code checks.
+Reports are per-case and per-runtime, and a deterministic PASS/FAIL gate makes
+the suite usable as a CI prerequisite without changing the legacy harness.
+
 ### Wave 2 — Runtime and performance (Phases 71–80)
 
 Bytecode optimizer, fast interpreter, JIT, native backend, WASM backend, parallel

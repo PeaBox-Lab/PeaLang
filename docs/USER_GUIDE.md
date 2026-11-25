@@ -140,6 +140,16 @@ resource budget derived from its parent. `scopes.current()` and
 `scopes.snapshot()` expose runtime state; project analysis reports `R201` for a
 duplicate binding and `R202` for reassigning a `using` binding inside its block.
 
+### Conformance suite
+```bash
+pea conformance-v2
+```
+Run a curated set of language-core cases and inspect the JSON report. Runtime
+cases must produce identical normalized output on the interpreter and bytecode
+VM; other cases check macro expansion, static diagnostic codes, and module
+graphs. `run_conformance_suite_v2()` is the equivalent host API, and
+`conformance_gate_v2()` returns `PASS` or `FAIL` for CI gates.
+
 ### Optional chaining and null coalescing
 ```pea
 let city = user?.profile?.city ?? "unknown"

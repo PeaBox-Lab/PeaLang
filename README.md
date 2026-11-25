@@ -835,6 +835,19 @@ deferred cleanup, and scope snapshots. The `scopes` namespace exposes
 `current()`, `snapshot()`, and `dispose()` to programs, and project analysis
 reports `R201`/`R202` for duplicate or reassigned scope bindings.
 
+### Conformance suite
+
+```bash
+pea conformance-v2
+```
+
+The v2 conformance suite runs a curated set of language-core cases across the
+interpreter and bytecode VM, plus macro expansion, static diagnostic, and
+module-graph cases. Each result records the runtime output or diagnostic codes
+observed, and `conformance_gate_v2()` reduces the report to a stable PASS/FAIL
+gate for CI. The original `pea conformance` differential and fuzz harness is
+unchanged.
+
 ### Project queries
 
 ```bash

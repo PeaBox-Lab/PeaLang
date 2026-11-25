@@ -435,6 +435,15 @@ All 1240 tests pass.
 - Add a `language.resource_scopes_v2` preview feature flag and update help, specs, and guides
 - Last verified baseline remains 1396 tests; targeted regression and resource-scope tests smoke-tested
 
+## 2.41.0 - Phase 69: Conformance Suite (2026-11-25)
+- Add a curated, deterministic `ConformanceCaseV2` suite covering Wave 1 language-core features
+- Check runtime cases on both interpreter and bytecode VM with normalized portable output
+- Add macro expansion cases plus static diagnostic and module-graph cases with stable codes
+- Add `run_conformance_suite_v2()`, `conformance_report_v2()`, and `conformance_gate_v2()` helpers
+- Add a `pea conformance-v2` CLI command and a `language.conformance_v2` preview feature flag
+- Update public API, help, specs, and guides; keep the 0.40 conformance harness unchanged
+- Last verified baseline remains 1396 tests; targeted regression and conformance tests smoke-tested
+
 ### Phase 34: Standard Library Completion (2.41.0)
   - **`std.sql`**: SQL query builder (SELECT, INSERT, UPDATE, DELETE, CREATE TABLE, DROP TABLE).
   - **`std.cache`**: In-memory cache with TTL support.

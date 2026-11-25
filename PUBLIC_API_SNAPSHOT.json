@@ -2450,6 +2450,42 @@
       "signature": "()"
     },
     {
+      "module": "pealang.conformance_suite",
+      "name": "ConformanceCaseV2",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.conformance_suite",
+      "name": "validate_case",
+      "kind": "function",
+      "signature": "(case)"
+    },
+    {
+      "module": "pealang.conformance_suite",
+      "name": "run_case",
+      "kind": "function",
+      "signature": "(case)"
+    },
+    {
+      "module": "pealang.conformance_suite",
+      "name": "run_conformance_suite_v2",
+      "kind": "function",
+      "signature": "(cases=?)"
+    },
+    {
+      "module": "pealang.conformance_suite",
+      "name": "conformance_report_v2",
+      "kind": "function",
+      "signature": "()"
+    },
+    {
+      "module": "pealang.conformance_suite",
+      "name": "conformance_gate_v2",
+      "kind": "function",
+      "signature": "(report=?)"
+    },
+    {
       "module": "pealang.conformance_quality",
       "name": "run_conformance_suite",
       "kind": "function",

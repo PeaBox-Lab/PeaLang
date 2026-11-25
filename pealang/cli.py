@@ -681,6 +681,12 @@ def main(argv=None):
 
             report=conformance_report();print(json.dumps(report,indent=2));return 0 if report['conformance']['ok'] and report['fuzz']['ok'] else 1
 
+        if c=='conformance-v2':
+
+            from .conformance_suite import conformance_report_v2,conformance_gate_v2
+
+            report=conformance_report_v2();print(json.dumps(report,indent=2));return 0 if conformance_gate_v2(report)['gate']=='PASS' else 1
+
         if c=='wasm-build':
 
             from .compiler import compile_source_to_bytecode

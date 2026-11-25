@@ -224,4 +224,10 @@
 - Add static `R201`/`R202` scope diagnostics and a `language.resource_scopes_v2` preview flag
 - Last verified baseline remains 1396 tests; targeted regression and resource-scope tests smoke-tested
 
+## 2.41.0 - Phase 69: Conformance Suite (2026-11-25)
+- Add a curated portable suite for runtime parity, macros, static diagnostics, and module graphs
+- Add stable per-case reports, definition validation, and a PASS/FAIL conformance gate
+- Add `pea conformance-v2` CLI output and a `language.conformance_v2` preview flag
+- Last verified baseline remains 1396 tests; targeted regression and conformance tests smoke-tested
+
 ### Phase 34: Standard Library Completion (2.41.0)
