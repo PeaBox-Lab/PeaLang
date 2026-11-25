@@ -50,6 +50,12 @@ parameters, preserved contracts, call-site inference, protocol bounds, and
 recursive generic compatibility. Runtime annotations remain erased, so existing
 programs continue to execute unchanged.
 
+**Phase 63 — Protocols/Traits** completes the structural contract layer:
+marker traits, optional `=` protocol bodies, signature-aware conformance checks,
+and conformance diagnostics scoped to protocols actually used as generic bounds.
+Extension types can now publish name-only protocol contracts, and all contracts
+remain static and erased before execution.
+
 ### Wave 2 — Runtime and performance (Phases 71–80)
 
 Bytecode optimizer, fast interpreter, JIT, native backend, WASM backend, parallel

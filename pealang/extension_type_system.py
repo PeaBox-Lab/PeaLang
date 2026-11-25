@@ -101,13 +101,11 @@ class ExtensionTypeSystem:
         ext_type = self.registry.get_type(type_name)
         if ext_type is None:
             return None
+        # Extension methods have no static signatures, so this is a name-only contract.
         return ProtocolContract(
             name=type_name,
-            methods={
-                method_name: method
-                for method_name, method in ext_type.methods.items()
-            },
-            doc=ext_type.doc,
+            methods=tuple((method_name, (), TypeRef('Any')) for method_name in ext_type.methods),
+            method_names_only=True,
         )
 
 

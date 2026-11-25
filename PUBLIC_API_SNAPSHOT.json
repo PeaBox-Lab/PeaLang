@@ -9951,6 +9951,18 @@
     },
     {
       "module": "pealang.type_system",
+      "name": "parse_traits",
+      "kind": "function",
+      "signature": "(source)"
+    },
+    {
+      "module": "pealang.type_system",
+      "name": "function_field_type",
+      "kind": "function",
+      "signature": "(params,return_type)"
+    },
+    {
+      "module": "pealang.type_system",
       "name": "protocol_conforms",
       "kind": "function",
       "signature": "(record_fields,protocol)"
@@ -9959,7 +9971,7 @@
       "module": "pealang.type_system",
       "name": "check_record_protocol_conformance",
       "kind": "function",
-      "signature": "(record_name,record_fields,protocol)"
+      "signature": "(record_name,record_fields,protocol,line=0)"
     },
     {
       "module": "pealang.type_system",

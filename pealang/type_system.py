@@ -89,7 +89,7 @@ class TypeChecker:
             if mbody is not None:
                 # Record-style type: type Name = {field: type, ...}
                 fields={}
-                for f in mbody.split(','):
+                for f in split_top(mbody,','):
                     if ':' in f:
                         n,t=f.split(':',1)
                         try:fields[n.strip()]=parse_type(t.strip())
@@ -142,8 +142,9 @@ class TypeChecker:
 
 def erase_types(source:str)->str:
     if len(source) > MAX_TYPE_SOURCE_CHARS: raise ValueError('Source exceeds safety limit')
-    # Remove protocol declarations and generic parameter lists before runtime parsing.
-    source=re.sub(r'(?m)^[ \t]*protocol[ \t]+[A-Za-z_]\w*[ \t]*=?[ \t]*\{[^{}]*\}[ \t]*(?:\n|$)','',source)  # lgtm[py/polynomial-redos]
+    # Remove protocol/trait declarations and generic parameter lists before runtime parsing.
+    source=re.sub(r'(?m)^[ \t]*(?:protocol|trait)[ \t]+[A-Za-z_]\w*[ \t]*=?[ \t]*\{[^{}]*\}[ \t]*(?:\n|$)','',source)  # lgtm[py/polynomial-redos]
+    source=re.sub(r'(?m)^[ \t]*trait[ \t]+[A-Za-z_]\w*[ \t]*(?:\n|$)','',source)  # lgtm[py/polynomial-redos]
     source=re.sub(r'(function\s+\w+)\s*<[^>]+>',r'\1',source)
     # Remove record declarations before runtime parsing.
     source=re.sub(r'(?m)^[ \t]*type[ \t]+[A-Za-z_]\w*[ \t]*=[ \t]*\{[^{}]*\}[ \t]*(?:\n|$)','',source)
@@ -169,6 +170,8 @@ class FunctionContract:
 class SemanticResult(TypeCheckResult):
     functions:dict[str,FunctionContract]=field(default_factory=dict)
     generics:dict[str,'GenericFunctionContract']=field(default_factory=dict)
+    protocols:dict[str,'ProtocolContract']=field(default_factory=dict)
+    traits:dict[str,'ProtocolContract']=field(default_factory=dict)
 
 class SemanticAnalyzer:
     """Flow-aware semantic checks layered over the optional type surface."""
@@ -176,7 +179,7 @@ class SemanticAnalyzer:
                 cross_module_context: dict | None = None)->SemanticResult:
         if len(source) > MAX_TYPE_SOURCE_CHARS: raise ValueError('Source exceeds safety limit')
         base=TypeChecker().check(source,source_name)
-        result=SemanticResult(base.diagnostics,base.symbols,base.records,{},{})
+        result=SemanticResult(base.diagnostics,base.symbols,base.records,{},{},{},{})
         generics = parse_generic_functions(source)
         known=set(BUILTINS)|set(result.records)
         for gf in generics.values():known.update(gf.type_params)
@@ -184,9 +187,16 @@ class SemanticAnalyzer:
             result.generics[name] = gf
             result.functions[name] = FunctionContract(name, gf.params, gf.return_type, 0)
         
-        # Parse protocols
+        # Parse protocols and marker traits.
         protocols = parse_protocols(source)
-        
+        traits = parse_traits(source)
+        result.protocols.update(protocols)
+        result.traits.update(traits)
+        all_contracts = {**protocols, **traits}
+        bound_contracts = set()
+        for gf in generics.values():
+            for bounds in gf.bounds.values():bound_contracts.update(bounds)
+
         lines=source.splitlines()
         # Collect function contracts and bodies using brace depth.
         i=0
@@ -218,11 +228,15 @@ class SemanticAnalyzer:
             self._check_function(name,params,ret,body,result,known)
             i=j
         
-        # Check protocol conformance
+        # Check protocol/trait conformance only where a generic bound references it.
+        record_lines = {m.group(1): source[:m.start()].count('\n')+1
+                        for m in re.finditer(r'(?m)^type[ \t]+([A-Za-z_]\w*)[ \t]*=', source)}
         for record_name, record_fields in result.records.items():
-            for proto_name, proto in protocols.items():
-                diags = check_record_protocol_conformance(record_name, record_fields, proto)
-                result.diagnostics.extend(diags)
+            for contract_name in sorted(bound_contracts):
+                contract = all_contracts.get(contract_name)
+                if contract is None:continue
+                result.diagnostics.extend(check_record_protocol_conformance(
+                    record_name, record_fields, contract, record_lines.get(record_name, 0)))
         
         # Check match exhaustiveness for ADTs
         all_records = dict(result.records)
@@ -234,7 +248,7 @@ class SemanticAnalyzer:
                 all_records[name] = {'constructors': constructors}
         
         self._check_records(source,result)
-        self._check_calls(source,result,protocols)
+        self._check_calls(source,result,all_contracts)
         
         # Cross-module context
         if cross_module_context:
@@ -370,6 +384,7 @@ class GenericFunctionContract:
 class ProtocolContract:
     name:str
     methods:tuple[tuple[str,tuple[tuple[str,TypeRef],...],TypeRef],...]
+    method_names_only:bool=False
 
 def substitute_type(t:TypeRef, bindings:dict[str,TypeRef])->TypeRef:
     """Substitute type parameters with concrete types."""
@@ -470,67 +485,92 @@ def parse_generic_functions(source:str):
             parse_type(raw_ret.strip()) if raw_ret else TypeRef('Any'),bounds,line)
     return out
 
-def parse_protocols(source:str):
+def _parse_contract_declarations(source:str,keyword:str)->dict[str,'ProtocolContract']:
     out={}
-    for m in re.finditer(r'protocol[ \t]+([A-Za-z_]\w*)[ \t]*\{([^{}]*)\}',source):
+    body_pattern=re.compile(rf'(?m)^[ \t]*{keyword}[ \t]+([A-Za-z_]\w*)[ \t]*(?:=[ \t]*)?\{{([^{{}}]*)\}}')
+    marker_pattern=re.compile(rf'(?m)^[ \t]*{keyword}[ \t]+([A-Za-z_]\w*)[ \t]*(?:\n|$)')
+    for m in body_pattern.finditer(source):
         methods=[]
         for fn in re.finditer(r'function[ \t]+([A-Za-z_]\w*)[ \t]*\(([^()]*)\)[ \t]*(?:->[ \t]*([^{}\n]+))?',m.group(2)):
             params=[]
             for item in split_top(fn.group(2),','):
                 if not item.strip():continue
                 if ':' in item:
-                    n,t=item.split(':',1);params.append((n.strip(),parse_type(t.strip())))
+                    n,t=item.split(':',1);params.append((n.strip(),parse_type(t.split('=',1)[0].strip())))
                 else:params.append((item.strip(),TypeRef('Any')))
             methods.append((fn.group(1),tuple(params),parse_type(fn.group(3).strip()) if fn.group(3) else TypeRef('Any')))
         out[m.group(1)]=ProtocolContract(m.group(1),tuple(methods))
+    for m in marker_pattern.finditer(source):
+        if m.group(1) not in out:out[m.group(1)]=ProtocolContract(m.group(1),())
     return out
 
+def parse_protocols(source:str)->dict[str,'ProtocolContract']:
+    """Parse structural protocol declarations."""
+    return _parse_contract_declarations(source,'protocol')
+
+def parse_traits(source:str)->dict[str,'ProtocolContract']:
+    """Parse trait declarations; traits without methods are marker contracts."""
+    return _parse_contract_declarations(source,'trait')
+
+def function_field_type(params,return_type)->TypeRef:
+    """Encode a function field as Function<P1,...,Pn,R>; bare Function is a wildcard."""
+    return TypeRef('Function',tuple(t for _,t in params)+(return_type,))
+
+def _function_signature(t:TypeRef):
+    if t.name!='Function' or not t.args:return None
+    return tuple(t.args[:-1]),t.args[-1]
+
 def protocol_conforms(record_fields:dict[str,TypeRef], protocol:ProtocolContract)->bool:
-    # 0.36 structural protocol surface: method-shaped fields must be Function.
-    return all(name in record_fields and record_fields[name].name=='Function' for name,_,_ in protocol.methods)
+    """Structural conformance; bare Function fields remain wildcard-compatible."""
+    return not check_record_protocol_conformance('<conformance>',record_fields,protocol)
 
 
-def check_record_protocol_conformance(record_name: str, record_fields: dict[str,TypeRef], 
-                                       protocol: ProtocolContract) -> list[Diagnostic]:
-    """Check if a record conforms to a protocol, return diagnostics for missing/mismatched methods."""
+def check_record_protocol_conformance(record_name: str, record_fields: dict[str,TypeRef],
+                                       protocol: ProtocolContract, line: int = 0) -> list[Diagnostic]:
+    """Check structural conformance with P201-P205 diagnostics."""
     diagnostics = []
     for method_name, params, return_type in protocol.methods:
         if method_name not in record_fields:
             diagnostics.append(Diagnostic(
-                'P201', 
+                'P201',
                 f"Record '{record_name}' does not implement required method '{method_name}' for protocol '{protocol.name}'",
-                0
+                line
             ))
             continue
-        
+
         field_type = record_fields[method_name]
         if field_type.name != 'Function':
             diagnostics.append(Diagnostic(
                 'P202',
                 f"Field '{method_name}' in record '{record_name}' must be a function for protocol '{protocol.name}'",
-                0
+                line
             ))
             continue
-        
-        # Check function signature compatibility
-        # field_type.args should be (params, return_type)
-        if field_type.args:
-            expected_params = params
-            actual_params = field_type.args[0] if field_type.args else []
-            if len(actual_params) != len(expected_params):
+        if protocol.method_names_only:continue
+        signature = _function_signature(field_type)
+        if signature is None:continue  # Bare Function is a legacy wildcard.
+        actual_params, actual_return = signature
+        expected_params = tuple(t for _,t in params)
+        if len(actual_params) != len(expected_params):
+            diagnostics.append(Diagnostic(
+                'P203',
+                f"Method '{method_name}' in '{record_name}' has {len(actual_params)} params, protocol requires {len(expected_params)}",
+                line
+            ))
+            continue
+        for (_, expected_t), actual_t in zip(params,actual_params):
+            if not compatible_generic(expected_t,actual_t):
                 diagnostics.append(Diagnostic(
-                    'P203',
-                    f"Method '{method_name}' in '{record_name}' has {len(actual_params)} params, protocol requires {len(expected_params)}",
-                    0
+                    'P204',
+                    f"Method '{method_name}' param type mismatch: expected {expected_t}, got {actual_t}",
+                    line
                 ))
-            else:
-                for (_, expected_t), actual_t in zip(expected_params, actual_params):
-                    if expected_t.name != 'Any' and actual_t.name != 'Any' and expected_t.name != actual_t.name:
-                        diagnostics.append(Diagnostic(
-                            'P204',
-                            f"Method '{method_name}' param type mismatch: expected {expected_t}, got {actual_t}",
-                            0
-                        ))
+        if not compatible_generic(return_type,actual_return):
+            diagnostics.append(Diagnostic(
+                'P205',
+                f"Method '{method_name}' return type mismatch: expected {return_type}, got {actual_return}",
+                line
+            ))
     return diagnostics
 
 
@@ -584,9 +624,10 @@ def future_type(t):return TypeRef('Future',(t,))
 def analyze_project(paths):
     """Cross-module contract collector/checker for .pea source files."""
     from pathlib import Path
-    result={'files':{},'functions':{},'generics':{},'records':{},'diagnostics':[]}
+    result={'files':{},'functions':{},'generics':{},'protocols':{},'traits':{},'records':{},'diagnostics':[]}
     all_records = {}
     all_protocols = {}
+    all_traits = {}
     all_generics = {}
     all_functions = {}
     
@@ -597,11 +638,12 @@ def analyze_project(paths):
         all_generics.update({f'{p.stem}.{k}': v for k,v in parse_generic_functions(src).items()})
         # Parse protocols
         all_protocols.update({f'{p.stem}.{k}': v for k,v in parse_protocols(src).items()})
+        all_traits.update({f'{p.stem}.{k}': v for k,v in parse_traits(src).items()})
         # Parse records (type declarations)
         for m in re.finditer(r'(?m)^type[ \t]+([A-Za-z_]\w*)[ \t]*=[ \t]*\{([^{}]*)\}', src):
             name, body = m.group(1), m.group(2)
             fields = {}
-            for f in body.split(','):
+            for f in split_top(body,','):
                 if ':' in f:
                     n, t = f.split(':', 1)
                     try:
@@ -630,6 +672,8 @@ def analyze_project(paths):
         result['diagnostics'].extend((str(p),x) for x in checked.diagnostics)
         for n,c in checked.functions.items():result['functions'][f'{p.stem}.{n}']=c
         for n,c in checked.generics.items():result['generics'][f'{p.stem}.{n}']=c
+        for n,c in checked.protocols.items():result['protocols'][f'{p.stem}.{n}']=c
+        for n,c in checked.traits.items():result['traits'][f'{p.stem}.{n}']=c
         for n,c in checked.records.items():result['records'][f'{p.stem}.{n}']=c
     
     # Check protocol conformance across modules

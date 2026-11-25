@@ -730,6 +730,28 @@ mismatches. Generic-aware compatibility checks nested arguments such as
 Runtime annotations are still erased, so these functions execute as before;
 `analyze_project()` also exposes collected generic contracts.
 
+### Protocols and traits
+
+```pea
+protocol Printable { function to_string() -> String }
+
+trait Serializable
+
+function show<T: Printable>(value: T) -> String {
+    return "printable"
+}
+```
+
+Protocols now perform structural signature checks on record fields encoded as
+`Function<P1,...,Pn,R>`, with `P201`–`P205` diagnostics for missing members,
+non-function fields, wrong arity, parameter mismatches, and return mismatches.
+A bare `Function` field remains a wildcard for backward compatibility. Traits
+are marker contracts, and conformance checks are scoped to protocols or traits
+referenced by generic bounds so unrelated records are not reported. All protocol
+and trait declarations are erased before runtime and are exposed through
+`SemanticResult` and `analyze_project()`. Protocol diagnostics are available via
+`pea semantic` and `pea typecheck-project`.
+
 ### Project queries
 
 ```bash

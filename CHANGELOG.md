@@ -382,6 +382,14 @@ All 1240 tests pass.
 - Expose generic contracts through `analyze_project()` and the public API
 - Last verified baseline remains 1396 tests; targeted regression and generics tests smoke-tested
 
+## 2.41.0 - Phase 63: Protocols and Traits (2026-11-25)
+- Parse marker traits and optional `=` protocol declaration syntax while keeping all declarations erased at runtime
+- Replace name-only conformance with structural `P201`–`P205` diagnostics for missing members, function kind, arity, parameters, and return types
+- Scope conformance checks to protocols referenced by generic bounds to avoid false positives on unrelated records
+- Preserve protocol and trait contracts on `SemanticResult` and expose them from `analyze_project()`
+- Repair the extension-type protocol hook and publish the structural conformance helpers through the public API
+- Last verified baseline remains 1396 tests; targeted regression and protocol/traits tests smoke-tested
+
 ### Phase 34: Standard Library Completion (2.41.0)
   - **`std.sql`**: SQL query builder (SELECT, INSERT, UPDATE, DELETE, CREATE TABLE, DROP TABLE).
   - **`std.cache`**: In-memory cache with TTL support.

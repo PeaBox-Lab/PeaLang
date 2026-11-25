@@ -183,4 +183,12 @@
 - Expose collected generic contracts from project analysis and the public API
 - Last verified baseline remains 1396 tests; targeted regression and generics tests smoke-tested
 
+## 2.41.0 - Phase 63: Protocols and Traits (2026-11-25)
+- Add marker trait declarations and optional `=` protocol body syntax
+- Add structural protocol conformance with `P201`–`P205` diagnostics
+- Scope conformance checks to protocols and traits referenced by generic bounds
+- Expose protocol and trait contracts from semantic analysis and project analysis
+- Repair extension type protocol generation and align the public API and docs
+- Last verified baseline remains 1396 tests; targeted regression and protocol/traits tests smoke-tested
+
 ### Phase 34: Standard Library Completion (2.41.0)

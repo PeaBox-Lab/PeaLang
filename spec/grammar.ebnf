@@ -1,5 +1,8 @@
 program          = { declaration } ;
-declaration      = variable_decl | constant_decl | function_decl | import_decl | export_decl | statement ;
+declaration      = variable_decl | constant_decl | function_decl | protocol_decl | trait_decl | import_decl | export_decl | statement ;
+protocol_decl    = "protocol", identifier, [ "=" ], "{", { protocol_method }, "}" ;
+protocol_method  = "function", identifier, "(", [ parameters ], ")", [ "->", type_ref ] ;
+trait_decl       = "trait", identifier, [ [ "=" ], "{", { protocol_method }, "}" ] ;
 variable_decl    = "let", identifier, [ ":", type_ref ], [ "=", expression ] ;
 constant_decl    = "const", identifier, [ ":", type_ref ], "=", expression ;
 function_decl    = [ "async" ], "function", identifier, [ "<", type_params, ">" ], "(", [ parameters ], ")", [ "->", type_ref ], block ;
