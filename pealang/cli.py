@@ -447,6 +447,67 @@ def main(argv=None):
                     print(f'{out}\nsha256 {h}')
                 return 0
 
+        if c=='plugin':
+            from .plugin_security import discover_plugins,init_plugin_manifest,load_trusted_plugin,scan_plugins,validate_plugin_manifest
+
+            sub=argv[1] if len(argv)>1 else None
+            args=argv[2:]
+
+            def _opt(flag,default=None):
+                for i,a in enumerate(args):
+                    if a==flag and i+1<len(args):return args[i+1]
+                return default
+
+            def _opts(flag):
+                return [args[i+1] for i,a in enumerate(args) if a==flag and i+1<len(args)]
+
+            def _pos(value_flags=()):
+                skip=set()
+                for flag in value_flags:
+                    for i,a in enumerate(args):
+                        if a==flag and i+1<len(args):skip.add(i+1)
+                return [a for i,a in enumerate(args) if not a.startswith('-') and i not in skip]
+
+            root=_opt('--root','.')
+            policy_path=_opt('--policy')
+            trust_store=_opt('--trust-store')
+
+            if sub=='init':
+                positional=_pos(('--root','--policy','--trust-store','--version','--description','--signature','--key-id','--capability','--function','--type','--operator','--namespace','--trusted-key'))
+                if len(positional)<2:
+                    print('Usage: pea plugin init <name> <module.py> [--root DIR] [--version VER] [--capability NAME] [--function NAME] [--type NAME] [--operator SYMBOL] [--namespace NAME] [--signature FILE] [--key-id ID] [--trusted-key ID] [--require-signature] [--policy FILE]');return 1
+                result=init_plugin_manifest(
+                    root,positional[0],positional[1],_opt('--version','0.1.0'),
+                    description=_opt('--description',''),
+                    capabilities=_opts('--capability'),functions=_opts('--function'),
+                    types=_opts('--type'),operators=_opts('--operator'),
+                    namespaces=_opts('--namespace'),signature=_opt('--signature'),
+                    key_id=_opt('--key-id'),policy_path=policy_path,
+                    require_signature='--require-signature' in args,
+                    trusted_key_ids=_opts('--trusted-key'),
+                )
+                print(json.dumps(result,indent=2));return 0
+            if sub=='list':
+                from .plugin_security import PluginPolicy,load_plugin_policy
+                policy=None
+                if policy_path:
+                    policy,_=load_plugin_policy(root,policy_path)
+                report=scan_plugins(root,policy=policy,policy_path=policy_path,trust_store=trust_store)
+                print(json.dumps(report,indent=2));return 0 if report['ok'] else 1
+            if sub=='verify':
+                positional=_pos(('--root','--policy','--trust-store'))
+                if not positional:
+                    print('Usage: pea plugin verify <manifest.json> [--root DIR] [--policy FILE] [--trust-store PATH]');return 1
+                report=validate_plugin_manifest(positional[0],root,policy_path=policy_path,trust_store=trust_store)
+                print(json.dumps(report,indent=2));return 0 if report['ok'] else 1
+            if sub=='load':
+                positional=_pos(('--root','--policy','--trust-store'))
+                if not positional:
+                    print('Usage: pea plugin load <manifest.json> [--root DIR] [--policy FILE] [--trust-store PATH]');return 1
+                report=load_trusted_plugin(positional[0],root,policy_path=policy_path,trust_store=trust_store)
+                print(json.dumps(report,indent=2));return 0
+            print('Usage: pea plugin init|list|verify|load ...');return 1
+
         if c=='cache':
             from .offline_cache import cache_package,find_cached,list_cached,remove_cached,export_cache,import_cache
             sub=argv[1] if len(argv)>1 else None
@@ -2176,7 +2237,7 @@ def main(argv=None):
 
         if allow:argv.remove('--allow-process')
 
-        if len(argv)!=1:print('Usage: pea [run|eval|repl|check|lint|fmt|test|compile|vm|dis|init|new|serve-web|doctor|health|help|quickstart|scaffold|templates|info|project|docs|registry|publish|search|browse|login|logout|ext|portal|market|analyze|web-openapi|hash|tree|env|typecheck|typecheck-project|readiness|audit|workspace|cache|stdlib] ...',file=sys.stderr);return 2
+        if len(argv)!=1:print('Usage: pea [run|eval|repl|check|lint|fmt|test|compile|vm|dis|init|new|serve-web|doctor|health|help|quickstart|scaffold|templates|info|project|docs|registry|publish|search|browse|login|logout|ext|portal|market|analyze|web-openapi|hash|tree|env|typecheck|typecheck-project|readiness|audit|workspace|cache|plugin|stdlib] ...',file=sys.stderr);return 2
 
         return run_file(argv[0],allow)
 

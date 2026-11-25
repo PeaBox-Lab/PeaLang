@@ -162,4 +162,11 @@
 - Add `pea cache put|get|list|remove|export|import`, `pea install --offline [--cache-dir DIR]`, and public API exports
 - Last verified baseline remains 1396 tests; functionality smoke-tested with cache put/list/get, bundle export/import, and offline verified install
 
+## 2.41.0 - Phase 60: Trusted Plugin Manifests (2026-11-25)
+- Add `PluginManifest`, `PluginPolicy`, checksum-validated discovery, and capability allow-list enforcement
+- Add optional Ed25519 plugin signature verification through the configured trust store, with revoked-key rejection
+- Add `load_trusted_plugin()` to import only verified modules and register only declared extension symbols
+- Add `pea plugin init|list|verify|load` and public API exports
+- Last verified baseline remains 1396 tests; functionality smoke-tested with manifest init, policy denial, signed load, and unsigned rejection
+
 ### Phase 34: Standard Library Completion (2.41.0)

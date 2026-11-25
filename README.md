@@ -669,6 +669,24 @@ deterministic gzip bundle for air-gapped machines. Offline verified installs reu
 the cached package and signature, recheck the SHA-256, and still require Ed25519
 verification through `--public-key`, `--key-id`, or the configured trust store.
 
+### Trusted plugins and capability policy
+
+```bash
+pea plugin init myplugin plugins/myplugin.py --capability language-function --function greet
+pea plugin init myplugin plugins/myplugin.py --signature plugins/myplugin.py.sig --key-id KEY_ID --trusted-key KEY_ID --require-signature
+pea plugin list [--root DIR] [--policy FILE] [--trust-store PATH]
+pea plugin verify .pealang/plugins/myplugin.json [--root DIR] [--policy FILE]
+pea plugin load .pealang/plugins/myplugin.json [--root DIR] [--policy FILE] [--trust-store PATH]
+```
+
+Plugin manifests live in `.pealang/plugins/*.json` and record the plugin module,
+version, declared symbols, SHA-256, and optional detached Ed25519 signature. The
+policy at `.pealang/plugin-policy.json` allow-lists capabilities and signing keys;
+unknown capabilities, checksum changes, untrusted keys, revoked keys, and invalid
+signatures stop loading before any plugin code is imported. `pea plugin load` registers
+only the declared functions, types, operators, and namespaces with the extension
+registry.
+
 ### Project queries
 
 ```bash

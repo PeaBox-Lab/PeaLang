@@ -121,3 +121,7 @@ enterprise and cloud codebases can manage many PeaLang packages as one unit.
 **Phase 59 — Offline Package Cache and Air-Gapped Installs** adds a content-addressed
 cache, portable bundles, and verified offline installs so regulated, embedded, and
 air-gapped environments can reuse signed packages without reaching a registry.
+
+**Phase 60 — Trusted Plugin Manifests** completes the Wave 0 trust foundation with
+checksummed plugin declarations, capability allow-lists, and optional Ed25519 plugin
+signatures. Hosts can enable language extensions without importing unverified code.
