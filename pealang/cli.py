@@ -627,6 +627,22 @@ def main(argv=None):
 
             p=argparse.ArgumentParser(prog='pea vm');p.add_argument('file');p.add_argument('--max-instructions',type=int,default=100000);a=p.parse_args(argv[1:]);path=Path(a.file);m=BytecodeModule.load(path) if path.suffix=='.peac' else compile_source_to_bytecode(path.read_text(encoding='utf-8'),str(path));VirtualMachine(print,a.max_instructions).run(m);return 0
 
+        if c=='optimize':
+
+            from .bytecode_optimizer import (bytecode_optimizer_gate,optimize_bytecode,optimize_report,verify_optimization)
+
+            from .compiler import compile_source_to_bytecode
+
+            p=argparse.ArgumentParser(prog='pea optimize');p.add_argument('file');p.add_argument('-o','--output');p.add_argument('--no-constant-folding',action='store_true');p.add_argument('--no-dead-push-pop',action='store_true');p.add_argument('--no-unreachable-code',action='store_true');p.add_argument('--verify',action='store_true');p.add_argument('--max-instructions',type=int,default=100000);a=p.parse_args(argv[1:]);path=Path(a.file)
+            try:module=BytecodeModule.load(path) if path.suffix=='.peac' else compile_source_to_bytecode(path.read_text(encoding='utf-8'),str(path))
+            except Exception as e:print(f'Optimize failed: {e}');return 1
+            hints={'constant_folding':not a.no_constant_folding,'dead_push_pop':not a.no_dead_push_pop,'unreachable_code':not a.no_unreachable_code};optimized=optimize_bytecode(module,**hints);report=optimize_report(module,**hints)
+            if a.verify:
+                try:report['parity']=verify_optimization(module,optimized,max_instructions=a.max_instructions)
+                except Exception as e:report['parity']={'ok':False,'error':str(e)}
+            if a.output:optimized.save(a.output);report['output']=a.output
+            print(json.dumps(report,indent=2,default=str));return 0 if bytecode_optimizer_gate(report)['gate']=='PASS' else 1
+
         if c=='semantic':
 
             from .type_system import SemanticAnalyzer
@@ -957,7 +973,7 @@ def main(argv=None):
             else:
                 from .stdlib import stdlib_manifest
                 sm=stdlib_manifest();mods=sm.get('modules',sm)
-                info={'version':__version__,'stdlib':list(mods.keys()) if isinstance(mods,dict) else mods,'commands':['run','eval','repl','check','lint','fmt','test','compile','vm','dis','init','new','serve-web','doctor','health','diagnose','help','templates','info','project','serve','stdlib','typecheck','typecheck-project','docs','analyze','web-openapi','openapi','openapi-contract','hash','tree','env','quickstart','scaffold','readiness','audit','conformance','conformance-v2','freeze']}
+                info={'version':__version__,'stdlib':list(mods.keys()) if isinstance(mods,dict) else mods,'commands':['run','eval','repl','check','lint','fmt','test','compile','vm','dis','init','new','serve-web','doctor','health','diagnose','help','templates','info','project','serve','stdlib','typecheck','typecheck-project','docs','analyze','web-openapi','openapi','openapi-contract','hash','tree','env','quickstart','scaffold','readiness','audit','conformance','conformance-v2','freeze','optimize']}
                 print(json.dumps(info,indent=2));return 0
 
         if c=='project':print(json.dumps(project_info(argv[1] if len(argv)>1 else '.'),indent=2));return 0

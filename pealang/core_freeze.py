@@ -23,7 +23,7 @@ from typing import Any
 from .conformance_suite import conformance_report_v2
 from .hardening import PublicAPIGate
 from .rc_stabilization import public_api_snapshot
-from .specification import verify_spec
+from .specification import SPEC_VERSION, verify_spec
 
 CORE_VERSION = '3.0'
 FREEZE_RELEASE = '3.1.37'
@@ -109,28 +109,38 @@ def _package_version() -> str | None:
 
 
 def core_freeze_gate(*, api=None, conformance=None, spec=None,
-                     manifest=None, release=None) -> dict[str, Any]:
-    """Reduce freeze inputs to a stable PASS/FAIL report."""
+                     manifest=None, release=None,
+                     package_version=None) -> dict[str, Any]:
+    """Reduce freeze inputs to a stable PASS/FAIL report.
+
+    ``release`` identifies the release line that froze the core and never
+    changes with later releases. Version checks compare the current package
+    and specification versions with each other so later releases can still
+    prove consistency without re-freezing the manifest (and its digest).
+    """
 
     release = release or FREEZE_RELEASE
     manifest = manifest or default_core_manifest()
+    package_version = package_version or _package_version()
     checks = {
         'public_api': bool(api and api.get('gate') == 'PASS'),
         'conformance': bool(conformance and conformance.get('suite', {}).get('ok')),
         'specification': bool(
-            spec and spec.get('ok') and spec.get('version') == release),
+            spec and spec.get('ok') and spec.get('version') == SPEC_VERSION),
         'surfaces': (
             len(manifest.surfaces) == len(CORE_SURFACES)
             and all(surface.stability == 'frozen'
                     for surface in manifest.surfaces.values())
         ),
-        'version': _package_version() == release,
+        'version': package_version == SPEC_VERSION,
     }
     issues = [name for name, passed in checks.items() if not passed]
     return {
         'gate': 'PASS' if not issues else 'FAIL',
         'release': release,
         'core_version': CORE_VERSION,
+        'spec_version': SPEC_VERSION,
+        'package_version': package_version,
         'checks': checks,
         'issues': issues,
         'digest': manifest.digest(),

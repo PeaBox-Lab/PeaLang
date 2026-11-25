@@ -1,3 +1,9 @@
+## 3.1.38 - Phase 71: Bytecode Optimizer (2026-11-26)
+- Start Wave 2 with conservative peephole passes over portable PeaLang bytecode
+- Fold literal arithmetic/comparisons, remove dead literal pushes, and remove unreachable blocks with remapped jump targets
+- Add `pea optimize` with optional VM output/result parity verification and a deterministic optimization digest
+- Align current release metadata to 3.1.38 while keeping the frozen 3.0 manifest digest pinned
+
 ## 3.1.37 - Phase 70: Frozen 3.0 Core (2026-11-26)
 - Freeze the Wave 1 language core behind a versioned surface manifest and stable gate
 - Add `pea freeze` as a CI prerequisite that checks API compatibility, conformance, spec completeness, and version agreement

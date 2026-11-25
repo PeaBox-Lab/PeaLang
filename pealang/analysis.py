@@ -210,6 +210,9 @@ from .supply_chain import (PackageMetadata as _sc_package_metadata,
     SupplyChainIndex as _sc_supply_chain_index)
 from .jit_compiler import (optimize_instructions as _jit_optimize,
     build_jit_namespace as _jit_build_namespace)
+from .bytecode_optimizer import (build_bytecode_optimizer_namespace as _bytecode_optimizer_build_namespace,
+    optimize_bytecode as _bytecode_optimize, optimize_report as _bytecode_optimize_report,
+    verify_optimization as _bytecode_verify_optimization)
 from .ai_ml import (build_ai_ml_namespace as _ai_ml_build_namespace)
 from .debugger import (build_debugger_namespace as _debugger_build_namespace)
 from .serverless import build_serverless_namespace as _serverless_build_namespace
@@ -3550,6 +3553,10 @@ def build_analysis_namespace() -> dict[str, Any]:
         "PackageIndex": _vm_package_index,
         "mmap_read": _perf_mmap_read,
         "OptimizeInstructions": _jit_optimize,
+        "BytecodeOptimizer": _bytecode_optimize,
+        "BytecodeOptimizerReport": _bytecode_optimize_report,
+        "VerifyOptimization": _bytecode_verify_optimization,
+        "BytecodeOptimizerNamespace": _bytecode_optimizer_build_namespace,
         "AIML": _ai_ml_build_namespace,
         "Debugger": _debugger_build_namespace,
         "Ecosystem": _ecosystem_build_namespace,

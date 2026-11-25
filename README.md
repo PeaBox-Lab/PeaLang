@@ -8,9 +8,9 @@ PeaLang is designed to complement existing ecosystems such as Python, FastAPI, J
 
 ## Release Status
 
-**Version: 3.1.37** — current tagged release across package, SDK, runtime, and specification metadata.
+**Version: 3.1.38** — current tagged release across package, SDK, runtime, and specification metadata.
 
-`3.1.37` is the unified release identifier for the tagged v3.1.37 line. Source version, SDK packages, container image label, runtime health output, registry user agent, release manifest, and language specification now report the same version. Historical release notes are kept in `docs/releases/` for provenance, but they do not define the current version.
+`3.1.38` is the unified release identifier for the tagged v3.1.38 line. Source version, SDK packages, container image label, runtime health output, registry user agent, release manifest, and language specification now report the same version. Historical release notes are kept in `docs/releases/` for provenance, but they do not define the current version.
 
 See `ROADMAP.md` for the forward-looking plan, `CHANGELOG.md` for per-feature history, and `docs/CROSS_SECTOR_ADOPTION_PLAN.md` for the plan to make PeaLang credible across enterprise, data, web, mobile, games, embedded, and cloud sectors.
 
@@ -860,6 +860,20 @@ an explicit `CORE_SURFACES` manifest. `verify_core_freeze()` returns the same
 PASS/FAIL report to hosts, and `core_freeze_report()` includes the manifest
 digest for release evidence. Additions remain compatible; unexpected public API
 removals fail the gate.
+
+### Bytecode optimizer
+
+```bash
+pea optimize app.pea --verify
+```
+
+Phase 71 opens Wave 2 with a conservative peephole optimizer for portable
+`.peac` bytecode. It folds literal arithmetic and comparisons, removes dead
+literal pushes, and removes unreachable blocks while remapping every jump,
+handler, and iterator target. Optimization operates on a deep copy, so the
+original module stays available for comparison. `optimize_report()` returns
+pass counts, a deterministic digest, and a PASS/FAIL gate; `--verify` runs both
+modules on the VM and compares output and result before reporting success.
 
 ### Project queries
 

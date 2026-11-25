@@ -16,13 +16,14 @@ from pealang import (
     feature_status,
 )
 from pealang.help import help as pea_help
+from pealang.specification import SPEC_VERSION
 
 
 def _passing_inputs():
     return {
         'api': {'gate': 'PASS'},
         'conformance': {'suite': {'ok': True}},
-        'spec': {'ok': True, 'version': FREEZE_RELEASE},
+        'spec': {'ok': True, 'version': SPEC_VERSION},
     }
 
 
@@ -89,7 +90,9 @@ def test_verify_core_freeze_passes_against_repository():
 
     result = verify_core_freeze()
     assert result['gate'] == 'PASS', result
-    assert result['release'] == pealang.__version__ == FREEZE_RELEASE
+    assert result['release'] == FREEZE_RELEASE
+    assert result['spec_version'] == result['package_version'] == pealang.__version__
+    assert result['digest'] == default_core_manifest().digest()
     assert all(result['checks'].values())
 
 

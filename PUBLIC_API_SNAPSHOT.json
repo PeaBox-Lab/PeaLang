@@ -2522,6 +2522,66 @@
       "signature": "(root=?)"
     },
     {
+      "module": "pealang.bytecode_optimizer",
+      "name": "OptimizationStats",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.bytecode_optimizer",
+      "name": "fold_constants",
+      "kind": "function",
+      "signature": "(instructions,constants)"
+    },
+    {
+      "module": "pealang.bytecode_optimizer",
+      "name": "remove_dead_pushes",
+      "kind": "function",
+      "signature": "(instructions)"
+    },
+    {
+      "module": "pealang.bytecode_optimizer",
+      "name": "remove_unreachable",
+      "kind": "function",
+      "signature": "(instructions)"
+    },
+    {
+      "module": "pealang.bytecode_optimizer",
+      "name": "BytecodeOptimizer",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.bytecode_optimizer",
+      "name": "optimize_bytecode",
+      "kind": "function",
+      "signature": "(module)"
+    },
+    {
+      "module": "pealang.bytecode_optimizer",
+      "name": "optimize_report",
+      "kind": "function",
+      "signature": "(module)"
+    },
+    {
+      "module": "pealang.bytecode_optimizer",
+      "name": "bytecode_optimizer_gate",
+      "kind": "function",
+      "signature": "(report)"
+    },
+    {
+      "module": "pealang.bytecode_optimizer",
+      "name": "verify_optimization",
+      "kind": "function",
+      "signature": "(before,after)"
+    },
+    {
+      "module": "pealang.bytecode_optimizer",
+      "name": "build_bytecode_optimizer_namespace",
+      "kind": "function",
+      "signature": "()"
+    },
+    {
       "module": "pealang.conformance_quality",
       "name": "run_conformance_suite",
       "kind": "function",

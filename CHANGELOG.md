@@ -1,4 +1,13 @@
 # Changelog
+## 3.1.38 - Phase 71: Bytecode Optimizer (2026-11-26)
+- Add `BytecodeOptimizer`, `optimize_bytecode()`, `optimize_report()`, and `verify_optimization()` for portable `.peac` bytecode
+- Add three conservative passes: constant folding, dead literal push/pop removal, and unreachable-code removal with jump-target remapping
+- Optimization runs on a deep copy, preserves line numbers, and exposes pass counts plus a deterministic digest for release evidence
+- Add a `pea optimize FILE.pea [--verify] [-o OUT.peac]` command, an `optimize` help topic, and a stable `runtime.bytecode_optimizer_v3` feature flag
+- Keep the frozen 3.0 manifest digest pinned to 3.1.37 while version checks compare current package and specification versions
+- Align current release metadata to 3.1.38 and open Wave 2 without changing language behavior
+- Targeted optimizer, parity, freeze, version, and conformance tests smoke-tested
+
 ## 3.1.37 - Phase 70: Frozen 3.0 Core (2026-11-26)
 - Add `CoreSurface`, `CoreFreezeManifest`, and a canonical frozen 3.0 core surface manifest
 - Add `core_freeze_gate()`, `verify_core_freeze()`, and `core_freeze_report()` for stable release checks

@@ -1,6 +1,6 @@
 # PeaLang User Guide
 
-This guide covers the PeaLang 3.1.37 release (unified versioning; supersedes the 1.0.0-experience and 0.99.6 baselines).
+This guide covers the PeaLang 3.1.38 release (unified versioning; supersedes the 1.0.0-experience and 0.99.6 baselines).
 
 ## Installation and Setup
 
@@ -158,6 +158,19 @@ The frozen-core gate checks that public API removals have not appeared, the v2
 conformance suite passes, the specification is complete for the current release,
 the version surfaces agree, and all declared `CORE_SURFACES` remain frozen.
 `verify_core_freeze()` provides the same gate to host programs.
+
+### Bytecode optimizer
+```bash
+pea optimize app.pea --verify
+pea optimize app.pea -o app.opt.peac
+```
+Compile or load a `.peac` artifact and apply constant folding, dead literal
+push/pop removal, and unreachable-code removal. The report shows pass counts,
+before/after sizes, and a digest. `--verify` executes the original and optimized
+modules on the VM and requires identical output and results. Individual passes
+can be disabled with `--no-constant-folding`, `--no-dead-push-pop`, and
+`--no-unreachable-code`. Host programs can use `optimize_bytecode()`,
+`optimize_report()`, and `verify_optimization()` directly.
 
 ### Optional chaining and null coalescing
 ```pea
