@@ -12,6 +12,7 @@ import hashlib
 import io
 import json
 import os
+import re
 import tarfile
 import time
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
@@ -20,7 +21,7 @@ from typing import Any
 
 from .errors import PeaError
 from .package_manager import load_pea_toml
-from .registry_index import PackageRecord, RegistryIndex, build_index, validate_index
+from .registry_index import PackageRecord, RegistryIndex, NamespacePolicy, build_index, validate_index, namespace_from_package
 from .ed25519_signing import (
     generate_ed25519_keypair,
     sign_ed25519,
@@ -48,6 +49,9 @@ class RegistryServer:
         self.sequence = 0
         self.packages: list[dict] = []
         self.publisher_tokens: dict[str, str] = {}  # token -> publisher_id
+        self.namespace_path = self.storage_dir / "namespaces.json"
+        self.namespace_policy = NamespacePolicy()
+        self._load_namespaces()
 
         # Setup signing keys
         if private_key_path and public_key_path:
@@ -86,6 +90,35 @@ class RegistryServer:
         index = build_index(self.registry_name, self.sequence, self.packages)
         index.save(str(self.index_path))
 
+    def _load_namespaces(self) -> None:
+        if self.namespace_path.exists():
+            data = json.loads(self.namespace_path.read_text(encoding="utf-8"))
+            self.namespace_policy.bindings = {
+                name: set(keys) for name, keys in data.get("namespaces", {}).items()
+            }
+
+    def _save_namespaces(self) -> None:
+        data = {"namespaces": {name: sorted(keys) for name, keys in self.namespace_policy.bindings.items()}}
+        self.namespace_path.write_text(json.dumps(data, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+
+    def authorize_namespace(self, namespace: str, principal: str) -> bool:
+        if not re.fullmatch(r"[A-Za-z0-9_.-]+", namespace) or ".." in namespace:
+            raise PeaError("Invalid namespace")
+        self.namespace_policy.authorize(namespace, principal)
+        self._save_namespaces()
+        return True
+
+    def namespace_list(self) -> dict[str, list[str]]:
+        return {name: sorted(keys) for name, keys in self.namespace_policy.bindings.items()}
+
+    def _namespace_for(self, name: str, namespace: str | None, principal: str) -> str:
+        if not re.fullmatch(r"[A-Za-z0-9_.-]+", name) or ".." in name:
+            raise PeaError("Invalid package name")
+        resolved = namespace or (namespace_from_package(name) if "." in name else principal)
+        if resolved != principal:
+            self.namespace_policy.check_namespace(resolved, principal)
+        return resolved
+
     def _auth_token(self, token: str | None) -> str | None:
         """Validate bearer token, return publisher_id or None."""
         if token is None:
@@ -109,10 +142,21 @@ class RegistryServer:
         """Register a publisher token for package uploads."""
         self.publisher_tokens[token] = publisher_id
 
-    def list_packages(self) -> dict[str, Any]:
-        """Return all packages with their versions."""
+    def _visible(self, package: dict, viewer: str | None) -> bool:
+        if package.get("visibility", "public") == "public":
+            return True
+        if viewer is None:
+            return False
+        allowed = set(package.get("allowed_principals", []))
+        allowed.add(package.get("publisher_id", ""))
+        return viewer in allowed
+
+    def list_packages(self, viewer: str | None = None) -> dict[str, Any]:
+        """Return packages visible to the given publisher principal."""
         result: dict[str, list[dict]] = {}
         for p in self.packages:
+            if not self._visible(p, viewer):
+                continue
             result.setdefault(p["name"], []).append({
                 "version": p["version"],
                 "sha256": p["sha256"],
@@ -121,11 +165,13 @@ class RegistryServer:
                 "signature_key_id": p.get("signature_key_id", p.get("publisher_key_id", "")),
                 "published": p["published"],
                 "publisher": p.get("publisher_key_id", ""),
+                "namespace": p.get("namespace", ""),
+                "visibility": p.get("visibility", "public"),
             })
         return result
 
-    def get_package_info(self, name: str) -> dict[str, Any] | None:
-        versions = [p for p in self.packages if p["name"] == name]
+    def get_package_info(self, name: str, viewer: str | None = None) -> dict[str, Any] | None:
+        versions = [p for p in self.packages if p["name"] == name and self._visible(p, viewer)]
         if not versions:
             return None
         return {
@@ -135,9 +181,17 @@ class RegistryServer:
 
     def upload_package(self, name: str, version: str, package_bytes: bytes,
                        publisher_id: str, token: str,
-                       signature_envelope: str | None = None) -> dict[str, Any]:
+                       signature_envelope: str | None = None,
+                       namespace: str | None = None,
+                       visibility: str = "public",
+                       allowed_principals: list[str] | None = None) -> dict[str, Any]:
         """Upload a .pelib package to the registry."""
         self._require_auth(token)
+        if visibility not in ("public", "private"):
+            raise PeaError("Visibility must be public or private")
+        resolved_namespace = self._namespace_for(name, namespace, publisher_id)
+        allowed = set(allowed_principals or [])
+        allowed.add(publisher_id)
 
         pkg_dir = self._package_dir(name)
         pkg_dir.mkdir(parents=True, exist_ok=True)
@@ -203,6 +257,10 @@ class RegistryServer:
             "publisher_key_id": signature_key_id,
             "signature_key_id": signature_key_id,
             "publisher_signature": publisher_signature,
+            "publisher_id": publisher_id,
+            "namespace": resolved_namespace,
+            "visibility": visibility,
+            "allowed_principals": sorted(allowed),
             "published": int(time.time()),
             "expires": None,
         }
@@ -218,25 +276,35 @@ class RegistryServer:
             "published": record["published"],
             "signature_key_id": signature_key_id,
             "publisher_signature": publisher_signature,
+            "namespace": resolved_namespace,
+            "visibility": visibility,
         }
 
-    def download_package(self, name: str, version: str) -> bytes | None:
+    def _check_download_access(self, name: str, version: str, viewer: str | None) -> None:
+        record = next((p for p in self.packages if p["name"] == name and p["version"] == version), None)
+        if record and not self._visible(record, viewer):
+            raise PeaError(f"Package {name} {version} is private")
+
+    def download_package(self, name: str, version: str, viewer: str | None = None) -> bytes | None:
         """Download a .pelib package."""
+        self._check_download_access(name, version, viewer)
         pkg_path = self._package_file(name, version)
         if not pkg_path.exists():
             return None
         return pkg_path.read_bytes()
 
-    def download_signature(self, name: str, version: str) -> bytes | None:
+    def download_signature(self, name: str, version: str, viewer: str | None = None) -> bytes | None:
         """Download package signature."""
+        self._check_download_access(name, version, viewer)
         sig_path = self._signature_file(name, version)
         if not sig_path.exists():
             return None
         return sig_path.read_bytes()
 
-    def get_index(self) -> dict[str, Any]:
-        """Return the signed registry index."""
-        index = RegistryIndex(self.registry_name, self.sequence, int(time.time()), self.packages)
+    def get_index(self, viewer: str | None = None) -> dict[str, Any]:
+        """Return the registry index filtered to packages visible to the viewer."""
+        packages = [p for p in self.packages if self._visible(p, viewer)]
+        index = RegistryIndex(self.registry_name, self.sequence, int(time.time()), packages)
         return {
             "registry": index.registry,
             "sequence": index.sequence,
@@ -274,21 +342,27 @@ class RegistryHandler(BaseHTTPRequestHandler):
             return auth[7:]
         return None
 
+    def _viewer(self) -> str | None:
+        token = self._auth_token()
+        return self.server.server._auth_token(token) if token else None
+
     def do_GET(self) -> None:
         path = self.path
 
+        viewer = self._viewer()
+
         if path == "/api/v1/packages":
-            self.send_json(200, {"packages": self.server.server.list_packages()})
+            self.send_json(200, {"packages": self.server.server.list_packages(viewer)})
             return
 
         if path == "/api/v1/index":
-            self.send_json(200, self.server.server.get_index())
+            self.send_json(200, self.server.server.get_index(viewer))
             return
 
         # /api/v1/packages/<name>
         if path.startswith("/api/v1/packages/") and path.count("/") == 4:
             name = path.split("/")[4]
-            info = self.server.server.get_package_info(name)
+            info = self.server.server.get_package_info(name, viewer)
             if info is None:
                 self.send_json(404, {"error": f"Package {name} not found"})
                 return
@@ -299,26 +373,30 @@ class RegistryHandler(BaseHTTPRequestHandler):
         if path.startswith("/api/v1/packages/") and path.count("/") == 6:
             parts = path.split("/")
             name, version = parts[4], parts[5]
-            if parts[6] == "download":
-                data = self.server.server.download_package(name, version)
-                if data is None:
-                    self.send_json(404, {"error": f"Package {name} {version} not found"})
+            try:
+                if parts[6] == "download":
+                    data = self.server.server.download_package(name, version, viewer)
+                    if data is None:
+                        self.send_json(404, {"error": f"Package {name} {version} not found"})
+                        return
+                    self.send_response(200)
+                    self.send_header("Content-Type", "application/gzip")
+                    self.send_header("Content-Length", str(len(data)))
+                    self.end_headers()
+                    self.wfile.write(data)
                     return
-                self.send_response(200)
-                self.send_header("Content-Type", "application/gzip")
-                self.send_header("Content-Length", str(len(data)))
-                self.end_headers()
-                self.wfile.write(data)
-                return
-            if parts[6] == "signature":
-                data = self.server.server.download_signature(name, version)
-                if data is None:
-                    self.send_json(404, {"error": f"Signature for {name} {version} not found"})
+                if parts[6] == "signature":
+                    data = self.server.server.download_signature(name, version, viewer)
+                    if data is None:
+                        self.send_json(404, {"error": f"Signature for {name} {version} not found"})
+                        return
+                    self.send_response(200)
+                    self.send_header("Content-Type", "application/json")
+                    self.end_headers()
+                    self.wfile.write(data)
                     return
-                self.send_response(200)
-                self.send_header("Content-Type", "application/json")
-                self.end_headers()
-                self.wfile.write(data)
+            except PeaError as e:
+                self.send_json(403, {"error": str(e)})
                 return
 
         self.send_json(404, {"error": "not found"})
@@ -341,8 +419,17 @@ class RegistryHandler(BaseHTTPRequestHandler):
                 header = self.headers.get("X-PeaLang-Signature")
                 if header:
                     signature_envelope = base64.b64decode(header, validate=True).decode("utf-8")
-                result = self.server.server.upload_package(name, version, body, publisher_id, token,
-                                                    signature_envelope=signature_envelope)
+                namespace = self.headers.get("X-PeaLang-Namespace")
+                visibility = self.headers.get("X-PeaLang-Visibility", "public")
+                allowed_header = self.headers.get("X-PeaLang-Allow", "")
+                allowed = [item for item in (part.strip() for part in allowed_header.split(",")) if item]
+                result = self.server.server.upload_package(
+                    name, version, body, publisher_id, token,
+                    signature_envelope=signature_envelope,
+                    namespace=namespace,
+                    visibility=visibility,
+                    allowed_principals=allowed,
+                )
                 self.send_json(201, {
                     "ok": True,
                     "name": result["name"],
@@ -351,6 +438,8 @@ class RegistryHandler(BaseHTTPRequestHandler):
                     "published": result["published"],
                     "signature_key_id": result["signature_key_id"],
                     "publisher_signature": result["publisher_signature"],
+                    "namespace": result["namespace"],
+                    "visibility": result["visibility"],
                 })
                 return
             except PeaError as e:

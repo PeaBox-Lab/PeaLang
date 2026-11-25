@@ -128,7 +128,7 @@ from .secure_packages import safe_extract,write_receipt,validate_remote_source,d
 from .ed25519_signing import Ed25519Envelope,PublicTrustStore,default_trust_store_path,generate_ed25519_keypair,public_key_bytes,public_key_id,sign_ed25519,verify_ed25519
 from .registry import PackageCache,install_verified,remote_install,verify_registry_index
 
-from .registry_index import PackageRecord,RegistryIndex,NamespacePolicy,RegistryState,build_index,validate_index
+from .registry_index import PackageRecord,RegistryIndex,NamespacePolicy,RegistryState,build_index,validate_index,namespace_from_package
 from .registry_auth import registry_token,bearer_headers
 
 from .compatibility import Stability,Feature,FEATURES,feature_status,stable_features,validate_deprecation

@@ -29,13 +29,15 @@ def validate_index(index,expected_registry=None,last_sequence=None,now=None):
   if p.get('expires') and now>p['expires']:raise PeaError(f'Package metadata expired: {p["name"]} {p["version"]}')
   if not p['url'].startswith('https://') or not p['signature_url'].startswith('https://'):raise PeaError('Registry package URLs must use HTTPS')
  return True
+def namespace_from_package(package):
+ return package.split('/',1)[0] if '/' in package else package.split('.',1)[0]
 class NamespacePolicy:
  def __init__(self):self.bindings={}
  def authorize(self,namespace,key_id):self.bindings.setdefault(namespace,set()).add(key_id)
- def check(self,package,key_id):
-  namespace=package.split('/',1)[0] if '/' in package else package.split('.',1)[0]
+ def check_namespace(self,namespace,key_id):
   if key_id not in self.bindings.get(namespace,set()):raise PeaError(f'Publisher {key_id} is not authorized for namespace {namespace}')
   return True
+ def check(self,package,key_id):return self.check_namespace(namespace_from_package(package),key_id)
 class RegistryState:
  def __init__(self,path):self.path=Path(path);self.data={'sequences':{},'versions':{}};self.load()
  def load(self):

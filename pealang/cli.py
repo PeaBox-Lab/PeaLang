@@ -739,15 +739,19 @@ def main(argv=None):
 
                 name=argv[1]
                 registry='http://127.0.0.1:8788'
+                token=None
 
                 i=2
                 while i+1<len(argv):
                     if argv[i]=='--registry':registry=argv[i+1];i+=2;continue
+                    if argv[i]=='--token':token=argv[i+1];i+=2;continue
                     i+=1
 
                 url=f'{registry}/api/v1/packages/{name}'
+                request=urllib.request.Request(url)
+                if token:request.add_header('Authorization','Bearer '+token)
                 try:
-                    with urllib.request.urlopen(url) as resp:
+                    with urllib.request.urlopen(request) as resp:
                         info=_json.loads(resp.read().decode())
                         print(f'Package: {info["name"]}')
                         for v in info.get('versions',[]):
@@ -1102,6 +1106,44 @@ def main(argv=None):
                 else:print(f"{name} {selected['version']} from {registry} sha256={selected.get('sha256','')}")
                 return 0
 
+            if sub=='namespace':
+
+                from .registry_server import RegistryServer
+
+                action=argv[2] if len(argv)>2 else None
+
+                storage='./registry-storage'
+
+                positional=[]
+
+                i=3
+
+                while i<len(argv):
+
+                    if argv[i]=='--storage' and i+1<len(argv):storage=argv[i+1];i+=2;continue
+
+                    positional.append(argv[i]);i+=1
+
+                srv=RegistryServer(storage)
+
+                if action in ('create','allow'):
+
+                    if len(positional)<2:
+
+                        print(f'Usage: pea registry namespace {action} <namespace> <principal> [--storage DIR]');return 1
+
+                    namespace,principal=positional[0],positional[1]
+
+                    srv.authorize_namespace(namespace,principal)
+
+                    print(json.dumps({'ok':True,'namespace':namespace,'principal':principal},indent=2));return 0
+
+                if action=='list':
+
+                    print(json.dumps(srv.namespace_list(),indent=2,sort_keys=True));return 0
+
+                print('Usage: pea registry namespace create|allow|list ...');return 1
+
             if sub=='register-publisher':
 
                 token=argv[2] if len(argv)>2 else None
@@ -1110,11 +1152,21 @@ def main(argv=None):
 
                 if not token or not publisher:
 
-                    print('Usage: pea registry register-publisher <token> <publisher-id>');return 1
+                    print('Usage: pea registry register-publisher <token> <publisher-id> [--storage DIR]');return 1
 
                 from .registry_server import RegistryServer
 
-                srv=RegistryServer('./registry-storage')
+                storage='./registry-storage'
+
+                i=4
+
+                while i+1<len(argv):
+
+                    if argv[i]=='--storage':storage=argv[i+1];i+=2;continue
+
+                    i+=1
+
+                srv=RegistryServer(storage)
 
                 srv.register_publisher(token,publisher)
 
@@ -1122,7 +1174,7 @@ def main(argv=None):
 
                 return 0
 
-            print('Usage: pea registry serve|resolve|register-publisher|keys ...');return 1
+            print('Usage: pea registry serve|resolve|register-publisher|keys|namespace ...');return 1
 
         if c=='ext':
 
@@ -1547,6 +1599,9 @@ def main(argv=None):
                 private_key=None
                 publisher=None
                 trust_store=None
+                namespace=None
+                private=False
+                allowed=[]
                 i=2
                 while i<len(argv):
                     arg=argv[i]
@@ -1555,12 +1610,15 @@ def main(argv=None):
                     if arg=='--private-key' and i+1<len(argv):private_key=argv[i+1];i+=2;continue
                     if arg=='--publisher' and i+1<len(argv):publisher=argv[i+1];i+=2;continue
                     if arg=='--trust-store' and i+1<len(argv):trust_store=argv[i+1];i+=2;continue
+                    if arg=='--namespace' and i+1<len(argv):namespace=argv[i+1];i+=2;continue
+                    if arg=='--allow' and i+1<len(argv):allowed.append(argv[i+1]);i+=2;continue
+                    if arg=='--private':private=True;i+=1;continue
                     if arg=='--dry-run':dry_run=True;i+=1;continue
                     if arg=='--sign':sign=True;i+=1;continue
                     if path is None:path=arg
                     i+=1
                 if not path:
-                    print('Usage: pea lib publish <path> [--registry URL] [--token TOKEN] [--dry-run] [--sign --private-key PATH]');return 1
+                    print('Usage: pea lib publish <path> [--registry URL] [--token TOKEN] [--dry-run] [--sign --private-key PATH] [--namespace NS] [--private] [--allow PRINCIPAL]');return 1
                 root=Path(path).resolve()
                 mf,data=load_pea_toml(root)
                 name=data['project']['name'];version=data['project']['version']
@@ -1593,6 +1651,9 @@ def main(argv=None):
                 req.add_header('Content-Type','application/octet-stream')
                 if signed:
                     req.add_header('X-PeaLang-Signature',base64.b64encode(Path(signed['signature']).read_bytes()).decode('ascii'))
+                if namespace:req.add_header('X-PeaLang-Namespace',namespace)
+                if private:req.add_header('X-PeaLang-Visibility','private')
+                if allowed:req.add_header('X-PeaLang-Allow',','.join(allowed))
                 try:
                     with urllib.request.urlopen(req) as resp:
                         if resp.status==201:
@@ -1622,6 +1683,9 @@ def main(argv=None):
             private_key=None
             publisher=None
             trust_store=None
+            namespace=None
+            private=False
+            allowed=[]
 
             i=1
             while i<len(argv):
@@ -1631,13 +1695,16 @@ def main(argv=None):
                 if arg=='--private-key' and i+1<len(argv):private_key=argv[i+1];i+=2;continue
                 if arg=='--publisher' and i+1<len(argv):publisher=argv[i+1];i+=2;continue
                 if arg=='--trust-store' and i+1<len(argv):trust_store=argv[i+1];i+=2;continue
+                if arg=='--namespace' and i+1<len(argv):namespace=argv[i+1];i+=2;continue
+                if arg=='--allow' and i+1<len(argv):allowed.append(argv[i+1]);i+=2;continue
+                if arg=='--private':private=True;i+=1;continue
                 if arg=='--dry-run':dry_run=True;i+=1;continue
                 if arg=='--sign':sign=True;i+=1;continue
                 if path is None:path=arg
                 i+=1
 
             if not path:
-                print('Usage: pea publish <path> [--registry URL] [--token TOKEN] [--dry-run] [--sign --private-key PATH]');return 1
+                print('Usage: pea publish <path> [--registry URL] [--token TOKEN] [--dry-run] [--sign --private-key PATH] [--namespace NS] [--private] [--allow PRINCIPAL]');return 1
 
             root=Path(path).resolve()
             mf,data=load_pea_toml(root)
@@ -1678,6 +1745,9 @@ def main(argv=None):
             req.add_header('Content-Type','application/octet-stream')
             if signed:
                 req.add_header('X-PeaLang-Signature',base64.b64encode(Path(signed['signature']).read_bytes()).decode('ascii'))
+            if namespace:req.add_header('X-PeaLang-Namespace',namespace)
+            if private:req.add_header('X-PeaLang-Visibility','private')
+            if allowed:req.add_header('X-PeaLang-Allow',','.join(allowed))
 
             try:
                 with urllib.request.urlopen(req) as resp:
@@ -1700,18 +1770,22 @@ def main(argv=None):
 
             query=argv[1] if len(argv)>1 else None
             registry='http://127.0.0.1:8788'
+            token=None
 
             i=2
             while i+1<len(argv):
                 if argv[i]=='--registry':registry=argv[i+1];i+=2;continue
+                if argv[i]=='--token':token=argv[i+1];i+=2;continue
                 i+=1
 
             if not query:
-                print('Usage: pea search <query> [--registry URL]');return 1
+                print('Usage: pea search <query> [--registry URL] [--token TOKEN]');return 1
 
             url=f'{registry}/api/v1/packages'
+            request=urllib.request.Request(url)
+            if token:request.add_header('Authorization','Bearer '+token)
             try:
-                with urllib.request.urlopen(url) as resp:
+                with urllib.request.urlopen(request) as resp:
                     data=_json.loads(resp.read().decode())
                     pkgs=data.get('packages',{})
                     matches={k:v for k,v in pkgs.items() if query.lower() in k.lower()}
@@ -1731,15 +1805,19 @@ def main(argv=None):
             import urllib.request, json as _json
 
             registry='http://127.0.0.1:8788'
+            token=None
 
             i=1
             while i+1<len(argv):
                 if argv[i]=='--registry':registry=argv[i+1];i+=2;continue
+                if argv[i]=='--token':token=argv[i+1];i+=2;continue
                 i+=1
 
             url=f'{registry}/api/v1/packages'
+            request=urllib.request.Request(url)
+            if token:request.add_header('Authorization','Bearer '+token)
             try:
-                with urllib.request.urlopen(url) as resp:
+                with urllib.request.urlopen(request) as resp:
                     data=_json.loads(resp.read().decode())
                     pkgs=data.get('packages',{})
                     if not pkgs:

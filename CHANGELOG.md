@@ -330,6 +330,13 @@ All 1240 tests pass.
 - Extend `pea lib inspect` with provenance details
 - Last verified baseline remains 1396 tests; full verification intentionally deferred while functionality work is prioritized
 
+## 2.41.0 - Phase 56: Registry Namespaces and Private Packages (2026-11-25)
+- Add persistent namespace ownership with `NamespacePolicy`, validate namespace/package identifiers, and authorize publishers per namespace
+- Add private package visibility with per-package allowed principals; filter package lists, info, index, downloads, and signature downloads by viewer
+- Add `X-PeaLang-Namespace`, `X-PeaLang-Visibility`, and `X-PeaLang-Allow` upload headers with `--namespace`, `--private`, and `--allow` publish flags
+- Add `pea registry namespace create|allow|list`, `--storage` for registry publisher registration, and token-aware `pea info` / `pea search`
+- Last verified baseline remains 1396 tests; functionality smoke-tested with private publish, hidden/visible reads, and unauthorized namespace rejection
+
 ### Phase 34: Standard Library Completion (2.41.0)
   - **`std.sql`**: SQL query builder (SELECT, INSERT, UPDATE, DELETE, CREATE TABLE, DROP TABLE).
   - **`std.cache`**: In-memory cache with TTL support.

@@ -550,10 +550,12 @@ pea publish mylib [--registry URL] [--token TOKEN]        # publish to a registr
 pea publish mylib --dry-run                                # build + verify without uploading
 pea lib publish mylib --dry-run                            # same, via the lib subcommand
 pea publish mylib --sign --private-key key [--publisher ID] # build, sign, and publish
+pea publish mylib --namespace acme [--private] [--allow bob] # publish into a namespace, optionally privately
 pea lib inspect mylib-0.1.0.pelib [--json]                 # inspect a built package without installing
 pea install mylib [@version]                               # install from default registry
 pea install mylib @1.0.0 --verify --public-key key.pub     # verify signature before installing
-pea info mylib                                             # show registry package info
+pea info mylib [--token TOKEN]                             # show registry package info
+pea search mylib [--token TOKEN]                           # search registry packages
 ```
 
 ### Signing and trusted keys
@@ -570,6 +572,20 @@ pea registry keys list [--trust-store PATH]
 The default trust store is `~/.pealang/trust.json`. Registry servers can load a
 shared trust store with `pea registry serve --trust-store PATH` so publisher keys are
 verified at upload time.
+
+### Registry namespaces and private packages
+
+```bash
+pea registry register-publisher <token> <publisher-id> [--storage DIR]
+pea registry namespace create <namespace> <principal> [--storage DIR]
+pea registry namespace list [--storage DIR]
+pea publish mylib --registry URL --token TOKEN --namespace acme --private --allow bob
+```
+
+A publisher may use its own namespace or one explicitly authorized with
+`pea registry namespace create`. Private packages are hidden from `pea info`,
+`pea search`, the registry index, and downloads unless the caller supplies a token
+for an allowed principal. Public packages keep their existing behavior.
 
 ### Reproducible libraries
 

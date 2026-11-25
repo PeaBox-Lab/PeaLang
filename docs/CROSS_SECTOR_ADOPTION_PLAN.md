@@ -104,3 +104,8 @@ concrete, checksummed lockfile entries.
 Wave 0 supply-chain baseline: publisher signatures, trusted-key rotation and
 revocation, verified installs, and reproducible build evidence are now available for
 regulated enterprise, finance, cloud, and embedded delivery pipelines.
+
+**Phase 56 — Registry Namespaces and Private Packages** adds namespace ownership,
+private visibility, and authorized reader lists so internal libraries can live on a
+self-hosted registry without exposing names, versions, or packages to anonymous
+callers.
