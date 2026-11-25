@@ -213,6 +213,9 @@ from .jit_compiler import (optimize_instructions as _jit_optimize,
 from .bytecode_optimizer import (build_bytecode_optimizer_namespace as _bytecode_optimizer_build_namespace,
     optimize_bytecode as _bytecode_optimize, optimize_report as _bytecode_optimize_report,
     verify_optimization as _bytecode_verify_optimization)
+from .fast_interpreter import (build_fast_interpreter_namespace as _fast_interpreter_build_namespace,
+    FastInterpreter as _fast_interpreter, verify_fast_parity as _fast_verify_parity,
+    fast_interpreter_report as _fast_interpreter_report)
 from .ai_ml import (build_ai_ml_namespace as _ai_ml_build_namespace)
 from .debugger import (build_debugger_namespace as _debugger_build_namespace)
 from .serverless import build_serverless_namespace as _serverless_build_namespace
@@ -3557,6 +3560,10 @@ def build_analysis_namespace() -> dict[str, Any]:
         "BytecodeOptimizerReport": _bytecode_optimize_report,
         "VerifyOptimization": _bytecode_verify_optimization,
         "BytecodeOptimizerNamespace": _bytecode_optimizer_build_namespace,
+        "FastInterpreter": _fast_interpreter,
+        "VerifyFastParity": _fast_verify_parity,
+        "FastInterpreterReport": _fast_interpreter_report,
+        "FastInterpreterNamespace": _fast_interpreter_build_namespace,
         "AIML": _ai_ml_build_namespace,
         "Debugger": _debugger_build_namespace,
         "Ecosystem": _ecosystem_build_namespace,

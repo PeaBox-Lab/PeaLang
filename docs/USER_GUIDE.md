@@ -1,6 +1,6 @@
 # PeaLang User Guide
 
-This guide covers the PeaLang 3.1.38 release (unified versioning; supersedes the 1.0.0-experience and 0.99.6 baselines).
+This guide covers the PeaLang 3.1.39 release (unified versioning; supersedes the 1.0.0-experience and 0.99.6 baselines).
 
 ## Installation and Setup
 
@@ -171,6 +171,19 @@ modules on the VM and requires identical output and results. Individual passes
 can be disabled with `--no-constant-folding`, `--no-dead-push-pop`, and
 `--no-unreachable-code`. Host programs can use `optimize_bytecode()`,
 `optimize_report()`, and `verify_optimization()` directly.
+
+### Fast interpreter
+```bash
+pea fast app.pea --verify
+pea fast app.pea --benchmark --optimize
+```
+Run bytecode through the direct-handler fast path when all instructions are
+supported; otherwise the standard virtual machine executes the module. The
+report includes the selected mode, eligibility, output, and module digest.
+`--verify` requires identical VM and fast-path output and results, while
+`--benchmark` reports median execution times. Host programs can use
+`FastInterpreter`, `fast_path_supported()`, `verify_fast_parity()`, and
+`fast_interpreter_report()` directly.
 
 ### Optional chaining and null coalescing
 ```pea

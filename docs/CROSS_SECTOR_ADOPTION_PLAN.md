@@ -116,6 +116,13 @@ reports pass counts and a deterministic digest, and `--verify` proves VM
 output/result parity before a release adopts the optimized artifact. The frozen
 3.0 language surface and its manifest digest remain unchanged.
 
+**Phase 72 — Fast Interpreter** adds a direct-handler execution path that
+pre-binds supported instructions to closures instead of walking a dispatch
+chain. Programs using calls, handlers, imports, iterators, or object access
+automatically fall back to the standard VM. `pea fast --verify` proves output
+and result parity, so hot scripts and small loops can adopt the fast path
+without changing the frozen language surface.
+
 ### Wave 3 — Developer experience (Phases 81–90)
 
 LSP v2, DAP debugger, formatter v3, linter v3, test framework v2, incremental

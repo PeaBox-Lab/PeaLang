@@ -8,9 +8,9 @@ PeaLang is designed to complement existing ecosystems such as Python, FastAPI, J
 
 ## Release Status
 
-**Version: 3.1.38** — current tagged release across package, SDK, runtime, and specification metadata.
+**Version: 3.1.39** — current tagged release across package, SDK, runtime, and specification metadata.
 
-`3.1.38` is the unified release identifier for the tagged v3.1.38 line. Source version, SDK packages, container image label, runtime health output, registry user agent, release manifest, and language specification now report the same version. Historical release notes are kept in `docs/releases/` for provenance, but they do not define the current version.
+`3.1.39` is the unified release identifier for the tagged v3.1.39 line. Source version, SDK packages, container image label, runtime health output, registry user agent, release manifest, and language specification now report the same version. Historical release notes are kept in `docs/releases/` for provenance, but they do not define the current version.
 
 See `ROADMAP.md` for the forward-looking plan, `CHANGELOG.md` for per-feature history, and `docs/CROSS_SECTOR_ADOPTION_PLAN.md` for the plan to make PeaLang credible across enterprise, data, web, mobile, games, embedded, and cloud sectors.
 
@@ -874,6 +874,19 @@ handler, and iterator target. Optimization operates on a deep copy, so the
 original module stays available for comparison. `optimize_report()` returns
 pass counts, a deterministic digest, and a PASS/FAIL gate; `--verify` runs both
 modules on the VM and compares output and result before reporting success.
+
+### Fast interpreter
+
+```bash
+pea fast app.pea --verify --benchmark
+```
+
+Phase 72 adds a direct-handler interpreter that pre-binds each supported
+bytecode instruction to a closure and runs it with an explicit program counter.
+Calls, imports, exception handlers, iterators, and object access automatically
+fall back to the standard VM, so program meaning never changes.
+`verify_fast_parity()` compares output and results from both executors, and
+`--optimize` runs the Phase 71 optimizer before execution.
 
 ### Project queries
 

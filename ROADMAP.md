@@ -1,3 +1,9 @@
+## 3.1.39 - Phase 72: Fast Interpreter (2026-11-26)
+- Add a direct-handler bytecode interpreter that pre-binds instructions instead of walking a dispatch chain
+- Keep a parity-verified fallback to the standard VM for unsupported instructions
+- Add `pea fast` with parity and benchmark reports and a stable runtime feature flag
+- Align current release metadata to 3.1.39 while keeping the frozen 3.0 digest pinned
+
 ## 3.1.38 - Phase 71: Bytecode Optimizer (2026-11-26)
 - Start Wave 2 with conservative peephole passes over portable PeaLang bytecode
 - Fold literal arithmetic/comparisons, remove dead literal pushes, and remove unreachable blocks with remapped jump targets

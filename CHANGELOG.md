@@ -1,4 +1,14 @@
 # Changelog
+## 3.1.39 - Phase 72: Fast Interpreter (2026-11-26)
+- Add `FastInterpreter`, `FastProgram`, `FastFrame`, and `compile_fast_program()` for direct-handler bytecode dispatch
+- Pre-bind supported instructions to closures and run them in a tight loop with an explicit program counter
+- Fall back automatically to the standard virtual machine for calls, imports, handlers, iterators, and object access
+- Add `verify_fast_parity()`, `benchmark_fast()`, `fast_interpreter_report()`, and `fast_interpreter_gate()`
+- Add a `pea fast` CLI command with `--verify`, `--benchmark`, and `--optimize` options, plus a `fast` help topic
+- Add a stable `runtime.fast_interpreter_v3` feature flag and a normative spec section
+- Align current release metadata to 3.1.39; frozen 3.0 digest and component versions stay pinned
+- Targeted fast-path, parity, optimizer, freeze, version, and conformance tests smoke-tested
+
 ## 3.1.38 - Phase 71: Bytecode Optimizer (2026-11-26)
 - Add `BytecodeOptimizer`, `optimize_bytecode()`, `optimize_report()`, and `verify_optimization()` for portable `.peac` bytecode
 - Add three conservative passes: constant folding, dead literal push/pop removal, and unreachable-code removal with jump-target remapping

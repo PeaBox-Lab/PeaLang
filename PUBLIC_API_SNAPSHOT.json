@@ -2582,6 +2582,66 @@
       "signature": "()"
     },
     {
+      "module": "pealang.fast_interpreter",
+      "name": "FastFrame",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.fast_interpreter",
+      "name": "FastProgram",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.fast_interpreter",
+      "name": "fast_path_supported",
+      "kind": "function",
+      "signature": "(module)"
+    },
+    {
+      "module": "pealang.fast_interpreter",
+      "name": "compile_fast_program",
+      "kind": "function",
+      "signature": "(module,output=?)"
+    },
+    {
+      "module": "pealang.fast_interpreter",
+      "name": "FastInterpreter",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.fast_interpreter",
+      "name": "verify_fast_parity",
+      "kind": "function",
+      "signature": "(module)"
+    },
+    {
+      "module": "pealang.fast_interpreter",
+      "name": "benchmark_fast",
+      "kind": "function",
+      "signature": "(module,iterations=?)"
+    },
+    {
+      "module": "pealang.fast_interpreter",
+      "name": "fast_interpreter_report",
+      "kind": "function",
+      "signature": "(module)"
+    },
+    {
+      "module": "pealang.fast_interpreter",
+      "name": "fast_interpreter_gate",
+      "kind": "function",
+      "signature": "(report)"
+    },
+    {
+      "module": "pealang.fast_interpreter",
+      "name": "build_fast_interpreter_namespace",
+      "kind": "function",
+      "signature": "()"
+    },
+    {
       "module": "pealang.conformance_quality",
       "name": "run_conformance_suite",
       "kind": "function",
