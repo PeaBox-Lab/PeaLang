@@ -1,5 +1,5 @@
 from .bytecode import BytecodeModule,CodeObject,Instruction,Op
-from .compiler import Compiler,CompileError,compile_source_to_bytecode
+from .compiler import Compiler,CompileError,compile_source_to_bytecode,compile_source_with_macros
 from .vm import VirtualMachine,VMError,AsyncSuspension
 from .async_vm import AsyncVirtualMachine,AsyncVMRuntime,AsyncVMModule,CancellationToken
 from .vm_embedding import VMRuntime,VMModule
@@ -11,6 +11,8 @@ from .error_values import (build_error,is_error_value,error_value_from_exception
 from .iterators import PeaIterator,make_iterator,iterator_next,has_next,peek,close_iterator
 from .project import ModuleResolver,ModuleResolution,module_alias,module_candidates
 from .type_system import TypeChecker,TypeRef,Diagnostic,TypeCheckResult,SemanticAnalyzer,SemanticResult,FunctionContract,parse_type,erase_types,compatible_generic,iterable_element_type,future_element_type
+from .metaprogramming import (SafeMacro,SafeMacroExpander,MacroIssue,MacroExpansionResult,
+    MacroExpansionError,validate_macro,expand_source_macros,STANDARD_SAFE_MACROS)
 from .embedding import (PeaRuntime,PeaModule,RuntimeOptions,ExecutionResult,
     PeaRuntimeError,PeaPermissionError,PeaResourceLimitError,to_pea,from_pea)
 from .web import (PeaWebApp,WebRequest,WebResponse,json_response,html_response,text_response,redirect,error_response,normalize_response)
@@ -113,8 +115,8 @@ from .target_encoding import (build_target_namespace,
     target_encode as stats_target_encode)
 from .ux import doctor as ux_doctor, explain_error as ux_explain
 __version__ = "2.21.0"
-__all__=['BytecodeModule','CodeObject','Instruction','Op','Compiler','CompileError','compile_source_to_bytecode','VirtualMachine','VMError','AsyncSuspension','AsyncVirtualMachine','AsyncVMRuntime','AsyncVMModule','CancellationToken','VMRuntime','VMModule','disassemble','execute','compile_source','Interpreter','PeaError','PeaRuntime','PeaModule',
-'PeaIterator','make_iterator','iterator_next','has_next','peek','close_iterator','ModuleResolver','ModuleResolution','module_alias','module_candidates','SemanticAnalyzer','SemanticResult','FunctionContract','TypeChecker','TypeRef','Diagnostic','TypeCheckResult','parse_type','erase_types','compatible_generic','iterable_element_type','future_element_type','GenericFunctionContract','ProtocolContract','parse_protocols','parse_traits','protocol_conforms','check_record_protocol_conformance','function_field_type','parse_generic_functions','infer_generic_bindings','instantiate_generic','check_generic_application','check_generic_bounds','infer_type_arguments','option_type','result_type','future_type','analyze_project','RuntimeOptions','ExecutionResult','PeaRuntimeError','PeaPermissionError',
+__all__=['BytecodeModule','CodeObject','Instruction','Op','Compiler','CompileError','compile_source_to_bytecode','compile_source_with_macros','VirtualMachine','VMError','AsyncSuspension','AsyncVirtualMachine','AsyncVMRuntime','AsyncVMModule','CancellationToken','VMRuntime','VMModule','disassemble','execute','compile_source','Interpreter','PeaError','PeaRuntime','PeaModule',
+'PeaIterator','make_iterator','iterator_next','has_next','peek','close_iterator','ModuleResolver','ModuleResolution','module_alias','module_candidates','SemanticAnalyzer','SemanticResult','FunctionContract','TypeChecker','TypeRef','Diagnostic','TypeCheckResult','parse_type','erase_types','compatible_generic','iterable_element_type','future_element_type','SafeMacro','SafeMacroExpander','MacroIssue','MacroExpansionResult','MacroExpansionError','validate_macro','expand_source_macros','STANDARD_SAFE_MACROS','GenericFunctionContract','ProtocolContract','parse_protocols','parse_traits','protocol_conforms','check_record_protocol_conformance','function_field_type','parse_generic_functions','infer_generic_bindings','instantiate_generic','check_generic_application','check_generic_bounds','infer_type_arguments','option_type','result_type','future_type','analyze_project','RuntimeOptions','ExecutionResult','PeaRuntimeError','PeaPermissionError',
 'PeaResourceLimitError','to_pea','from_pea','CancellationScope','PeaTask','TaskGroup','gather_structured','spawn_task','build_async_vm_concurrency_namespace','build_structured_concurrency_namespace','__version__']
 
 from .package_manager import Version,satisfies,DEFAULT_REGISTRY,registry_cache_dir,registry_cache_path,fetch_registry_versions,select_registry_version,resolve_registry_dependency,load_pea_toml,init_manifest,resolve,write_lock,check_lock,lock_drift,refresh_lock,audit,build_package,build_library,sign_library,inspect_library,verify_library_provenance,reproducible_build_check,install,install_remote,install_remote_verified,publish,quality_check,uninstall,update,dependency_tree,dependency_graph,outdated,clean

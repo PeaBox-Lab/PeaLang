@@ -16,6 +16,7 @@ FEATURES={
   'language.iterators':Feature('language.iterators','2.41',Stability.PREVIEW),
   'language.async_v2':Feature('language.async_v2','2.41',Stability.PREVIEW),
   'language.modules_v2':Feature('language.modules_v2','2.41',Stability.PREVIEW),
+  'language.macros_v2':Feature('language.macros_v2','2.41',Stability.PREVIEW),
  'async.await':Feature('async.await','0.26',Stability.PREVIEW),
  'embedding.python':Feature('embedding.python','0.18',Stability.STABLE),
  'embedding.fastapi':Feature('embedding.fastapi','0.25',Stability.PREVIEW),

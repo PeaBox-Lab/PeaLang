@@ -805,6 +805,20 @@ paths. Aliased imports are cached and circular imports are reported clearly.
 Project analysis exposes the module graph and reports `M201` for unresolved
 imports and `M203` for cycles.
 
+### Safe metaprogramming
+
+```pea
+print double 3
+```
+
+Macro expansion is explicit and bounded. `SafeMacro` patterns use named
+metavariables such as `$value`, and templates may use hygiene markers such as
+`@tmp` to introduce fresh identifiers. Definitions are validated before use,
+expansion work is limited, and issues are reported as `MG101`-`MG203`. Use
+`expand_source_macros()` for source transformation or
+`compile_source_with_macros()` to expand and compile in one step. Legacy string
+macros remain available, and the default compile pipeline is unchanged.
+
 ### Project queries
 
 ```bash

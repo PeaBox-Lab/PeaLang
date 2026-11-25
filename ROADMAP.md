@@ -212,4 +212,10 @@
 - Add a `language.modules_v2` preview feature flag and update public docs
 - Last verified baseline remains 1396 tests; targeted regression and module tests smoke-tested
 
+## 2.41.0 - Phase 67: Safe Metaprogramming (2026-11-25)
+- Add validated, bounded, hygiene-aware source macros with `MG101`-`MG203` diagnostics
+- Add explicit expansion and compile helpers while preserving legacy macros
+- Add a `language.macros_v2` preview feature flag and update public docs
+- Last verified baseline remains 1396 tests; targeted regression and metaprogramming tests smoke-tested
+
 ### Phase 34: Standard Library Completion (2.41.0)

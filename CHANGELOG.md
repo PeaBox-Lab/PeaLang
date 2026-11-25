@@ -418,6 +418,14 @@ All 1240 tests pass.
 - Add a `language.modules_v2` preview feature flag and update help, specs, and guides
 - Last verified baseline remains 1396 tests; targeted regression and module tests smoke-tested
 
+## 2.41.0 - Phase 67: Safe Metaprogramming (2026-11-25)
+- Add a `SafeMacroExpander` with validated definitions, bounded passes, capture limits, and `MG101`-`MG203` diagnostics
+- Add named metavariables, repeated-capture consistency checks, and hygiene markers that generate fresh identifiers
+- Add `expand_source_macros()` and `compile_source_with_macros()` for explicit pre-parse expansion
+- Keep the legacy regex macro layer intact while making safe expansion opt-in
+- Add a `language.macros_v2` preview feature flag and update help, specs, and guides
+- Last verified baseline remains 1396 tests; targeted regression and metaprogramming tests smoke-tested
+
 ### Phase 34: Standard Library Completion (2.41.0)
   - **`std.sql`**: SQL query builder (SELECT, INSERT, UPDATE, DELETE, CREATE TABLE, DROP TABLE).
   - **`std.cache`**: In-memory cache with TTL support.

@@ -2318,6 +2318,12 @@
       "signature": "(source,source_name=?)"
     },
     {
+      "module": "pealang.compiler",
+      "name": "compile_source_with_macros",
+      "kind": "function",
+      "signature": "(source,source_name=?,expander=?)"
+    },
+    {
       "module": "pealang.concurrency_resilience",
       "name": "CancellationReason",
       "kind": "class",
@@ -5520,6 +5526,48 @@
       "name": "InMemoryMessageBus",
       "kind": "class",
       "signature": ""
+    },
+    {
+      "module": "pealang.metaprogramming",
+      "name": "MacroIssue",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.metaprogramming",
+      "name": "MacroExpansionResult",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.metaprogramming",
+      "name": "MacroExpansionError",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.metaprogramming",
+      "name": "SafeMacro",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.metaprogramming",
+      "name": "validate_macro",
+      "kind": "function",
+      "signature": "(macro)"
+    },
+    {
+      "module": "pealang.metaprogramming",
+      "name": "SafeMacroExpander",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.metaprogramming",
+      "name": "expand_source_macros",
+      "kind": "function",
+      "signature": "(source,expander=?)"
     },
     {
       "module": "pealang.migration",

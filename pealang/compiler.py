@@ -3,6 +3,7 @@ from .ast_nodes import *
 from .parser import parse_source
 from .bytecode import BytecodeModule,CodeObject,Instruction,Op
 class CompileError(Exception):pass
+from .metaprogramming import expand_source_macros
 class Compiler:
  def __init__(self,source_name='<input>'):self.module=BytecodeModule(source_name=source_name);self.code=self.module.code;self.code.source_name=source_name;self.loops=[]
  def emit(self,op,arg=None,node=None):self.code.instructions.append(Instruction(op.value if hasattr(op,'value') else op,arg,getattr(getattr(node,'span',None),'line',1)));return len(self.code.instructions)-1
@@ -160,3 +161,4 @@ class Compiler:
    self.emit(Op.CALL,len(e.args),e)
   else:raise CompileError(f'Unsupported expression: {type(e).__name__}')
 def compile_source_to_bytecode(source,source_name='<input>'):return Compiler(source_name).compile(parse_source(source,source_name))
+def compile_source_with_macros(source,source_name='<input>',expander=None):return compile_source_to_bytecode(expand_source_macros(source,expander),source_name)

@@ -75,6 +75,13 @@ bytecode VM, and async VM. Imports now accept dotted project paths with
 cache aliased imports, and reject cycles. Project analysis exposes a module
 graph with `M201` unresolved-import and `M203` cycle diagnostics.
 
+**Phase 67 — Safe Metaprogramming** adds an explicit, validated macro layer.
+Definitions are bounded, metavariables are checked for consistency, and hygiene
+markers generate fresh identifiers so macro temporaries cannot capture caller
+code. Expansion reports `MG101`-`MG203` issues and is opt-in through
+`compile_source_with_macros()`, leaving legacy string macros and existing
+programs unchanged.
+
 ### Wave 2 — Runtime and performance (Phases 71–80)
 
 Bytecode optimizer, fast interpreter, JIT, native backend, WASM backend, parallel

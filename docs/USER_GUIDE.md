@@ -117,6 +117,16 @@ same resolver, so aliased imports are cached and cycles are reported. Project
 analysis exposes a module graph with `M201` unresolved-import and `M203` cycle
 diagnostics.
 
+### Safe metaprogramming
+```pea
+print double 3
+```
+Pass a `SafeMacro` with a whole-line pattern such as `print double $value` and a
+template such as `print $value + $value` to `SafeMacroExpander`. `@name` markers
+introduce hygienic temporaries. Expansion is explicit via
+`expand_source_macros()` or `compile_source_with_macros()`, and reports
+`MG101`-`MG203` issues instead of silently producing unbounded output.
+
 ### Optional chaining and null coalescing
 ```pea
 let city = user?.profile?.city ?? "unknown"
