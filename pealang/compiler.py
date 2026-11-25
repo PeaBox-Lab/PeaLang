@@ -115,7 +115,7 @@ class Compiler:
    return
   if isinstance(s,ThrowStmt):self.expr(s.value);self.emit(Op.RAISE,node=s);return
   if isinstance(s,TryStmt):
-   push=self.emit(Op.PUSH_HANDLER,{'catch':None,'finally':None,'end':None,'name':s.catch_name},s);self.block(s.try_body);self.emit(Op.POP_HANDLER,node=s)
+   push=self.emit(Op.PUSH_HANDLER,{'catch':None,'finally':None,'end':None,'name':s.catch_name,'catch_type':getattr(s,'catch_type',None)},s);self.block(s.try_body);self.emit(Op.POP_HANDLER,node=s)
    normal_finally=len(self.code.instructions)
    if s.finally_body:self.block(s.finally_body)
    jump_end=self.emit(Op.JUMP,None,s);catch_target=None
@@ -123,7 +123,7 @@ class Compiler:
     catch_target=len(self.code.instructions);self.block(s.catch_body)
     if s.finally_body:self.block(s.finally_body)
    end=len(self.code.instructions);self.patch(jump_end,end)
-   self.code.instructions[push].arg.update({'catch':catch_target,'finally':None,'end':end})
+   self.code.instructions[push].arg.update({'catch':catch_target,'finally':normal_finally if s.finally_body else None,'end':end})
    return
   if isinstance(s,ImportStmt):self.emit(Op.IMPORT,{'path':s.path,'alias':s.alias},s);return
   if isinstance(s,FunctionStmt):

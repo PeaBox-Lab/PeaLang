@@ -169,4 +169,11 @@
 - Add `pea plugin init|list|verify|load` and public API exports
 - Last verified baseline remains 1396 tests; functionality smoke-tested with manifest init, policy denial, signed load, and unsigned rejection
 
+## 2.41.0 - Phase 61: Structured Error Handling v2 (2026-11-25)
+- Add structured error values with stable schema, error codes, cause chains, context, and source spans
+- Add the `error()` builtin and preserve typed structured values through `throw`
+- Unify interpreter and VM catch records and typed catch matching, including builtin runtime failures
+- Add `KeyError` to the typed exception registry and expose the structured error API publicly
+- Last verified baseline remains 1396 tests; targeted regression and structured-error tests smoke-tested
+
 ### Phase 34: Standard Library Completion (2.41.0)

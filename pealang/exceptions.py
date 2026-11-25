@@ -32,6 +32,10 @@ class IndexError(PeaException):
     kind = "IndexError"
 
 
+class KeyError(PeaException):
+    kind = "KeyError"
+
+
 class ZeroDivisionError(PeaException):
     kind = "ZeroDivisionError"
 
@@ -66,6 +70,7 @@ EXCEPTION_TYPES = {
         ValueError,
         TypeError,
         IndexError,
+        KeyError,
         ZeroDivisionError,
         ScopeError,
         AssertionError,

@@ -366,6 +366,14 @@ All 1240 tests pass.
 - Add `pea plugin init|list|verify|load` and public API exports
 - Last verified baseline remains 1396 tests; functionality smoke-tested with manifest init, policy denial, signed load, and unsigned rejection
 
+## 2.41.0 - Phase 61: Structured Error Handling v2 (2026-11-25)
+- Add `ErrorValue` and `ERROR_VALUE_SCHEMA` with stable `code`, `cause`, `context`, source span, and trace fields
+- Add `error(kind, message, code, cause)` builtin and preserve structured values through `throw`
+- Unify catch records across interpreter and bytecode VM; typed catches now match structured errors in both paths
+- Map builtin runtime failures (including division, index, key, type, value, and attribute errors) into typed structured errors
+- Add `KeyError` to the typed exception registry and expose the structured error API publicly
+- Last verified baseline remains 1396 tests; targeted regression and structured-error tests smoke-tested
+
 ### Phase 34: Standard Library Completion (2.41.0)
   - **`std.sql`**: SQL query builder (SELECT, INSERT, UPDATE, DELETE, CREATE TABLE, DROP TABLE).
   - **`std.cache`**: In-memory cache with TTL support.

@@ -22,7 +22,8 @@ from .help import help as _pea_help
 from .extension_registry import ExtensionRegistry
 from .extension_type_system import ExtensionTypeSystem
 from .exceptions import (PeaException, NameError, ValueError, TypeError, IndexError,
-    ZeroDivisionError, ScopeError, AssertionError, AttributeError, ImportError, UserError)
+    KeyError, ZeroDivisionError, ScopeError, AssertionError, AttributeError, ImportError, UserError)
+from .error_values import build_error, exception_from_error_value, matches_error
 class ReturnSignal(Exception):
     def __init__(self,v):self.value=v
 class BreakSignal(Exception):pass
@@ -41,17 +42,19 @@ def _map_builtin_exception(exc, span=None, source=None):
     source = source if source is not None else getattr(exc, 'source_name', '<input>')
     if isinstance(exc, _exc.PeaException):
         return exc
-    if isinstance(exc, _builtins.ZeroDivisionError):
-        return _exc.ZeroDivisionError(str(exc), span, source)
-    if isinstance(exc, _builtins.IndexError):
-        return _exc.IndexError(str(exc), span, source)
-    if isinstance(exc, _builtins.TypeError):
-        return _exc.TypeError(str(exc), span, source)
-    if isinstance(exc, _builtins.ValueError):
-        return _exc.ValueError(str(exc), span, source)
-    if isinstance(exc, _builtins.NameError):
-        return _exc.NameError(str(exc), span, source)
-    return _exc.PeaException(str(exc), span, source)
+    mapping = (
+        (_builtins.ZeroDivisionError, _exc.ZeroDivisionError),
+        (_builtins.IndexError, _exc.IndexError),
+        (_builtins.KeyError, _exc.KeyError),
+        (_builtins.TypeError, _exc.TypeError),
+        (_builtins.ValueError, _exc.ValueError),
+        (_builtins.NameError, _exc.NameError),
+        (_builtins.AttributeError, _exc.AttributeError),
+    )
+    for py_cls, pea_cls in mapping:
+        if isinstance(exc, py_cls):
+            return pea_cls(str(exc), span, source, code=pea_cls.kind, cause=exc)
+    return _exc.PeaException(str(exc), span, source, cause=exc)
 
 class Interpreter:
     def __init__(self,output=None,base_dir=None,allow_process=False,project_root=None,dependencies=None,debug_hook=None,permissions=None):
@@ -420,7 +423,7 @@ class Interpreter:
                 if isinstance(fn,UserFunction): return self.invoke_user_function(fn,[])
                 return fn()
             except Exception: return default
-        builtins={'range':lambda *a:list(range(*map(int,a))),'len':len,'str':lambda x:self.stringify(x),'bool':bool,'number':lambda x:float(x),'int':lambda x:int(float(x)),'float':lambda x:float(x),'type':lambda x:type(x).__name__,'upper':lambda x:str(x).upper(),'lower':lambda x:str(x).lower(),'trim':lambda x:str(x).strip(),'split':lambda x,s=None:str(x).split(s),'join':lambda s,x:str(s).join(map(str,x)),'replace':lambda s,a,b:str(s).replace(str(a),str(b)),'starts_with':lambda s,p:str(s).startswith(str(p)),'ends_with':lambda s,p:str(s).endswith(str(p)),'contains':_contains,'append':self._append,'push':_push,'pop':_pop,'get':_get,'has':_has,'merge':_merge,'slice':_slice,'keys':lambda d:list(d.keys()) if isinstance(d,dict) else list(range(len(d))),'values':lambda d:list(d.values()) if isinstance(d,dict) else list(d),'items':lambda d:[[k,v] for k,v in d.items()] if isinstance(d,dict) else _enumerate(d),'read':lambda p:Path(p).read_text(encoding='utf-8'),'write':self._write,'exists':os.path.exists,'sqrt':math.sqrt,'abs':abs,'round':round,'min':min,'max':max,'sum':lambda x,start=0:sum(x,start),'sleep':time.sleep,'enumerate':_enumerate,'zip':_zip,'sorted':_sorted,'reversed':_reversed,'map':_map,'filter':_filter,'any':_any,'all':_all,'list':lambda x=None:list(x) if x is not None else [],'dict':lambda x=None:dict(x) if x is not None else {},'help':_pea_help,'json_parse':lambda s:json.loads(s),'json_dump':lambda x,indent=None:json.dumps(x,indent=indent,ensure_ascii=False,default=str),'safe':_safe,'now_ms':lambda:int(time.time()*1000),'chunk':_chunk,'flatten':_flatten,'uniq':_uniq,'pick':_pick,'omit':_omit,'clamp':_clamp,'uuid':_uuid,'randint':_randint,'b64encode':_b64e,'b64decode':_b64d,'now_iso':_now_iso,'coalesce':_coalesce,'repeat':_repeat,'times':_times,'find':_find,'find_index':_find_index,'pluck':_pluck,'index_by':_index_by,'sort_by':_sort_by,'is_null':_is_null,'is_list':_is_list,'is_dict':_is_dict,'is_string':_is_string,'is_number':_is_number,'is_bool':_is_bool,'identity':_identity,'tap':_tap,'pad_start':_pad_start,'pad_end':_pad_end,'lines':_lines,'words':_words,'floor':_floor,'ceil':_ceil,'log':_log,'exp':_exp,'pow':_pow,'get_path':_get_path,'deep_merge':_deep_merge,'take':_take,'drop':_drop,'partition':_partition,'count_by':_count_by,'first':_first,'last':_last,'is_empty':_is_empty,'compact':_compact,'defaults':_defaults,'invert':_invert,'to_pairs':_to_pairs,'from_pairs':_from_pairs,'sum_by':_sum_by,'avg':_avg,'capitalize':_capitalize,'snake_case':_snake_case,'kebab_case':_kebab_case,'slugify':_slugify,'truncate':_truncate,'union':_union,'intersection':_intersection,'difference':_difference,'has_path':_has_path,'set_path':_set_path,'map_values':_map_values,'map_keys':_map_keys,'pick_by':_pick_by,'omit_by':_omit_by,'shuffle':_shuffle,'product':_product,'median':_median,'parse_int':_parse_int,'parse_float':_parse_float,'strip_prefix':_strip_prefix,'strip_suffix':_strip_suffix,'sha256':_sha256,'url_encode':_url_encode,'url_decode':_url_decode,'html_escape':_html_escape,'title_case':_title_case,'center':_center,'min_by':_min_by,'max_by':_max_by,'without':_without,'xor':_xor,'zip_object':_zip_object,'ensure_list':_ensure_list,'ensure_dict':_ensure_dict,'size':_size,'random_choice':_random_choice,'sample_list':_sample_list,'clone':_clone,'deep_clone':_deep_clone,'deep_equal':_deep_equal,'nth':_nth,'initial':_initial,'rest':_rest,'group_by':_group_by,'frequencies':_count_by,'scan':_scan,'hex_encode':_hex_encode,'hex_decode':_hex_decode,'ensure_str':_ensure_str,'ensure_int':_ensure_int,'ensure_float':_ensure_float,'pipe':_pipe,'apply':_apply_fn,'gcd':_gcd,'lcm':_lcm,'sign':_sign,'is_even':_is_even,'is_odd':_is_odd,'lerp':_lerp,'rotate':_rotate,'interleave':_interleave,'windows':_window_list,'dedupe_by':_dedupe_by,'assoc':_assoc,'dissoc':_dissoc,'rename_keys':_rename_keys,'format_number':_format_number,'between':_between_val}
+        builtins={'range':lambda *a:list(range(*map(int,a))),'len':len,'str':lambda x:self.stringify(x),'bool':bool,'number':lambda x:float(x),'int':lambda x:int(float(x)),'float':lambda x:float(x),'type':lambda x:type(x).__name__,'upper':lambda x:str(x).upper(),'lower':lambda x:str(x).lower(),'trim':lambda x:str(x).strip(),'split':lambda x,s=None:str(x).split(s),'join':lambda s,x:str(s).join(map(str,x)),'replace':lambda s,a,b:str(s).replace(str(a),str(b)),'starts_with':lambda s,p:str(s).startswith(str(p)),'ends_with':lambda s,p:str(s).endswith(str(p)),'contains':_contains,'append':self._append,'push':_push,'pop':_pop,'get':_get,'has':_has,'merge':_merge,'slice':_slice,'keys':lambda d:list(d.keys()) if isinstance(d,dict) else list(range(len(d))),'values':lambda d:list(d.values()) if isinstance(d,dict) else list(d),'items':lambda d:[[k,v] for k,v in d.items()] if isinstance(d,dict) else _enumerate(d),'read':lambda p:Path(p).read_text(encoding='utf-8'),'write':self._write,'exists':os.path.exists,'sqrt':math.sqrt,'abs':abs,'round':round,'min':min,'max':max,'sum':lambda x,start=0:sum(x,start),'sleep':time.sleep,'enumerate':_enumerate,'zip':_zip,'sorted':_sorted,'reversed':_reversed,'map':_map,'filter':_filter,'any':_any,'all':_all,'list':lambda x=None:list(x) if x is not None else [],'dict':lambda x=None:dict(x) if x is not None else {},'help':_pea_help,'error':build_error,'json_parse':lambda s:json.loads(s),'json_dump':lambda x,indent=None:json.dumps(x,indent=indent,ensure_ascii=False,default=str),'safe':_safe,'now_ms':lambda:int(time.time()*1000),'chunk':_chunk,'flatten':_flatten,'uniq':_uniq,'pick':_pick,'omit':_omit,'clamp':_clamp,'uuid':_uuid,'randint':_randint,'b64encode':_b64e,'b64decode':_b64d,'now_iso':_now_iso,'coalesce':_coalesce,'repeat':_repeat,'times':_times,'find':_find,'find_index':_find_index,'pluck':_pluck,'index_by':_index_by,'sort_by':_sort_by,'is_null':_is_null,'is_list':_is_list,'is_dict':_is_dict,'is_string':_is_string,'is_number':_is_number,'is_bool':_is_bool,'identity':_identity,'tap':_tap,'pad_start':_pad_start,'pad_end':_pad_end,'lines':_lines,'words':_words,'floor':_floor,'ceil':_ceil,'log':_log,'exp':_exp,'pow':_pow,'get_path':_get_path,'deep_merge':_deep_merge,'take':_take,'drop':_drop,'partition':_partition,'count_by':_count_by,'first':_first,'last':_last,'is_empty':_is_empty,'compact':_compact,'defaults':_defaults,'invert':_invert,'to_pairs':_to_pairs,'from_pairs':_from_pairs,'sum_by':_sum_by,'avg':_avg,'capitalize':_capitalize,'snake_case':_snake_case,'kebab_case':_kebab_case,'slugify':_slugify,'truncate':_truncate,'union':_union,'intersection':_intersection,'difference':_difference,'has_path':_has_path,'set_path':_set_path,'map_values':_map_values,'map_keys':_map_keys,'pick_by':_pick_by,'omit_by':_omit_by,'shuffle':_shuffle,'product':_product,'median':_median,'parse_int':_parse_int,'parse_float':_parse_float,'strip_prefix':_strip_prefix,'strip_suffix':_strip_suffix,'sha256':_sha256,'url_encode':_url_encode,'url_decode':_url_decode,'html_escape':_html_escape,'title_case':_title_case,'center':_center,'min_by':_min_by,'max_by':_max_by,'without':_without,'xor':_xor,'zip_object':_zip_object,'ensure_list':_ensure_list,'ensure_dict':_ensure_dict,'size':_size,'random_choice':_random_choice,'sample_list':_sample_list,'clone':_clone,'deep_clone':_deep_clone,'deep_equal':_deep_equal,'nth':_nth,'initial':_initial,'rest':_rest,'group_by':_group_by,'frequencies':_count_by,'scan':_scan,'hex_encode':_hex_encode,'hex_decode':_hex_decode,'ensure_str':_ensure_str,'ensure_int':_ensure_int,'ensure_float':_ensure_float,'pipe':_pipe,'apply':_apply_fn,'gcd':_gcd,'lcm':_lcm,'sign':_sign,'is_even':_is_even,'is_odd':_is_odd,'lerp':_lerp,'rotate':_rotate,'interleave':_interleave,'windows':_window_list,'dedupe_by':_dedupe_by,'assoc':_assoc,'dissoc':_dissoc,'rename_keys':_rename_keys,'format_number':_format_number,'between':_between_val}
         for k,v in builtins.items():self.global_env.define(k,v,True)
         for k,v in build_standard_library(allow_process=allow_process,permissions=permissions).items():self.global_env.define(k,v,True)
         ai_ns=build_ai_namespace(); self.ai_service = ai_ns; self.global_env.define('ai',ai_ns,True)
@@ -540,19 +543,16 @@ class Interpreter:
                     message=self.stringify(self.eval(s.message)) if s.message else 'Assertion failed'
                     raise AssertionError(message,s.span,self.source_name)
                 return None
-            if isinstance(s,ThrowStmt):raise UserError(self.stringify(self.eval(s.value)),s.span,self.source_name)
+            if isinstance(s,ThrowStmt):
+                raise exception_from_error_value(self.eval(s.value),s.span,self.source_name)
             if isinstance(s,TryStmt):
                 try:return self.exec_block(s.try_body)
-                except PeaException as ex:
+                except PeaError as ex:
                     if s.catch_body is None:raise
-                    catchenv=Env(self.env)
                     catch_type = getattr(s, 'catch_type', None)
-                    if catch_type is not None:
-                        from .exceptions import EXCEPTION_TYPES
-                        expected = EXCEPTION_TYPES.get(catch_type)
-                        if expected is not None and not isinstance(ex, expected):
-                            raise
-                    if s.catch_name:catchenv.define(s.catch_name,{'message':ex.message,'source':ex.source_name,'line':ex.span.line if ex.span else None,'column':ex.span.col if ex.span else None,'kind':getattr(ex,'kind','Exception'),'frames':getattr(ex,'frames',None),'trace':ex.trace() if hasattr(ex,'trace') else str(ex)},True)
+                    if catch_type is not None and not matches_error(ex, catch_type):raise
+                    catchenv=Env(self.env)
+                    if s.catch_name:catchenv.define(s.catch_name,ex.to_value(),True)
                     return self.exec_block(s.catch_body,catchenv)
                 finally:
                     if s.finally_body is not None:self.exec_block(s.finally_body)

@@ -3,6 +3,7 @@ from __future__ import annotations
 from dataclasses import dataclass,field
 from pathlib import Path
 from .bytecode import BytecodeModule,Op
+from .error_values import build_error, error_value_from_raw, matches_error
 class VMError(Exception):pass
 @dataclass
 class AsyncSuspension:
@@ -10,13 +11,14 @@ class AsyncSuspension:
  source:str
  line:int
 class VMThrown(Exception):
- def __init__(self,value):self.value=value;super().__init__(str(value))
+ def __init__(self,value,source=None,line=None):
+  self.value=value;self.source=source;self.line=line;super().__init__(str(value))
 class _StepPause(Exception):
  def __init__(self,frame,ins):self.frame,self.ins=frame,ins
 @dataclass
 class VMFunction:name:str;module:BytecodeModule;closure:dict
 @dataclass
-class Handler:catch:int|None;finally_ip:int|None;end:int;name:str|None;stack_size:int
+class Handler:catch:int|None;finally_ip:int|None;end:int;name:str|None;stack_size:int;catch_type:str|None=None
 @dataclass
 class Frame:code:object;env:dict;ip:int=0;name:str='<module>';stack_base:int=0;handlers:list[Handler]=field(default_factory=list)
 class VirtualMachine:
@@ -24,7 +26,7 @@ class VirtualMachine:
   self.output=output or print;self.max_instructions=max_instructions;self.debug_hook=debug_hook;self.module_loader=module_loader;self.instrumentation=instrumentation;self.reset()
  def reset(self):self.instructions=0;self.stack=[];self.frames=[];self.exports={};self.paused=False;self.breakpoints=set();self.last_event=None;self.module_cache={}
  def run(self,module,globals=None):
-  self.module=module;env=dict(globals or {});env.update({'len':len,'str':str,'int':int,'number':float,'upper':lambda x:str(x).upper(),'lower':lambda x:str(x).lower(),'append':lambda a,x:(a.append(x) or a)})
+  self.module=module;env=dict(globals or {});env.update({'len':len,'str':str,'int':int,'number':float,'upper':lambda x:str(x).upper(),'lower':lambda x:str(x).lower(),'append':lambda a,x:(a.append(x) or a),'error':build_error})
   self.frames=[Frame(module.code,env,name='<module>')];return self.loop()
  def pop(self):
   if not self.stack:raise VMError('Stack underflow')
@@ -49,13 +51,22 @@ class VirtualMachine:
    env=dict(callee.closure);env.update(code.defaults);env.update(zip(code.params,args));self.frames.append(Frame(code,env,name=callee.name,stack_base=len(self.stack)));return None
   if callable(callee):self.stack.append(callee(*args));return None
   raise VMError('Value is not callable')
- def _handle_throw(self,value):
+ def _structured_throw(self,thrown):
+  record=error_value_from_raw(thrown.value)
+  if not record.get('source'):record['source']=thrown.source or self.module.source_name
+  if record.get('line') is None:record['line']=thrown.line
+  if record.get('frames') is None:record['frames']=self.stack_trace()
+  return record
+ def _handle_throw(self,thrown):
+  record=self._structured_throw(thrown)
   while self.frames:
    f=self.frames[-1]
    if f.handlers:
     h=f.handlers.pop();del self.stack[h.stack_size:]
-    if h.name:f.env[h.name]=value
-    if h.catch is not None:f.ip=h.catch;return True
+    if h.catch_type and not matches_error(record,h.catch_type):continue
+    if h.catch is not None:
+     if h.name:f.env[h.name]=record
+     f.ip=h.catch;return True
    self.frames.pop()
   return False
  def _load_module(self,path,alias,frame):
@@ -123,16 +134,19 @@ class VirtualMachine:
      self.stack.append(value)
     elif op==Op.RETURN.value:
      value=self.pop();self.frames.pop();self.stack.append(value) if self.frames else None;ret=value
-    elif op==Op.PUSH_HANDLER.value:f.handlers.append(Handler(ins.arg.get('catch'),ins.arg.get('finally'),ins.arg['end'],ins.arg.get('name'),len(self.stack)))
+    elif op==Op.PUSH_HANDLER.value:f.handlers.append(Handler(ins.arg.get('catch'),ins.arg.get('finally'),ins.arg['end'],ins.arg.get('name'),len(self.stack),ins.arg.get('catch_type')))
     elif op==Op.POP_HANDLER.value:
      if f.handlers:f.handlers.pop()
-    elif op==Op.RAISE.value:raise VMThrown(self.pop())
+    elif op==Op.RAISE.value:raise VMThrown(self.pop(),f.code.source_name,ins.line)
     elif op==Op.IMPORT.value:self._load_module(ins.arg['path'],ins.arg.get('alias'),f)
     elif op==Op.EXPORT.value:self.exports[ins.arg]=f.env.get(ins.arg)
     elif op==Op.HALT.value:self.frames.pop();ret=self.stack[-1] if self.stack else None
     else:raise VMError(f'Unknown opcode {op}')
    except VMThrown as ex:
-    if not self._handle_throw(ex.value):raise VMError(str(ex.value))
+    if not self._handle_throw(ex):raise VMError(str(ex.value))
+   except (ZeroDivisionError, IndexError, KeyError, TypeError, ValueError, AttributeError) as ex:
+    record=build_error(type(ex).__name__,str(ex),cause=ex)
+    if not self._handle_throw(VMThrown(record,f.code.source_name,ins.line)):raise VMError(str(ex)) from ex
   return ret
  def pop_args(self,n):
   args=[self.pop() for _ in range(n)][::-1];return self.pop(),args

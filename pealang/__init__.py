@@ -5,6 +5,9 @@ from .async_vm import AsyncVirtualMachine,AsyncVMRuntime,AsyncVMModule,Cancellat
 from .vm_embedding import VMRuntime,VMModule
 from .disassembler import disassemble
 from .runtime import execute, compile_source, Interpreter, PeaError
+from .errors import ERROR_VALUE_SCHEMA,ErrorValue,SourceSpan
+from .error_values import (build_error,is_error_value,error_value_from_exception,
+    error_value_from_raw,exception_from_error_value,matches_error)
 from .type_system import TypeChecker,TypeRef,Diagnostic,TypeCheckResult,SemanticAnalyzer,SemanticResult,FunctionContract,parse_type,erase_types
 from .embedding import (PeaRuntime,PeaModule,RuntimeOptions,ExecutionResult,
     PeaRuntimeError,PeaPermissionError,PeaResourceLimitError,to_pea,from_pea)

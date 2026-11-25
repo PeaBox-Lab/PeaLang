@@ -687,6 +687,27 @@ signatures stop loading before any plugin code is imported. `pea plugin load` re
 only the declared functions, types, operators, and namespaces with the extension
 registry.
 
+### Structured errors and typed catch
+
+```pea
+try {
+    throw error("TypeError", "bad value", "E_TYPE", error("ValueError", "root"))
+} catch TypeError e {
+    print e["kind"]        # TypeError
+    print e["code"]        # E_TYPE
+    print e["cause"]["code"]  # ValueError
+}
+```
+
+`error(kind, message, code, cause)` creates a structured error value. `throw`
+preserves that value, and `catch` bindings expose `schema`, `kind`, `message`,
+`code`, `cause`, `context`, `source`, `line`, `column`, `end_line`, `end_col`,
+`frames`, and `trace`. Typed catches such as `catch TypeError as e` work the
+same in the interpreter and bytecode VM, and builtin failures such as division
+by zero, bad indexes, missing keys, and type errors are converted into typed
+structured errors. Plain thrown values still stringify to their message for
+backward compatibility.
+
 ### Project queries
 
 ```bash

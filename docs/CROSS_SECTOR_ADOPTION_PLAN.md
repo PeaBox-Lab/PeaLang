@@ -40,6 +40,11 @@ Error handling v2, generics v2, protocols/traits, iterators, async/concurrency,
 module system v2, safe metaprogramming, resource scopes, conformance suite,
 and a frozen 3.0 core.
 
+**Phase 61 — Structured Error Handling v2** starts Wave 1 with a shared error
+value schema. Interpreter and bytecode runs now expose the same typed catch
+records, error codes, cause chains, context, and source spans, so libraries and
+hosts can route failures consistently.
+
 ### Wave 2 — Runtime and performance (Phases 71–80)
 
 Bytecode optimizer, fast interpreter, JIT, native backend, WASM backend, parallel
