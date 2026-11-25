@@ -6,6 +6,7 @@ from .bytecode import BytecodeModule,Op
 from .error_values import build_error, error_value_from_raw, matches_error
 from .iterators import make_iterator,iterator_next,has_next,peek,close_iterator,ITER_EXHAUSTED
 from .project import ModuleResolver,load_manifest
+from .resource_scopes import ResourceScopeManager,ResourceScope,dispose,ResourceScopeError,scope_summary
 class VMError(Exception):pass
 @dataclass
 class AsyncSuspension:
@@ -20,15 +21,15 @@ class _StepPause(Exception):
 @dataclass
 class VMFunction:name:str;module:BytecodeModule;closure:dict
 @dataclass
-class Handler:catch:int|None;finally_ip:int|None;end:int;name:str|None;stack_size:int;catch_type:str|None=None
+class Handler:catch:int|None;finally_ip:int|None;end:int;name:str|None;stack_size:int;catch_type:str|None=None;scope_depth:int=0
 @dataclass
-class Frame:code:object;env:dict;ip:int=0;name:str='<module>';stack_base:int=0;handlers:list[Handler]=field(default_factory=list)
+class Frame:code:object;env:dict;ip:int=0;name:str='<module>';stack_base:int=0;handlers:list[Handler]=field(default_factory=list);scopes:list[ResourceScope]=field(default_factory=list)
 class VirtualMachine:
- def __init__(self,output=None,max_instructions=100000,debug_hook=None,module_loader=None,instrumentation=None,module_resolver=None):
-  self.output=output or print;self.max_instructions=max_instructions;self.debug_hook=debug_hook;self.module_loader=module_loader;self.instrumentation=instrumentation;self.module_resolver=module_resolver;self.reset()
+ def __init__(self,output=None,max_instructions=100000,debug_hook=None,module_loader=None,instrumentation=None,module_resolver=None,scope_manager=None):
+  self.output=output or print;self.max_instructions=max_instructions;self.debug_hook=debug_hook;self.module_loader=module_loader;self.instrumentation=instrumentation;self.module_resolver=module_resolver;self.scope_manager=scope_manager or ResourceScopeManager();self.reset()
  def reset(self):self.instructions=0;self.stack=[];self.frames=[];self.exports={};self.paused=False;self.breakpoints=set();self.last_event=None;self.module_cache={};self.module_loading=set()
  def run(self,module,globals=None):
-  self.module=module;env=dict(globals or {});env.update({'len':len,'str':str,'int':int,'number':float,'upper':lambda x:str(x).upper(),'lower':lambda x:str(x).lower(),'append':lambda a,x:(a.append(x) or a),'iter':make_iterator,'next':iterator_next,'has_next':has_next,'peek':peek,'error':build_error})
+  self.module=module;env=dict(globals or {});env.update({'len':len,'str':str,'int':int,'number':float,'upper':lambda x:str(x).upper(),'lower':lambda x:str(x).lower(),'append':lambda a,x:(a.append(x) or a),'iter':make_iterator,'next':iterator_next,'has_next':has_next,'peek':peek,'error':build_error,'scopes':{'current':lambda:scope_summary(self.scope_manager.current()),'snapshot':lambda:scope_summary(self.scope_manager),'dispose':dispose}})
   self.frames=[Frame(module.code,env,name='<module>')];return self.loop()
  def pop(self):
   if not self.stack:raise VMError('Stack underflow')
@@ -62,17 +63,23 @@ class VirtualMachine:
   if record.get('line') is None:record['line']=thrown.line
   if record.get('frames') is None:record['frames']=self.stack_trace()
   return record
+ def _close_scopes(self,f,depth=0):
+  while len(f.scopes)>depth:
+   self.scope_manager.exit(f.scopes.pop())
+ def _pop_frame(self):
+  if not self.frames:return
+  f=self.frames.pop();self._close_scopes(f);self._discard_stack(f.stack_base)
  def _handle_throw(self,thrown):
   record=self._structured_throw(thrown)
   while self.frames:
    f=self.frames[-1]
    if f.handlers:
-    h=f.handlers.pop();self._discard_stack(h.stack_size)
+    h=f.handlers.pop();self._discard_stack(h.stack_size);self._close_scopes(f,h.scope_depth)
     if h.catch_type and not matches_error(record,h.catch_type):continue
     if h.catch is not None:
      if h.name:f.env[h.name]=record
      f.ip=h.catch;return True
-   self._discard_stack(f.stack_base);self.frames.pop()
+   self._pop_frame()
   return False
  def _resolver_for_frame(self,frame):
   if self.module_resolver is not None:return self.module_resolver
@@ -98,14 +105,14 @@ class VirtualMachine:
     else:
      from .compiler import compile_source_to_bytecode
      module=compile_source_to_bytecode(resolved.read_text(encoding='utf-8'),key)
-    child=VirtualMachine(self.output,self.max_instructions-self.instructions,module_loader=self.module_loader,module_resolver=resolver);child.module_cache=self.module_cache;child.module_loading=self.module_loading;child.run(module,frame.env);exports=dict(child.exports);self.instructions+=child.instructions;self.module_cache[key]=exports
+    child=VirtualMachine(self.output,self.max_instructions-self.instructions,module_loader=self.module_loader,module_resolver=resolver,scope_manager=self.scope_manager);child.module_cache=self.module_cache;child.module_loading=self.module_loading;child.run(module,frame.env);exports=dict(child.exports);self.instructions+=child.instructions;self.module_cache[key]=exports
    finally:self.module_loading.discard(key)
   frame.env[binding]=exports
  def loop(self):
   ret=None
   while self.frames:
    f=self.frames[-1]
-   if f.ip>=len(f.code.instructions):self.frames.pop();continue
+   if f.ip>=len(f.code.instructions):self._pop_frame();continue
    ins=f.code.instructions[f.ip]
    if self.instrumentation:self.instrumentation.hook(self,f,ins)
    if self.debug_hook:self.debug_hook(self,f,ins)
@@ -156,14 +163,18 @@ class VirtualMachine:
      if hasattr(value,'__await__'):return AsyncSuspension(value,f.code.source_name,ins.line)
      self.stack.append(value)
     elif op==Op.RETURN.value:
-     value=self.pop();self._discard_stack(f.stack_base);self.frames.pop();self.stack.append(value) if self.frames else None;ret=value
-    elif op==Op.PUSH_HANDLER.value:f.handlers.append(Handler(ins.arg.get('catch'),ins.arg.get('finally'),ins.arg['end'],ins.arg.get('name'),len(self.stack),ins.arg.get('catch_type')))
+     value=self.pop();self._pop_frame();self.stack.append(value) if self.frames else None;ret=value
+    elif op==Op.PUSH_HANDLER.value:f.handlers.append(Handler(ins.arg.get('catch'),ins.arg.get('finally'),ins.arg['end'],ins.arg.get('name'),len(self.stack),ins.arg.get('catch_type'),len(f.scopes)))
     elif op==Op.POP_HANDLER.value:
      if f.handlers:f.handlers.pop()
     elif op==Op.RAISE.value:raise VMThrown(self.pop(),f.code.source_name,ins.line)
     elif op==Op.IMPORT.value:self._load_module(ins.arg['path'],ins.arg.get('alias'),f)
+    elif op==Op.SCOPE_ENTER.value:
+     value=self.pop();scope=self.scope_manager.enter(ins.arg['name'],value);f.scopes.append(scope);f.env[ins.arg['name']]=value
+    elif op==Op.SCOPE_EXIT.value:
+     if f.scopes:self.scope_manager.exit(f.scopes.pop())
     elif op==Op.EXPORT.value:self.exports[ins.arg]=f.env.get(ins.arg)
-    elif op==Op.HALT.value:self.frames.pop();ret=self.stack[-1] if self.stack else None
+    elif op==Op.HALT.value:self._pop_frame();ret=self.stack[-1] if self.stack else None
     else:raise VMError(f'Unknown opcode {op}')
    except VMThrown as ex:
     if not self._handle_throw(ex):raise VMError(str(ex.value))

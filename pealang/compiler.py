@@ -115,6 +115,7 @@ class Compiler:
    # Pop the match result
    self.emit(Op.POP, node=s)
    return
+  if isinstance(s,UsingStmt):self.expr(s.value);self.emit(Op.SCOPE_ENTER,{'name':s.name},s);self.block(s.body);self.emit(Op.SCOPE_EXIT,node=s);return
   if isinstance(s,ThrowStmt):self.expr(s.value);self.emit(Op.RAISE,node=s);return
   if isinstance(s,TryStmt):
    push=self.emit(Op.PUSH_HANDLER,{'catch':None,'finally':None,'end':None,'name':s.catch_name,'catch_type':getattr(s,'catch_type',None)},s);self.block(s.try_body);self.emit(Op.POP_HANDLER,node=s)

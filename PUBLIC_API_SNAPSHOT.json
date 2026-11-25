@@ -8678,6 +8678,48 @@
       "signature": "(value,seen=?)"
     },
     {
+      "module": "pealang.resource_scopes",
+      "name": "ResourceScopeError",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.resource_scopes",
+      "name": "derive_limits",
+      "kind": "function",
+      "signature": "(parent)"
+    },
+    {
+      "module": "pealang.resource_scopes",
+      "name": "dispose",
+      "kind": "function",
+      "signature": "(value)"
+    },
+    {
+      "module": "pealang.resource_scopes",
+      "name": "ResourceScope",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.resource_scopes",
+      "name": "ResourceScopeManager",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.resource_scopes",
+      "name": "scope_summary",
+      "kind": "function",
+      "signature": "(value)"
+    },
+    {
+      "module": "pealang.type_system",
+      "name": "check_resource_scopes",
+      "kind": "function",
+      "signature": "(source)"
+    },
+    {
       "module": "pealang.robustness",
       "name": "LRUCache",
       "kind": "class",

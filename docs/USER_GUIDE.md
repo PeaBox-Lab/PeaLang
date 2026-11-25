@@ -127,6 +127,19 @@ introduce hygienic temporaries. Expansion is explicit via
 `expand_source_macros()` or `compile_source_with_macros()`, and reports
 `MG101`-`MG203` issues instead of silently producing unbounded output.
 
+### Resource scopes
+```pea
+using session = open_session() {
+    print session.status
+}
+```
+The binding lives only inside the block. On exit, a `close()` or `dispose()`
+method on the value is called automatically, including when the block throws.
+Nested `using` blocks close in reverse order, and each scope receives a bounded
+resource budget derived from its parent. `scopes.current()` and
+`scopes.snapshot()` expose runtime state; project analysis reports `R201` for a
+duplicate binding and `R202` for reassigning a `using` binding inside its block.
+
 ### Optional chaining and null coalescing
 ```pea
 let city = user?.profile?.city ?? "unknown"

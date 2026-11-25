@@ -218,4 +218,10 @@
 - Add a `language.macros_v2` preview feature flag and update public docs
 - Last verified baseline remains 1396 tests; targeted regression and metaprogramming tests smoke-tested
 
+## 2.41.0 - Phase 68: Resource Scopes (2026-11-25)
+- Add language-level `using` scopes with deterministic cleanup across interpreter and bytecode VM
+- Add bounded nested resource budgets and a shared scope manager for hosts and runtimes
+- Add static `R201`/`R202` scope diagnostics and a `language.resource_scopes_v2` preview flag
+- Last verified baseline remains 1396 tests; targeted regression and resource-scope tests smoke-tested
+
 ### Phase 34: Standard Library Completion (2.41.0)

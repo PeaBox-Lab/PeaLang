@@ -61,6 +61,10 @@ class Parser:
             if self.match(','):message=self.expression()
             return AssertStmt(condition,message,span=x.span)
         if self.match('THROW'):return ThrowStmt(self.expression(),span=x.span)
+        if self.match('USING'):
+            name=self.need('IDENT','Expected a binding name after using').value
+            self.need('=','Expected = after using binding');value=self.expression()
+            return UsingStmt(name,value,self.block(),span=x.span)
         if self.match('TRY'):
             body=self.block();self.skip();name=None;catch_body=None;finally_body=None;catch_type=None
             if self.match('CATCH'):

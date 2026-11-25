@@ -82,6 +82,12 @@ code. Expansion reports `MG101`-`MG203` issues and is opt-in through
 `compile_source_with_macros()`, leaving legacy string macros and existing
 programs unchanged.
 
+**Phase 68 — Resource Scopes** introduces `using` bindings with guaranteed LIFO
+cleanup across the interpreter and bytecode VM. Scopes own bounded child budgets,
+nesting inherits limits, and cleanup runs on both normal and exceptional exits.
+Hosts receive the same `ResourceScope`/`ResourceScopeManager` primitives, while
+static analysis reports `R201`/`R202` for duplicate or reassigned bindings.
+
 ### Wave 2 — Runtime and performance (Phases 71–80)
 
 Bytecode optimizer, fast interpreter, JIT, native backend, WASM backend, parallel

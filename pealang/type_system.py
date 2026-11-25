@@ -732,10 +732,48 @@ def _build_module_graph(paths):
             'edges':edges,'cycles':cycles,'diagnostics':diagnostics}
 
 
+def check_resource_scopes(source):
+    """Collect static resource-scope bindings and diagnostics for one source."""
+    from .ast_nodes import Assign,UsingStmt,Variable
+    from .parser import parse_source
+    bindings=[]
+    diagnostics=[]
+    try:
+        program=parse_source(source,'<scopes>')
+    except Exception:
+        return {'bindings':bindings,'diagnostics':diagnostics}
+    def walk(body,depth):
+        seen=set()
+        for stmt in body:
+            if isinstance(stmt,UsingStmt):
+                line=getattr(getattr(stmt,'span',None),'line',0) or 0
+                if stmt.name in seen:
+                    diagnostics.append(Diagnostic('R201',f"Duplicate using binding '{stmt.name}' in the same block",line))
+                seen.add(stmt.name)
+                bindings.append({'name':stmt.name,'line':line,'depth':depth})
+                for node in _iter_statements(stmt.body):
+                    if isinstance(node,Assign) and isinstance(node.target,Variable) and node.target.name==stmt.name:
+                        nline=getattr(getattr(node,'span',None),'line',0) or 0
+                        diagnostics.append(Diagnostic('R202',f"Using binding '{stmt.name}' cannot be reassigned in its scope",nline))
+                walk(stmt.body,depth+1)
+            else:
+                for key in ('then_body','else_body','body','try_body','catch_body','finally_body'):
+                    child=getattr(stmt,key,None)
+                    if isinstance(child,list):walk(child,depth)
+    def _iter_statements(body):
+        for stmt in body:
+            yield stmt
+            for key in ('then_body','else_body','body','try_body','catch_body','finally_body'):
+                child=getattr(stmt,key,None)
+                if isinstance(child,list):yield from _iter_statements(child)
+    walk(program.statements,0)
+    return {'bindings':bindings,'diagnostics':diagnostics}
+
+
 def analyze_project(paths):
     """Cross-module contract collector/checker for .pea source files."""
     from pathlib import Path
-    result={'files':{},'functions':{},'generics':{},'protocols':{},'traits':{},'records':{},'diagnostics':[]}
+    result={'files':{},'functions':{},'generics':{},'protocols':{},'traits':{},'records':{},'scopes':{},'diagnostics':[]}
     result['modules']=_build_module_graph(paths)
     result['diagnostics'].extend(('<module graph>',d) for d in result['modules']['diagnostics'])
     all_records = {}
@@ -747,6 +785,8 @@ def analyze_project(paths):
     # First pass: collect all declarations
     for raw in paths:
         p=Path(raw); src=p.read_text(encoding='utf-8')
+        scopes=check_resource_scopes(src);result['scopes'][str(p)]=scopes
+        result['diagnostics'].extend((str(p),d) for d in scopes['diagnostics'])
         # Parse generics
         all_generics.update({f'{p.stem}.{k}': v for k,v in parse_generic_functions(src).items()})
         # Parse protocols

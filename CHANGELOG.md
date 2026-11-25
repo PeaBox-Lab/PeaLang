@@ -426,6 +426,15 @@ All 1240 tests pass.
 - Add a `language.macros_v2` preview feature flag and update help, specs, and guides
 - Last verified baseline remains 1396 tests; targeted regression and metaprogramming tests smoke-tested
 
+## 2.41.0 - Phase 68: Resource Scopes (2026-11-25)
+- Add `ResourceScope`, `ResourceScopeManager`, and bounded child budgets with LIFO cleanup
+- Add a `using name = resource { ... }` statement to the parser, interpreter, and bytecode VM
+- Add `SCOPE_ENTER`/`SCOPE_EXIT` instructions and guaranteed cleanup on normal and exceptional exits
+- Add `scopes` runtime helpers for inspecting active scopes and disposing portable values
+- Add static `R201`/`R202` scope diagnostics to project analysis
+- Add a `language.resource_scopes_v2` preview feature flag and update help, specs, and guides
+- Last verified baseline remains 1396 tests; targeted regression and resource-scope tests smoke-tested
+
 ### Phase 34: Standard Library Completion (2.41.0)
   - **`std.sql`**: SQL query builder (SELECT, INSERT, UPDATE, DELETE, CREATE TABLE, DROP TABLE).
   - **`std.cache`**: In-memory cache with TTL support.

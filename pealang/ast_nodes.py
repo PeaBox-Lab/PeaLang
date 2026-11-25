@@ -63,6 +63,8 @@ class ParallelExpr(Expr): expressions:list[Expr]=field(default_factory=list)
 class TryStmt(Stmt):
     try_body:list[Stmt]=field(default_factory=list); catch_name:Optional[str]=None; catch_body:Optional[list[Stmt]]=None; finally_body:Optional[list[Stmt]]=None; catch_type:Optional[str]=None
 @dataclass
+class UsingStmt(Stmt): name:str=''; value:Optional[Expr]=None; body:list[Stmt]=field(default_factory=list)
+@dataclass
 class ThrowStmt(Stmt): value:Optional[Expr]=None
 @dataclass
 class Param(Node): name:str=''; default:Optional[Expr]=None

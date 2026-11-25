@@ -819,6 +819,22 @@ expansion work is limited, and issues are reported as `MG101`-`MG203`. Use
 `compile_source_with_macros()` to expand and compile in one step. Legacy string
 macros remain available, and the default compile pipeline is unchanged.
 
+### Resource scopes
+
+```pea
+using conn = open_connection() {
+    print conn.query("select 1")
+}
+```
+
+The `using` statement binds a resource for the block only. Values exposing
+`close()` or `dispose()` are cleaned up when the block exits, including exits
+caused by errors, and nested scopes unwind in LIFO order. Hosts can use
+`ResourceScope` and `ResourceScopeManager` directly for bounded child budgets,
+deferred cleanup, and scope snapshots. The `scopes` namespace exposes
+`current()`, `snapshot()`, and `dispose()` to programs, and project analysis
+reports `R201`/`R202` for duplicate or reassigned scope bindings.
+
 ### Project queries
 
 ```bash
