@@ -352,6 +352,13 @@ All 1240 tests pass.
 - Add `pea workspace init|add|list|graph|lock` CLI commands and public API exports
 - Last verified baseline remains 1396 tests; functionality smoke-tested with member add/list, graph ordering, cycle rejection, and workspace locking
 
+## 2.41.0 - Phase 59: Offline Package Cache and Air-Gapped Installs (2026-11-25)
+- Add a content-addressed offline cache with indexed package/signature entries, checksum validation, and semver-aware lookup
+- Add `export_cache()` and `import_cache()` for deterministic portable gzip bundles
+- Extend `install_remote_verified()` with `offline` and `cache_dir` support that still enforces SHA-256 and Ed25519 verification
+- Add `pea cache put|get|list|remove|export|import`, `pea install --offline [--cache-dir DIR]`, and public API exports
+- Last verified baseline remains 1396 tests; functionality smoke-tested with cache put/list/get, bundle export/import, and offline verified install
+
 ### Phase 34: Standard Library Completion (2.41.0)
   - **`std.sql`**: SQL query builder (SELECT, INSERT, UPDATE, DELETE, CREATE TABLE, DROP TABLE).
   - **`std.cache`**: In-memory cache with TTL support.

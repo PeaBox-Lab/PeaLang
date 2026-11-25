@@ -626,31 +626,44 @@ def clean(root='.', all=False):
       removed.append('pea.lock')
   return {'ok':True,'removed':removed}
 
-def install_remote_verified(name,version=None,registry=DEFAULT_REGISTRY,token=None,*,public_key=None,key_id=None,trust_store=None,root='.'):
-  """Download, verify, and install a signed library from a registry."""
+def install_remote_verified(name,version=None,registry=DEFAULT_REGISTRY,token=None,*,public_key=None,key_id=None,trust_store=None,root='.',offline=False,cache_dir=None):
+  """Install a signed library from a registry or the local offline cache."""
   from .ed25519_signing import PublicTrustStore,default_trust_store_path,public_key_bytes,public_key_id,verify_ed25519
   from .secure_packages import safe_extract,write_receipt
   mf,_=load_pea_toml(root);base=mf.parent;target=base/'.pea_modules'
   if version and version.startswith('@'):version=version[1:]
-  info=fetch_registry_versions(name,registry,token=token)
-  selected=select_registry_version(info['versions'],version or '*')
-  package_version=selected.get('version','0.0.0')
-  def full_url(value,default):
-   value=value or default
-   return str(value) if str(value).startswith(('http://','https://')) else registry.rstrip('/')+'/'+str(value).lstrip('/')
-  package_url=full_url(selected.get('url'),f'/api/v1/packages/{name}/{package_version}/download')
-  signature_url=full_url(selected.get('signature_url'),f'/api/v1/packages/{name}/{package_version}/signature')
-  def download(url):
-   request=urllib.request.Request(url)
-   if token:request.add_header('Authorization','Bearer '+token)
-   with urllib.request.urlopen(request,timeout=10) as response:
-    return response.read()
-  package_bytes=download(package_url)
-  actual_sha256=hashlib.sha256(package_bytes).hexdigest()
-  expected_sha256=selected.get('sha256','')
-  if expected_sha256 and actual_sha256!=expected_sha256:
-   raise PeaError(f'Package SHA-256 mismatch: expected {expected_sha256}, got {actual_sha256}')
-  signature_bytes=download(signature_url)
+  if offline:
+   from .offline_cache import find_cached
+   cached=find_cached(name,version,registry,cache_dir=cache_dir)
+   if not cached.get('signature_path'):
+    raise PeaError(f'Cached package {name} {cached["version"]} has no signature')
+   package_version=cached['version']
+   package_bytes=Path(cached['package_path']).read_bytes()
+   signature_bytes=Path(cached['signature_path']).read_bytes()
+   actual_sha256=hashlib.sha256(package_bytes).hexdigest()
+   if actual_sha256!=cached['sha256']:
+    raise PeaError(f'Package SHA-256 mismatch: expected {cached["sha256"]}, got {actual_sha256}')
+   selected={'signature_key_id':cached.get('key_id','')}
+  else:
+   info=fetch_registry_versions(name,registry,token=token)
+   selected=select_registry_version(info['versions'],version or '*')
+   package_version=selected.get('version','0.0.0')
+   def full_url(value,default):
+    value=value or default
+    return str(value) if str(value).startswith(('http://','https://')) else registry.rstrip('/')+'/'+str(value).lstrip('/')
+   package_url=full_url(selected.get('url'),f'/api/v1/packages/{name}/{package_version}/download')
+   signature_url=full_url(selected.get('signature_url'),f'/api/v1/packages/{name}/{package_version}/signature')
+   def download(url):
+    request=urllib.request.Request(url)
+    if token:request.add_header('Authorization','Bearer '+token)
+    with urllib.request.urlopen(request,timeout=10) as response:
+     return response.read()
+   package_bytes=download(package_url)
+   actual_sha256=hashlib.sha256(package_bytes).hexdigest()
+   expected_sha256=selected.get('sha256','')
+   if expected_sha256 and actual_sha256!=expected_sha256:
+    raise PeaError(f'Package SHA-256 mismatch: expected {expected_sha256}, got {actual_sha256}')
+   signature_bytes=download(signature_url)
   store=PublicTrustStore(trust_store or default_trust_store_path())
   revoked=list(store.data.get('revoked',{}))
   with tempfile.TemporaryDirectory() as td:

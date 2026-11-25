@@ -117,3 +117,7 @@ giving regulated teams a CI-friendly gate before install, build, or deployment.
 **Phase 58 — Workspaces and Multi-Package Projects** adds local member graphs,
 cycle detection, deterministic build order, and workspace-wide lockfiles so large
 enterprise and cloud codebases can manage many PeaLang packages as one unit.
+
+**Phase 59 — Offline Package Cache and Air-Gapped Installs** adds a content-addressed
+cache, portable bundles, and verified offline installs so regulated, embedded, and
+air-gapped environments can reuse signed packages without reaching a registry.

@@ -651,6 +651,24 @@ become local workspace links. `pea workspace graph` detects cycles and duplicate
 member names; `pea workspace lock` writes each member's `pea.lock` plus a deterministic
 `pea.workspace.lock` with the build order and manifest/lock checksums.
 
+### Offline cache and air-gapped installs
+
+```bash
+pea cache put mylib-1.0.0.pelib [--signature mylib-1.0.0.sig] [--name mylib] [--version 1.0.0]
+pea cache get mylib [@version] [--registry URL]
+pea cache list [--cache-dir DIR]
+pea cache remove mylib 1.0.0
+pea cache export packages.tar.gz [--cache-dir DIR]
+pea cache import packages.tar.gz [--cache-dir DIR]
+pea install mylib @1.0.0 --verify --offline --public-key key.pub [--cache-dir DIR]
+```
+
+The cache is content-addressed under `~/.pealang/package_cache` by default and stores
+each package beside its detached signature. `export`/`import` produce a portable,
+deterministic gzip bundle for air-gapped machines. Offline verified installs reuse
+the cached package and signature, recheck the SHA-256, and still require Ed25519
+verification through `--public-key`, `--key-id`, or the configured trust store.
+
 ### Project queries
 
 ```bash

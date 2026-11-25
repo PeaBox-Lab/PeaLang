@@ -350,25 +350,27 @@ def main(argv=None):
 
             if c=='install':
                 args=argv[1:]
-                name=None;version=None;registry=DEFAULT_REGISTRY;token=None;public_key=None;key_id=None;trust_store=None;verify=False
+                name=None;version=None;registry=DEFAULT_REGISTRY;token=None;public_key=None;key_id=None;trust_store=None;verify=False;offline=False;cache_dir=None
                 i=0
                 while i<len(args):
-                    if args[i] in ('--registry','--token','--public-key','--key-id','--trust-store') and i+1<len(args):
+                    if args[i] in ('--registry','--token','--public-key','--key-id','--trust-store','--cache-dir') and i+1<len(args):
                         flag=args[i];value=args[i+1]
                         if flag=='--registry':registry=value
                         elif flag=='--token':token=value
                         elif flag=='--public-key':public_key=value
                         elif flag=='--key-id':key_id=value
+                        elif flag=='--cache-dir':cache_dir=value
                         else:trust_store=value
                         i+=2;continue
                     if args[i]=='--verify':verify=True;i+=1;continue
+                    if args[i]=='--offline':offline=True;i+=1;continue
                     if name is None:name=args[i]
                     elif version is None:version=args[i]
                     i+=1
                 if not name:
-                    print('Usage: pea install <name> [@version] [--verify] [--registry URL] [--token TOKEN] [--public-key PATH] [--key-id ID] [--trust-store PATH]');return 1
+                    print('Usage: pea install <name> [@version] [--verify] [--offline] [--registry URL] [--token TOKEN] [--public-key PATH] [--key-id ID] [--trust-store PATH] [--cache-dir DIR]');return 1
                 if verify:
-                    result=install_remote_verified(name,version,registry,token,public_key=public_key,key_id=key_id,trust_store=trust_store)
+                    result=install_remote_verified(name,version,registry,token,public_key=public_key,key_id=key_id,trust_store=trust_store,offline=offline,cache_dir=cache_dir)
                     print(json.dumps(result,indent=2));return 0
                 install_remote(name,version,registry,token)
                 print(f'Installed: {name}')
@@ -444,6 +446,56 @@ def main(argv=None):
                     out,h=build_package(root_path,a.output)
                     print(f'{out}\nsha256 {h}')
                 return 0
+
+        if c=='cache':
+            from .offline_cache import cache_package,find_cached,list_cached,remove_cached,export_cache,import_cache
+            sub=argv[1] if len(argv)>1 else None
+            args=argv[2:]
+            def _opt(flag,default=None):
+                for i,a in enumerate(args):
+                    if a==flag and i+1<len(args):return args[i+1]
+                return default
+            def _pos(value_flags=()):
+                skip=set()
+                for flag in value_flags:
+                    for i,a in enumerate(args):
+                        if a==flag and i+1<len(args):skip.add(i+1)
+                return [a for i,a in enumerate(args) if not a.startswith('-') and i not in skip]
+
+            if sub=='put':
+                positional=_pos(('--signature','--name','--version','--registry','--cache-dir'))
+                if not positional:
+                    print('Usage: pea cache put <package.pelib> [--signature FILE] [--name NAME] [--version VER] [--registry URL] [--cache-dir DIR]');return 1
+                result=cache_package(
+                    positional[0],_opt('--signature'),name=_opt('--name'),version=_opt('--version'),
+                    registry=_opt('--registry','http://127.0.0.1:8788'),cache_dir=_opt('--cache-dir'),
+                )
+                print(json.dumps(result,indent=2));return 0
+            if sub=='get':
+                positional=_pos(('--registry','--cache-dir'))
+                if not positional:
+                    print('Usage: pea cache get <name> [@version] [--registry URL] [--cache-dir DIR]');return 1
+                version=positional[1] if len(positional)>1 else None
+                result=find_cached(positional[0],version,_opt('--registry'),cache_dir=_opt('--cache-dir'))
+                print(json.dumps(result,indent=2));return 0
+            if sub=='list':
+                print(json.dumps({'entries':list_cached(_opt('--cache-dir'))},indent=2));return 0
+            if sub=='remove':
+                positional=_pos(('--registry','--cache-dir'))
+                if len(positional)<2:
+                    print('Usage: pea cache remove <name> <version> [--registry URL] [--cache-dir DIR]');return 1
+                print(json.dumps(remove_cached(positional[0],positional[1],_opt('--registry','http://127.0.0.1:8788'),_opt('--cache-dir')),indent=2));return 0
+            if sub=='export':
+                positional=_pos(('--cache-dir',))
+                if not positional:
+                    print('Usage: pea cache export <bundle.tar.gz> [--cache-dir DIR]');return 1
+                print(json.dumps(export_cache(positional[0],_opt('--cache-dir')),indent=2));return 0
+            if sub=='import':
+                positional=_pos(('--cache-dir',))
+                if not positional:
+                    print('Usage: pea cache import <bundle.tar.gz> [--cache-dir DIR]');return 1
+                print(json.dumps(import_cache(positional[0],_opt('--cache-dir')),indent=2));return 0
+            print('Usage: pea cache put|get|list|remove|export|import ...');return 1
 
         if c=='workspace':
             from .workspace import init_workspace,add_workspace_member,workspace_members,workspace_graph,workspace_lock
@@ -2124,7 +2176,7 @@ def main(argv=None):
 
         if allow:argv.remove('--allow-process')
 
-        if len(argv)!=1:print('Usage: pea [run|eval|repl|check|lint|fmt|test|compile|vm|dis|init|new|serve-web|doctor|health|help|quickstart|scaffold|templates|info|project|docs|registry|publish|search|browse|login|logout|ext|portal|market|analyze|web-openapi|hash|tree|env|typecheck|typecheck-project|readiness|audit|workspace|stdlib] ...',file=sys.stderr);return 2
+        if len(argv)!=1:print('Usage: pea [run|eval|repl|check|lint|fmt|test|compile|vm|dis|init|new|serve-web|doctor|health|help|quickstart|scaffold|templates|info|project|docs|registry|publish|search|browse|login|logout|ext|portal|market|analyze|web-openapi|hash|tree|env|typecheck|typecheck-project|readiness|audit|workspace|cache|stdlib] ...',file=sys.stderr);return 2
 
         return run_file(argv[0],allow)
 

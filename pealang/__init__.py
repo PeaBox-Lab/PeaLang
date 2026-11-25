@@ -132,6 +132,7 @@ from .registry_index import PackageRecord,RegistryIndex,NamespacePolicy,Registry
 from .registry_auth import registry_token,bearer_headers
 from .dependency_security import Advisory,SecurityPolicy,load_advisories,load_security_policy,scan_dependencies,severity_rank
 from .workspace import WORKSPACE_FILE,WORKSPACE_LOCK,find_workspace,init_workspace,add_workspace_member,load_workspace,workspace_members,workspace_graph,workspace_lock
+from .offline_cache import CACHE_SCHEMA,cache_key,default_cache_dir,cache_package,find_cached,list_cached,remove_cached,export_cache,import_cache
 
 from .compatibility import Stability,Feature,FEATURES,feature_status,stable_features,validate_deprecation
 from .specification import SPEC_VERSION,verify_spec
