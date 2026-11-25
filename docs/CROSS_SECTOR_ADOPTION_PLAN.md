@@ -98,6 +98,12 @@ the suite usable as a CI prerequisite without changing the legacy harness.
 registry, manifest, and specification metadata to the tagged `v3.1.36` release
 line. Historical phase notes and older versioned documents remain unchanged.
 
+**Phase 70 — Frozen 3.0 Core** closes Wave 1 with a stable, additive-only core
+contract. `pea freeze` combines the v2 conformance suite, public API removal
+checks, specification verification, version agreement, and an explicit manifest
+of frozen surfaces into one PASS/FAIL gate. Wave 2 can optimize and extend the
+runtime without changing the frozen language surface.
+
 ### Wave 2 — Runtime and performance (Phases 71–80)
 
 Bytecode optimizer, fast interpreter, JIT, native backend, WASM backend, parallel

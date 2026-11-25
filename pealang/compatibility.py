@@ -19,6 +19,7 @@ FEATURES={
   'language.macros_v2':Feature('language.macros_v2','2.41',Stability.PREVIEW),
   'language.resource_scopes_v2':Feature('language.resource_scopes_v2','2.41',Stability.PREVIEW),
   'language.conformance_v2':Feature('language.conformance_v2','2.41',Stability.PREVIEW),
+  'language.core_freeze_v3':Feature('language.core_freeze_v3','3.1.37',Stability.STABLE),
  'async.await':Feature('async.await','0.26',Stability.PREVIEW),
  'embedding.python':Feature('embedding.python','0.18',Stability.STABLE),
  'embedding.fastapi':Feature('embedding.fastapi','0.25',Stability.PREVIEW),

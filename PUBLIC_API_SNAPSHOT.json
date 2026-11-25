@@ -2486,6 +2486,42 @@
       "signature": "(report=?)"
     },
     {
+      "module": "pealang.core_freeze",
+      "name": "CoreSurface",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.core_freeze",
+      "name": "CoreFreezeManifest",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.core_freeze",
+      "name": "default_core_manifest",
+      "kind": "function",
+      "signature": "()"
+    },
+    {
+      "module": "pealang.core_freeze",
+      "name": "core_freeze_gate",
+      "kind": "function",
+      "signature": "()"
+    },
+    {
+      "module": "pealang.core_freeze",
+      "name": "verify_core_freeze",
+      "kind": "function",
+      "signature": "(root=?)"
+    },
+    {
+      "module": "pealang.core_freeze",
+      "name": "core_freeze_report",
+      "kind": "function",
+      "signature": "(root=?)"
+    },
+    {
       "module": "pealang.conformance_quality",
       "name": "run_conformance_suite",
       "kind": "function",

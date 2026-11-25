@@ -1,4 +1,12 @@
 # Changelog
+## 3.1.37 - Phase 70: Frozen 3.0 Core (2026-11-26)
+- Add `CoreSurface`, `CoreFreezeManifest`, and a canonical frozen 3.0 core surface manifest
+- Add `core_freeze_gate()`, `verify_core_freeze()`, and `core_freeze_report()` for stable release checks
+- Combine public API removals, v2 conformance, specification verification, frozen surfaces, and version agreement in one gate
+- Add a `pea freeze` CLI command, a `freeze` help topic, and a stable `language.core_freeze_v3` feature flag
+- Align current release metadata to 3.1.37 and close Wave 1 without language behavior changes
+- Last verified baseline remains 1396 tests; targeted freeze, version, and conformance tests smoke-tested
+
 ## 3.1.36 - Release Version Alignment (2026-11-25)
 - Align `pealang.__version__`, `pyproject.toml`, SDK package versions, React peer dependency, and container image metadata with the local `v3.1.36` tag
 - Align runtime health output, registry user agent, release manifest, audit closure, language specification version, and specification title with `3.1.36`

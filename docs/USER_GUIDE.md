@@ -1,6 +1,6 @@
 # PeaLang User Guide
 
-This guide covers the PeaLang 3.1.36 release (unified versioning; supersedes the 1.0.0-experience and 0.99.6 baselines).
+This guide covers the PeaLang 3.1.37 release (unified versioning; supersedes the 1.0.0-experience and 0.99.6 baselines).
 
 ## Installation and Setup
 
@@ -149,6 +149,15 @@ cases must produce identical normalized output on the interpreter and bytecode
 VM; other cases check macro expansion, static diagnostic codes, and module
 graphs. `run_conformance_suite_v2()` is the equivalent host API, and
 `conformance_gate_v2()` returns `PASS` or `FAIL` for CI gates.
+
+### Frozen 3.0 core
+```bash
+pea freeze
+```
+The frozen-core gate checks that public API removals have not appeared, the v2
+conformance suite passes, the specification is complete for the current release,
+the version surfaces agree, and all declared `CORE_SURFACES` remain frozen.
+`verify_core_freeze()` provides the same gate to host programs.
 
 ### Optional chaining and null coalescing
 ```pea

@@ -8,9 +8,9 @@ PeaLang is designed to complement existing ecosystems such as Python, FastAPI, J
 
 ## Release Status
 
-**Version: 3.1.36** — current tagged release across package, SDK, runtime, and specification metadata.
+**Version: 3.1.37** — current tagged release across package, SDK, runtime, and specification metadata.
 
-`3.1.36` is the unified release identifier for the tagged v3.1.36 line. Source version, SDK packages, container image label, runtime health output, registry user agent, release manifest, and language specification now report the same version. Historical release notes are kept in `docs/releases/` for provenance, but they do not define the current version.
+`3.1.37` is the unified release identifier for the tagged v3.1.37 line. Source version, SDK packages, container image label, runtime health output, registry user agent, release manifest, and language specification now report the same version. Historical release notes are kept in `docs/releases/` for provenance, but they do not define the current version.
 
 See `ROADMAP.md` for the forward-looking plan, `CHANGELOG.md` for per-feature history, and `docs/CROSS_SECTOR_ADOPTION_PLAN.md` for the plan to make PeaLang credible across enterprise, data, web, mobile, games, embedded, and cloud sectors.
 
@@ -847,6 +847,19 @@ module-graph cases. Each result records the runtime output or diagnostic codes
 observed, and `conformance_gate_v2()` reduces the report to a stable PASS/FAIL
 gate for CI. The original `pea conformance` differential and fuzz harness is
 unchanged.
+
+### Frozen 3.0 core
+
+```bash
+pea freeze
+```
+
+Phase 70 closes Wave 1 with a stable core-freeze gate. It combines the v2
+conformance report, public API removal checks, specification verification, and
+an explicit `CORE_SURFACES` manifest. `verify_core_freeze()` returns the same
+PASS/FAIL report to hosts, and `core_freeze_report()` includes the manifest
+digest for release evidence. Additions remain compatible; unexpected public API
+removals fail the gate.
 
 ### Project queries
 

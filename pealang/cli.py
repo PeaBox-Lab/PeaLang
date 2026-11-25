@@ -687,6 +687,12 @@ def main(argv=None):
 
             report=conformance_report_v2();print(json.dumps(report,indent=2));return 0 if conformance_gate_v2(report)['gate']=='PASS' else 1
 
+        if c=='freeze':
+
+            from .core_freeze import core_freeze_report
+
+            report=core_freeze_report();print(json.dumps(report,indent=2));return 0 if report['freeze']['gate']=='PASS' else 1
+
         if c=='wasm-build':
 
             from .compiler import compile_source_to_bytecode
@@ -951,7 +957,7 @@ def main(argv=None):
             else:
                 from .stdlib import stdlib_manifest
                 sm=stdlib_manifest();mods=sm.get('modules',sm)
-                info={'version':__version__,'stdlib':list(mods.keys()) if isinstance(mods,dict) else mods,'commands':['run','eval','repl','check','lint','fmt','test','compile','vm','dis','init','new','serve-web','doctor','health','diagnose','help','templates','info','project','serve','stdlib','typecheck','typecheck-project','docs','analyze','web-openapi','openapi','openapi-contract','hash','tree','env','quickstart','scaffold','readiness','audit']}
+                info={'version':__version__,'stdlib':list(mods.keys()) if isinstance(mods,dict) else mods,'commands':['run','eval','repl','check','lint','fmt','test','compile','vm','dis','init','new','serve-web','doctor','health','diagnose','help','templates','info','project','serve','stdlib','typecheck','typecheck-project','docs','analyze','web-openapi','openapi','openapi-contract','hash','tree','env','quickstart','scaffold','readiness','audit','conformance','conformance-v2','freeze']}
                 print(json.dumps(info,indent=2));return 0
 
         if c=='project':print(json.dumps(project_info(argv[1] if len(argv)>1 else '.'),indent=2));return 0

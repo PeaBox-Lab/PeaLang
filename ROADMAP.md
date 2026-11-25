@@ -1,3 +1,8 @@
+## 3.1.37 - Phase 70: Frozen 3.0 Core (2026-11-26)
+- Freeze the Wave 1 language core behind a versioned surface manifest and stable gate
+- Add `pea freeze` as a CI prerequisite that checks API compatibility, conformance, spec completeness, and version agreement
+- Align current release metadata to 3.1.37 and close Wave 1 without changing runtime behavior
+
 ## 3.1.36 - Release Version Alignment (2026-11-25)
 - Align all current release metadata with the tagged `v3.1.36` line
 - Keep phase history, feature flags, and historical documents unchanged
