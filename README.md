@@ -708,6 +708,28 @@ by zero, bad indexes, missing keys, and type errors are converted into typed
 structured errors. Plain thrown values still stringify to their message for
 backward compatibility.
 
+### Generics v2
+
+```pea
+protocol Printable { function to_string() -> String }
+
+function show<T: Printable>(value: T) -> String {
+    return "printable"
+}
+
+function first<T>(items: List<T>) -> T? {
+    return null
+}
+```
+
+Static analysis now keeps generic contracts, scopes type parameters such as `T`,
+infers type arguments from literals and typed variables at call sites, and
+reports `G201`–`G204` diagnostics for arity, inference, bound, and argument
+mismatches. Generic-aware compatibility checks nested arguments such as
+`List<Int>` versus `List<String>` without changing legacy broad compatibility.
+Runtime annotations are still erased, so these functions execute as before;
+`analyze_project()` also exposes collected generic contracts.
+
 ### Project queries
 
 ```bash

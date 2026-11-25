@@ -176,4 +176,11 @@
 - Add `KeyError` to the typed exception registry and expose the structured error API publicly
 - Last verified baseline remains 1396 tests; targeted regression and structured-error tests smoke-tested
 
+## 2.41.0 - Phase 62: Generics v2 (2026-11-25)
+- Add scoped type parameters and preserved generic contracts in static analysis
+- Infer generic type arguments at call sites and check protocol bounds
+- Add generic-aware recursive compatibility checks without changing legacy broad compatibility
+- Expose collected generic contracts from project analysis and the public API
+- Last verified baseline remains 1396 tests; targeted regression and generics tests smoke-tested
+
 ### Phase 34: Standard Library Completion (2.41.0)

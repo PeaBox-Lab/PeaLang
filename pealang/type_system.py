@@ -1,6 +1,6 @@
 """Optional static type system and source-to-runtime annotation erasure."""
 from __future__ import annotations
-from dataclasses import dataclass,field
+from dataclasses import dataclass,field,replace
 import re
 from typing import Any
 
@@ -61,6 +61,20 @@ def compatible(expected:TypeRef,actual:TypeRef)->bool:
     if expected.name=='Union':return any(compatible(x,actual) for x in expected.args)
     return expected.name==actual.name
 
+
+def compatible_generic(expected:TypeRef,actual:TypeRef,type_params=frozenset())->bool:
+    """Generic-aware compatibility; type parameters are wildcards during checking."""
+    if expected.name in type_params or actual.name in type_params:return True
+    if expected.name=='Any' or actual.name=='Any':return True
+    if actual.nullable and not expected.nullable:return False
+    if actual.name=='Null':return expected.nullable or expected.name in ('Null','Option')
+    if expected.name=='Number' and actual.name in ('Int','Float','Number'):return True
+    if expected.name=='Union':return any(compatible_generic(x,actual,type_params) for x in expected.args)
+    if expected.name!=actual.name:return False
+    if len(expected.args)!=len(actual.args):return False
+    return all(compatible_generic(x,y,type_params) for x,y in zip(expected.args,actual.args))
+
+
 class TypeChecker:
     def check(self,source:str,source_name='<input>')->TypeCheckResult:
         if len(source)>MAX_TYPE_SOURCE_CHARS:raise ValueError('Type-check source exceeds safety limit')
@@ -68,6 +82,7 @@ class TypeChecker:
         if len(source) > 100000:
             raise ValueError('Type-check source exceeds safety limit')
         r=TypeCheckResult();known=set(BUILTINS)
+        for gf in parse_generic_functions(source).values():known.update(gf.type_params)
         # record declarations, one-line or multiline (supports ADT constructors)
         for m in re.finditer(r'(?m)^type[ \t]+([A-Za-z_]\w*)[ \t]*=[ \t]*(?:\{([^{}]*)\}|([^\n]*))',source):
             name,mbody,mcons=m.group(1),m.group(2),m.group(3)
@@ -108,7 +123,7 @@ class TypeChecker:
                 actual=infer_literal(m.group(2));expected=r.symbols[m.group(1)]
                 if not compatible(expected,actual):r.diagnostics.append(Diagnostic('T202',f"Cannot assign {actual} to {expected} variable '{m.group(1)}'",ln))
             # Function signature validation
-            m=re.match(r'function[ \t]+([A-Za-z_]\w*)[ \t]*\(([^()]*)\)[ \t]*(?:->[ \t]*([^{}\n]+))?',clean)
+            m=re.match(r'function[ \t]+([A-Za-z_]\w*)(?:[ \t]*<[^<>]+>)?[ \t]*\(([^()]*)\)[ \t]*(?:->[ \t]*([^{}\n]+))?',clean)
             if m:
                 for p in split_top(m.group(2),','):
                     if ':' in p:
@@ -153,6 +168,7 @@ class FunctionContract:
 @dataclass
 class SemanticResult(TypeCheckResult):
     functions:dict[str,FunctionContract]=field(default_factory=dict)
+    generics:dict[str,'GenericFunctionContract']=field(default_factory=dict)
 
 class SemanticAnalyzer:
     """Flow-aware semantic checks layered over the optional type surface."""
@@ -160,12 +176,12 @@ class SemanticAnalyzer:
                 cross_module_context: dict | None = None)->SemanticResult:
         if len(source) > MAX_TYPE_SOURCE_CHARS: raise ValueError('Source exceeds safety limit')
         base=TypeChecker().check(source,source_name)
-        result=SemanticResult(base.diagnostics,base.symbols,base.records,{})
-        known=set(BUILTINS)|set(result.records)
-        
-        # Parse generic functions
+        result=SemanticResult(base.diagnostics,base.symbols,base.records,{},{})
         generics = parse_generic_functions(source)
+        known=set(BUILTINS)|set(result.records)
+        for gf in generics.values():known.update(gf.type_params)
         for name, gf in generics.items():
+            result.generics[name] = gf
             result.functions[name] = FunctionContract(name, gf.params, gf.return_type, 0)
         
         # Parse protocols
@@ -175,18 +191,13 @@ class SemanticAnalyzer:
         # Collect function contracts and bodies using brace depth.
         i=0
         while i<len(lines):
-            line=lines[i];m=re.search(r'function[ \t]+([A-Za-z_]\w*)[ \t]*<([^<>]+)>[ \t]*\(([^()]*)\)[ \t]*(?:->[ \t]*([^{}\n]+))?[ \t]*\{',line)
-            if not m:
-                m=re.search(r'function[ \t]+([A-Za-z_]\w*)[ \t]*\(([^()]*)\)[ \t]*(?:->[ \t]*([^{}\n]+))?[ \t]*\{',line)
-            if not m:i+=1;continue
-            
-            if m.groups() and '<' in line and '>' in line and m.groups()[1] and '<' in m.groups()[1]:
-                # Generic function
-                name,tps,raw_params,raw_ret=m.groups()
-            else:
-                name,raw_params,raw_ret=m.groups()[:3]
-                tps = None
-            
+            line=lines[i]
+            generic_match=re.search(r'function[ \t]+([A-Za-z_]\w*)[ \t]*<([^<>]+)>[ \t]*\(([^()]*)\)[ \t]*(?:->[ \t]*([^{}\n]+))?[ \t]*\{',line)
+            plain_match=None if generic_match else re.search(r'function[ \t]+([A-Za-z_]\w*)[ \t]*\(([^()]*)\)[ \t]*(?:->[ \t]*([^{}\n]+))?[ \t]*\{',line)
+            if generic_match:name,tps,raw_params,raw_ret=generic_match.groups()
+            elif plain_match:name,raw_params,raw_ret=plain_match.groups();tps=None
+            else:i+=1;continue
+
             params=[]
             for item in split_top(raw_params,','):
                 item=item.strip()
@@ -197,6 +208,8 @@ class SemanticAnalyzer:
                 params.append((pname,ptype))
             ret=parse_type(raw_ret.strip()) if raw_ret else TypeRef('Any')
             result.functions[name]=FunctionContract(name,params,ret,i+1)
+            if generic_match and name in result.generics:
+                result.generics[name]=replace(result.generics[name],params=tuple(params),return_type=ret,line=i+1)
             depth=line.count('{')-line.count('}');body=[];j=i+1
             while j<len(lines) and depth>0:
                 depth+=lines[j].count('{')-lines[j].count('}')
@@ -221,7 +234,7 @@ class SemanticAnalyzer:
                 all_records[name] = {'constructors': constructors}
         
         self._check_records(source,result)
-        self._check_calls(source,result)
+        self._check_calls(source,result,protocols)
         
         # Cross-module context
         if cross_module_context:
@@ -283,18 +296,36 @@ class SemanticAnalyzer:
             for name in fields:
                 if name not in expected:r.diagnostics.append(Diagnostic('R203',f"Unknown field '{name}' for record '{record}'",source[:m.start()].count('\n')+1))
 
-    def _check_calls(self,source,r):
-        function_ranges=[m.span() for m in re.finditer(r'function\s+\w+\s*\(',source)]
+    def _check_calls(self,source,r,protocols=None):
+        protocols=protocols or {}
+        env=dict(r.symbols)
         for name,fn in r.functions.items():
+            generic=r.generics.get(name)
             for m in re.finditer(r'\b'+re.escape(name)+r'\s*\(([^()]*)\)',source):
                 # skip declaration
-                prefix=source[max(0,m.start()-12):m.start()]
+                prefix=source[max(0,m.start()-16):m.start()]
                 if 'function' in prefix:continue
+                line=source[:m.start()].count('\n')+1
                 args=split_top(m.group(1),',') if m.group(1).strip() else []
-                if len(args)!=len(fn.params):r.diagnostics.append(Diagnostic('C201',f"Function '{name}' expects {len(fn.params)} arguments, got {len(args)}",source[:m.start()].count('\n')+1));continue
-                for arg,(_,expected) in zip(args,fn.params):
-                    actual=infer_literal(arg)
-                    if actual.name!='Any' and not compatible(expected,actual):r.diagnostics.append(Diagnostic('C202',f"Argument expects {expected}, got {actual}",source[:m.start()].count('\n')+1))
+                expected_params=generic.params if generic else fn.params
+                if len(args)!=len(expected_params):
+                    code='G201' if generic else 'C201'
+                    r.diagnostics.append(Diagnostic(code,f"Function '{name}' expects {len(expected_params)} arguments, got {len(args)}",line));continue
+                actual_types=[self.infer_expr(arg,env,r) for arg in args]
+                if generic is None:
+                    for actual,(_,expected) in zip(actual_types,fn.params):
+                        if actual.name!='Any' and not compatible(expected,actual):r.diagnostics.append(Diagnostic('C202',f"Argument expects {expected}, got {actual}",line))
+                    continue
+                try:
+                    bindings=infer_type_arguments(generic,actual_types)
+                except ValueError as e:
+                    r.diagnostics.append(Diagnostic('G202',f"Cannot infer generic arguments for '{name}': {e}",line));continue
+                for issue in check_generic_bounds(generic,bindings,protocols,r.records):
+                    r.diagnostics.append(Diagnostic('G203',f"Generic bound violation in '{name}': {issue}",line))
+                instantiated=instantiate_generic(generic,bindings)
+                for actual,(_,expected) in zip(actual_types,instantiated.params):
+                    if actual.name!='Any' and not compatible_generic(expected,actual,set(generic.type_params)):
+                        r.diagnostics.append(Diagnostic('G204',f"Generic argument expects {expected}, got {actual}",line))
 
     def _check_cross_module_calls(self, source: str, r: SemanticResult, context: dict):
         """Check calls to functions from other modules."""
@@ -332,6 +363,8 @@ class GenericFunctionContract:
     type_params:tuple[str,...]
     params:tuple[tuple[str,TypeRef],...]
     return_type:TypeRef
+    bounds:dict[str,tuple[str,...]]=field(default_factory=dict)
+    line:int=0
 
 @dataclass(frozen=True)
 class ProtocolContract:
@@ -364,12 +397,34 @@ def instantiate_generic(generic: GenericFunctionContract, bindings: dict[str,Typ
     return FunctionContract(generic.name, params, ret, 0)
 
 
-def check_generic_application(generic: GenericFunctionContract, type_args: list[TypeRef]) -> dict[str,TypeRef]:
+def check_generic_bounds(generic: GenericFunctionContract, bindings: dict[str,TypeRef],
+                         protocols=None, records=None) -> list[str]:
+    """Return human-readable violations of declared generic type-parameter bounds."""
+    protocols=protocols or {};records=records or {};issues=[]
+    for param,bounds in generic.bounds.items():
+        concrete=bindings.get(param)
+        if concrete is None:continue
+        for bound in bounds:
+            if bound in BUILTINS or bound in generic.type_params:continue
+            protocol=protocols.get(bound)
+            if protocol is None:
+                issues.append(f"unknown protocol bound '{bound}' for type parameter '{param}'")
+                continue
+            fields=records.get(concrete.name)
+            if fields is None:continue
+            if not protocol_conforms(fields,protocol):
+                issues.append(f"type '{concrete}' does not satisfy bound '{bound}'")
+    return issues
+
+
+def check_generic_application(generic: GenericFunctionContract, type_args: list[TypeRef],
+                              protocols=None, records=None) -> dict[str,TypeRef]:
     """Check and infer type arguments for a generic function application."""
     if len(type_args) != len(generic.type_params):
         raise ValueError(f"Expected {len(generic.type_params)} type arguments, got {len(type_args)}")
     bindings = dict(zip(generic.type_params, type_args))
-    # Validate constraints (future: add trait bounds)
+    issues=check_generic_bounds(generic,bindings,protocols,records)
+    if issues:raise ValueError('; '.join(issues))
     return bindings
 
 
@@ -395,12 +450,24 @@ def parse_generic_functions(source:str):
     out={}
     pattern=r'function[ \t]+([A-Za-z_]\w*)[ \t]*<([^<>]+)>[ \t]*\(([^()]*)\)[ \t]*(?:->[ \t]*([^{}\n]+))?[ \t]*\{'
     for m in re.finditer(pattern,source):
-        name,tps,raw_params,raw_ret=m.groups(); type_params=tuple(x.strip() for x in tps.split(',') if x.strip());params=[]
+        name,tps,raw_params,raw_ret=m.groups();type_params=[];bounds={}
+        for raw_param in tps.split(','):
+            raw_param=raw_param.strip()
+            if not raw_param:continue
+            param_name,_,raw_bound=raw_param.partition(':')
+            param_name=param_name.strip()
+            if not param_name:continue
+            type_params.append(param_name)
+            bounds[param_name]=tuple(x.strip() for x in re.split(r'[+&]',raw_bound) if x.strip())
+        params=[]
         for item in split_top(raw_params,','):
             if ':' in item:
                 n,t=item.split(':',1);params.append((n.strip(),parse_type(t.split('=',1)[0].strip())))
             else:params.append((item.strip(),TypeRef('Any')))
-        out[name]=GenericFunctionContract(name,type_params,tuple(params),parse_type(raw_ret.strip()) if raw_ret else TypeRef('Any'))
+        line=source[:m.start()].count('\n')+1
+        out[name]=GenericFunctionContract(
+            name,tuple(type_params),tuple(params),
+            parse_type(raw_ret.strip()) if raw_ret else TypeRef('Any'),bounds,line)
     return out
 
 def parse_protocols(source:str):
@@ -517,7 +584,7 @@ def future_type(t):return TypeRef('Future',(t,))
 def analyze_project(paths):
     """Cross-module contract collector/checker for .pea source files."""
     from pathlib import Path
-    result={'files':{},'functions':{},'records':{},'diagnostics':[]}
+    result={'files':{},'functions':{},'generics':{},'records':{},'diagnostics':[]}
     all_records = {}
     all_protocols = {}
     all_generics = {}
@@ -562,6 +629,7 @@ def analyze_project(paths):
         result['files'][str(p)]={'ok':checked.ok,'diagnostics':[str(x) for x in checked.diagnostics]}
         result['diagnostics'].extend((str(p),x) for x in checked.diagnostics)
         for n,c in checked.functions.items():result['functions'][f'{p.stem}.{n}']=c
+        for n,c in checked.generics.items():result['generics'][f'{p.stem}.{n}']=c
         for n,c in checked.records.items():result['records'][f'{p.stem}.{n}']=c
     
     # Check protocol conformance across modules

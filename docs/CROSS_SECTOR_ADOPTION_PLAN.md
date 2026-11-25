@@ -45,6 +45,11 @@ value schema. Interpreter and bytecode runs now expose the same typed catch
 records, error codes, cause chains, context, and source spans, so libraries and
 hosts can route failures consistently.
 
+**Phase 62 — Generics v2** adds a real static generic layer: scoped type
+parameters, preserved contracts, call-site inference, protocol bounds, and
+recursive generic compatibility. Runtime annotations remain erased, so existing
+programs continue to execute unchanged.
+
 ### Wave 2 — Runtime and performance (Phases 71–80)
 
 Bytecode optimizer, fast interpreter, JIT, native backend, WASM backend, parallel

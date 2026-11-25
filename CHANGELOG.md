@@ -374,6 +374,14 @@ All 1240 tests pass.
 - Add `KeyError` to the typed exception registry and expose the structured error API publicly
 - Last verified baseline remains 1396 tests; targeted regression and structured-error tests smoke-tested
 
+## 2.41.0 - Phase 62: Generics v2 (2026-11-25)
+- Scope generic type parameters during static checking so legal `T` annotations do not emit `T101`
+- Preserve `GenericFunctionContract` metadata in `SemanticResult`, including optional protocol bounds
+- Infer generic bindings at call sites from literals and typed variables, with `G201`–`G204` diagnostics
+- Add generic-aware recursive compatibility and protocol-bound violation checks
+- Expose generic contracts through `analyze_project()` and the public API
+- Last verified baseline remains 1396 tests; targeted regression and generics tests smoke-tested
+
 ### Phase 34: Standard Library Completion (2.41.0)
   - **`std.sql`**: SQL query builder (SELECT, INSERT, UPDATE, DELETE, CREATE TABLE, DROP TABLE).
   - **`std.cache`**: In-memory cache with TTL support.

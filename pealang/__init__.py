@@ -8,7 +8,7 @@ from .runtime import execute, compile_source, Interpreter, PeaError
 from .errors import ERROR_VALUE_SCHEMA,ErrorValue,SourceSpan
 from .error_values import (build_error,is_error_value,error_value_from_exception,
     error_value_from_raw,exception_from_error_value,matches_error)
-from .type_system import TypeChecker,TypeRef,Diagnostic,TypeCheckResult,SemanticAnalyzer,SemanticResult,FunctionContract,parse_type,erase_types
+from .type_system import TypeChecker,TypeRef,Diagnostic,TypeCheckResult,SemanticAnalyzer,SemanticResult,FunctionContract,parse_type,erase_types,compatible_generic
 from .embedding import (PeaRuntime,PeaModule,RuntimeOptions,ExecutionResult,
     PeaRuntimeError,PeaPermissionError,PeaResourceLimitError,to_pea,from_pea)
 from .web import (PeaWebApp,WebRequest,WebResponse,json_response,html_response,text_response,redirect,error_response,normalize_response)
@@ -143,7 +143,9 @@ from .specification import SPEC_VERSION,verify_spec
 
 from .stdlib import STDLIB_VERSION,MODULES,StdModuleSpec,stdlib_manifest,build_standard_library
 
-from .type_system import GenericFunctionContract,ProtocolContract,substitute_type,infer_generic_bindings,parse_generic_functions,parse_protocols,protocol_conforms,option_type,result_type,future_type,analyze_project
+from .type_system import (GenericFunctionContract,ProtocolContract,substitute_type,infer_generic_bindings,
+    instantiate_generic,check_generic_application,check_generic_bounds,infer_type_arguments,
+    parse_generic_functions,parse_protocols,protocol_conforms,option_type,result_type,future_type,analyze_project)
 
 from .resource_limits import ResourceLimits,ResourceUsage,ResourceBudget,ResourceLimitExceeded,estimated_size
 from .structured_concurrency import CancellationScope,PeaTask,TaskGroup,gather_structured
