@@ -2,7 +2,7 @@
 from __future__ import annotations
 from dataclasses import dataclass,asdict
 from pathlib import Path
-import base64,hashlib,json,os,time
+import base64,hashlib,json,os,time,urllib.parse
 from cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PrivateKey,Ed25519PublicKey
 from cryptography.hazmat.primitives import serialization
 from cryptography.exceptions import InvalidSignature
@@ -13,6 +13,7 @@ class Ed25519Envelope:
  algorithm:str;key_id:str;package_sha256:str;signature:str;created:int;publisher:str|None=None
  def to_dict(self):return asdict(self)
 def public_key_id(raw):return hashlib.sha256(raw).hexdigest()[:24]
+def default_trust_store_path():return Path.home()/'.pealang'/'trust.json'
 def generate_ed25519_keypair(private_path,public_path=None):
  private_path=Path(private_path);public_path=Path(public_path or (str(private_path)+'.pub'));private_path.parent.mkdir(parents=True,exist_ok=True)
  private=Ed25519PrivateKey.generate();priv_raw=private.private_bytes(serialization.Encoding.Raw,serialization.PrivateFormat.Raw,serialization.NoEncryption());pub_raw=private.public_key().public_bytes(serialization.Encoding.Raw,serialization.PublicFormat.Raw)
@@ -46,7 +47,21 @@ class PublicTrustStore:
   if key_id not in self.data['keys']:raise PeaError('Unknown key ID')
   self.data['revoked'][key_id]={'reason':reason,'at':int(time.time())};self.save()
  def configure_registry(self,name,url,key_ids):
-  if not url.startswith('https://'):raise PeaError('Registry URL must use HTTPS')
+  parsed=urllib.parse.urlparse(url)
+  loopback=parsed.scheme=='http' and parsed.hostname in ('127.0.0.1','localhost','::1')
+  if parsed.scheme!='https' and not loopback:raise PeaError('Registry URL must use HTTPS (or local loopback HTTP)')
   for kid in key_ids:
    if kid not in self.data['keys'] or kid in self.data['revoked']:raise PeaError(f'Untrusted or revoked key: {kid}')
   self.data['registries'][name]={'url':url.rstrip('/'),'keys':list(key_ids)};self.save()
+ def registry_keys(self,url_or_name):
+  entry=self.data.get('registries',{}).get(url_or_name)
+  if entry:return list(entry.get('keys',[]))
+  target=str(url_or_name).rstrip('/')
+  for entry in self.data.get('registries',{}).values():
+   if str(entry.get('url','')).rstrip('/')==target:return list(entry.get('keys',[]))
+  return []
+ def rotate(self,old_key_id,new_public_key,label=None,reason='rotated'):
+  if old_key_id not in self.data['keys']:raise PeaError('Unknown key ID')
+  new_key_id=self.trust(new_public_key,label=label)
+  if old_key_id!=new_key_id:self.revoke(old_key_id,reason)
+  return new_key_id

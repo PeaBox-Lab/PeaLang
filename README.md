@@ -549,10 +549,38 @@ pea lib quality mylib                    # run quality gates on a library
 pea publish mylib [--registry URL] [--token TOKEN]        # publish to a registry
 pea publish mylib --dry-run                                # build + verify without uploading
 pea lib publish mylib --dry-run                            # same, via the lib subcommand
+pea publish mylib --sign --private-key key [--publisher ID] # build, sign, and publish
 pea lib inspect mylib-0.1.0.pelib [--json]                 # inspect a built package without installing
 pea install mylib [@version]                               # install from default registry
+pea install mylib @1.0.0 --verify --public-key key.pub     # verify signature before installing
 pea info mylib                                             # show registry package info
 ```
+
+### Signing and trusted keys
+
+```bash
+pea registry keys generate publisher.key [--public-key publisher.key.pub]
+pea registry keys trust publisher.key.pub [--label NAME] [--trust-store PATH]
+pea registry keys configure REGISTRY_URL KEY_ID... [--name NAME] [--trust-store PATH]
+pea registry keys rotate OLD_KEY_ID NEW_KEY.pub [--trust-store PATH]
+pea registry keys revoke KEY_ID [--reason REASON] [--trust-store PATH]
+pea registry keys list [--trust-store PATH]
+```
+
+The default trust store is `~/.pealang/trust.json`. Registry servers can load a
+shared trust store with `pea registry serve --trust-store PATH` so publisher keys are
+verified at upload time.
+
+### Reproducible libraries
+
+```bash
+pea lib reproducible mylib [--runs 2]                      # verify byte-identical rebuilds
+pea lib provenance mylib-0.1.0.pelib [--json]               # verify embedded build evidence
+```
+
+Built `.pelib` files embed `provenance.json` with sorted tar entries, zeroed
+timestamps/ownership, source/bytecode/manifest/exports checksums, lockfile hash,
+dependencies, and the PeaLang builder version.
 
 ### Dependency management
 

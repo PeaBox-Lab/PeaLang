@@ -1,4 +1,4 @@
-import argparse,sys,json
+import argparse,base64,sys,json
 
 from pathlib import Path
 
@@ -287,7 +287,7 @@ def main(argv=None):
 
         if c in ('lock','install','uninstall','audit','quality','build','deps','update','outdated','clean'):
 
-            from .package_manager import write_lock,install,uninstall,audit,build_package,install_remote,quality_check,check_lock,lock_drift,refresh_lock,list_dependencies,outdated,dependency_tree,dependency_graph,clean
+            from .package_manager import write_lock,install,uninstall,audit,build_package,install_remote,install_remote_verified,quality_check,check_lock,lock_drift,refresh_lock,list_dependencies,outdated,dependency_tree,dependency_graph,clean,DEFAULT_REGISTRY
 
             # Find root: first non-flag argument after argv[0]
             rootnext=[a for a in argv[1:] if not a.startswith('-')]
@@ -329,11 +329,28 @@ def main(argv=None):
                 print(json.dumps(list_dependencies(root),indent=2));return 0
 
             if c=='install':
-                name=argv[1] if len(argv)>1 else None
-                version=argv[2] if len(argv)>2 else None
+                args=argv[1:]
+                name=None;version=None;registry=DEFAULT_REGISTRY;token=None;public_key=None;key_id=None;trust_store=None;verify=False
+                i=0
+                while i<len(args):
+                    if args[i] in ('--registry','--token','--public-key','--key-id','--trust-store') and i+1<len(args):
+                        flag=args[i];value=args[i+1]
+                        if flag=='--registry':registry=value
+                        elif flag=='--token':token=value
+                        elif flag=='--public-key':public_key=value
+                        elif flag=='--key-id':key_id=value
+                        else:trust_store=value
+                        i+=2;continue
+                    if args[i]=='--verify':verify=True;i+=1;continue
+                    if name is None:name=args[i]
+                    elif version is None:version=args[i]
+                    i+=1
                 if not name:
-                    print('Usage: pea install <name> [@version]');return 1
-                result=install_remote(name, version, token=None)
+                    print('Usage: pea install <name> [@version] [--verify] [--registry URL] [--token TOKEN] [--public-key PATH] [--key-id ID] [--trust-store PATH]');return 1
+                if verify:
+                    result=install_remote_verified(name,version,registry,token,public_key=public_key,key_id=key_id,trust_store=trust_store)
+                    print(json.dumps(result,indent=2));return 0
+                install_remote(name,version,registry,token)
                 print(f'Installed: {name}')
                 return 0
 
@@ -931,7 +948,7 @@ def main(argv=None):
 
                 host='127.0.0.1';port=8788;storage='./registry-storage';name='pealang'
 
-                private_key_path=None;public_key_path=None
+                private_key_path=None;public_key_path=None;trust_store_path=None
 
                 i=2
 
@@ -949,15 +966,115 @@ def main(argv=None):
 
                     if argv[i]=='--public-key':public_key_path=argv[i+1];i+=2;continue
 
+                    if argv[i]=='--trust-store':trust_store_path=argv[i+1];i+=2;continue
+
                     i+=1
 
                 serve(host=host,port=port,storage_dir=storage,registry_name=name,
 
                       private_key_path=private_key_path,
 
-                      public_key_path=public_key_path)
+                      public_key_path=public_key_path,
+
+                      trust_store_path=trust_store_path)
 
                 return 0
+
+            if sub=='keys':
+
+                from .ed25519_signing import PublicTrustStore,default_trust_store_path,generate_ed25519_keypair
+
+                action=argv[2] if len(argv)>2 else None
+
+                rest=argv[3:]
+
+                trust_store=default_trust_store_path()
+
+                label=None;reason=None;registry_name=None;public_key_path=None
+
+                positional=[]
+
+                i=0
+
+                while i<len(rest):
+
+                    if rest[i] in ('--trust-store','--label','--reason','--name','--public-key') and i+1<len(rest):
+
+                        flag=rest[i];value=rest[i+1]
+
+                        if flag=='--trust-store':trust_store=value
+
+                        elif flag=='--label':label=value
+
+                        elif flag=='--reason':reason=value
+
+                        elif flag=='--name':registry_name=value
+
+                        else:public_key_path=value
+
+                        i+=2;continue
+
+                    positional.append(rest[i]);i+=1
+
+                if action=='generate':
+
+                    if not positional:
+
+                        print('Usage: pea registry keys generate <private.key> [--public-key PATH] [--trust-store PATH]');return 1
+
+                    key_id,private_path,pub_path=generate_ed25519_keypair(positional[0],public_key_path)
+
+                    print(json.dumps({'ok':True,'key_id':key_id,'private_key':str(private_path),'public_key':str(pub_path)},indent=2));return 0
+
+                store=PublicTrustStore(trust_store)
+
+                if action=='list':
+
+                    print(json.dumps(store.data,indent=2,sort_keys=True));return 0
+
+                if action=='trust':
+
+                    if not positional:
+
+                        print('Usage: pea registry keys trust <public.key> [--label LABEL] [--trust-store PATH]');return 1
+
+                    key_id=store.trust(positional[0],label=label)
+
+                    print(json.dumps({'ok':True,'key_id':key_id,'trust_store':str(store.path)},indent=2));return 0
+
+                if action=='revoke':
+
+                    if not positional:
+
+                        print('Usage: pea registry keys revoke <key-id> [--reason REASON] [--trust-store PATH]');return 1
+
+                    store.revoke(positional[0],reason or 'revoked')
+
+                    print(json.dumps({'ok':True,'key_id':positional[0],'revoked':True},indent=2));return 0
+
+                if action=='configure':
+
+                    if len(positional)<2:
+
+                        print('Usage: pea registry keys configure <registry-url> <key-id>... [--name NAME] [--trust-store PATH]');return 1
+
+                    url=positional[0];key_ids=positional[1:]
+
+                    store.configure_registry(registry_name or url,url,key_ids)
+
+                    print(json.dumps({'ok':True,'registry':registry_name or url,'url':url,'keys':key_ids},indent=2));return 0
+
+                if action=='rotate':
+
+                    if len(positional)<2:
+
+                        print('Usage: pea registry keys rotate <old-key-id> <new-public.key> [--label LABEL] [--reason REASON] [--trust-store PATH]');return 1
+
+                    new_key_id=store.rotate(positional[0],positional[1],label=label,reason=reason or 'rotated')
+
+                    print(json.dumps({'ok':True,'old_key_id':positional[0],'new_key_id':new_key_id},indent=2));return 0
+
+                print('Usage: pea registry keys generate|list|trust|revoke|configure|rotate ...');return 1
 
             if sub=='resolve':
 
@@ -1005,7 +1122,7 @@ def main(argv=None):
 
                 return 0
 
-            print('Usage: pea registry serve|resolve|register-publisher ...');return 1
+            print('Usage: pea registry serve|resolve|register-publisher|keys ...');return 1
 
         if c=='ext':
 
@@ -1342,7 +1459,7 @@ def main(argv=None):
 
         if c=='lib':
 
-            from .package_manager import build_library, quality_check, inspect_library
+            from .package_manager import build_library, sign_library, quality_check, inspect_library, verify_library_provenance, reproducible_build_check
             import urllib.request, urllib.error, json as _json
 
             sub=argv[1] if len(argv)>1 else None
@@ -1388,29 +1505,76 @@ def main(argv=None):
                     print(f"Exports: {', '.join(info['exports']) or '(none)'}")
                     print(f"Files: {len(info['files'])}")
                     print(f"SHA-256: {info['sha256']}")
+                    if info.get('provenance'):
+                        print(f"Provenance: {info['provenance'].get('format','')} deterministic={bool(info['provenance'].get('deterministic'))}")
                 return 0
+
+            if sub=='reproducible':
+                p=argparse.ArgumentParser(prog='pea lib reproducible')
+                p.add_argument('path',nargs='?',default='.')
+                p.add_argument('--runs',type=int,default=2)
+                a=p.parse_args(argv[2:])
+                result=reproducible_build_check(a.path,runs=a.runs)
+                print(json.dumps(result,indent=2));return 0 if result['ok'] else 1
+
+            if sub=='provenance':
+                path=None
+                as_json=False
+                i=2
+                while i<len(argv):
+                    arg=argv[i]
+                    if arg=='--json':as_json=True;i+=1;continue
+                    if path is None:path=arg
+                    i+=1
+                if not path:
+                    print('Usage: pea lib provenance <package.pelib> [--json]');return 1
+                result=verify_library_provenance(path)
+                if as_json:
+                    print(json.dumps(result,indent=2))
+                else:
+                    print(f"Package: {result['package']} sha256={result['sha256']}")
+                    print(f"Deterministic: {bool(result['provenance'] and result['provenance'].get('deterministic'))}")
+                    print(f"Builder: {(result['provenance'] or {}).get('builder','')} {(result['provenance'] or {}).get('builder_version','')}")
+                    for issue in result['issues']:print(f"Issue: {issue}")
+                return 0 if result['ok'] else 1
 
             if sub=='publish':
                 path=None
                 registry='http://127.0.0.1:8788'
                 token=None
                 dry_run=False
+                sign=False
+                private_key=None
+                publisher=None
+                trust_store=None
                 i=2
                 while i<len(argv):
                     arg=argv[i]
                     if arg=='--registry' and i+1<len(argv):registry=argv[i+1];i+=2;continue
                     if arg=='--token' and i+1<len(argv):token=argv[i+1];i+=2;continue
+                    if arg=='--private-key' and i+1<len(argv):private_key=argv[i+1];i+=2;continue
+                    if arg=='--publisher' and i+1<len(argv):publisher=argv[i+1];i+=2;continue
+                    if arg=='--trust-store' and i+1<len(argv):trust_store=argv[i+1];i+=2;continue
                     if arg=='--dry-run':dry_run=True;i+=1;continue
+                    if arg=='--sign':sign=True;i+=1;continue
                     if path is None:path=arg
                     i+=1
                 if not path:
-                    print('Usage: pea lib publish <path> [--registry URL] [--token TOKEN] [--dry-run]');return 1
+                    print('Usage: pea lib publish <path> [--registry URL] [--token TOKEN] [--dry-run] [--sign --private-key PATH]');return 1
                 root=Path(path).resolve()
                 mf,data=load_pea_toml(root)
                 name=data['project']['name'];version=data['project']['version']
-                out,h=build_library(root)
+                signed=None
+                if sign:
+                    signed=sign_library(root,private_key=private_key,publisher=publisher,trust_store=trust_store)
+                    out,h=signed['path'],signed['sha256']
+                else:
+                    out,h=build_library(root)
                 if dry_run:
-                    print(f'Dry-run: built library at {out} sha256={h}')
+                    if signed:
+                        print(f"Dry-run: built library at {out} sha256={h} signed_by={signed['key_id']} signature={signed['signature']}")
+                    else:
+                        print(f'Dry-run: built library at {out} sha256={h}')
                     return 0
                 package_bytes=Path(out).read_bytes()
                 if not token:
@@ -1427,6 +1591,8 @@ def main(argv=None):
                 req=urllib.request.Request(url,data=package_bytes,method='PUT')
                 req.add_header('Authorization','Bearer '+token)
                 req.add_header('Content-Type','application/octet-stream')
+                if signed:
+                    req.add_header('X-PeaLang-Signature',base64.b64encode(Path(signed['signature']).read_bytes()).decode('ascii'))
                 try:
                     with urllib.request.urlopen(req) as resp:
                         if resp.status==201:
@@ -1441,39 +1607,55 @@ def main(argv=None):
                     print(f'Upload failed: {e}');return 1
                 return 0
 
-            print('Usage: pea lib new <name> | pea lib build <path> [-o output] | pea lib quality <path> | pea lib publish <path> [--registry URL] [--token TOKEN]');return 1
+            print('Usage: pea lib new <name> | pea lib build <path> [-o output] | pea lib quality <path> | pea lib publish <path> [--registry URL] [--token TOKEN] [--sign --private-key PATH]');return 1
 
         if c=='publish':
 
-            from .package_manager import build_library
+            from .package_manager import build_library, sign_library
             import urllib.request, urllib.error, json as _json
 
             path=None
             registry='http://127.0.0.1:8788'
             token=None
             dry_run=False
+            sign=False
+            private_key=None
+            publisher=None
+            trust_store=None
 
             i=1
             while i<len(argv):
                 arg=argv[i]
                 if arg=='--registry' and i+1<len(argv):registry=argv[i+1];i+=2;continue
                 if arg=='--token' and i+1<len(argv):token=argv[i+1];i+=2;continue
+                if arg=='--private-key' and i+1<len(argv):private_key=argv[i+1];i+=2;continue
+                if arg=='--publisher' and i+1<len(argv):publisher=argv[i+1];i+=2;continue
+                if arg=='--trust-store' and i+1<len(argv):trust_store=argv[i+1];i+=2;continue
                 if arg=='--dry-run':dry_run=True;i+=1;continue
+                if arg=='--sign':sign=True;i+=1;continue
                 if path is None:path=arg
                 i+=1
 
             if not path:
-                print('Usage: pea publish <path> [--registry URL] [--token TOKEN] [--dry-run]');return 1
+                print('Usage: pea publish <path> [--registry URL] [--token TOKEN] [--dry-run] [--sign --private-key PATH]');return 1
 
             root=Path(path).resolve()
             mf,data=load_pea_toml(root)
             name=data['project']['name'];version=data['project']['version']
 
-            # Build the library package
-            out,h=build_library(root)
+            # Build and optionally sign the library package
+            signed=None
+            if sign:
+                signed=sign_library(root,private_key=private_key,publisher=publisher,trust_store=trust_store)
+                out,h=signed['path'],signed['sha256']
+            else:
+                out,h=build_library(root)
             package_bytes=Path(out).read_bytes()
             if dry_run:
-                print(f'Dry-run: built library at {out} sha256={h}')
+                if signed:
+                    print(f"Dry-run: built library at {out} sha256={h} signed_by={signed['key_id']} signature={signed['signature']}")
+                else:
+                    print(f'Dry-run: built library at {out} sha256={h}')
                 return 0
 
             # Get token from stored tokens if not provided
@@ -1494,6 +1676,8 @@ def main(argv=None):
             req=urllib.request.Request(url,data=package_bytes,method='PUT')
             req.add_header('Authorization','Bearer '+token)
             req.add_header('Content-Type','application/octet-stream')
+            if signed:
+                req.add_header('X-PeaLang-Signature',base64.b64encode(Path(signed['signature']).read_bytes()).decode('ascii'))
 
             try:
                 with urllib.request.urlopen(req) as resp:

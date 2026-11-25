@@ -112,7 +112,7 @@ __all__=['BytecodeModule','CodeObject','Instruction','Op','Compiler','CompileErr
 'SemanticAnalyzer','SemanticResult','FunctionContract','TypeChecker','TypeRef','Diagnostic','TypeCheckResult','parse_type','erase_types','RuntimeOptions','ExecutionResult','PeaRuntimeError','PeaPermissionError',
 'PeaResourceLimitError','to_pea','from_pea','__version__']
 
-from .package_manager import Version,satisfies,DEFAULT_REGISTRY,registry_cache_dir,registry_cache_path,fetch_registry_versions,select_registry_version,resolve_registry_dependency,load_pea_toml,init_manifest,resolve,write_lock,check_lock,lock_drift,refresh_lock,audit,build_package,build_library,inspect_library,install,install_remote,publish,quality_check,uninstall,update,dependency_tree,dependency_graph,outdated,clean
+from .package_manager import Version,satisfies,DEFAULT_REGISTRY,registry_cache_dir,registry_cache_path,fetch_registry_versions,select_registry_version,resolve_registry_dependency,load_pea_toml,init_manifest,resolve,write_lock,check_lock,lock_drift,refresh_lock,audit,build_package,build_library,sign_library,inspect_library,verify_library_provenance,reproducible_build_check,install,install_remote,install_remote_verified,publish,quality_check,uninstall,update,dependency_tree,dependency_graph,outdated,clean
 from .marketplace import create_marketplace
 
 from .runtime_service import RuntimeService,RuntimeResponse,ServiceError
@@ -125,7 +125,7 @@ from .benchmark import benchmark_source
 from .signing import Signature,TrustStore,generate_key,sign_package,verify_package
 from .secure_packages import safe_extract,write_receipt,validate_remote_source,dependency_confusion_guard
 
-from .ed25519_signing import Ed25519Envelope,PublicTrustStore,generate_ed25519_keypair,sign_ed25519,verify_ed25519
+from .ed25519_signing import Ed25519Envelope,PublicTrustStore,default_trust_store_path,generate_ed25519_keypair,public_key_bytes,public_key_id,sign_ed25519,verify_ed25519
 from .registry import PackageCache,install_verified,remote_install,verify_registry_index
 
 from .registry_index import PackageRecord,RegistryIndex,NamespacePolicy,RegistryState,build_index,validate_index

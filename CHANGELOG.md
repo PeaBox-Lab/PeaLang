@@ -316,6 +316,20 @@ All 1240 tests pass.
 - Add `pea registry resolve <name> [constraint] [--registry URL] [--token TOKEN] [--offline] [--json]` and `pea lock --update --registry-resolve [--offline]`
 - Last verified baseline remains 1396 tests; full verification intentionally deferred while functionality work is prioritized
 
+## 2.41.0 - Phase 54: Signed Publish/Install (2026-11-25)
+- Add Ed25519 signer key generation, trust store rotation, revocation, registry key configuration, and loopback registry support
+- Add `sign_library()` and `pea publish --sign` / `pea lib publish --sign` with detached publisher signatures uploaded to the registry
+- Add `pea install --verify [--public-key PATH | --key-id ID] [--trust-store PATH]` with checksum and Ed25519 verification before installation
+- Fix registry HTTP handler routing and server lookup so publish/download/signature endpoints work end to end
+- Last verified baseline remains 1396 tests; functionality smoke-tested with signed publish and verified install
+
+## 2.41.0 - Phase 55: Reproducible Build Provenance (2026-11-25)
+- Embed deterministic `provenance.json` in `.pelib` packages with source, bytecode, manifest, exports, lockfile, dependency, and builder evidence
+- Make library archives byte-reproducible with sorted entries, zeroed tar metadata, and gzip mtime normalization
+- Add `reproducible_build_check()`, `verify_library_provenance()`, `pea lib reproducible`, and `pea lib provenance`
+- Extend `pea lib inspect` with provenance details
+- Last verified baseline remains 1396 tests; full verification intentionally deferred while functionality work is prioritized
+
 ### Phase 34: Standard Library Completion (2.41.0)
   - **`std.sql`**: SQL query builder (SELECT, INSERT, UPDATE, DELETE, CREATE TABLE, DROP TABLE).
   - **`std.cache`**: In-memory cache with TTL support.

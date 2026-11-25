@@ -66,6 +66,7 @@ def fetch_registry_versions(name,registry=DEFAULT_REGISTRY,token=None,offline=Fa
     'published':item.get('published'),
     'url':item.get('url',''),
     'signature_url':item.get('signature_url',''),
+    'signature_key_id':item.get('signature_key_id') or item.get('publisher_key_id',''),
    })
   versions.sort(key=lambda item:Version.parse(item['version']),reverse=True)
   result={'name':name,'registry':registry,'versions':versions,'cached':False,'offline':False,'fetched_at':int(time.time())}
@@ -326,8 +327,10 @@ def build_library(root='.',output=None):
    src/<lib>.peac - compiled bytecode
    exports.json - export manifest
    receipt.json - signature/receipt
+   provenance.json - deterministic build evidence
  """
  from .compiler import compile_source_to_bytecode
+ from . import __version__ as _pealang_version
 
  mf,data=load_pea_toml(root)
  base=mf.parent
@@ -349,10 +352,9 @@ def build_library(root='.',output=None):
 
  import io, gzip, json as _json
  raw=io.BytesIO()
+ entries={}
  with tarfile.open(fileobj=raw,mode='w',format=tarfile.PAX_FORMAT) as tf:
-  def add_file(arcname,content_bytes):
-   info=tarfile.TarInfo(arcname);info.size=len(content_bytes);info.mtime=0;info.uid=info.gid=0;info.uname=info.gname=''
-   tf.addfile(info,io.BytesIO(content_bytes))
+  def add_file(arcname,content_bytes):entries[arcname]=content_bytes
 
   # manifest.json
   manifest={
@@ -365,20 +367,24 @@ def build_library(root='.',output=None):
    'format':'pelib',
    'pealang':'>=0.35.0',
   }
-  add_file('manifest.json',_json.dumps(manifest,indent=2).encode('utf-8'))
+  manifest_bytes=_json.dumps(manifest,indent=2).encode('utf-8')
+  add_file('manifest.json',manifest_bytes)
 
   # source
-  add_file(entry,source.encode('utf-8'))
+  source_bytes=source.encode('utf-8')
+  add_file(entry,source_bytes)
 
   # bytecode
-  add_file(entry.replace('.pea','.peac'),_json.dumps(bytecode,indent=2).encode('utf-8'))
+  bytecode_bytes=_json.dumps(bytecode,indent=2).encode('utf-8')
+  add_file(entry.replace('.pea','.peac'),bytecode_bytes)
 
   # exports.json
   exports_manifest={
    'exports':exports,
    'entry':entry,
   }
-  add_file('exports.json',_json.dumps(exports_manifest,indent=2).encode('utf-8'))
+  exports_bytes=_json.dumps(exports_manifest,indent=2).encode('utf-8')
+  add_file('exports.json',exports_bytes)
 
   # receipt.json
   content_hash=sha256_file(entry_path) if entry_path.exists() else ''
@@ -391,10 +397,63 @@ def build_library(root='.',output=None):
   }
   add_file('receipt.json',_json.dumps(receipt,indent=2).encode('utf-8'))
 
+  # provenance.json - deterministic build evidence
+  lock_path=base/'pea.lock'
+  lock_hash=sha256_file(lock_path) if lock_path.is_file() else ''
+  dependencies=[]
+  if lock_hash:
+   lock_data=_json.loads(lock_path.read_text(encoding='utf-8'))
+   dependencies=[{'name':d.get('name'),'version':d.get('version'),'source':d.get('source')} for d in lock_data.get('dependencies',[])]
+  provenance={
+   'format':'pelib-provenance-v1',
+   'name':name,
+   'version':version,
+   'source_sha256':hashlib.sha256(source_bytes).hexdigest(),
+   'bytecode_sha256':hashlib.sha256(bytecode_bytes).hexdigest(),
+   'manifest_sha256':hashlib.sha256(manifest_bytes).hexdigest(),
+   'exports_sha256':hashlib.sha256(exports_bytes).hexdigest(),
+   'lock_sha256':lock_hash,
+   'dependencies':dependencies,
+   'builder':'pealang',
+   'builder_version':_pealang_version,
+   'deterministic':True,
+   'normalization':{'tar_mtime':0,'tar_uid':0,'tar_gid':0,'gzip_mtime':0,'entry_order':'sorted'},
+  }
+  add_file('provenance.json',_json.dumps(provenance,indent=2,sort_keys=True).encode('utf-8'))
+
+  for arcname in sorted(entries):
+   content_bytes=entries[arcname]
+   info=tarfile.TarInfo(arcname);info.size=len(content_bytes);info.mtime=0;info.uid=info.gid=0;info.uname=info.gname=''
+   tf.addfile(info,io.BytesIO(content_bytes))
+
  with open(out,'wb') as target:
   with gzip.GzipFile(filename='',mode='wb',fileobj=target,mtime=0) as gz:gz.write(raw.getvalue())
 
  return out,sha256_file(out)
+def reproducible_build_check(root='.',runs=2):
+  """Build the same library repeatedly and verify byte-identical output."""
+  if runs<2:raise PeaError('Reproducible build check requires at least two runs')
+  hashes=[]
+  with tempfile.TemporaryDirectory() as td:
+   for index in range(runs):
+    out=Path(td)/f'build-{index}.pelib'
+    _,digest=build_library(root,str(out))
+    hashes.append(digest)
+  return {'ok':len(set(hashes))==1,'runs':runs,'hashes':hashes,'sha256':hashes[0] if hashes else ''}
+def sign_library(root='.',private_key=None,publisher=None,output=None,trust_store=None):
+  """Build a library and create a detached Ed25519 publisher signature."""
+  if not private_key:raise PeaError('Signing requires a private key path')
+  from .ed25519_signing import PublicTrustStore,default_trust_store_path,sign_ed25519
+  out,h=build_library(root,output)
+  signature,envelope=sign_ed25519(str(out),private_key,publisher=publisher)
+  report={'path':str(out),'sha256':h,'signature':str(signature),'key_id':envelope.key_id,'publisher':publisher,'signed':True,'trusted_key':None}
+  public_key=Path(str(private_key)+'.pub')
+  if public_key.is_file():
+   store=PublicTrustStore(trust_store or default_trust_store_path())
+   if envelope.key_id not in store.data.get('keys',{}):
+    store.trust(str(public_key),label=publisher or envelope.key_id)
+   report['trusted_key']=envelope.key_id
+  return report
 def inspect_library(package):
  """Inspect a built .pelib package without installing it."""
  p=Path(package).resolve()
@@ -408,6 +467,7 @@ def inspect_library(package):
   manifest=read_json('manifest.json')
   exports=read_json('exports.json',{}).get('exports',[]) or []
   receipt=read_json('receipt.json')
+  provenance=read_json('provenance.json')
  if not isinstance(manifest,dict) or not manifest.get('name'):
   raise PeaError(f'Invalid library package: {package}')
  return {
@@ -421,8 +481,30 @@ def inspect_library(package):
   'entry':manifest.get('entry',''),
   'exports':exports,
   'receipt':receipt,
+  'provenance':provenance,
   'files':names,
  }
+def verify_library_provenance(package):
+  """Verify deterministic build evidence embedded in a .pelib package."""
+  info=inspect_library(package)
+  provenance=info.get('provenance')
+  if not isinstance(provenance,dict):
+   return {'ok':False,'issues':['provenance.json not found'],'package':info['package'],'sha256':info['sha256'],'checked':[],'provenance':None}
+  entry=info.get('entry','')
+  paths={'source_sha256':entry,'bytecode_sha256':entry.replace('.pea','.peac'),'manifest_sha256':'manifest.json','exports_sha256':'exports.json'}
+  issues=[];checked=[]
+  with tarfile.open(package,'r:gz') as tf:
+   names=tf.getnames()
+   for field,arcname in paths.items():
+    expected=provenance.get(field)
+    if not arcname or arcname not in names:
+     issues.append(f'{field}: package member {arcname or "<missing>"} not found');continue
+    member=tf.extractfile(arcname)
+    actual=hashlib.sha256(member.read()).hexdigest() if member else ''
+    checked.append({'field':field,'path':arcname,'sha256':actual})
+    if expected and actual!=expected:issues.append(f'{field}: expected {expected}, got {actual}')
+  if not provenance.get('deterministic'):issues.append('deterministic flag is not true')
+  return {'ok':not issues,'issues':issues,'package':info['package'],'sha256':info['sha256'],'checked':checked,'provenance':provenance}
 def install(root='.'):
  mf,_=load_pea_toml(root);lock_path=mf.parent/'pea.lock'
  if not lock_path.exists():lock_path,_=write_lock(mf.parent)
@@ -530,16 +612,76 @@ def clean(root='.', all=False):
       removed.append('pea.lock')
   return {'ok':True,'removed':removed}
 
-def publish(root='.', registry=DEFAULT_REGISTRY, token=None):
+def install_remote_verified(name,version=None,registry=DEFAULT_REGISTRY,token=None,*,public_key=None,key_id=None,trust_store=None,root='.'):
+  """Download, verify, and install a signed library from a registry."""
+  from .ed25519_signing import PublicTrustStore,default_trust_store_path,public_key_bytes,public_key_id,verify_ed25519
+  from .secure_packages import safe_extract,write_receipt
+  mf,_=load_pea_toml(root);base=mf.parent;target=base/'.pea_modules'
+  if version and version.startswith('@'):version=version[1:]
+  info=fetch_registry_versions(name,registry,token=token)
+  selected=select_registry_version(info['versions'],version or '*')
+  package_version=selected.get('version','0.0.0')
+  def full_url(value,default):
+   value=value or default
+   return str(value) if str(value).startswith(('http://','https://')) else registry.rstrip('/')+'/'+str(value).lstrip('/')
+  package_url=full_url(selected.get('url'),f'/api/v1/packages/{name}/{package_version}/download')
+  signature_url=full_url(selected.get('signature_url'),f'/api/v1/packages/{name}/{package_version}/signature')
+  def download(url):
+   request=urllib.request.Request(url)
+   if token:request.add_header('Authorization','Bearer '+token)
+   with urllib.request.urlopen(request,timeout=10) as response:
+    return response.read()
+  package_bytes=download(package_url)
+  actual_sha256=hashlib.sha256(package_bytes).hexdigest()
+  expected_sha256=selected.get('sha256','')
+  if expected_sha256 and actual_sha256!=expected_sha256:
+   raise PeaError(f'Package SHA-256 mismatch: expected {expected_sha256}, got {actual_sha256}')
+  signature_bytes=download(signature_url)
+  store=PublicTrustStore(trust_store or default_trust_store_path())
+  revoked=list(store.data.get('revoked',{}))
+  with tempfile.TemporaryDirectory() as td:
+   tmp=Path(td)
+   package_path=tmp/f'{name}-{package_version}.pelib';package_path.write_bytes(package_bytes)
+   signature_path=tmp/f'{name}-{package_version}.sig';signature_path.write_bytes(signature_bytes)
+   if public_key:
+    verify_ed25519(package_path,signature_path,public_key,revoked=revoked)
+    selected_key_id=public_key_id(public_key_bytes(public_key))
+   else:
+    envelope=json.loads(signature_bytes.decode('utf-8'))
+    envelope_key_id=envelope.get('key_id')
+    selected_key_id=key_id or envelope_key_id or selected.get('signature_key_id')
+    if key_id and envelope_key_id and key_id!=envelope_key_id:
+     raise PeaError(f'Requested key {key_id} does not match signature key {envelope_key_id}')
+    if not selected_key_id:
+     keys=store.registry_keys(registry)
+     selected_key_id=keys[0] if keys else None
+    if not selected_key_id:raise PeaError(f'No trusted key configured for registry {registry}')
+    if selected_key_id not in store.data.get('keys',{}):raise PeaError(f'Untrusted signing key: {selected_key_id}')
+    trusted=store.data['keys'][selected_key_id]
+    key_path=tmp/'trusted.pub';key_path.write_text(trusted['public_key']+'\n',encoding='utf-8')
+    verify_ed25519(package_path,signature_path,key_path,revoked=revoked)
+   dest=target/name
+   shutil.rmtree(dest,ignore_errors=True)
+   safe_extract(package_path,dest)
+   write_receipt(dest,package_path,signature_path,selected_key_id,source=registry)
+   (dest/'REMOTE_SOURCE.json').write_text(json.dumps({'name':name,'version':package_version,'source':'registry','registry':registry,'sha256':actual_sha256,'key_id':selected_key_id,'verified':True},indent=2,sort_keys=True)+'\n',encoding='utf-8')
+  return {'name':name,'version':package_version,'source':'registry','registry':registry,'verified':True,'key_id':selected_key_id,'sha256':actual_sha256,'installed':True}
+
+def publish(root='.', registry=DEFAULT_REGISTRY, token=None,*,sign=False,private_key=None,publisher=None,trust_store=None):
  """Publish a library package (.pelib) to a registry.
 
- Builds the library from the project at `root`, then uploads it to the registry.
- Returns a dict with name, version, sha256, registry, and published=True.
+ Builds (and optionally signs) the library from the project at `root` and returns
+ deterministic publish metadata for CLI upload. Returns name, version, sha256,
+ registry, published=True, and optional signature/key metadata.
  """
  out,h=build_library(root)
  mf,data=load_pea_toml(root)
  name=data['project']['name'];version=data['project']['version']
- return {'name':name,'version':version,'sha256':h,'registry':registry,'published':True,'path':str(out)}
+ report={'name':name,'version':version,'sha256':h,'registry':registry,'published':True,'path':str(out),'signed':False}
+ if sign:
+  signed=sign_library(root,private_key=private_key,publisher=publisher,output=str(out),trust_store=trust_store)
+  report['signed']=True;report['signature']=signed['signature'];report['key_id']=signed['key_id'];report['trusted_key']=signed['trusted_key']
+ return report
 
 def quality_check(root='.'):
  """Run quality checks on a library project.

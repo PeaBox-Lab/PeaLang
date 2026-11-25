@@ -7,6 +7,7 @@ Ed25519-signed registry indexes and bearer-token publisher authentication.
 
 from __future__ import annotations
 
+import base64
 import hashlib
 import io
 import json
@@ -116,6 +117,8 @@ class RegistryServer:
                 "version": p["version"],
                 "sha256": p["sha256"],
                 "url": p["url"],
+                "signature_url": p.get("signature_url", ""),
+                "signature_key_id": p.get("signature_key_id", p.get("publisher_key_id", "")),
                 "published": p["published"],
                 "publisher": p.get("publisher_key_id", ""),
             })
@@ -131,7 +134,8 @@ class RegistryServer:
         }
 
     def upload_package(self, name: str, version: str, package_bytes: bytes,
-                       publisher_id: str, token: str) -> dict[str, Any]:
+                       publisher_id: str, token: str,
+                       signature_envelope: str | None = None) -> dict[str, Any]:
         """Upload a .pelib package to the registry."""
         self._require_auth(token)
 
@@ -161,10 +165,33 @@ class RegistryServer:
         pkg_path.write_bytes(package_bytes)
         sha = hashlib.sha256(package_bytes).hexdigest()
 
-        # Create signature
+        # Create or accept a detached publisher signature
         sig_path = self._signature_file(name, version)
-        sig_path, env = sign_ed25519(str(pkg_path), str(self.private_key_path),
-                                     output=str(sig_path), publisher=publisher_id)
+        if signature_envelope:
+            env = json.loads(signature_envelope)
+            if env.get("algorithm") != "Ed25519":
+                raise PeaError("Unsupported publisher signature algorithm")
+            if env.get("package_sha256") != sha:
+                raise PeaError("Publisher signature checksum mismatch")
+            key_id = env.get("key_id")
+            revoked = set(self.trust_store.data.get("revoked", {}))
+            trusted = self.trust_store.data.get("keys", {}).get(key_id)
+            if not trusted or key_id in revoked:
+                raise PeaError(f"Publisher key {key_id} is not trusted by this registry")
+            with tempfile.TemporaryDirectory() as sd:
+                tmp_sig = Path(sd) / "publisher.sig"
+                tmp_pub = Path(sd) / "publisher.pub"
+                tmp_sig.write_text(signature_envelope, encoding="utf-8")
+                tmp_pub.write_text(trusted["public_key"] + "\n", encoding="utf-8")
+                verify_ed25519(str(pkg_path), str(tmp_sig), str(tmp_pub), revoked=revoked)
+            sig_path.write_text(signature_envelope, encoding="utf-8")
+            signature_key_id = key_id
+            publisher_signature = True
+        else:
+            sig_path, env = sign_ed25519(str(pkg_path), str(self.private_key_path),
+                                         output=str(sig_path), publisher=publisher_id)
+            signature_key_id = self.signing_key_id
+            publisher_signature = False
 
         # Build package record
         record = {
@@ -173,7 +200,9 @@ class RegistryServer:
             "sha256": sha,
             "url": f"/api/v1/packages/{name}/{version}/download",
             "signature_url": f"/api/v1/packages/{name}/{version}/signature",
-            "publisher_key_id": self.signing_key_id,
+            "publisher_key_id": signature_key_id,
+            "signature_key_id": signature_key_id,
+            "publisher_signature": publisher_signature,
             "published": int(time.time()),
             "expires": None,
         }
@@ -187,6 +216,8 @@ class RegistryServer:
             "version": version,
             "sha256": sha,
             "published": record["published"],
+            "signature_key_id": signature_key_id,
+            "publisher_signature": publisher_signature,
         }
 
     def download_package(self, name: str, version: str) -> bytes | None:
@@ -247,17 +278,17 @@ class RegistryHandler(BaseHTTPRequestHandler):
         path = self.path
 
         if path == "/api/v1/packages":
-            self.send_json(200, {"packages": self.server.list_packages()})
+            self.send_json(200, {"packages": self.server.server.list_packages()})
             return
 
         if path == "/api/v1/index":
-            self.send_json(200, self.server.get_index())
+            self.send_json(200, self.server.server.get_index())
             return
 
         # /api/v1/packages/<name>
         if path.startswith("/api/v1/packages/") and path.count("/") == 4:
-            name = path.split("/")[3]
-            info = self.server.get_package_info(name)
+            name = path.split("/")[4]
+            info = self.server.server.get_package_info(name)
             if info is None:
                 self.send_json(404, {"error": f"Package {name} not found"})
                 return
@@ -267,9 +298,9 @@ class RegistryHandler(BaseHTTPRequestHandler):
         # /api/v1/packages/<name>/<version>/download
         if path.startswith("/api/v1/packages/") and path.count("/") == 6:
             parts = path.split("/")
-            name, version = parts[3], parts[4]
-            if parts[5] == "download":
-                data = self.server.download_package(name, version)
+            name, version = parts[4], parts[5]
+            if parts[6] == "download":
+                data = self.server.server.download_package(name, version)
                 if data is None:
                     self.send_json(404, {"error": f"Package {name} {version} not found"})
                     return
@@ -279,8 +310,8 @@ class RegistryHandler(BaseHTTPRequestHandler):
                 self.end_headers()
                 self.wfile.write(data)
                 return
-            if parts[5] == "signature":
-                data = self.server.download_signature(name, version)
+            if parts[6] == "signature":
+                data = self.server.server.download_signature(name, version)
                 if data is None:
                     self.send_json(404, {"error": f"Signature for {name} {version} not found"})
                     return
@@ -296,23 +327,30 @@ class RegistryHandler(BaseHTTPRequestHandler):
         # /api/v1/packages/<name>/<version>
         if self.path.startswith("/api/v1/packages/") and self.path.count("/") == 5:
             parts = self.path.split("/")
-            name, version = parts[3], parts[4]
+            name, version = parts[4], parts[5]
 
             token = self._auth_token()
-            publisher_id = self.server._auth_token(token)
+            publisher_id = self.server.server._auth_token(token)
             if publisher_id is None:
                 self.send_json(401, {"error": "Authentication required"})
                 return
 
             try:
                 body = self._get_body()
-                result = self.server.upload_package(name, version, body, publisher_id, token)
+                signature_envelope = None
+                header = self.headers.get("X-PeaLang-Signature")
+                if header:
+                    signature_envelope = base64.b64decode(header, validate=True).decode("utf-8")
+                result = self.server.server.upload_package(name, version, body, publisher_id, token,
+                                                    signature_envelope=signature_envelope)
                 self.send_json(201, {
                     "ok": True,
                     "name": result["name"],
                     "version": result["version"],
                     "sha256": result["sha256"],
                     "published": result["published"],
+                    "signature_key_id": result["signature_key_id"],
+                    "publisher_signature": result["publisher_signature"],
                 })
                 return
             except PeaError as e:

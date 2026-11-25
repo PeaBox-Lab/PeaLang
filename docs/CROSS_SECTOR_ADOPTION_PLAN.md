@@ -96,6 +96,11 @@ Every phase must satisfy all of these:
 detection provide the reproducible, auditable baseline required by banking, data,
 cloud, games, mobile, and embedded delivery pipelines.
 
-**Phase 53 — Registry-Backed Resolution** is the next Wave 0 build: cached registry
-metadata, semver constraint selection, and offline resolution turn package ranges
-into concrete, checksummed lockfile entries.
+**Phase 53 — Registry-Backed Resolution** is complete: cached registry metadata,
+semver constraint selection, and offline resolution turn package ranges into
+concrete, checksummed lockfile entries.
+
+**Phases 54–55 — Signed Publish/Install and Reproducible Provenance** complete the
+Wave 0 supply-chain baseline: publisher signatures, trusted-key rotation and
+revocation, verified installs, and reproducible build evidence are now available for
+regulated enterprise, finance, cloud, and embedded delivery pipelines.
