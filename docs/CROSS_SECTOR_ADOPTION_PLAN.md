@@ -94,6 +94,10 @@ project analysis with normalized outputs and stable diagnostic-code checks.
 Reports are per-case and per-runtime, and a deterministic PASS/FAIL gate makes
 the suite usable as a CI prerequisite without changing the legacy harness.
 
+**Release version alignment** updates current package, SDK, container, runtime,
+registry, manifest, and specification metadata to the tagged `v3.1.36` release
+line. Historical phase notes and older versioned documents remain unchanged.
+
 ### Wave 2 — Runtime and performance (Phases 71–80)
 
 Bytecode optimizer, fast interpreter, JIT, native backend, WASM backend, parallel

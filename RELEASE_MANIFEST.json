@@ -1,11 +1,11 @@
 {
-  "version": "2.21.0",
-  "previous_version": "0.63.0rc2",
-  "release_line": "post-RC alpha",
+  "version": "3.1.36",
+  "previous_version": "3.1.35",
+  "release_line": "tagged release v3.1.36",
   "pytest_tests_passed": 436,
   "conformance_cases_passed": 500,
   "fuzz_iterations": 250,
   "tests_failed": 0,
   "status": "PASS",
-  "note": "0.63 RC line remains frozen"
+  "note": "Tagged release metadata aligned with source version and language specification."
 }

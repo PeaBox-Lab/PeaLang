@@ -1,6 +1,6 @@
 # PeaLang User Guide
 
-This guide covers the PeaLang 2.20.0 release (unified versioning; supersedes the 1.0.0-experience and 0.99.6 baselines).
+This guide covers the PeaLang 3.1.36 release (unified versioning; supersedes the 1.0.0-experience and 0.99.6 baselines).
 
 ## Installation and Setup
 

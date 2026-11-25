@@ -1,3 +1,8 @@
+## 3.1.36 - Release Version Alignment (2026-11-25)
+- Align all current release metadata with the tagged `v3.1.36` line
+- Keep phase history, feature flags, and historical documents unchanged
+- Strengthen version consistency checks for package, SDK, container, manifest, runtime, registry, and specification surfaces
+
 ## 2.41.0 - Phase 34: Standard Library Completion (2026-11-24)
 - Add 9 new standard library modules: std.sql, std.cache, std.uuid, std.cli, std.config, std.template, std.serialize, std.graph, std.queue, std.env
 - Fix std.config JSON/TOML parse (was using undefined `p` instead of `path`)

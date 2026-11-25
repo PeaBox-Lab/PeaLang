@@ -8,9 +8,9 @@ PeaLang is designed to complement existing ecosystems such as Python, FastAPI, J
 
 ## Release Status
 
-**Version: 2.21.0** — single source of truth for the current release.
+**Version: 3.1.36** — current tagged release across package, SDK, runtime, and specification metadata.
 
-`2.21.0` is the current unified release after the v0.99.6 security-hardening baseline and the 2.x feature build-out (optimizer, JIT, AI/ML, developer tooling, frameworks scaffolding, and examples). Historical release notes are kept in `docs/releases/` for provenance, but they do not define the current version.
+`3.1.36` is the unified release identifier for the tagged v3.1.36 line. Source version, SDK packages, container image label, runtime health output, registry user agent, release manifest, and language specification now report the same version. Historical release notes are kept in `docs/releases/` for provenance, but they do not define the current version.
 
 See `ROADMAP.md` for the forward-looking plan, `CHANGELOG.md` for per-feature history, and `docs/CROSS_SECTOR_ADOPTION_PLAN.md` for the plan to make PeaLang credible across enterprise, data, web, mobile, games, embedded, and cloud sectors.
 

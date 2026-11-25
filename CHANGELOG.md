@@ -1,4 +1,11 @@
 # Changelog
+## 3.1.36 - Release Version Alignment (2026-11-25)
+- Align `pealang.__version__`, `pyproject.toml`, SDK package versions, React peer dependency, and container image metadata with the local `v3.1.36` tag
+- Align runtime health output, registry user agent, release manifest, audit closure, language specification version, and specification title with `3.1.36`
+- Update README and user guide release status; keep historical release notes and older versioned documents intact
+- Extend version guard tests to cover the release manifest, container metadata, and specification version
+- No language behavior changes; targeted version, compatibility, audit, and conformance tests smoke-tested
+
 ## 2.21.0 - 2026-11-22
 
 ### Phase 1: Foundation & Reliability (Partial)
