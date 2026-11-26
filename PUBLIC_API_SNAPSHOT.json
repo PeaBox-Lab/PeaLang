@@ -7478,6 +7478,78 @@
       "signature": "()"
     },
     {
+      "module": "pealang.slo_pack",
+      "name": "SloPackError",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.slo_pack",
+      "name": "SloProfileV2",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.slo_pack",
+      "name": "slo_pack_capabilities",
+      "kind": "function",
+      "signature": "()"
+    },
+    {
+      "module": "pealang.slo_pack",
+      "name": "SloIssueV2",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.slo_pack",
+      "name": "SloAppV2",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.slo_pack",
+      "name": "SloPackPlanV2",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.slo_pack",
+      "name": "plan_slo_pack",
+      "kind": "function",
+      "signature": "(root,profile=?,state=?)"
+    },
+    {
+      "module": "pealang.slo_pack",
+      "name": "load_slo_state_v2",
+      "kind": "function",
+      "signature": "(path)"
+    },
+    {
+      "module": "pealang.slo_pack",
+      "name": "write_slo_state_v2",
+      "kind": "function",
+      "signature": "(root,plan,path=?)"
+    },
+    {
+      "module": "pealang.slo_pack",
+      "name": "slo_pack_report",
+      "kind": "function",
+      "signature": "(plans,profile=?)"
+    },
+    {
+      "module": "pealang.slo_pack",
+      "name": "slo_pack_gate",
+      "kind": "function",
+      "signature": "(report)"
+    },
+    {
+      "module": "pealang.slo_pack",
+      "name": "build_slo_pack_namespace",
+      "kind": "function",
+      "signature": "()"
+    },
+    {
       "module": "pealang.lsp",
       "name": "LSPServer",
       "kind": "class",

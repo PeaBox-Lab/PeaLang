@@ -403,6 +403,19 @@ digests that exclude host paths make reliability evidence reviewable and
 reproducible in CI through `pea observability-pack --check` and
 `observability_pack_gate()`.
 
+**Phase 102 — SLO enforcement and incident-response governance** extends Wave 6
+with a deterministic governance gate over `*.slo.json` manifests. Validated
+profiles control entry limits, preview inclusion, error budgets, incident drills,
+escalation policies, postmortems, alert routes, runbooks, SLOs, the current
+version, and incomplete policy. Stable nodes with digests, names, versions,
+kinds, evidence paths, platform bindings, resolved dependencies, propagated
+incomplete reasons, and topological order; sorted missing-dependency, cycle,
+invalid-manifest, missing-evidence, missing-error-budget, missing-incident-drill,
+missing-escalation-policy, missing-postmortem, missing-alert-route,
+missing-runbook, and missing-SLO issues; and digests that exclude host paths make
+governance evidence reviewable and reproducible in CI through
+`pea slo-pack --check` and `slo_pack_gate()`.
+
 ## Sector packs
 
 | Sector | Current PeaLang evidence | Required additions | Acceptance gate |

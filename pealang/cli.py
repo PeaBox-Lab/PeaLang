@@ -1653,6 +1653,26 @@ def main(argv=None):
             if a.check:return 0 if decision['gate']=='PASS' else 1
             return 0
 
+        if c=='slo-pack':
+
+            from .slo_pack import (SloProfileV2,slo_pack_capabilities,slo_pack_gate,slo_pack_report,plan_slo_pack,load_slo_state_v2,write_slo_state_v2)
+
+            p=argparse.ArgumentParser(prog='pea slo-pack');p.add_argument('root',nargs='?',default='.');p.add_argument('--capabilities',action='store_true');p.add_argument('--check',action='store_true');p.add_argument('--emit');p.add_argument('--state');p.add_argument('--write-state',action='store_true');p.add_argument('--max-entries',type=int,default=500);p.add_argument('--include-preview',action='store_true');p.add_argument('--no-check-budget',action='store_true');p.add_argument('--no-check-drill',action='store_true');p.add_argument('--no-check-escalation',action='store_true');p.add_argument('--no-check-postmortem',action='store_true');p.add_argument('--no-check-route',action='store_true');p.add_argument('--no-check-runbook',action='store_true');p.add_argument('--no-check-slo',action='store_true');p.add_argument('--fail-on-incomplete',action='store_true');p.add_argument('--current-version');a=p.parse_args(argv[1:])
+            if a.capabilities:
+                print(json.dumps(slo_pack_capabilities(),indent=2));return 0
+            try:profile=SloProfileV2(max_entries=a.max_entries,include_preview=a.include_preview,check_budget=not a.no_check_budget,check_drill=not a.no_check_drill,check_escalation=not a.no_check_escalation,check_postmortem=not a.no_check_postmortem,check_route=not a.no_check_route,check_runbook=not a.no_check_runbook,check_slo=not a.no_check_slo,fail_on_incomplete=a.fail_on_incomplete,current_version=a.current_version or '')
+            except Exception as e:print(f'SLO pack failed: {e}');return 1
+            state_path=Path(a.state) if a.state else Path(a.root)/'.pea_slo_pack.json'
+            try:
+                state=load_slo_state_v2(state_path);plan=plan_slo_pack(a.root,profile,state)
+                if a.write_state:write_slo_state_v2(a.root,plan,state_path)
+            except Exception as e:print(f'SLO pack failed: {e}');return 1
+            report=slo_pack_report([plan],profile);decision=slo_pack_gate(report);report['decision']=decision
+            if a.emit:Path(a.emit).write_text(json.dumps(report,indent=2,default=str)+'\n',encoding='utf-8')
+            print(json.dumps(report,indent=2,default=str))
+            if a.check:return 0 if decision['gate']=='PASS' else 1
+            return 0
+
         if c in ('check','lint'):
 
             p=argparse.ArgumentParser(prog=f'pea {c}');p.add_argument('paths',nargs='+');p.add_argument('--json',action='store_true');a=p.parse_args(argv[1:]);errors=warnings=0;items=[]

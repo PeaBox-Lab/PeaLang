@@ -4,3 +4,9 @@ Use optional annotations, generics such as `function first<T>(items: List<T>) ->
  Ecosystem registry and migration guides open Wave 5 with a stable topological entry order, manifest-digest incomplete sets with dependency propagation, and digests that exclude host paths; `pea ecosystem-pack --check` and `ecosystem_pack_gate()` provide reproducible ecosystem evidence with missing-dependency, cycle, invalid-manifest, missing-evidence, missing-migration-guide, missing-registry-package, missing-metadata, missing-signature, and missing-lockfile detection.
  Certified packages and the 5.0 ecosystem release close Wave 5 with a stable topological package order, manifest-digest incomplete sets with dependency propagation, and digests that exclude host paths; `pea certified-pack --check` and `certified_pack_gate()` provide reproducible release evidence with missing-dependency, cycle, invalid-manifest, missing-evidence, missing-signature, missing-provenance, missing-conformance-report, missing-reproducible-build, missing-lockfile, missing-registry-package, and missing-migration-guide detection.
  Wave 6 opens with a deterministic observability and SRE sector pack: `pea observability-pack --check` and `observability_pack_gate()` provide reproducible reliability evidence with missing-dependency, cycle, invalid-manifest, missing-evidence, missing-trace, missing-metric, missing-log, missing-SLO, missing-alert-policy, missing-incident-runbook, and missing-dashboard detection.
+ Phase 102 continues Wave 6 with SLO enforcement and incident-response
+governance: `pea slo-pack --check` and `slo_pack_gate()` provide reproducible
+governance evidence with missing-dependency, cycle, invalid-manifest,
+missing-evidence, missing-error-budget, missing-incident-drill,
+missing-escalation-policy, missing-postmortem, missing-alert-route,
+missing-runbook, and missing-SLO detection.

@@ -1,3 +1,11 @@
+## 5.2.0 - Phase 102: SLO enforcement and incident-response governance (2026-11-26)
+- Continue Wave 6 with a deterministic SLO enforcement and incident-response governance gate
+- Add validated profiles for entry limits, preview inclusion, error-budget/incident-drill/escalation/postmortem/alert-route/runbook/SLO checks, current version, and incomplete policy
+- Add stable SLO nodes with digests, names, versions, kinds, evidence, bindings, resolved dependencies, incomplete reasons, and topological order
+- Detect missing dependencies, cycles, invalid manifests, missing evidence, missing error budgets, incident drills, escalation policies, postmortems, alert routes, runbooks, and SLOs as stable issue codes
+- Add `pea slo-pack` with check, emit, state, strict incomplete, governance toggles, and capability options plus a stable sector feature flag
+- Align current release metadata to 5.2.0 while keeping the frozen 3.0 digest pinned
+
 ## 5.1.0 - Phase 101: Observability and SRE sector pack (2026-11-26)
 - Open Wave 6 with a deterministic observability and production-reliability gate
 - Add validated profiles for entry limits, preview inclusion, trace, metric, log, SLO, alert-policy, incident-runbook, and dashboard checks, current version, and incomplete policy
