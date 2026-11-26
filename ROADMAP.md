@@ -1,3 +1,11 @@
+## 5.10.0 - Phase 110: Game delivery evidence (2026-11-27)
+- Continue Wave 7 with a deterministic game delivery evidence gate
+- Add validated profiles for entry limits, preview inclusion, runtime-binding/ecs-binding/engine-bridge/input-api/render-api/hot-reload/playable-build, current version, and incomplete policy
+- Add stable nodes with digests, names, versions, kinds, evidence, bindings, resolved dependencies, incomplete reasons, and topological order
+- Detect missing dependencies, cycles, invalid manifests, missing evidence, and game demos without runtime binding, ECS binding, engine bridge, input API, render API, hot reload, playable build as stable issue codes
+- Add `pea game-delivery` with check, emit, state, strict incomplete, governance toggles, and capability options plus a stable sector feature flag
+- Align current release metadata to 5.10.0 while keeping the frozen 3.0 digest pinned
+
 ## 5.9.0 - Phase 109: Mobile delivery evidence (2026-11-27)
 - Continue Wave 7 with a deterministic mobile delivery evidence gate
 - Add validated profiles for entry limits, preview inclusion, android-bridge/ios-bridge/lifecycle-binding/sdk-bundle/sample-app/build-pipeline/device-matrix, current version, and incomplete policy

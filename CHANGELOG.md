@@ -1,4 +1,15 @@
 # Changelog
+## 5.10.0 - Phase 110: Game delivery evidence (2026-11-27)
+- Continue Wave 7 with a deterministic game delivery evidence gate
+- Add validated profiles for entry limits, preview inclusion, runtime-binding, ecs-binding, engine-bridge, input-api, render-api, hot-reload, playable-build, current version, and an incomplete-failure policy
+- Add stable nodes with manifest digests, names, versions, kinds, evidence paths, platform bindings, resolved dependencies, and topological order
+- Detect missing dependencies, cycles, invalid manifests, missing evidence, or game demos without runtime binding, ECS binding, engine bridge, input API, render API, hot reload, playable build as sorted issue codes
+- Track digest drift and propagate incomplete state to dependent entries through `pea game-delivery --state --write-state`
+- Add `pea game-delivery` with capability, check, emit, state, strict incomplete, governance toggle, and current-version options plus a stable `sector.game_delivery` feature flag
+- Add a normative game delivery spec section and align current release metadata to 5.10.0
+- Frozen 3.0 digest, earlier component versions, and historical release metadata stay pinned
+- Full pytest suite and targeted quality gates passed
+
 ## 5.9.0 - Phase 109: Mobile delivery evidence (2026-11-27)
 - Continue Wave 7 with a deterministic mobile delivery evidence gate
 - Add validated profiles for entry limits, preview inclusion, android-bridge, ios-bridge, lifecycle-binding, sdk-bundle, sample-app, build-pipeline, device-matrix, current version, and an incomplete-failure policy

@@ -8,9 +8,9 @@ PeaLang is designed to complement existing ecosystems such as Python, FastAPI, J
 
 ## Release Status
 
-**Version: 5.9.0** — current tagged release across package, SDK, runtime, and specification metadata.
+**Version: 5.10.0** — current tagged release across package, SDK, runtime, and specification metadata.
 
-`5.9.0` is the unified release identifier for the tagged v5.9.0 line. Source version, SDK packages, container image label, runtime health output, registry user agent, release manifest, and language specification now report the same version. Historical release notes are kept in `docs/releases/` for provenance, but they do not define the current version.
+`5.10.0` is the unified release identifier for the tagged v5.10.0 line. Source version, SDK packages, container image label, runtime health output, registry user agent, release manifest, and language specification now report the same version. Historical release notes are kept in `docs/releases/` for provenance, but they do not define the current version.
 
 See `ROADMAP.md` for the forward-looking plan, `CHANGELOG.md` for per-feature history, and `docs/CROSS_SECTOR_ADOPTION_PLAN.md` for the plan to make PeaLang credible across enterprise, data, web, mobile, games, embedded, and cloud sectors.
 
@@ -1449,6 +1449,24 @@ Android bridge, iOS bridge, lifecycle binding, SDK bundle, sample app, build pip
 `MobileDeliveryProfileV2` validates entry limits, preview inclusion, governance
 checks, current version, and the incomplete-failure policy; `mobile_delivery_report()`
 and `mobile_delivery_gate()` provide reproducible CI evidence without host paths or
+timings.
+
+### Game delivery evidence
+
+```bash
+pea game-delivery --capabilities
+pea game-delivery . --check --state game_delivery-state.json --emit game_delivery.json
+pea game-delivery . --check --write-state --fail-on-incomplete
+```
+
+Phase 110 at **5.10.0** extends Wave 7 with a deterministic
+game delivery gate over `*.game.json` manifests. It derives a stable
+topological order and incomplete set, and reports missing dependencies, cycles,
+invalid manifests, missing evidence, and game demos without
+runtime binding, ECS binding, engine bridge, input API, render API, hot reload, playable build as sorted issue codes.
+`GameDeliveryProfileV2` validates entry limits, preview inclusion, governance
+checks, current version, and the incomplete-failure policy; `game_delivery_report()`
+and `game_delivery_gate()` provide reproducible CI evidence without host paths or
 timings.
 
 ### Project queries

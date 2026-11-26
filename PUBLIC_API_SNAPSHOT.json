@@ -8054,6 +8054,78 @@
       "signature": "()"
     },
     {
+      "module": "pealang.game_delivery",
+      "name": "GameDeliveryPackError",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.game_delivery",
+      "name": "GameDeliveryProfileV2",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.game_delivery",
+      "name": "game_delivery_capabilities",
+      "kind": "function",
+      "signature": "()"
+    },
+    {
+      "module": "pealang.game_delivery",
+      "name": "GameDeliveryIssueV2",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.game_delivery",
+      "name": "GameDeliveryAppV2",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.game_delivery",
+      "name": "GameDeliveryPackPlanV2",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.game_delivery",
+      "name": "plan_game_delivery",
+      "kind": "function",
+      "signature": "(root,profile=?,state=?)"
+    },
+    {
+      "module": "pealang.game_delivery",
+      "name": "load_game_delivery_state_v2",
+      "kind": "function",
+      "signature": "(path)"
+    },
+    {
+      "module": "pealang.game_delivery",
+      "name": "write_game_delivery_state_v2",
+      "kind": "function",
+      "signature": "(root,plan,path=?)"
+    },
+    {
+      "module": "pealang.game_delivery",
+      "name": "game_delivery_report",
+      "kind": "function",
+      "signature": "(plans,profile=?)"
+    },
+    {
+      "module": "pealang.game_delivery",
+      "name": "game_delivery_gate",
+      "kind": "function",
+      "signature": "(report)"
+    },
+    {
+      "module": "pealang.game_delivery",
+      "name": "build_game_delivery_namespace",
+      "kind": "function",
+      "signature": "()"
+    },
+    {
       "module": "pealang.lsp",
       "name": "LSPServer",
       "kind": "class",
