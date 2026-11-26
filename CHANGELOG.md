@@ -1,4 +1,15 @@
 # Changelog
+## 5.12.0 - Phase 112: Wave 7 maturity and consolidation gate (2026-11-27)
+- Continue Wave 7 with a deterministic Wave 7 maturity and consolidation gate
+- Add validated profiles for entry limits, preview inclusion, trust-gate, safety-gate, conformance-gate, sector-gate, pilot-gate, security-review, version-freeze, current version, and an incomplete-failure policy
+- Add stable nodes with manifest digests, names, versions, kinds, evidence paths, platform bindings, resolved dependencies, and topological order
+- Detect missing dependencies, cycles, invalid manifests, missing evidence, or maturity demos without trust gate, safety gate, conformance gate, sector gate, pilot gate, security review, version freeze as sorted issue codes
+- Track digest drift and propagate incomplete state to dependent entries through `pea maturity-gate --state --write-state`
+- Add `pea maturity-gate` with capability, check, emit, state, strict incomplete, governance toggle, and current-version options plus a stable `sector.maturity_gate` feature flag
+- Add a normative maturity gate spec section and align current release metadata to 5.12.0
+- Frozen 3.0 digest, earlier component versions, and historical release metadata stay pinned
+- Full pytest suite and targeted quality gates passed
+
 ## 5.11.0 - Phase 111: Embedded and IoT delivery evidence (2026-11-27)
 - Continue Wave 7 with a deterministic embedded and IoT delivery evidence gate
 - Add validated profiles for entry limits, preview inclusion, no-gc-profile, c-abi, rtos-binding, static-binary, gpio-api, signed-update, safety-audit, current version, and an incomplete-failure policy

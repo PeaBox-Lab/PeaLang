@@ -385,12 +385,12 @@ def test_feature_flag_help_and_analysis_namespace_document_mobile_delivery():
 
 
 def test_release_metadata_is_aligned_and_component_pins_hold():
-    assert pealang.__version__ == SPEC_VERSION == '5.11.0'
+    assert pealang.__version__ == SPEC_VERSION == '5.12.0'
     manifest = json.loads((Path(__file__).resolve().parent.parent
                            / 'RELEASE_MANIFEST.json').read_text(encoding='utf-8'))
-    assert manifest['version'] == '5.11.0'
-    assert manifest['previous_version'] == '5.10.0'
-    assert manifest['release_line'] == 'tagged release v5.11.0'
+    assert manifest['version'] == '5.12.0'
+    assert manifest['previous_version'] == '5.11.0'
+    assert manifest['release_line'] == 'tagged release v5.12.0'
     assert pealang.MOBILE_DELIVERY_VERSION == '5.9.0'
     assert pealang.PILOT_EVIDENCE_VERSION == '5.8.0'
     assert pealang.CAPACITY_PACK_VERSION == '5.4.0'

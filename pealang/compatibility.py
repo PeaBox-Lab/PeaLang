@@ -59,6 +59,7 @@ FEATURES={
   'sector.mobile_delivery':Feature('sector.mobile_delivery','5.9.0',Stability.STABLE),
   'sector.game_delivery':Feature('sector.game_delivery','5.10.0',Stability.STABLE),
   'sector.embedded_delivery':Feature('sector.embedded_delivery','5.11.0',Stability.STABLE),
+  'sector.maturity_gate':Feature('sector.maturity_gate','5.12.0',Stability.STABLE),
  'async.await':Feature('async.await','0.26',Stability.PREVIEW),
  'embedding.python':Feature('embedding.python','0.18',Stability.STABLE),
  'embedding.fastapi':Feature('embedding.fastapi','0.25',Stability.PREVIEW),

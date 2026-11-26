@@ -1859,6 +1859,27 @@ def main(argv=None):
             if a.check:return 0 if decision['gate']=='PASS' else 1
             return 0
 
+        if c=='maturity-gate':
+
+            from .maturity_gate import (MaturityGateProfileV2,maturity_gate_capabilities,maturity_gate_gate,maturity_gate_report,plan_maturity_gate,load_maturity_gate_state_v2,write_maturity_gate_state_v2)
+
+            p=argparse.ArgumentParser(prog='pea maturity-gate');p.add_argument('root',nargs='?',default='.');p.add_argument('--capabilities',action='store_true');p.add_argument('--check',action='store_true');p.add_argument('--emit');p.add_argument('--state');p.add_argument('--write-state',action='store_true');p.add_argument('--max-entries',type=int,default=500);p.add_argument('--include-preview',action='store_true');p.add_argument('--no-check-trust',action='store_true');p.add_argument('--no-check-safety',action='store_true');p.add_argument('--no-check-conformance',action='store_true');p.add_argument('--no-check-sector',action='store_true');p.add_argument('--no-check-pilot',action='store_true');p.add_argument('--no-check-security',action='store_true');p.add_argument('--no-check-freeze',action='store_true');p.add_argument('--fail-on-incomplete',action='store_true');p.add_argument('--current-version');a=p.parse_args(argv[1:])
+            if a.capabilities:
+                print(json.dumps(maturity_gate_capabilities(),indent=2));return 0
+            try:profile=MaturityGateProfileV2(max_entries=a.max_entries,include_preview=a.include_preview,check_trust=not a.no_check_trust,check_safety=not a.no_check_safety,check_conformance=not a.no_check_conformance,check_sector=not a.no_check_sector,check_pilot=not a.no_check_pilot,check_security=not a.no_check_security,check_freeze=not a.no_check_freeze,fail_on_incomplete=a.fail_on_incomplete,current_version=a.current_version or '')
+            except Exception as e:print(f'Maturity gate pack failed: {e}');return 1
+            state_path=Path(a.state) if a.state else Path(a.root)/'.pea_maturity_gate.json'
+            try:
+                state=load_maturity_gate_state_v2(state_path);plan=plan_maturity_gate(a.root,profile,state)
+                if a.write_state:write_maturity_gate_state_v2(a.root,plan,state_path)
+            except Exception as e:
+                print(f'Maturity gate pack failed: {e}');return 1
+            report=maturity_gate_report([plan],profile);decision=maturity_gate_gate(report);report['decision']=decision
+            if a.emit:Path(a.emit).write_text(json.dumps(report,indent=2,default=str)+'\n',encoding='utf-8')
+            print(json.dumps(report,indent=2,default=str))
+            if a.check:return 0 if decision['gate']=='PASS' else 1
+            return 0
+
         if c in ('check','lint'):
 
             p=argparse.ArgumentParser(prog=f'pea {c}');p.add_argument('paths',nargs='+');p.add_argument('--json',action='store_true');a=p.parse_args(argv[1:]);errors=warnings=0;items=[]

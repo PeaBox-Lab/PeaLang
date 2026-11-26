@@ -1,6 +1,6 @@
 {
   "name": "@pealang/client",
-  "version": "5.11.0",
+  "version": "5.12.0",
   "type": "module",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -9,7 +9,7 @@
     "typecheck": "tsc -p tsconfig.json --noEmit"
   },
   "devDependencies": {
-    "typescript": "^5.11.0"
+    "typescript": "^5.12.0"
   },
   "files": [
     "dist"

@@ -8198,6 +8198,78 @@
       "signature": "()"
     },
     {
+      "module": "pealang.maturity_gate",
+      "name": "MaturityGatePackError",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.maturity_gate",
+      "name": "MaturityGateProfileV2",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.maturity_gate",
+      "name": "maturity_gate_capabilities",
+      "kind": "function",
+      "signature": "()"
+    },
+    {
+      "module": "pealang.maturity_gate",
+      "name": "MaturityGateIssueV2",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.maturity_gate",
+      "name": "MaturityGateAppV2",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.maturity_gate",
+      "name": "MaturityGatePackPlanV2",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.maturity_gate",
+      "name": "plan_maturity_gate",
+      "kind": "function",
+      "signature": "(root,profile=?,state=?)"
+    },
+    {
+      "module": "pealang.maturity_gate",
+      "name": "load_maturity_gate_state_v2",
+      "kind": "function",
+      "signature": "(path)"
+    },
+    {
+      "module": "pealang.maturity_gate",
+      "name": "write_maturity_gate_state_v2",
+      "kind": "function",
+      "signature": "(root,plan,path=?)"
+    },
+    {
+      "module": "pealang.maturity_gate",
+      "name": "maturity_gate_report",
+      "kind": "function",
+      "signature": "(plans,profile=?)"
+    },
+    {
+      "module": "pealang.maturity_gate",
+      "name": "maturity_gate_gate",
+      "kind": "function",
+      "signature": "(report)"
+    },
+    {
+      "module": "pealang.maturity_gate",
+      "name": "build_maturity_gate_namespace",
+      "kind": "function",
+      "signature": "()"
+    },
+    {
       "module": "pealang.lsp",
       "name": "LSPServer",
       "kind": "class",

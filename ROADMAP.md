@@ -1,3 +1,11 @@
+## 5.12.0 - Phase 112: Wave 7 maturity and consolidation gate (2026-11-27)
+- Continue Wave 7 with a deterministic Wave 7 maturity and consolidation gate
+- Add validated profiles for entry limits, preview inclusion, trust-gate/safety-gate/conformance-gate/sector-gate/pilot-gate/security-review/version-freeze, current version, and incomplete policy
+- Add stable nodes with digests, names, versions, kinds, evidence, bindings, resolved dependencies, incomplete reasons, and topological order
+- Detect missing dependencies, cycles, invalid manifests, missing evidence, and maturity demos without trust gate, safety gate, conformance gate, sector gate, pilot gate, security review, version freeze as stable issue codes
+- Add `pea maturity-gate` with check, emit, state, strict incomplete, governance toggles, and capability options plus a stable sector feature flag
+- Align current release metadata to 5.12.0 while keeping the frozen 3.0 digest pinned
+
 ## 5.11.0 - Phase 111: Embedded and IoT delivery evidence (2026-11-27)
 - Continue Wave 7 with a deterministic embedded and IoT delivery evidence gate
 - Add validated profiles for entry limits, preview inclusion, no-gc-profile/c-abi/rtos-binding/static-binary/gpio-api/signed-update/safety-audit, current version, and incomplete policy

@@ -8,9 +8,9 @@ PeaLang is designed to complement existing ecosystems such as Python, FastAPI, J
 
 ## Release Status
 
-**Version: 5.11.0** — current tagged release across package, SDK, runtime, and specification metadata.
+**Version: 5.12.0** — current tagged release across package, SDK, runtime, and specification metadata.
 
-`5.11.0` is the unified release identifier for the tagged v5.11.0 line. Source version, SDK packages, container image label, runtime health output, registry user agent, release manifest, and language specification now report the same version. Historical release notes are kept in `docs/releases/` for provenance, but they do not define the current version.
+`5.12.0` is the unified release identifier for the tagged v5.12.0 line. Source version, SDK packages, container image label, runtime health output, registry user agent, release manifest, and language specification now report the same version. Historical release notes are kept in `docs/releases/` for provenance, but they do not define the current version.
 
 See `ROADMAP.md` for the forward-looking plan, `CHANGELOG.md` for per-feature history, and `docs/CROSS_SECTOR_ADOPTION_PLAN.md` for the plan to make PeaLang credible across enterprise, data, web, mobile, games, embedded, and cloud sectors.
 
@@ -1485,6 +1485,24 @@ no-GC profile, C ABI, RTOS binding, static binary, GPIO API, signed update, safe
 `EmbeddedDeliveryProfileV2` validates entry limits, preview inclusion, governance
 checks, current version, and the incomplete-failure policy; `embedded_delivery_report()`
 and `embedded_delivery_gate()` provide reproducible CI evidence without host paths or
+timings.
+
+### Wave 7 maturity and consolidation gate
+
+```bash
+pea maturity-gate --capabilities
+pea maturity-gate . --check --state maturity_gate-state.json --emit maturity_gate.json
+pea maturity-gate . --check --write-state --fail-on-incomplete
+```
+
+Phase 112 at **5.12.0** extends Wave 7 with a deterministic
+maturity gate gate over `*.maturity.json` manifests. It derives a stable
+topological order and incomplete set, and reports missing dependencies, cycles,
+invalid manifests, missing evidence, and maturity demos without
+trust gate, safety gate, conformance gate, sector gate, pilot gate, security review, version freeze as sorted issue codes.
+`MaturityGateProfileV2` validates entry limits, preview inclusion, governance
+checks, current version, and the incomplete-failure policy; `maturity_gate_report()`
+and `maturity_gate_gate()` provide reproducible CI evidence without host paths or
 timings.
 
 ### Project queries
