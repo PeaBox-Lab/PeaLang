@@ -1,4 +1,15 @@
 # Changelog
+## 5.16.0 - Phase 116: Third-party license review closure (2026-11-27)
+- Continue Wave 8 with a deterministic third-party license review closure gate
+- Add validated profiles for entry limits, preview inclusion, license-inventory, license-policy, reviewer-decision, approved-license, unknown-license, exception-record, review-evidence, current version, and an incomplete-failure policy
+- Add stable nodes with manifest digests, names, versions, kinds, evidence paths, platform bindings, resolved dependencies, and topological order
+- Detect missing dependencies, cycles, invalid manifests, missing evidence, or license demos without license inventory, license policy, reviewer decision, approved license, unknown license, exception record, review evidence as sorted issue codes
+- Track digest drift and propagate incomplete state to dependent entries through `pea license-review --state --write-state`
+- Add `pea license-review` with capability, check, emit, state, strict incomplete, governance toggle, and current-version options plus a stable `sector.license_review` feature flag
+- Add a normative license review spec section and align current release metadata to 5.16.0
+- Frozen 3.0 digest, earlier component versions, and historical release metadata stay pinned
+- Full pytest suite and targeted quality gates passed
+
 ## 5.15.0 - Phase 115: Release artifact attestation and provenance (2026-11-27)
 - Continue Wave 8 with a deterministic release artifact attestation and provenance gate
 - Add validated profiles for entry limits, preview inclusion, wheel-digest, sdist-digest, container-manifest, sbom, provenance, signature, reproducibility, current version, and an incomplete-failure policy

@@ -8,9 +8,9 @@ PeaLang is designed to complement existing ecosystems such as Python, FastAPI, J
 
 ## Release Status
 
-**Version: 5.15.0** — current tagged release across package, SDK, runtime, and specification metadata.
+**Version: 5.16.0** — current tagged release across package, SDK, runtime, and specification metadata.
 
-`5.15.0` is the unified release identifier for the tagged v5.15.0 line. Source version, SDK packages, container image label, runtime health output, registry user agent, release manifest, and language specification now report the same version. Historical release notes are kept in `docs/releases/` for provenance, but they do not define the current version.
+`5.16.0` is the unified release identifier for the tagged v5.16.0 line. Source version, SDK packages, container image label, runtime health output, registry user agent, release manifest, and language specification now report the same version. Historical release notes are kept in `docs/releases/` for provenance, but they do not define the current version.
 
 See `ROADMAP.md` for the forward-looking plan, `CHANGELOG.md` for per-feature history, and `docs/CROSS_SECTOR_ADOPTION_PLAN.md` for the plan to make PeaLang credible across enterprise, data, web, mobile, games, embedded, and cloud sectors.
 
@@ -1557,6 +1557,24 @@ wheel digest, sdist digest, container manifest, SBOM, provenance, signature, rep
 `ArtifactAttestationProfileV2` validates entry limits, preview inclusion, governance
 checks, current version, and the incomplete-failure policy; `artifact_attestation_report()`
 and `artifact_attestation_gate()` provide reproducible CI evidence without host paths or
+timings.
+
+### Third-party license review closure
+
+```bash
+pea license-review --capabilities
+pea license-review . --check --state license_review-state.json --emit license_review.json
+pea license-review . --check --write-state --fail-on-incomplete
+```
+
+Phase 116 at **5.16.0** extends Wave 8 with a deterministic
+license review gate over `*.license.json` manifests. It derives a stable
+topological order and incomplete set, and reports missing dependencies, cycles,
+invalid manifests, missing evidence, and license demos without
+license inventory, license policy, reviewer decision, approved license, unknown license, exception record, review evidence as sorted issue codes.
+`LicenseReviewProfileV2` validates entry limits, preview inclusion, governance
+checks, current version, and the incomplete-failure policy; `license_review_report()`
+and `license_review_gate()` provide reproducible CI evidence without host paths or
 timings.
 
 ### Project queries

@@ -1,3 +1,11 @@
+## 5.16.0 - Phase 116: Third-party license review closure (2026-11-27)
+- Continue Wave 8 with a deterministic third-party license review closure gate
+- Add validated profiles for entry limits, preview inclusion, license-inventory/license-policy/reviewer-decision/approved-license/unknown-license/exception-record/review-evidence, current version, and incomplete policy
+- Add stable nodes with digests, names, versions, kinds, evidence, bindings, resolved dependencies, incomplete reasons, and topological order
+- Detect missing dependencies, cycles, invalid manifests, missing evidence, and license demos without license inventory, license policy, reviewer decision, approved license, unknown license, exception record, review evidence as stable issue codes
+- Add `pea license-review` with check, emit, state, strict incomplete, governance toggles, and capability options plus a stable sector feature flag
+- Align current release metadata to 5.16.0 while keeping the frozen 3.0 digest pinned
+
 ## 5.15.0 - Phase 115: Release artifact attestation and provenance (2026-11-27)
 - Continue Wave 8 with a deterministic release artifact attestation and provenance gate
 - Add validated profiles for entry limits, preview inclusion, wheel-digest/sdist-digest/container-manifest/sbom/provenance/signature/reproducibility, current version, and incomplete policy

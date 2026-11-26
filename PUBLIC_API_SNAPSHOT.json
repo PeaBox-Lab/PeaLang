@@ -8486,6 +8486,78 @@
       "signature": "()"
     },
     {
+      "module": "pealang.license_review",
+      "name": "LicenseReviewPackError",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.license_review",
+      "name": "LicenseReviewProfileV2",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.license_review",
+      "name": "license_review_capabilities",
+      "kind": "function",
+      "signature": "()"
+    },
+    {
+      "module": "pealang.license_review",
+      "name": "LicenseReviewIssueV2",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.license_review",
+      "name": "LicenseReviewAppV2",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.license_review",
+      "name": "LicenseReviewPackPlanV2",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.license_review",
+      "name": "plan_license_review",
+      "kind": "function",
+      "signature": "(root,profile=?,state=?)"
+    },
+    {
+      "module": "pealang.license_review",
+      "name": "load_license_review_state_v2",
+      "kind": "function",
+      "signature": "(path)"
+    },
+    {
+      "module": "pealang.license_review",
+      "name": "write_license_review_state_v2",
+      "kind": "function",
+      "signature": "(root,plan,path=?)"
+    },
+    {
+      "module": "pealang.license_review",
+      "name": "license_review_report",
+      "kind": "function",
+      "signature": "(plans,profile=?)"
+    },
+    {
+      "module": "pealang.license_review",
+      "name": "license_review_gate",
+      "kind": "function",
+      "signature": "(report)"
+    },
+    {
+      "module": "pealang.license_review",
+      "name": "build_license_review_namespace",
+      "kind": "function",
+      "signature": "()"
+    },
+    {
       "module": "pealang.lsp",
       "name": "LSPServer",
       "kind": "class",

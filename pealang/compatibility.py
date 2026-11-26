@@ -63,6 +63,7 @@ FEATURES={
   'sector.release_candidate':Feature('sector.release_candidate','5.13.0',Stability.STABLE),
   'sector.ci_evidence':Feature('sector.ci_evidence','5.14.0',Stability.STABLE),
   'sector.artifact_attestation':Feature('sector.artifact_attestation','5.15.0',Stability.STABLE),
+  'sector.license_review':Feature('sector.license_review','5.16.0',Stability.STABLE),
  'async.await':Feature('async.await','0.26',Stability.PREVIEW),
  'embedding.python':Feature('embedding.python','0.18',Stability.STABLE),
  'embedding.fastapi':Feature('embedding.fastapi','0.25',Stability.PREVIEW),

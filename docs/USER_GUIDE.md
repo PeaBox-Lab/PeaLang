@@ -1,6 +1,6 @@
 # PeaLang User Guide
 
-This guide covers the PeaLang 5.15.0 release (unified versioning; supersedes the 1.0.0-experience and 0.99.6 baselines).
+This guide covers the PeaLang 5.16.0 release (unified versioning; supersedes the 1.0.0-experience and 0.99.6 baselines).
 
 ## Installation and Setup
 
@@ -73,6 +73,7 @@ pea doctor
 | `pea release-candidate <root> [--check] [--state FILE]` | Gate release candidate and stable 1.0 evidence evidence with stable digests |
 | `pea ci-evidence <root> [--check] [--state FILE]` | Gate CI evidence ingest and matrix verification evidence with stable digests |
 | `pea artifact-attestation <root> [--check] [--state FILE]` | Gate release artifact attestation and provenance evidence with stable digests |
+| `pea license-review <root> [--check] [--state FILE]` | Gate third-party license review closure evidence with stable digests |
 | `pea fmt-v3 <path...> [--check] [--write]` | Report or apply formatter v3 changes |
 | `pea analyze <file.json|csv> [--json] [--head N]` | Profile a JSON/CSV dataset (analysis) |
 | `pea web-openapi` / `pea openapi <file.pea> [--title T] [--version V]` | Extract OpenAPI from a file defining `app` |
@@ -1071,6 +1072,30 @@ artifact demos without wheel digest, sdist digest, container manifest, SBOM, pro
 become stable issue codes, while `write_artifact_attestation_state_v2()` persists digests
 without absolute host paths. `artifact_attestation_report()` summarizes plans with a
 recomputable digest, and `artifact_attestation_gate()` recomputes PASS/FAIL from the
+reported error count, incomplete count, and profile.
+
+### Third-party license review closure
+
+```bash
+pea license-review --capabilities
+pea license-review . --check --state license_review-state.json --emit license_review.json
+pea license-review . --check --write-state --fail-on-incomplete
+```
+
+`plan_license_review()` extends Wave 8 as a third-party license review closure gate and is additive to the
+release governance, capacity, chaos, SLO, observability, and certified-package
+surfaces. A `LicenseReviewProfileV2` validates the entry limit, preview inclusion,
+license-inventory/license-policy/reviewer-decision/approved-license/unknown-license/exception-record/review-evidence, current version, and
+incomplete-failure policy before planning. Each `LicenseReviewAppV2` carries a
+relative path, a manifest digest, name, version, kind, sorted evidence paths,
+sorted platform bindings, sorted required names, resolved dependencies, a
+clean/stale state, and reasons; entries are ordered topologically, and
+incomplete state propagates to dependent entries. Missing dependencies,
+dependency cycles, invalid manifests, missing evidence artifacts, or
+license demos without license inventory, license policy, reviewer decision, approved license, unknown license, exception record, review evidence
+become stable issue codes, while `write_license_review_state_v2()` persists digests
+without absolute host paths. `license_review_report()` summarizes plans with a
+recomputable digest, and `license_review_gate()` recomputes PASS/FAIL from the
 reported error count, incomplete count, and profile.
 
 ### Optional chaining and null coalescing

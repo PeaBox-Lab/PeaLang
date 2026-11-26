@@ -1,13 +1,13 @@
 {
   "name": "@pealang/react",
-  "version": "5.15.0",
+  "version": "5.16.0",
   "type": "module",
   "peerDependencies": {
     "react": ">=18 <20",
-    "@pealang/client": "^5.15.0"
+    "@pealang/client": "^5.16.0"
   },
   "devDependencies": {
-    "typescript": "^5.15.0",
+    "typescript": "^5.16.0",
     "@types/react": "^18.3.0",
     "@pealang/client": "file:../typescript-sdk"
   },
