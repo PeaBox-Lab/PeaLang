@@ -24,3 +24,10 @@ cycle, invalid-manifest, missing-evidence, missing-cost-budget,
 missing-quota, missing-headroom, missing-autoscale-policy,
 missing-resource-limit, missing-forecast, and missing-review-gate
 detection.
+ Phase 105 extends Wave 6 with release governance and change safety:
+`pea release-governance --check` and `release_governance_gate()`
+provide reproducible release evidence with missing-dependency, cycle,
+invalid-manifest, missing-evidence, missing-change-record,
+missing-approval, missing-canary-plan, missing-rollback-plan,
+missing-feature-flag, missing-audit-trail, and
+missing-release-checklist detection.

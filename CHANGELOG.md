@@ -1,4 +1,15 @@
 # Changelog
+## 5.5.0 - Phase 105: Release governance and change safety (2026-11-26)
+- Continue Wave 6 with a deterministic release governance and change safety gate
+- Add validated profiles for entry limits, preview inclusion, change-record, approval, canary-plan, rollback-plan, feature-flag, audit-trail, and release-checklist checks, current version, and an incomplete-failure policy
+- Add stable release nodes with manifest digests, names, versions, kinds, evidence paths, platform bindings, resolved dependencies, and topological order
+- Detect missing dependencies, cycles, invalid manifests, missing evidence, or release demos without change records, approvals, canary plans, rollback plans, feature flags, audit trails, or release checklists as sorted issue codes
+- Track digest drift and propagate incomplete state to dependent entries through `pea release-governance --state --write-state`
+- Add `pea release-governance` with capability, check, emit, state, strict incomplete, governance toggle, and current-version options plus a stable `sector.release_governance` feature flag
+- Add a normative release governance and change safety spec section and align current release metadata to 5.5.0
+- Frozen 3.0 digest, earlier component versions, and historical release metadata stay pinned
+- Targeted release, CLI, freeze, version, and conformance tests smoke-tested
+
 ## 5.4.0 - Phase 104: Capacity and cost reliability governance (2026-11-26)
 - Continue Wave 6 with a deterministic capacity and cost reliability governance gate
 - Add validated profiles for entry limits, preview inclusion, cost-budget, quota, headroom, autoscale-policy, resource-limit, forecast, and review-gate checks, current version, and an incomplete-failure policy

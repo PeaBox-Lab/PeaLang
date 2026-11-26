@@ -7694,6 +7694,78 @@
       "signature": "()"
     },
     {
+      "module": "pealang.release_governance",
+      "name": "ReleaseGovernancePackError",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.release_governance",
+      "name": "ReleaseGovernanceProfileV2",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.release_governance",
+      "name": "release_governance_capabilities",
+      "kind": "function",
+      "signature": "()"
+    },
+    {
+      "module": "pealang.release_governance",
+      "name": "ReleaseGovernanceIssueV2",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.release_governance",
+      "name": "ReleaseGovernanceAppV2",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.release_governance",
+      "name": "ReleaseGovernancePackPlanV2",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.release_governance",
+      "name": "plan_release_governance",
+      "kind": "function",
+      "signature": "(root,profile=?,state=?)"
+    },
+    {
+      "module": "pealang.release_governance",
+      "name": "load_release_governance_state_v2",
+      "kind": "function",
+      "signature": "(path)"
+    },
+    {
+      "module": "pealang.release_governance",
+      "name": "write_release_governance_state_v2",
+      "kind": "function",
+      "signature": "(root,plan,path=?)"
+    },
+    {
+      "module": "pealang.release_governance",
+      "name": "release_governance_report",
+      "kind": "function",
+      "signature": "(plans,profile=?)"
+    },
+    {
+      "module": "pealang.release_governance",
+      "name": "release_governance_gate",
+      "kind": "function",
+      "signature": "(report)"
+    },
+    {
+      "module": "pealang.release_governance",
+      "name": "build_release_governance_namespace",
+      "kind": "function",
+      "signature": "()"
+    },
+    {
       "module": "pealang.lsp",
       "name": "LSPServer",
       "kind": "class",

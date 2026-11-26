@@ -1,6 +1,6 @@
 # PeaLang User Guide
 
-This guide covers the PeaLang 5.4.0 release (unified versioning; supersedes the 1.0.0-experience and 0.99.6 baselines).
+This guide covers the PeaLang 5.5.0 release (unified versioning; supersedes the 1.0.0-experience and 0.99.6 baselines).
 
 ## Installation and Setup
 
@@ -62,6 +62,7 @@ pea doctor
 | `pea slo-pack <root> [--check] [--state FILE]` | Gate SLO enforcement and incident-response evidence with stable digests |
 | `pea chaos-pack <root> [--check] [--state FILE]` | Gate chaos engineering and resilience evidence with stable digests |
 | `pea capacity-pack <root> [--check] [--state FILE]` | Gate capacity and cost reliability evidence with stable digests |
+| `pea release-governance <root> [--check] [--state FILE]` | Gate release governance and change safety evidence with stable digests |
 | `pea fmt-v3 <path...> [--check] [--write]` | Report or apply formatter v3 changes |
 | `pea analyze <file.json|csv> [--json] [--head N]` | Profile a JSON/CSV dataset (analysis) |
 | `pea web-openapi` / `pea openapi <file.pea> [--title T] [--version V]` | Extract OpenAPI from a file defining `app` |
@@ -795,6 +796,32 @@ resource limits, forecasts, or review gates become stable issue codes, while
 `capacity_pack_report()` summarizes plans with a recomputable digest, and
 `capacity_pack_gate()` recomputes PASS/FAIL from the reported error count,
 incomplete count, and profile.
+
+### Release governance and change safety
+
+```bash
+pea release-governance --capabilities
+pea release-governance . --check --state release-state.json --emit release.json
+pea release-governance . --check --write-state --fail-on-incomplete
+```
+
+`plan_release_governance()` extends Wave 6 as a release governance and change
+safety gate and is additive to the capacity, chaos, SLO, observability, and
+certified-package surfaces. A `ReleaseGovernanceProfileV2` validates the entry
+limit, preview inclusion,
+change-record/approval/canary-plan/rollback-plan/feature-flag/audit-trail/release-checklist
+checks, current version, and incomplete-failure policy before planning. Each
+`ReleaseGovernanceAppV2` carries a relative path, a manifest digest, name,
+version, kind, sorted evidence paths, sorted platform bindings, sorted required
+names, resolved dependencies, a clean/stale state, and reasons; entries are
+ordered topologically, and incomplete state propagates to dependent entries.
+Missing dependencies, dependency cycles, invalid manifests, missing evidence
+artifacts, or release demos without change records, approvals, canary plans,
+rollback plans, feature flags, audit trails, or release checklists become stable
+issue codes, while `write_release_governance_state_v2()` persists digests
+without absolute host paths. `release_governance_report()` summarizes plans with
+a recomputable digest, and `release_governance_gate()` recomputes PASS/FAIL from
+the reported error count, incomplete count, and profile.
 
 ### Optional chaining and null coalescing
 ```pea

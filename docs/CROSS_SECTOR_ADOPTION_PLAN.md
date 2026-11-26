@@ -443,6 +443,20 @@ missing-forecast, and missing-review-gate issues; and digests that exclude host
 paths make capacity evidence reviewable and reproducible in CI through
 `pea capacity-pack --check` and `capacity_pack_gate()`.
 
+**Phase 105 — Release governance and change safety** extends Wave 6 with a
+deterministic release gate over `*.release.json` manifests. Validated profiles
+control entry limits, preview inclusion, change records, approvals, canary
+plans, rollback plans, feature flags, audit trails, release checklists, the
+current version, and incomplete policy. Stable nodes with digests, names,
+versions, kinds, evidence paths, platform bindings, resolved dependencies,
+propagated incomplete reasons, and topological order; sorted
+missing-dependency, cycle, invalid-manifest, missing-evidence,
+missing-change-record, missing-approval, missing-canary-plan,
+missing-rollback-plan, missing-feature-flag, missing-audit-trail, and
+missing-release-checklist issues; and digests that exclude host paths make
+release evidence reviewable and reproducible in CI through
+`pea release-governance --check` and `release_governance_gate()`.
+
 ## Sector packs
 
 | Sector | Current PeaLang evidence | Required additions | Acceptance gate |
