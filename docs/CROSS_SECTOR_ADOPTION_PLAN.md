@@ -201,6 +201,14 @@ topological order, content-digest dirty sets, propagated reasons, and digests
 that exclude host paths make plans reviewable and reproducible in CI through
 `pea build-v2 --check` and `build_v2_gate()`.
 
+**Phase 87 — Versioned docs** continues Wave 3 with deterministic documentation
+evidence additive to the existing `pea docs`. Validated profiles control file
+limits, release-note inclusion, link checks, the current version, and drift
+policy. Stable entries with digests, version references, and internal links;
+sorted stale-version and broken-link issues; and digests that exclude host paths
+make documentation reviewable and reproducible in CI through `pea docs-v2 --check`
+and `docs_v2_gate()`.
+
 ### Wave 4 — Sector packs (Phases 91–98)
 
 One focused pack per row of the table, each with a reference application and

@@ -1,3 +1,11 @@
+## 3.1.50 - Phase 87: Versioned docs (2026-11-26)
+- Continue Wave 3 with a deterministic versioned documentation inventory additive to the existing docs command
+- Add validated profiles for file limits, history inclusion, link checks, current version, and drift-failure policy
+- Add stable doc entries with digests, version references, internal links, and digest drift tracking
+- Detect stale versions and broken links as stable issue codes
+- Add `pea docs-v2` with check, emit, state, drift, and capability options plus a stable devx feature flag
+- Align current release metadata to 3.1.50 while keeping the frozen 3.0 digest pinned
+
 ## 3.1.49 - Phase 86: Incremental build system v2 (2026-11-26)
 - Continue Wave 3 with a deterministic incremental build system v2 additive to the existing build command
 - Add validated profiles for file limits, test inclusion, import checks, and dirty-failure policy

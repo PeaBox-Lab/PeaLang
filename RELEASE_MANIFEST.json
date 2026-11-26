@@ -1,11 +1,11 @@
 {
-  "version": "3.1.49",
-  "previous_version": "3.1.48",
-  "release_line": "tagged release v3.1.49",
+  "version": "3.1.50",
+  "previous_version": "3.1.49",
+  "release_line": "tagged release v3.1.50",
   "pytest_tests_passed": 436,
   "conformance_cases_passed": 500,
   "fuzz_iterations": 250,
   "tests_failed": 0,
   "status": "PASS",
-  "note": "Phase 86 adds a deterministic incremental build system v2 with stable topologically-ordered plans, dirty sets from content digests, host-path-free evidence, and a recomputable dirty gate; frozen 3.0 digest and component versions stay pinned."
+  "note": "Phase 87 adds a deterministic versioned documentation inventory with stable version/link evidence, digest drift tracking, and a recomputable gate; frozen 3.0 digest and component versions stay pinned."
 }

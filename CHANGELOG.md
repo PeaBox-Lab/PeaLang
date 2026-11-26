@@ -1,4 +1,15 @@
 # Changelog
+## 3.1.50 - Phase 87: Versioned docs (2026-11-26)
+- Add a deterministic versioned documentation inventory additive to the existing `pea docs` command
+- Add validated profiles for file limits, release-note inclusion, link checks, current version, and a drift-failure policy
+- Add stable doc entries with content digests, extracted version references, and internal links
+- Detect stale version references, broken internal links, and file-limit overruns as sorted issue codes
+- Track documentation digest drift through `pea docs-v2 --state --write-state`
+- Add `pea docs-v2` with capability, check, emit, state, and drift options plus a stable `devx.versioned_docs` feature flag
+- Add a normative versioned docs spec section and align current release metadata to 3.1.50
+- Frozen 3.0 digest, earlier component versions, and historical release metadata stay pinned
+- Targeted versioned docs, CLI, freeze, version, and conformance tests smoke-tested
+
 ## 3.1.49 - Phase 86: Incremental build system v2 (2026-11-26)
 - Add a deterministic incremental build system v2 layer additive to the existing `pea build` command
 - Add validated profiles for file limits, test inclusion, import checks, and a dirty-failure policy

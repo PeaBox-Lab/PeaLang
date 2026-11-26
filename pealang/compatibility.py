@@ -34,6 +34,7 @@ FEATURES={
   'devx.linter_v3':Feature('devx.linter_v3','3.1.47',Stability.STABLE),
   'devx.test_framework_v2':Feature('devx.test_framework_v2','3.1.48',Stability.STABLE),
   'devx.incremental_build_v2':Feature('devx.incremental_build_v2','3.1.49',Stability.STABLE),
+  'devx.versioned_docs':Feature('devx.versioned_docs','3.1.50',Stability.STABLE),
  'async.await':Feature('async.await','0.26',Stability.PREVIEW),
  'embedding.python':Feature('embedding.python','0.18',Stability.STABLE),
  'embedding.fastapi':Feature('embedding.fastapi','0.25',Stability.PREVIEW),

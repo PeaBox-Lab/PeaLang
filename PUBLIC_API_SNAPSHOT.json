@@ -6398,6 +6398,78 @@
       "signature": "()"
     },
     {
+      "module": "pealang.versioned_docs",
+      "name": "VersionedDocsError",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.versioned_docs",
+      "name": "DocsProfileV2",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.versioned_docs",
+      "name": "versioned_docs_capabilities",
+      "kind": "function",
+      "signature": "()"
+    },
+    {
+      "module": "pealang.versioned_docs",
+      "name": "DocsIssueV2",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.versioned_docs",
+      "name": "DocEntryV2",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.versioned_docs",
+      "name": "DocsPlanV2",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.versioned_docs",
+      "name": "plan_docs_v2",
+      "kind": "function",
+      "signature": "(root,profile=?,state=?)"
+    },
+    {
+      "module": "pealang.versioned_docs",
+      "name": "load_docs_state_v2",
+      "kind": "function",
+      "signature": "(path)"
+    },
+    {
+      "module": "pealang.versioned_docs",
+      "name": "write_docs_state_v2",
+      "kind": "function",
+      "signature": "(root,plan,path=?)"
+    },
+    {
+      "module": "pealang.versioned_docs",
+      "name": "docs_v2_report",
+      "kind": "function",
+      "signature": "(plans,profile=?)"
+    },
+    {
+      "module": "pealang.versioned_docs",
+      "name": "docs_v2_gate",
+      "kind": "function",
+      "signature": "(report)"
+    },
+    {
+      "module": "pealang.versioned_docs",
+      "name": "build_versioned_docs_namespace",
+      "kind": "function",
+      "signature": "()"
+    },
+    {
       "module": "pealang.lsp",
       "name": "LSPServer",
       "kind": "class",

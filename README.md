@@ -8,9 +8,9 @@ PeaLang is designed to complement existing ecosystems such as Python, FastAPI, J
 
 ## Release Status
 
-**Version: 3.1.49** — current tagged release across package, SDK, runtime, and specification metadata.
+**Version: 3.1.50** — current tagged release across package, SDK, runtime, and specification metadata.
 
-`3.1.49` is the unified release identifier for the tagged v3.1.49 line. Source version, SDK packages, container image label, runtime health output, registry user agent, release manifest, and language specification now report the same version. Historical release notes are kept in `docs/releases/` for provenance, but they do not define the current version.
+`3.1.50` is the unified release identifier for the tagged v3.1.50 line. Source version, SDK packages, container image label, runtime health output, registry user agent, release manifest, and language specification now report the same version. Historical release notes are kept in `docs/releases/` for provenance, but they do not define the current version.
 
 See `ROADMAP.md` for the forward-looking plan, `CHANGELOG.md` for per-feature history, and `docs/CROSS_SECTOR_ADOPTION_PLAN.md` for the plan to make PeaLang credible across enterprise, data, web, mobile, games, embedded, and cloud sectors.
 
@@ -1026,6 +1026,21 @@ from source digests and import edges, and reports missing imports and dependency
 cycles as sorted issue codes. `BuildProfileV2` validates file limits, test
 inclusion, import checks, and the dirty-failure policy; `build_v2_report()` and
 `build_v2_gate()` provide reproducible CI evidence without host paths or timings.
+
+### Versioned docs
+
+```bash
+pea docs-v2 --capabilities
+pea docs-v2 . --check --state docs-state.json --emit docs.json
+pea docs-v2 . --check --write-state --fail-on-drift
+```
+
+Phase 87 adds a deterministic documentation inventory alongside the existing
+`pea docs` command. It extracts version references and internal links, detects
+stale versions and broken links as sorted issue codes, and tracks digest drift
+across runs. `DocsProfileV2` validates file limits, history inclusion, link
+checks, current version, and the drift-failure policy; `docs_v2_report()` and
+`docs_v2_gate()` provide reproducible CI evidence without host paths or timings.
 
 ### Project queries
 

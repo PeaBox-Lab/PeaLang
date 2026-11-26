@@ -1,6 +1,6 @@
 # PeaLang User Guide
 
-This guide covers the PeaLang 3.1.49 release (unified versioning; supersedes the 1.0.0-experience and 0.99.6 baselines).
+This guide covers the PeaLang 3.1.50 release (unified versioning; supersedes the 1.0.0-experience and 0.99.6 baselines).
 
 ## Installation and Setup
 
@@ -44,6 +44,7 @@ pea doctor
 | `pea lint-v3 <path...> [--check] [--fail-on-warning]` | Report deterministic linter v3 findings |
 | `pea test-v2 <path...> [--check] [--fail-fast]` | Run deterministic test framework v2 cases |
 | `pea build-v2 <root> [--check] [--state FILE]` | Plan an incremental build with stable digests |
+| `pea docs-v2 <root> [--check] [--state FILE]` | Inventory versioned documentation with stable digests |
 | `pea fmt-v3 <path...> [--check] [--write]` | Report or apply formatter v3 changes |
 | `pea analyze <file.json|csv> [--json] [--head N]` | Profile a JSON/CSV dataset (analysis) |
 | `pea web-openapi` / `pea openapi <file.pea> [--title T] [--version V]` | Extract OpenAPI from a file defining `app` |
@@ -357,6 +358,24 @@ dependency cycles become stable issue codes, while `write_build_state_v2()`
 persists digests without absolute host paths. `build_v2_report()` summarizes
 plans with a recomputable digest, and `build_v2_gate()` recomputes PASS/FAIL from
 the reported error count, dirty count, and profile.
+
+### Versioned docs
+
+```bash
+pea docs-v2 --capabilities
+pea docs-v2 . --check --state docs-state.json --emit docs.json
+pea docs-v2 . --check --write-state --fail-on-drift
+```
+
+`plan_docs_v2()` is additive to `pea docs`. A `DocsProfileV2` validates the file
+limit, release-note inclusion, link checks, current version, and drift-failure
+policy before inventorying. Each `DocEntryV2` carries a relative path, a content
+digest, extracted version references, internal links, a clean/stale state, and
+reasons; entries are sorted by path. Stale version references and broken links
+become stable issue codes, while `write_docs_state_v2()` persists digests without
+absolute host paths. `docs_v2_report()` summarizes plans with a recomputable
+digest, and `docs_v2_gate()` recomputes PASS/FAIL from the reported error count,
+drift count, and profile.
 
 ### Optional chaining and null coalescing
 ```pea
