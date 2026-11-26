@@ -1,4 +1,15 @@
 # Changelog
+## 5.20.0 - Phase 120: Stable 1.0 declaration and GA evidence bundle (2026-11-27)
+- Continue Wave 8 with a deterministic stable 1.0 declaration and GA evidence bundle gate
+- Add validated profiles for entry limits, preview inclusion, final-gate, pre-v1-evidence, maturity-report, candidate-report, attestation-report, approval-signature, ga-declaration, current version, and an incomplete-failure policy
+- Add stable nodes with manifest digests, names, versions, kinds, evidence paths, platform bindings, resolved dependencies, and topological order
+- Detect missing dependencies, cycles, invalid manifests, missing evidence, or GA demos without final gate, pre-1.0 evidence, maturity report, candidate report, attestation report, approval signature, GA declaration as sorted issue codes
+- Track digest drift and propagate incomplete state to dependent entries through `pea stable-declaration --state --write-state`
+- Add `pea stable-declaration` with capability, check, emit, state, strict incomplete, governance toggle, and current-version options plus a stable `sector.stable_declaration` feature flag
+- Add a normative stable declaration spec section and align current release metadata to 5.20.0
+- Frozen 3.0 digest, earlier component versions, and historical release metadata stay pinned
+- Full pytest suite and targeted quality gates passed
+
 ## 5.19.0 - Phase 119: Support and operations readiness evidence (2026-11-27)
 - Continue Wave 8 with a deterministic support and operations readiness evidence gate
 - Add validated profiles for entry limits, preview inclusion, support-policy, incident-runbook, rollback-playbook, owner-assignment, drill-evidence, sla-rto-target, escalation-policy, current version, and an incomplete-failure policy

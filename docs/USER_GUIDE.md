@@ -1,6 +1,6 @@
 # PeaLang User Guide
 
-This guide covers the PeaLang 5.19.0 release (unified versioning; supersedes the 1.0.0-experience and 0.99.6 baselines).
+This guide covers the PeaLang 5.20.0 release (unified versioning; supersedes the 1.0.0-experience and 0.99.6 baselines).
 
 ## Installation and Setup
 
@@ -77,6 +77,7 @@ pea doctor
 | `pea live-integration <root> [--check] [--state FILE]` | Gate live service integration evidence evidence with stable digests |
 | `pea security-soak <root> [--check] [--state FILE]` | Gate independent security review and soak evidence evidence with stable digests |
 | `pea support-operations <root> [--check] [--state FILE]` | Gate support and operations readiness evidence evidence with stable digests |
+| `pea stable-declaration <root> [--check] [--state FILE]` | Gate stable 1.0 declaration and GA evidence bundle evidence with stable digests |
 | `pea fmt-v3 <path...> [--check] [--write]` | Report or apply formatter v3 changes |
 | `pea analyze <file.json|csv> [--json] [--head N]` | Profile a JSON/CSV dataset (analysis) |
 | `pea web-openapi` / `pea openapi <file.pea> [--title T] [--version V]` | Extract OpenAPI from a file defining `app` |
@@ -1171,6 +1172,30 @@ support demos without support policy, incident runbook, rollback playbook, owner
 become stable issue codes, while `write_support_operations_state_v2()` persists digests
 without absolute host paths. `support_operations_report()` summarizes plans with a
 recomputable digest, and `support_operations_gate()` recomputes PASS/FAIL from the
+reported error count, incomplete count, and profile.
+
+### Stable 1.0 declaration and GA evidence bundle
+
+```bash
+pea stable-declaration --capabilities
+pea stable-declaration . --check --state stable_declaration-state.json --emit stable_declaration.json
+pea stable-declaration . --check --write-state --fail-on-incomplete
+```
+
+`plan_stable_declaration()` extends Wave 8 as a stable 1.0 declaration and GA evidence bundle gate and is additive to the
+release governance, capacity, chaos, SLO, observability, and certified-package
+surfaces. A `StableDeclarationProfileV2` validates the entry limit, preview inclusion,
+final-gate/pre-v1-evidence/maturity-report/candidate-report/attestation-report/approval-signature/ga-declaration, current version, and
+incomplete-failure policy before planning. Each `StableDeclarationAppV2` carries a
+relative path, a manifest digest, name, version, kind, sorted evidence paths,
+sorted platform bindings, sorted required names, resolved dependencies, a
+clean/stale state, and reasons; entries are ordered topologically, and
+incomplete state propagates to dependent entries. Missing dependencies,
+dependency cycles, invalid manifests, missing evidence artifacts, or
+GA demos without final gate, pre-1.0 evidence, maturity report, candidate report, attestation report, approval signature, GA declaration
+become stable issue codes, while `write_stable_declaration_state_v2()` persists digests
+without absolute host paths. `stable_declaration_report()` summarizes plans with a
+recomputable digest, and `stable_declaration_gate()` recomputes PASS/FAIL from the
 reported error count, incomplete count, and profile.
 
 ### Optional chaining and null coalescing

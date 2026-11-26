@@ -2027,6 +2027,27 @@ def main(argv=None):
             if a.check:return 0 if decision['gate']=='PASS' else 1
             return 0
 
+        if c=='stable-declaration':
+
+            from .stable_declaration import (StableDeclarationProfileV2,stable_declaration_capabilities,stable_declaration_gate,stable_declaration_report,plan_stable_declaration,load_stable_declaration_state_v2,write_stable_declaration_state_v2)
+
+            p=argparse.ArgumentParser(prog='pea stable-declaration');p.add_argument('root',nargs='?',default='.');p.add_argument('--capabilities',action='store_true');p.add_argument('--check',action='store_true');p.add_argument('--emit');p.add_argument('--state');p.add_argument('--write-state',action='store_true');p.add_argument('--max-entries',type=int,default=500);p.add_argument('--include-preview',action='store_true');p.add_argument('--no-check-final',action='store_true');p.add_argument('--no-check-pre-v1',action='store_true');p.add_argument('--no-check-maturity',action='store_true');p.add_argument('--no-check-candidate',action='store_true');p.add_argument('--no-check-attestation',action='store_true');p.add_argument('--no-check-approval',action='store_true');p.add_argument('--no-check-declaration',action='store_true');p.add_argument('--fail-on-incomplete',action='store_true');p.add_argument('--current-version');a=p.parse_args(argv[1:])
+            if a.capabilities:
+                print(json.dumps(stable_declaration_capabilities(),indent=2));return 0
+            try:profile=StableDeclarationProfileV2(max_entries=a.max_entries,include_preview=a.include_preview,check_final=not a.no_check_final,check_pre_v1=not a.no_check_pre_v1,check_maturity=not a.no_check_maturity,check_candidate=not a.no_check_candidate,check_attestation=not a.no_check_attestation,check_approval=not a.no_check_approval,check_declaration=not a.no_check_declaration,fail_on_incomplete=a.fail_on_incomplete,current_version=a.current_version or '')
+            except Exception as e:print(f'Stable declaration pack failed: {e}');return 1
+            state_path=Path(a.state) if a.state else Path(a.root)/'.pea_stable_declaration.json'
+            try:
+                state=load_stable_declaration_state_v2(state_path);plan=plan_stable_declaration(a.root,profile,state)
+                if a.write_state:write_stable_declaration_state_v2(a.root,plan,state_path)
+            except Exception as e:
+                print(f'Stable declaration pack failed: {e}');return 1
+            report=stable_declaration_report([plan],profile);decision=stable_declaration_gate(report);report['decision']=decision
+            if a.emit:Path(a.emit).write_text(json.dumps(report,indent=2,default=str)+'\n',encoding='utf-8')
+            print(json.dumps(report,indent=2,default=str))
+            if a.check:return 0 if decision['gate']=='PASS' else 1
+            return 0
+
         if c in ('check','lint'):
 
             p=argparse.ArgumentParser(prog=f'pea {c}');p.add_argument('paths',nargs='+');p.add_argument('--json',action='store_true');a=p.parse_args(argv[1:]);errors=warnings=0;items=[]

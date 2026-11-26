@@ -8,9 +8,9 @@ PeaLang is designed to complement existing ecosystems such as Python, FastAPI, J
 
 ## Release Status
 
-**Version: 5.19.0** — current tagged release across package, SDK, runtime, and specification metadata.
+**Version: 5.20.0** — current tagged release across package, SDK, runtime, and specification metadata.
 
-`5.19.0` is the unified release identifier for the tagged v5.19.0 line. Source version, SDK packages, container image label, runtime health output, registry user agent, release manifest, and language specification now report the same version. Historical release notes are kept in `docs/releases/` for provenance, but they do not define the current version.
+`5.20.0` is the unified release identifier for the tagged v5.20.0 line. Source version, SDK packages, container image label, runtime health output, registry user agent, release manifest, and language specification now report the same version. Historical release notes are kept in `docs/releases/` for provenance, but they do not define the current version.
 
 See `ROADMAP.md` for the forward-looking plan, `CHANGELOG.md` for per-feature history, and `docs/CROSS_SECTOR_ADOPTION_PLAN.md` for the plan to make PeaLang credible across enterprise, data, web, mobile, games, embedded, and cloud sectors.
 
@@ -1629,6 +1629,24 @@ support policy, incident runbook, rollback playbook, owner assignment, drill evi
 `SupportOperationsProfileV2` validates entry limits, preview inclusion, governance
 checks, current version, and the incomplete-failure policy; `support_operations_report()`
 and `support_operations_gate()` provide reproducible CI evidence without host paths or
+timings.
+
+### Stable 1.0 declaration and GA evidence bundle
+
+```bash
+pea stable-declaration --capabilities
+pea stable-declaration . --check --state stable_declaration-state.json --emit stable_declaration.json
+pea stable-declaration . --check --write-state --fail-on-incomplete
+```
+
+Phase 120 at **5.20.0** extends Wave 8 with a deterministic
+stable declaration gate over `*.declaration.json` manifests. It derives a stable
+topological order and incomplete set, and reports missing dependencies, cycles,
+invalid manifests, missing evidence, and GA demos without
+final gate, pre-1.0 evidence, maturity report, candidate report, attestation report, approval signature, GA declaration as sorted issue codes.
+`StableDeclarationProfileV2` validates entry limits, preview inclusion, governance
+checks, current version, and the incomplete-failure policy; `stable_declaration_report()`
+and `stable_declaration_gate()` provide reproducible CI evidence without host paths or
 timings.
 
 ### Project queries

@@ -1,3 +1,11 @@
+## 5.20.0 - Phase 120: Stable 1.0 declaration and GA evidence bundle (2026-11-27)
+- Continue Wave 8 with a deterministic stable 1.0 declaration and GA evidence bundle gate
+- Add validated profiles for entry limits, preview inclusion, final-gate/pre-v1-evidence/maturity-report/candidate-report/attestation-report/approval-signature/ga-declaration, current version, and incomplete policy
+- Add stable nodes with digests, names, versions, kinds, evidence, bindings, resolved dependencies, incomplete reasons, and topological order
+- Detect missing dependencies, cycles, invalid manifests, missing evidence, and GA demos without final gate, pre-1.0 evidence, maturity report, candidate report, attestation report, approval signature, GA declaration as stable issue codes
+- Add `pea stable-declaration` with check, emit, state, strict incomplete, governance toggles, and capability options plus a stable sector feature flag
+- Align current release metadata to 5.20.0 while keeping the frozen 3.0 digest pinned
+
 ## 5.19.0 - Phase 119: Support and operations readiness evidence (2026-11-27)
 - Continue Wave 8 with a deterministic support and operations readiness evidence gate
 - Add validated profiles for entry limits, preview inclusion, support-policy/incident-runbook/rollback-playbook/owner-assignment/drill-evidence/sla-rto-target/escalation-policy, current version, and incomplete policy
