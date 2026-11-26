@@ -39,6 +39,7 @@ FEATURES={
   'devx.project_templates_v2':Feature('devx.project_templates_v2','3.1.52',Stability.STABLE),
   'devx.devex_v2':Feature('devx.devex_v2','3.1.53',Stability.STABLE),
   'sector.finance_pack':Feature('sector.finance_pack','3.1.54',Stability.STABLE),
+  'sector.data_science_pack':Feature('sector.data_science_pack','3.1.55',Stability.STABLE),
  'async.await':Feature('async.await','0.26',Stability.PREVIEW),
  'embedding.python':Feature('embedding.python','0.18',Stability.STABLE),
  'embedding.fastapi':Feature('embedding.fastapi','0.25',Stability.PREVIEW),

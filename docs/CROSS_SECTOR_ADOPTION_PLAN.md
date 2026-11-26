@@ -254,8 +254,20 @@ dependencies, propagated incomplete reasons, and topological order; sorted
 missing-dependency, cycle, invalid-manifest, missing-evidence, missing-interop-
 contract, and missing-audit-rule issues; and digests that exclude host paths make
 sector evidence reviewable and reproducible in CI through `pea finance-pack
---check` and `finance_pack_gate()`. Later rows of the table are built
-sequentially in following phases.
+--check` and `finance_pack_gate()`.
+
+**Phase 92 — Data Science / AI / ML sector pack** continues Wave 4 with a
+deterministic governance gate for the second row of the sector table, additive
+to `analysis.py`, `timeseries.py`, `forecasting.py`, `ai_ml.py`, `jupyter_kernel.py`,
+`serving_runtime.py`, `std.analysis`, and `std.stats`. Validated profiles control
+workflow limits, preview inclusion, parity and benchmark checks, the current
+version, and incomplete policy. Stable nodes with digests, names, versions,
+kinds, evidence paths, published metrics, resolved dependencies, propagated
+incomplete reasons, and topological order; sorted missing-dependency, cycle,
+invalid-manifest, missing-evidence, missing-parity-suite, and missing-benchmark
+issues; and digests that exclude host paths make workflow evidence reviewable and
+reproducible in CI through `pea data-pack --check` and `data_pack_gate()`.
+Later rows of the table are built sequentially in following phases.
 
 ### Wave 5 — Ecosystem release (Phases 99–100)
 

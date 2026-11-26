@@ -1,4 +1,15 @@
 # Changelog
+## 3.1.55 - Phase 92: Data Science / AI / ML sector pack (2026-11-26)
+- Continue Wave 4 with a deterministic sector-pack evidence gate for data, analytics, and ML workflows
+- Add validated profiles for workflow limits, preview inclusion, parity/benchmark checks, current version, and an incomplete-failure policy
+- Add stable workflow nodes with manifest digests, names, versions, kinds, evidence paths, published metrics, resolved dependencies, and topological order
+- Detect missing dependencies, cycles, invalid manifests, missing evidence, pipelines without parity suites, and models without published benchmarks as sorted issue codes
+- Track digest drift and propagate incomplete state to dependent workflows through `pea data-pack --state --write-state`
+- Add `pea data-pack` with capability, check, emit, state, strict incomplete, and current-version options plus a stable `sector.data_science_pack` feature flag
+- Add a normative data science sector-pack spec section and align current release metadata to 3.1.55
+- Frozen 3.0 digest, earlier component versions, and historical release metadata stay pinned
+- Targeted sector-pack, CLI, freeze, version, and conformance tests smoke-tested
+
 ## 3.1.54 - Phase 91: Enterprise/Finance/Banking sector pack (2026-11-26)
 - Open Wave 4 with a deterministic sector-pack evidence gate for enterprise, finance, and banking delivery
 - Add validated profiles for artifact limits, sandbox inclusion, interop/audit contract checks, current version, and an incomplete-failure policy

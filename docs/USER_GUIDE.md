@@ -1,6 +1,6 @@
 # PeaLang User Guide
 
-This guide covers the PeaLang 3.1.54 release (unified versioning; supersedes the 1.0.0-experience and 0.99.6 baselines).
+This guide covers the PeaLang 3.1.55 release (unified versioning; supersedes the 1.0.0-experience and 0.99.6 baselines).
 
 ## Installation and Setup
 
@@ -49,6 +49,7 @@ pea doctor
 | `pea templates-v2 <root> [--check] [--state FILE]` | Inventory project templates with stable digests |
 | `pea devex-v2 <root> [--check] [--state FILE]` | Gate developer-experience evidence with stable digests |
 | `pea finance-pack <root> [--check] [--state FILE]` | Gate finance sector-pack evidence with stable digests |
+| `pea data-pack <root> [--check] [--state FILE]` | Gate data science sector-pack evidence with stable digests |
 | `pea fmt-v3 <path...> [--check] [--write]` | Report or apply formatter v3 changes |
 | `pea analyze <file.json|csv> [--json] [--head N]` | Profile a JSON/CSV dataset (analysis) |
 | `pea web-openapi` / `pea openapi <file.pea> [--title T] [--version V]` | Extract OpenAPI from a file defining `app` |
@@ -466,6 +467,30 @@ become stable issue codes, while `write_finance_state_v2()` persists digests
 without absolute host paths. `finance_pack_report()` summarizes plans with a
 recomputable digest, and `finance_pack_gate()` recomputes PASS/FAIL from the
 reported error count, incomplete count, and profile.
+
+### Data Science / AI / ML sector pack
+
+```bash
+pea data-pack --capabilities
+pea data-pack . --check --state data-state.json --emit data.json
+pea data-pack . --check --write-state --fail-on-incomplete
+```
+
+`plan_data_pack()` continues Wave 4 and is additive to the existing analysis,
+timeseries, forecasting, AI/ML, Jupyter, and serving runtime layers. A
+`DataProfileV2` validates the workflow limit, preview inclusion, parity and
+benchmark checks, current version, and incomplete-failure policy before
+planning. Each `DataWorkflowV2` carries a relative path, a manifest digest,
+name, version, kind, sorted evidence paths, sorted required names, sorted
+published metrics, resolved dependencies, a clean/stale state, and reasons;
+workflows are ordered topologically, and incomplete state propagates to
+dependent workflows. Missing dependencies, dependency cycles, invalid
+manifests, missing evidence artifacts, pipelines without parity suites, and
+models without published benchmarks become stable issue codes, while
+`write_data_state_v2()` persists digests without absolute host paths.
+`data_pack_report()` summarizes plans with a recomputable digest, and
+`data_pack_gate()` recomputes PASS/FAIL from the reported error count,
+incomplete count, and profile.
 
 ### Optional chaining and null coalescing
 ```pea
