@@ -1573,6 +1573,26 @@ def main(argv=None):
             if a.check:return 0 if decision['gate']=='PASS' else 1
             return 0
 
+        if c=='cloud-pack':
+
+            from .cloud_pack import (CloudProfileV2,cloud_pack_capabilities,cloud_pack_gate,cloud_pack_report,plan_cloud_pack,load_cloud_state_v2,write_cloud_state_v2)
+
+            p=argparse.ArgumentParser(prog='pea cloud-pack');p.add_argument('root',nargs='?',default='.');p.add_argument('--capabilities',action='store_true');p.add_argument('--check',action='store_true');p.add_argument('--emit');p.add_argument('--state');p.add_argument('--write-state',action='store_true');p.add_argument('--max-deployments',type=int,default=500);p.add_argument('--include-preview',action='store_true');p.add_argument('--no-check-container',action='store_true');p.add_argument('--no-check-orchestration',action='store_true');p.add_argument('--no-check-pipeline',action='store_true');p.add_argument('--no-check-observability',action='store_true');p.add_argument('--no-check-iam',action='store_true');p.add_argument('--no-check-source',action='store_true');p.add_argument('--no-check-lockfile',action='store_true');p.add_argument('--no-check-signed',action='store_true');p.add_argument('--no-check-drift',action='store_true');p.add_argument('--fail-on-incomplete',action='store_true');p.add_argument('--current-version');a=p.parse_args(argv[1:])
+            if a.capabilities:
+                print(json.dumps(cloud_pack_capabilities(),indent=2));return 0
+            try:profile=CloudProfileV2(max_deployments=a.max_deployments,include_preview=a.include_preview,check_container=not a.no_check_container,check_orchestration=not a.no_check_orchestration,check_pipeline=not a.no_check_pipeline,check_observability=not a.no_check_observability,check_iam=not a.no_check_iam,check_source=not a.no_check_source,check_lockfile=not a.no_check_lockfile,check_signed=not a.no_check_signed,check_drift=not a.no_check_drift,fail_on_incomplete=a.fail_on_incomplete,current_version=a.current_version or '')
+            except Exception as e:print(f'Cloud pack failed: {e}');return 1
+            state_path=Path(a.state) if a.state else Path(a.root)/'.pea_cloud_pack.json'
+            try:
+                state=load_cloud_state_v2(state_path);plan=plan_cloud_pack(a.root,profile,state)
+                if a.write_state:write_cloud_state_v2(a.root,plan,state_path)
+            except Exception as e:print(f'Cloud pack failed: {e}');return 1
+            report=cloud_pack_report([plan],profile);decision=cloud_pack_gate(report);report['decision']=decision
+            if a.emit:Path(a.emit).write_text(json.dumps(report,indent=2,default=str)+'\n',encoding='utf-8')
+            print(json.dumps(report,indent=2,default=str))
+            if a.check:return 0 if decision['gate']=='PASS' else 1
+            return 0
+
         if c in ('check','lint'):
 
             p=argparse.ArgumentParser(prog=f'pea {c}');p.add_argument('paths',nargs='+');p.add_argument('--json',action='store_true');a=p.parse_args(argv[1:]);errors=warnings=0;items=[]

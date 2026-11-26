@@ -8,9 +8,9 @@ PeaLang is designed to complement existing ecosystems such as Python, FastAPI, J
 
 ## Release Status
 
-**Version: 3.1.60** — current tagged release across package, SDK, runtime, and specification metadata.
+**Version: 3.1.61** — current tagged release across package, SDK, runtime, and specification metadata.
 
-`3.1.60` is the unified release identifier for the tagged v3.1.60 line. Source version, SDK packages, container image label, runtime health output, registry user agent, release manifest, and language specification now report the same version. Historical release notes are kept in `docs/releases/` for provenance, but they do not define the current version.
+`3.1.61` is the unified release identifier for the tagged v3.1.61 line. Source version, SDK packages, container image label, runtime health output, registry user agent, release manifest, and language specification now report the same version. Historical release notes are kept in `docs/releases/` for provenance, but they do not define the current version.
 
 See `ROADMAP.md` for the forward-looking plan, `CHANGELOG.md` for per-feature history, and `docs/CROSS_SECTOR_ADOPTION_PLAN.md` for the plan to make PeaLang credible across enterprise, data, web, mobile, games, embedded, and cloud sectors.
 
@@ -1225,6 +1225,27 @@ native/C-ABI/RTOS/static/bus/safety/memory/signature checks, current version, an
 the incomplete-failure policy; `embedded_pack_report()` and
 `embedded_pack_gate()` provide reproducible CI evidence without host paths or
 timings.
+
+### Cloud Infrastructure / DevOps sector pack
+
+```bash
+pea cloud-pack --capabilities
+pea cloud-pack . --check --state cloud-state.json --emit cloud.json
+pea cloud-pack . --check --write-state --fail-on-incomplete
+```
+
+Phase 98 completes Wave 4 with a deterministic delivery gate alongside the
+existing package lifecycle CLI and `frameworks.py` scaffolds. It derives a
+stable topological deployment order and incomplete set from `*.cloud.json`
+manifests, and reports missing dependencies, cycles, invalid manifests, missing
+evidence, deployments without container images, Kubernetes manifests, CI
+pipelines, observability, IAM policies, Go/Python/Bash/CDK/Terraform source
+bridges, lockfiles, signed packages, or drift checks as sorted issue codes.
+`CloudProfileV2` validates deployment limits, preview inclusion,
+container/orchestration/pipeline/observability/IAM/source/lockfile/signature/
+drift checks, current version, and the incomplete-failure policy;
+`cloud_pack_report()` and `cloud_pack_gate()` provide reproducible CI evidence
+without host paths or timings.
 
 ### Project queries
 

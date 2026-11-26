@@ -1,6 +1,6 @@
 # PeaLang User Guide
 
-This guide covers the PeaLang 3.1.60 release (unified versioning; supersedes the 1.0.0-experience and 0.99.6 baselines).
+This guide covers the PeaLang 3.1.61 release (unified versioning; supersedes the 1.0.0-experience and 0.99.6 baselines).
 
 ## Installation and Setup
 
@@ -55,6 +55,7 @@ pea doctor
 | `pea ios-pack <root> [--check] [--state FILE]` | Gate Mobile (iOS) sector-pack evidence with stable digests |
 | `pea game-pack <root> [--check] [--state FILE]` | Gate Game Development sector-pack evidence with stable digests |
 | `pea embedded-pack <root> [--check] [--state FILE]` | Gate Embedded / IoT / OS sector-pack evidence with stable digests |
+| `pea cloud-pack <root> [--check] [--state FILE]` | Gate Cloud Infrastructure / DevOps sector-pack evidence with stable digests |
 | `pea fmt-v3 <path...> [--check] [--write]` | Report or apply formatter v3 changes |
 | `pea analyze <file.json|csv> [--json] [--head N]` | Profile a JSON/CSV dataset (analysis) |
 | `pea web-openapi` / `pea openapi <file.pea> [--title T] [--version V]` | Extract OpenAPI from a file defining `app` |
@@ -615,6 +616,31 @@ signed-update bindings become stable issue codes, while
 `embedded_pack_report()` summarizes plans with a recomputable digest, and
 `embedded_pack_gate()` recomputes PASS/FAIL from the reported error count,
 incomplete count, and profile.
+
+### Cloud Infrastructure / DevOps sector pack
+
+```bash
+pea cloud-pack --capabilities
+pea cloud-pack . --check --state cloud-state.json --emit cloud.json
+pea cloud-pack . --check --write-state --fail-on-incomplete
+```
+
+`plan_cloud_pack()` completes Wave 4 and is additive to the package lifecycle CLI
+and `frameworks.py` scaffolds. A `CloudProfileV2` validates the deployment limit,
+preview inclusion, container/orchestration/pipeline/observability/IAM/source/
+lockfile/signature/drift checks, current version, and incomplete-failure policy
+before planning. Each `CloudAppV2` carries a relative path, a manifest digest,
+name, version, kind, sorted evidence paths, sorted platform bindings, sorted
+required names, resolved dependencies, a clean/stale state, and reasons;
+deployments are ordered topologically, and incomplete state propagates to
+dependent deployments. Missing dependencies, dependency cycles, invalid
+manifests, missing evidence artifacts, deployments without container images,
+Kubernetes manifests, CI pipelines, observability, IAM policies,
+Go/Python/Bash/CDK/Terraform source bridges, lockfiles, signed packages, or drift
+checks become stable issue codes, while `write_cloud_state_v2()` persists digests
+without absolute host paths. `cloud_pack_report()` summarizes plans with a
+recomputable digest, and `cloud_pack_gate()` recomputes PASS/FAIL from the
+reported error count, incomplete count, and profile.
 
 ### Optional chaining and null coalescing
 ```pea

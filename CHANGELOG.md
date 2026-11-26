@@ -1,4 +1,15 @@
 # Changelog
+## 3.1.61 - Phase 98: Cloud Infrastructure / DevOps sector pack (2026-11-26)
+- Complete Wave 4 with a deterministic sector-pack evidence gate for cloud stacks and deployment pipelines
+- Add validated profiles for deployment limits, preview inclusion, container/orchestration/pipeline/observability/IAM/source/lockfile/signature/drift checks, current version, and an incomplete-failure policy
+- Add stable deployment nodes with manifest digests, names, versions, kinds, evidence paths, platform bindings, resolved dependencies, and topological order
+- Detect missing dependencies, cycles, invalid manifests, missing evidence, deployments without container images, Kubernetes manifests, CI pipelines, observability, IAM policies, source bridges, lockfiles, signed packages, or drift checks as sorted issue codes
+- Track digest drift and propagate incomplete state to dependent deployments through `pea cloud-pack --state --write-state`
+- Add `pea cloud-pack` with capability, check, emit, state, strict incomplete, governance toggle, and current-version options plus a stable `sector.cloud_pack` feature flag
+- Add a normative Cloud Infrastructure / DevOps sector-pack spec section and align current release metadata to 3.1.61
+- Frozen 3.0 digest, earlier component versions, and historical release metadata stay pinned
+- Targeted sector-pack, CLI, freeze, version, and conformance tests smoke-tested
+
 ## 3.1.60 - Phase 97: Embedded / IoT / OS sector pack (2026-11-26)
 - Continue Wave 4 with a deterministic sector-pack evidence gate for firmware and OS delivery
 - Add validated profiles for firmware limits, preview inclusion, native/C-ABI/RTOS/static/bus/safety/memory/signature checks, current version, and an incomplete-failure policy

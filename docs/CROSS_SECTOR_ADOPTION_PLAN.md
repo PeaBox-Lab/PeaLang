@@ -331,8 +331,25 @@ missing-native-profile, missing-C-ABI, missing-RTOS-binding,
 missing-static-binary, missing-bus-API, missing-safety-audit,
 missing-bounded-memory, and missing-signed-update issues; and digests that
 exclude host paths make firmware evidence reviewable and reproducible in CI
-through `pea embedded-pack --check` and `embedded_pack_gate()`. Later rows of the
-table are built sequentially in following phases.
+through `pea embedded-pack --check` and `embedded_pack_gate()`.
+
+**Phase 98 — Cloud Infrastructure / DevOps sector pack** completes Wave 4 with a
+deterministic delivery gate for the eighth row of the sector table, additive to
+the package lifecycle CLI, `frameworks.py` k8s/cloudbuild/edge scaffolds,
+`cloud_connectors.py`, `object_storage.py`, and `kafka_connector.py`. Validated
+profiles control deployment limits, preview inclusion, container image,
+Kubernetes manifest, CI pipeline, observability, IAM policy, Go/Python/Bash/CDK/
+Terraform source bridges, lockfile, signed package, and drift checks, the current
+version, and incomplete policy. Stable nodes with digests, names, versions,
+kinds, evidence paths, platform bindings, resolved dependencies, propagated
+incomplete reasons, and topological order; sorted missing-dependency, cycle,
+invalid-manifest, missing-evidence, missing-container-image,
+missing-Kubernetes-manifest, missing-CI-pipeline, missing-observability,
+missing-IAM-policy, missing-source-bridge, missing-lockfile, missing-signed-package,
+and missing-drift-check issues; and digests that exclude host paths make cloud
+stack evidence reviewable and reproducible in CI through `pea cloud-pack --check`
+and `cloud_pack_gate()`. All eight rows of the sector table now have focused
+packs with reference evidence and stable gates.
 
 ### Wave 5 — Ecosystem release (Phases 99–100)
 

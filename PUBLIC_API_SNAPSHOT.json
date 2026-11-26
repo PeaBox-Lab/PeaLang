@@ -7190,6 +7190,78 @@
       "signature": "()"
     },
     {
+      "module": "pealang.cloud_pack",
+      "name": "CloudPackError",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.cloud_pack",
+      "name": "CloudProfileV2",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.cloud_pack",
+      "name": "cloud_pack_capabilities",
+      "kind": "function",
+      "signature": "()"
+    },
+    {
+      "module": "pealang.cloud_pack",
+      "name": "CloudIssueV2",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.cloud_pack",
+      "name": "CloudAppV2",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.cloud_pack",
+      "name": "CloudPackPlanV2",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.cloud_pack",
+      "name": "plan_cloud_pack",
+      "kind": "function",
+      "signature": "(root,profile=?,state=?)"
+    },
+    {
+      "module": "pealang.cloud_pack",
+      "name": "load_cloud_state_v2",
+      "kind": "function",
+      "signature": "(path)"
+    },
+    {
+      "module": "pealang.cloud_pack",
+      "name": "write_cloud_state_v2",
+      "kind": "function",
+      "signature": "(root,plan,path=?)"
+    },
+    {
+      "module": "pealang.cloud_pack",
+      "name": "cloud_pack_report",
+      "kind": "function",
+      "signature": "(plans,profile=?)"
+    },
+    {
+      "module": "pealang.cloud_pack",
+      "name": "cloud_pack_gate",
+      "kind": "function",
+      "signature": "(report)"
+    },
+    {
+      "module": "pealang.cloud_pack",
+      "name": "build_cloud_pack_namespace",
+      "kind": "function",
+      "signature": "()"
+    },
+    {
       "module": "pealang.lsp",
       "name": "LSPServer",
       "kind": "class",

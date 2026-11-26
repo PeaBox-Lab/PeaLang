@@ -94,11 +94,11 @@ def test_feature_flag_help_and_analysis_namespace_document_gates():
 
 
 def test_release_metadata_is_aligned():
-    assert pealang.__version__ == SPEC_VERSION == '3.1.60'
+    assert pealang.__version__ == SPEC_VERSION == '3.1.61'
     manifest = json.loads((Path(__file__).resolve().parent.parent
                            / 'RELEASE_MANIFEST.json').read_text(encoding='utf-8'))
-    assert manifest['version'] == '3.1.60'
-    assert manifest['previous_version'] == '3.1.59'
+    assert manifest['version'] == '3.1.61'
+    assert manifest['previous_version'] == '3.1.60'
     assert pealang.PERFORMANCE_GATE_VERSION == '4.0.0'
     assert pealang.RUNTIME_PROFILER_VERSION == '3.1.43'
     assert pealang.PARALLEL_RUNTIME_VERSION == '3.1.43'
