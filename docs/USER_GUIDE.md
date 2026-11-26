@@ -1,6 +1,6 @@
 # PeaLang User Guide
 
-This guide covers the PeaLang 5.18.0 release (unified versioning; supersedes the 1.0.0-experience and 0.99.6 baselines).
+This guide covers the PeaLang 5.19.0 release (unified versioning; supersedes the 1.0.0-experience and 0.99.6 baselines).
 
 ## Installation and Setup
 
@@ -76,6 +76,7 @@ pea doctor
 | `pea license-review <root> [--check] [--state FILE]` | Gate third-party license review closure evidence with stable digests |
 | `pea live-integration <root> [--check] [--state FILE]` | Gate live service integration evidence evidence with stable digests |
 | `pea security-soak <root> [--check] [--state FILE]` | Gate independent security review and soak evidence evidence with stable digests |
+| `pea support-operations <root> [--check] [--state FILE]` | Gate support and operations readiness evidence evidence with stable digests |
 | `pea fmt-v3 <path...> [--check] [--write]` | Report or apply formatter v3 changes |
 | `pea analyze <file.json|csv> [--json] [--head N]` | Profile a JSON/CSV dataset (analysis) |
 | `pea web-openapi` / `pea openapi <file.pea> [--title T] [--version V]` | Extract OpenAPI from a file defining `app` |
@@ -1146,6 +1147,30 @@ soak demos without security review, threat model, fuzz corpus, remediation log, 
 become stable issue codes, while `write_security_soak_state_v2()` persists digests
 without absolute host paths. `security_soak_report()` summarizes plans with a
 recomputable digest, and `security_soak_gate()` recomputes PASS/FAIL from the
+reported error count, incomplete count, and profile.
+
+### Support and operations readiness evidence
+
+```bash
+pea support-operations --capabilities
+pea support-operations . --check --state support_operations-state.json --emit support_operations.json
+pea support-operations . --check --write-state --fail-on-incomplete
+```
+
+`plan_support_operations()` extends Wave 8 as a support and operations readiness evidence gate and is additive to the
+release governance, capacity, chaos, SLO, observability, and certified-package
+surfaces. A `SupportOperationsProfileV2` validates the entry limit, preview inclusion,
+support-policy/incident-runbook/rollback-playbook/owner-assignment/drill-evidence/sla-rto-target/escalation-policy, current version, and
+incomplete-failure policy before planning. Each `SupportOperationsAppV2` carries a
+relative path, a manifest digest, name, version, kind, sorted evidence paths,
+sorted platform bindings, sorted required names, resolved dependencies, a
+clean/stale state, and reasons; entries are ordered topologically, and
+incomplete state propagates to dependent entries. Missing dependencies,
+dependency cycles, invalid manifests, missing evidence artifacts, or
+support demos without support policy, incident runbook, rollback playbook, owner assignment, drill evidence, SLA and RTO target, escalation policy
+become stable issue codes, while `write_support_operations_state_v2()` persists digests
+without absolute host paths. `support_operations_report()` summarizes plans with a
+recomputable digest, and `support_operations_gate()` recomputes PASS/FAIL from the
 reported error count, incomplete count, and profile.
 
 ### Optional chaining and null coalescing

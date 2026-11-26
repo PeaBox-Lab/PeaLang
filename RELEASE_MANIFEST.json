@@ -1,7 +1,7 @@
 {
-  "version": "5.18.0",
-  "previous_version": "5.17.0",
-  "release_line": "tagged release v5.18.0",
+  "version": "5.19.0",
+  "previous_version": "5.18.0",
+  "release_line": "tagged release v5.19.0",
   "pytest_tests_passed": 436,
   "conformance_cases_passed": 500,
   "fuzz_iterations": 250,

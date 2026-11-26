@@ -1,4 +1,15 @@
 # Changelog
+## 5.19.0 - Phase 119: Support and operations readiness evidence (2026-11-27)
+- Continue Wave 8 with a deterministic support and operations readiness evidence gate
+- Add validated profiles for entry limits, preview inclusion, support-policy, incident-runbook, rollback-playbook, owner-assignment, drill-evidence, sla-rto-target, escalation-policy, current version, and an incomplete-failure policy
+- Add stable nodes with manifest digests, names, versions, kinds, evidence paths, platform bindings, resolved dependencies, and topological order
+- Detect missing dependencies, cycles, invalid manifests, missing evidence, or support demos without support policy, incident runbook, rollback playbook, owner assignment, drill evidence, SLA and RTO target, escalation policy as sorted issue codes
+- Track digest drift and propagate incomplete state to dependent entries through `pea support-operations --state --write-state`
+- Add `pea support-operations` with capability, check, emit, state, strict incomplete, governance toggle, and current-version options plus a stable `sector.support_operations` feature flag
+- Add a normative support operations spec section and align current release metadata to 5.19.0
+- Frozen 3.0 digest, earlier component versions, and historical release metadata stay pinned
+- Full pytest suite and targeted quality gates passed
+
 ## 5.18.0 - Phase 118: Independent security review and soak evidence (2026-11-27)
 - Continue Wave 8 with a deterministic independent security review and soak evidence gate
 - Add validated profiles for entry limits, preview inclusion, security-review, threat-model, fuzz-corpus, remediation-log, soak-run, load-profile, slo-adherence, current version, and an incomplete-failure policy

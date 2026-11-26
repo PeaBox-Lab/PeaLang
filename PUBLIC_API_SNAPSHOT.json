@@ -8702,6 +8702,78 @@
       "signature": "()"
     },
     {
+      "module": "pealang.support_operations",
+      "name": "SupportOperationsPackError",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.support_operations",
+      "name": "SupportOperationsProfileV2",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.support_operations",
+      "name": "support_operations_capabilities",
+      "kind": "function",
+      "signature": "()"
+    },
+    {
+      "module": "pealang.support_operations",
+      "name": "SupportOperationsIssueV2",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.support_operations",
+      "name": "SupportOperationsAppV2",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.support_operations",
+      "name": "SupportOperationsPackPlanV2",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.support_operations",
+      "name": "plan_support_operations",
+      "kind": "function",
+      "signature": "(root,profile=?,state=?)"
+    },
+    {
+      "module": "pealang.support_operations",
+      "name": "load_support_operations_state_v2",
+      "kind": "function",
+      "signature": "(path)"
+    },
+    {
+      "module": "pealang.support_operations",
+      "name": "write_support_operations_state_v2",
+      "kind": "function",
+      "signature": "(root,plan,path=?)"
+    },
+    {
+      "module": "pealang.support_operations",
+      "name": "support_operations_report",
+      "kind": "function",
+      "signature": "(plans,profile=?)"
+    },
+    {
+      "module": "pealang.support_operations",
+      "name": "support_operations_gate",
+      "kind": "function",
+      "signature": "(report)"
+    },
+    {
+      "module": "pealang.support_operations",
+      "name": "build_support_operations_namespace",
+      "kind": "function",
+      "signature": "()"
+    },
+    {
       "module": "pealang.lsp",
       "name": "LSPServer",
       "kind": "class",

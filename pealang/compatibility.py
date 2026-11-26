@@ -66,6 +66,7 @@ FEATURES={
   'sector.license_review':Feature('sector.license_review','5.16.0',Stability.STABLE),
   'sector.live_integration':Feature('sector.live_integration','5.17.0',Stability.STABLE),
   'sector.security_soak':Feature('sector.security_soak','5.18.0',Stability.STABLE),
+  'sector.support_operations':Feature('sector.support_operations','5.19.0',Stability.STABLE),
  'async.await':Feature('async.await','0.26',Stability.PREVIEW),
  'embedding.python':Feature('embedding.python','0.18',Stability.STABLE),
  'embedding.fastapi':Feature('embedding.fastapi','0.25',Stability.PREVIEW),

@@ -1,3 +1,11 @@
+## 5.19.0 - Phase 119: Support and operations readiness evidence (2026-11-27)
+- Continue Wave 8 with a deterministic support and operations readiness evidence gate
+- Add validated profiles for entry limits, preview inclusion, support-policy/incident-runbook/rollback-playbook/owner-assignment/drill-evidence/sla-rto-target/escalation-policy, current version, and incomplete policy
+- Add stable nodes with digests, names, versions, kinds, evidence, bindings, resolved dependencies, incomplete reasons, and topological order
+- Detect missing dependencies, cycles, invalid manifests, missing evidence, and support demos without support policy, incident runbook, rollback playbook, owner assignment, drill evidence, SLA and RTO target, escalation policy as stable issue codes
+- Add `pea support-operations` with check, emit, state, strict incomplete, governance toggles, and capability options plus a stable sector feature flag
+- Align current release metadata to 5.19.0 while keeping the frozen 3.0 digest pinned
+
 ## 5.18.0 - Phase 118: Independent security review and soak evidence (2026-11-27)
 - Continue Wave 8 with a deterministic independent security review and soak evidence gate
 - Add validated profiles for entry limits, preview inclusion, security-review/threat-model/fuzz-corpus/remediation-log/soak-run/load-profile/slo-adherence, current version, and incomplete policy
