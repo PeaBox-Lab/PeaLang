@@ -7118,6 +7118,78 @@
       "signature": "()"
     },
     {
+      "module": "pealang.embedded_pack",
+      "name": "EmbeddedPackError",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.embedded_pack",
+      "name": "EmbeddedProfileV2",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.embedded_pack",
+      "name": "embedded_pack_capabilities",
+      "kind": "function",
+      "signature": "()"
+    },
+    {
+      "module": "pealang.embedded_pack",
+      "name": "EmbeddedIssueV2",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.embedded_pack",
+      "name": "EmbeddedAppV2",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.embedded_pack",
+      "name": "EmbeddedPackPlanV2",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.embedded_pack",
+      "name": "plan_embedded_pack",
+      "kind": "function",
+      "signature": "(root,profile=?,state=?)"
+    },
+    {
+      "module": "pealang.embedded_pack",
+      "name": "load_embedded_state_v2",
+      "kind": "function",
+      "signature": "(path)"
+    },
+    {
+      "module": "pealang.embedded_pack",
+      "name": "write_embedded_state_v2",
+      "kind": "function",
+      "signature": "(root,plan,path=?)"
+    },
+    {
+      "module": "pealang.embedded_pack",
+      "name": "embedded_pack_report",
+      "kind": "function",
+      "signature": "(plans,profile=?)"
+    },
+    {
+      "module": "pealang.embedded_pack",
+      "name": "embedded_pack_gate",
+      "kind": "function",
+      "signature": "(report)"
+    },
+    {
+      "module": "pealang.embedded_pack",
+      "name": "build_embedded_pack_namespace",
+      "kind": "function",
+      "signature": "()"
+    },
+    {
       "module": "pealang.lsp",
       "name": "LSPServer",
       "kind": "class",

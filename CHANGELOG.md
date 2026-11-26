@@ -1,4 +1,15 @@
 # Changelog
+## 3.1.60 - Phase 97: Embedded / IoT / OS sector pack (2026-11-26)
+- Continue Wave 4 with a deterministic sector-pack evidence gate for firmware and OS delivery
+- Add validated profiles for firmware limits, preview inclusion, native/C-ABI/RTOS/static/bus/safety/memory/signature checks, current version, and an incomplete-failure policy
+- Add stable firmware nodes with manifest digests, names, versions, kinds, evidence paths, platform bindings, resolved dependencies, and topological order
+- Detect missing dependencies, cycles, invalid manifests, missing evidence, firmware demos without native profiles, C ABIs, RTOS bindings, static binaries, bus APIs, safety audits, bounded-memory bindings, or signed-update bindings as sorted issue codes
+- Track digest drift and propagate incomplete state to dependent firmware through `pea embedded-pack --state --write-state`
+- Add `pea embedded-pack` with capability, check, emit, state, strict incomplete, governance toggle, and current-version options plus a stable `sector.embedded_pack` feature flag
+- Add a normative Embedded / IoT / OS sector-pack spec section and align current release metadata to 3.1.60
+- Frozen 3.0 digest, earlier component versions, and historical release metadata stay pinned
+- Targeted sector-pack, CLI, freeze, version, and conformance tests smoke-tested
+
 ## 3.1.59 - Phase 96: Game Development sector pack (2026-11-26)
 - Continue Wave 4 with a deterministic sector-pack evidence gate for game delivery
 - Add validated profiles for game limits, preview inclusion, runtime/ECS/engine/hot-reload/input/render checks, current version, and an incomplete-failure policy

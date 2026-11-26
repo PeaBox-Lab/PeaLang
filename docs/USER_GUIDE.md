@@ -1,6 +1,6 @@
 # PeaLang User Guide
 
-This guide covers the PeaLang 3.1.59 release (unified versioning; supersedes the 1.0.0-experience and 0.99.6 baselines).
+This guide covers the PeaLang 3.1.60 release (unified versioning; supersedes the 1.0.0-experience and 0.99.6 baselines).
 
 ## Installation and Setup
 
@@ -54,6 +54,7 @@ pea doctor
 | `pea android-pack <root> [--check] [--state FILE]` | Gate Mobile (Android) sector-pack evidence with stable digests |
 | `pea ios-pack <root> [--check] [--state FILE]` | Gate Mobile (iOS) sector-pack evidence with stable digests |
 | `pea game-pack <root> [--check] [--state FILE]` | Gate Game Development sector-pack evidence with stable digests |
+| `pea embedded-pack <root> [--check] [--state FILE]` | Gate Embedded / IoT / OS sector-pack evidence with stable digests |
 | `pea fmt-v3 <path...> [--check] [--write]` | Report or apply formatter v3 changes |
 | `pea analyze <file.json|csv> [--json] [--head N]` | Profile a JSON/CSV dataset (analysis) |
 | `pea web-openapi` / `pea openapi <file.pea> [--title T] [--version V]` | Extract OpenAPI from a file defining `app` |
@@ -589,6 +590,31 @@ input APIs, or render APIs become stable issue codes, while
 `game_pack_report()` summarizes plans with a recomputable digest, and
 `game_pack_gate()` recomputes PASS/FAIL from the reported error count, incomplete
 count, and profile.
+
+### Embedded / IoT / OS sector pack
+
+```bash
+pea embedded-pack --capabilities
+pea embedded-pack . --check --state embedded-state.json --emit embedded.json
+pea embedded-pack . --check --write-state --fail-on-incomplete
+```
+
+`plan_embedded_pack()` continues Wave 4 and is additive to the host bindings,
+Java client sidecar, and VM embedding foundations. An `EmbeddedProfileV2`
+validates the firmware limit, preview inclusion, native/C-ABI/RTOS/static/bus/
+safety/memory/signature checks, current version, and incomplete-failure policy
+before planning. Each `EmbeddedAppV2` carries a relative path, a manifest digest,
+name, version, kind, sorted evidence paths, sorted platform bindings, sorted
+required names, resolved dependencies, a clean/stale state, and reasons; firmware
+is ordered topologically, and incomplete state propagates to dependent firmware.
+Missing dependencies, dependency cycles, invalid manifests, missing evidence
+artifacts, firmware demos without native profiles, C ABIs, RTOS bindings, static
+binaries, GPIO/I2C/SPI/CAN APIs, safety audits, bounded-memory bindings, or
+signed-update bindings become stable issue codes, while
+`write_embedded_state_v2()` persists digests without absolute host paths.
+`embedded_pack_report()` summarizes plans with a recomputable digest, and
+`embedded_pack_gate()` recomputes PASS/FAIL from the reported error count,
+incomplete count, and profile.
 
 ### Optional chaining and null coalescing
 ```pea

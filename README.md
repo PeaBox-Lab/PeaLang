@@ -8,9 +8,9 @@ PeaLang is designed to complement existing ecosystems such as Python, FastAPI, J
 
 ## Release Status
 
-**Version: 3.1.59** — current tagged release across package, SDK, runtime, and specification metadata.
+**Version: 3.1.60** — current tagged release across package, SDK, runtime, and specification metadata.
 
-`3.1.59` is the unified release identifier for the tagged v3.1.59 line. Source version, SDK packages, container image label, runtime health output, registry user agent, release manifest, and language specification now report the same version. Historical release notes are kept in `docs/releases/` for provenance, but they do not define the current version.
+`3.1.60` is the unified release identifier for the tagged v3.1.60 line. Source version, SDK packages, container image label, runtime health output, registry user agent, release manifest, and language specification now report the same version. Historical release notes are kept in `docs/releases/` for provenance, but they do not define the current version.
 
 See `ROADMAP.md` for the forward-looking plan, `CHANGELOG.md` for per-feature history, and `docs/CROSS_SECTOR_ADOPTION_PLAN.md` for the plan to make PeaLang credible across enterprise, data, web, mobile, games, embedded, and cloud sectors.
 
@@ -1204,6 +1204,27 @@ bridges, hot reload, input APIs, or render APIs as sorted issue codes.
 runtime/ECS/engine/hot-reload/input/render checks, current version, and the
 incomplete-failure policy; `game_pack_report()` and `game_pack_gate()` provide
 reproducible CI evidence without host paths or timings.
+
+### Embedded / IoT / OS sector pack
+
+```bash
+pea embedded-pack --capabilities
+pea embedded-pack . --check --state embedded-state.json --emit embedded.json
+pea embedded-pack . --check --write-state --fail-on-incomplete
+```
+
+Phase 97 continues Wave 4 with a deterministic delivery gate alongside the
+existing host bindings, Java client sidecar, and VM embedding foundations. It
+derives a stable topological firmware order and incomplete set from
+`*.embedded.json` manifests, and reports missing dependencies, cycles, invalid
+manifests, missing evidence, firmware demos without native profiles, C ABIs,
+RTOS bindings, static binaries, GPIO/I2C/SPI/CAN APIs, safety audits,
+bounded-memory bindings, or signed-update bindings as sorted issue codes.
+`EmbeddedProfileV2` validates firmware limits, preview inclusion,
+native/C-ABI/RTOS/static/bus/safety/memory/signature checks, current version, and
+the incomplete-failure policy; `embedded_pack_report()` and
+`embedded_pack_gate()` provide reproducible CI evidence without host paths or
+timings.
 
 ### Project queries
 
