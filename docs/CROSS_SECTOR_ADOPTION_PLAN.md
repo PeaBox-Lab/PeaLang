@@ -416,6 +416,20 @@ missing-runbook, and missing-SLO issues; and digests that exclude host paths mak
 governance evidence reviewable and reproducible in CI through
 `pea slo-pack --check` and `slo_pack_gate()`.
 
+**Phase 103 — Chaos engineering and resilience validation** extends Wave 6 with
+a deterministic resilience gate over `*.chaos.json` manifests. Validated
+profiles control entry limits, preview inclusion, steady states, hypotheses,
+blast radii, abort conditions, rollback plans, game days, resilience reports,
+the current version, and incomplete policy. Stable nodes with digests, names,
+versions, kinds, evidence paths, platform bindings, resolved dependencies,
+propagated incomplete reasons, and topological order; sorted
+missing-dependency, cycle, invalid-manifest, missing-evidence,
+missing-steady-state, missing-hypothesis, missing-blast-radius,
+missing-abort-condition, missing-rollback-plan, missing-game-day, and
+missing-resilience-report issues; and digests that exclude host paths make
+resilience evidence reviewable and reproducible in CI through
+`pea chaos-pack --check` and `chaos_pack_gate()`.
+
 ## Sector packs
 
 | Sector | Current PeaLang evidence | Required additions | Acceptance gate |

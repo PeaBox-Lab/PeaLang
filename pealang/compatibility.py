@@ -50,6 +50,7 @@ FEATURES={
   'sector.certified_pack':Feature('sector.certified_pack','5.0.0',Stability.STABLE),
   'sector.observability_pack':Feature('sector.observability_pack','5.1.0',Stability.STABLE),
   'sector.slo_pack':Feature('sector.slo_pack','5.2.0',Stability.STABLE),
+  'sector.chaos_pack':Feature('sector.chaos_pack','5.3.0',Stability.STABLE),
  'async.await':Feature('async.await','0.26',Stability.PREVIEW),
  'embedding.python':Feature('embedding.python','0.18',Stability.STABLE),
  'embedding.fastapi':Feature('embedding.fastapi','0.25',Stability.PREVIEW),

@@ -1,3 +1,11 @@
+## 5.3.0 - Phase 103: Chaos engineering and resilience validation (2026-11-26)
+- Continue Wave 6 with a deterministic chaos engineering and resilience validation gate
+- Add validated profiles for entry limits, preview inclusion, steady-state/hypothesis/blast-radius/abort-condition/rollback-plan/game-day/resilience-report checks, current version, and incomplete policy
+- Add stable chaos nodes with digests, names, versions, kinds, evidence, bindings, resolved dependencies, incomplete reasons, and topological order
+- Detect missing dependencies, cycles, invalid manifests, missing evidence, missing steady states, hypotheses, blast radii, abort conditions, rollback plans, game days, and resilience reports as stable issue codes
+- Add `pea chaos-pack` with check, emit, state, strict incomplete, governance toggles, and capability options plus a stable sector feature flag
+- Align current release metadata to 5.3.0 while keeping the frozen 3.0 digest pinned
+
 ## 5.2.0 - Phase 102: SLO enforcement and incident-response governance (2026-11-26)
 - Continue Wave 6 with a deterministic SLO enforcement and incident-response governance gate
 - Add validated profiles for entry limits, preview inclusion, error-budget/incident-drill/escalation/postmortem/alert-route/runbook/SLO checks, current version, and incomplete policy

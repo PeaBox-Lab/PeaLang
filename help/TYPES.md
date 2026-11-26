@@ -10,3 +10,10 @@ governance evidence with missing-dependency, cycle, invalid-manifest,
 missing-evidence, missing-error-budget, missing-incident-drill,
 missing-escalation-policy, missing-postmortem, missing-alert-route,
 missing-runbook, and missing-SLO detection.
+ Phase 103 extends Wave 6 with chaos engineering and resilience
+validation: `pea chaos-pack --check` and `chaos_pack_gate()` provide
+reproducible resilience evidence with missing-dependency, cycle,
+invalid-manifest, missing-evidence, missing-steady-state,
+missing-hypothesis, missing-blast-radius, missing-abort-condition,
+missing-rollback-plan, missing-game-day, and missing-resilience-report
+detection.
