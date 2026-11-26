@@ -1,3 +1,11 @@
+## 3.1.45 - Phase 82: DAP debugger v2 (2026-11-26)
+- Continue Wave 3 with a deterministic DAP v2 layer additive to the existing DAP servers
+- Add reproducible VM launch, full JSON-RPC command dispatch, and stable session events
+- Add conditional and hit-conditional breakpoints with reviewable hit evidence
+- Add stack, scope, variable, evaluate, exception, threads, and disconnect inspection
+- Add `pea dap-v2` with check, breakpoint, capability, and emit options plus a stable debug feature flag
+- Align current release metadata to 3.1.45 while keeping the frozen 3.0 digest pinned
+
 ## 3.1.44 - Phase 81: LSP v2 (2026-11-26)
 - Open Wave 3 with a deterministic LSP v2 capability layer and versioned server metadata
 - Add full and incremental document synchronization with stable document-store digests

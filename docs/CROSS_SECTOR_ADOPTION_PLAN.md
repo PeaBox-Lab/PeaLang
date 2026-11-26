@@ -165,6 +165,14 @@ and semantic tokens as reviewable functions. `pea lsp --check` and
 `lsp_v2_gate()` provide CI-ready evidence without changing the frozen 3.0
 language surface or manifest digest.
 
+**Phase 82 — DAP debugger v2** continues Wave 3 with a deterministic debug layer
+additive to the existing DAP servers. It launches bytecode on the VM with a
+bounded instruction budget, verifies conditional and hit-conditional breakpoints,
+and records reproducible stop events and snapshot fingerprints. Stack, scope,
+variable, evaluation, exception, and disconnect commands are reviewable responses,
+while `pea dap-v2 --check` and `dap_v2_gate()` provide CI-ready evidence without
+changing the frozen 3.0 contract.
+
 ### Wave 4 — Sector packs (Phases 91–98)
 
 One focused pack per row of the table, each with a reference application and

@@ -1,6 +1,6 @@
 # PeaLang User Guide
 
-This guide covers the PeaLang 3.1.44 release (unified versioning; supersedes the 1.0.0-experience and 0.99.6 baselines).
+This guide covers the PeaLang 3.1.45 release (unified versioning; supersedes the 1.0.0-experience and 0.99.6 baselines).
 
 ## Installation and Setup
 
@@ -40,6 +40,7 @@ pea doctor
 | `pea profiler <file.pea> [--verify] [--emit FILE.json]` | Capture deterministic execution counters |
 | `pea perf-gate <file.pea> [--iterations N]` | Evaluate 4.0 performance gates |
 | `pea lsp <file.pea> [--check] [--symbols] [--hover LINE CHAR]` | Query LSP v2 diagnostics and symbols |
+| `pea dap-v2 <file.pea> [--check] [--breakpoint LINE]` | Run a deterministic DAP v2 session |
 | `pea analyze <file.json|csv> [--json] [--head N]` | Profile a JSON/CSV dataset (analysis) |
 | `pea web-openapi` / `pea openapi <file.pea> [--title T] [--version V]` | Extract OpenAPI from a file defining `app` |
 | `pea hash <file> [--algo sha256]` | Compute file hash |
@@ -266,6 +267,22 @@ symbols, hover, completion, definition, references, rename, formatting, folding
 ranges, inlay hints, and semantic tokens are all pure, inspectable functions.
 `lsp_v2_report()` summarizes the capability set and open documents with a stable
 digest; `lsp_v2_gate()` recomputes the PASS/FAIL decision for CI checks.
+
+### Debug adapter v2
+
+```bash
+pea dap-v2 --capabilities
+pea dap-v2 app.pea --breakpoint 3 --check --emit dap.json
+```
+
+`DapV2Session` is additive to the existing `dap` and `vm-dap` servers. It
+launches bytecode on the VM, applies verified breakpoints, and resumes or steps
+while recording deterministic events and snapshot fingerprints. Conditions such
+as `x == 1` and `hits == 2` are evaluated against stable local values; built-in
+VM helpers and host-specific paths are excluded from fingerprints and digests.
+Stack traces, scopes, variables, evaluation, exception info, threads, and
+disconnect are available as reviewable responses. `dap_v2_report()` summarizes
+the session and `dap_v2_gate()` recomputes the PASS/FAIL decision for CI checks.
 
 ### Optional chaining and null coalescing
 ```pea

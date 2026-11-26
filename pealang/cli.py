@@ -791,6 +791,28 @@ def main(argv=None):
             if a.emit:Path(a.emit).write_text(json.dumps(result,indent=2,default=str)+'\n',encoding='utf-8')
             print(json.dumps(result,indent=2,default=str));return 0 if not any(item.get('severity')==1 for item in opened['diagnostics']) else 1
 
+        if c=='dap-v2':
+
+            from .dap_v2 import DAP_V2_VERSION,DapV2Session,dap_v2_capabilities,dap_v2_gate,dap_v2_report
+
+            p=argparse.ArgumentParser(prog='pea dap-v2');p.add_argument('file',nargs='?');p.add_argument('--capabilities',action='store_true');p.add_argument('--check',action='store_true');p.add_argument('--breakpoint',type=int,action='append',default=[]);p.add_argument('--emit');a=p.parse_args(argv[1:])
+            if a.capabilities:
+                print(json.dumps(dap_v2_capabilities(),indent=2));return 0
+            if not a.file:print('dap-v2 requires FILE.pea or --capabilities');return 1
+            path=Path(a.file)
+            try:
+                session=DapV2Session();session.initialize();launch=session.launch(path=str(path))
+                if a.breakpoint:session.set_breakpoints(str(path),[{'line':line} for line in a.breakpoint])
+                status=session.configuration_done();stops=[status];guard=max(1,launch['instruction_count'])
+                while not session.terminated and status.get('reason')=='breakpoint' and guard>0:
+                    status=session.continue_run();stops.append(status);guard-=1
+            except Exception as e:print(f'DAP v2 failed: {e}');return 1
+            result={'version':DAP_V2_VERSION,'program':str(path),'verified':launch['verified'],'stops':stops,'output':list(session.output)}
+            if a.check:
+                report=dap_v2_report(session);result['report_digest']=report['digest'];result['gate']=dap_v2_gate(report)['gate']
+            if a.emit:Path(a.emit).write_text(json.dumps(result,indent=2,default=str)+'\n',encoding='utf-8')
+            print(json.dumps(result,indent=2,default=str));return 0 if session.terminated else 1
+
         if c=='semantic':
 
             from .type_system import SemanticAnalyzer
@@ -1121,7 +1143,7 @@ def main(argv=None):
             else:
                 from .stdlib import stdlib_manifest
                 sm=stdlib_manifest();mods=sm.get('modules',sm)
-                info={'version':__version__,'stdlib':list(mods.keys()) if isinstance(mods,dict) else mods,'commands':['run','eval','repl','check','lint','fmt','test','compile','vm','dis','init','new','serve-web','doctor','health','diagnose','help','templates','info','project','serve','stdlib','typecheck','typecheck-project','docs','analyze','web-openapi','openapi','openapi-contract','hash','tree','env','quickstart','scaffold','readiness','audit','conformance','conformance-v2','freeze','optimize','fast','jit','native','wasm-backend','parallel','profiler','perf-gate','lsp']}
+                info={'version':__version__,'stdlib':list(mods.keys()) if isinstance(mods,dict) else mods,'commands':['run','eval','repl','check','lint','fmt','test','compile','vm','dis','init','new','serve-web','doctor','health','diagnose','help','templates','info','project','serve','stdlib','typecheck','typecheck-project','docs','analyze','web-openapi','openapi','openapi-contract','hash','tree','env','quickstart','scaffold','readiness','audit','conformance','conformance-v2','freeze','optimize','fast','jit','native','wasm-backend','parallel','profiler','perf-gate','lsp','dap-v2']}
                 print(json.dumps(info,indent=2));return 0
 
         if c=='project':print(json.dumps(project_info(argv[1] if len(argv)>1 else '.'),indent=2));return 0

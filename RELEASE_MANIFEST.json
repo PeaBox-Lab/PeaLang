@@ -1,11 +1,11 @@
 {
-  "version": "3.1.44",
-  "previous_version": "3.1.43",
-  "release_line": "tagged release v3.1.44",
+  "version": "3.1.45",
+  "previous_version": "3.1.44",
+  "release_line": "tagged release v3.1.45",
   "pytest_tests_passed": 436,
   "conformance_cases_passed": 500,
   "fuzz_iterations": 250,
   "tests_failed": 0,
   "status": "PASS",
-  "note": "Phase 81 adds a deterministic LSP v2 layer with versioned capabilities, incremental document synchronization, and reviewable language features; frozen 3.0 digest and component versions stay pinned."
+  "note": "Phase 82 adds a deterministic DAP v2 debugger layer with reproducible VM sessions, conditional breakpoints, stepping evidence, and a CI-ready gate; frozen 3.0 digest and component versions stay pinned."
 }

@@ -3074,6 +3074,48 @@
       "signature": "()"
     },
     {
+      "module": "pealang.dap_v2",
+      "name": "DapV2Error",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.dap_v2",
+      "name": "DapBreakpoint",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.dap_v2",
+      "name": "dap_v2_capabilities",
+      "kind": "function",
+      "signature": "()"
+    },
+    {
+      "module": "pealang.dap_v2",
+      "name": "DapV2Session",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.dap_v2",
+      "name": "dap_v2_report",
+      "kind": "function",
+      "signature": "(session)"
+    },
+    {
+      "module": "pealang.dap_v2",
+      "name": "dap_v2_gate",
+      "kind": "function",
+      "signature": "(report)"
+    },
+    {
+      "module": "pealang.dap_v2",
+      "name": "build_dap_v2_namespace",
+      "kind": "function",
+      "signature": "()"
+    },
+    {
       "module": "pealang.conformance_quality",
       "name": "run_conformance_suite",
       "kind": "function",

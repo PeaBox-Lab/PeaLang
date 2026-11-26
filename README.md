@@ -8,9 +8,9 @@ PeaLang is designed to complement existing ecosystems such as Python, FastAPI, J
 
 ## Release Status
 
-**Version: 3.1.44** — current tagged release across package, SDK, runtime, and specification metadata.
+**Version: 3.1.45** — current tagged release across package, SDK, runtime, and specification metadata.
 
-`3.1.44` is the unified release identifier for the tagged v3.1.44 line. Source version, SDK packages, container image label, runtime health output, registry user agent, release manifest, and language specification now report the same version. Historical release notes are kept in `docs/releases/` for provenance, but they do not define the current version.
+`3.1.45` is the unified release identifier for the tagged v3.1.45 line. Source version, SDK packages, container image label, runtime health output, registry user agent, release manifest, and language specification now report the same version. Historical release notes are kept in `docs/releases/` for provenance, but they do not define the current version.
 
 See `ROADMAP.md` for the forward-looking plan, `CHANGELOG.md` for per-feature history, and `docs/CROSS_SECTOR_ADOPTION_PLAN.md` for the plan to make PeaLang credible across enterprise, data, web, mobile, games, embedded, and cloud sectors.
 
@@ -955,6 +955,20 @@ inspectable diagnostics, symbols, hover, completion, references, rename,
 formatting, folding, inlay hints, and semantic tokens. `lsp_v2_report()` produces
 a stable capability/document digest, and `lsp_v2_gate()` reduces it to a
 PASS/FAIL decision for editor tooling checks.
+
+### Debug adapter v2
+
+```bash
+pea dap-v2 --capabilities
+pea dap-v2 app.pea --breakpoint 3 --check --emit dap.json
+```
+
+Phase 82 adds a deterministic DAP v2 layer alongside the existing debug servers.
+It provides versioned capabilities, reproducible VM-backed launch and resume,
+conditional and hit-conditional breakpoints, and inspectable stack, scope,
+variable, evaluation, and exception responses. `dap_v2_report()` summarizes the
+session and snapshot fingerprint with a stable digest, and `dap_v2_gate()`
+reduces it to a PASS/FAIL decision for debugger tooling checks.
 
 ### Project queries
 

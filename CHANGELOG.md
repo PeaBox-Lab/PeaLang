@@ -1,4 +1,14 @@
 # Changelog
+## 3.1.45 - Phase 82: DAP debugger v2 (2026-11-26)
+- Add a deterministic DAP v2 session layer additive to the existing DAP servers
+- Add versioned capabilities, reproducible VM launch, breakpoints, and stepping evidence
+- Add conditional and hit-conditional breakpoints with stable hit counters
+- Add stack, scope, variable, evaluate, exception, threads, and disconnect responses
+- Add `pea dap-v2` with capability, check, breakpoint, and emit options plus a stable `debug.dap_v2` feature flag
+- Add a normative DAP v2 spec section and align current release metadata to 3.1.45
+- Frozen 3.0 digest, earlier component versions, and historical release metadata stay pinned
+- Targeted DAP v2, JSON-RPC dispatch, breakpoint, freeze, version, and conformance tests smoke-tested
+
 ## 3.1.44 - Phase 81: LSP v2 (2026-11-26)
 - Add a versioned LSP v2 layer with deterministic capabilities and server metadata
 - Add an incremental document store with full/range synchronization, versioning, and stable digests
