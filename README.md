@@ -8,9 +8,9 @@ PeaLang is designed to complement existing ecosystems such as Python, FastAPI, J
 
 ## Release Status
 
-**Version: 3.1.48** — current tagged release across package, SDK, runtime, and specification metadata.
+**Version: 3.1.49** — current tagged release across package, SDK, runtime, and specification metadata.
 
-`3.1.48` is the unified release identifier for the tagged v3.1.48 line. Source version, SDK packages, container image label, runtime health output, registry user agent, release manifest, and language specification now report the same version. Historical release notes are kept in `docs/releases/` for provenance, but they do not define the current version.
+`3.1.49` is the unified release identifier for the tagged v3.1.49 line. Source version, SDK packages, container image label, runtime health output, registry user agent, release manifest, and language specification now report the same version. Historical release notes are kept in `docs/releases/` for provenance, but they do not define the current version.
 
 See `ROADMAP.md` for the forward-looking plan, `CHANGELOG.md` for per-feature history, and `docs/CROSS_SECTOR_ADOPTION_PLAN.md` for the plan to make PeaLang credible across enterprise, data, web, mobile, games, embedded, and cloud sectors.
 
@@ -1011,6 +1011,21 @@ Phase 85 adds a deterministic test framework v2 alongside the existing
 and omits elapsed timings and raw host paths from evidence and digests.
 `TestProfileV2` validates filtering, fail-fast behavior, and the allowed failure
 count; `test_v2_report()` and `test_v2_gate()` provide reproducible CI results.
+
+### Incremental build system v2
+
+```bash
+pea build-v2 --capabilities
+pea build-v2 . --check --state build-state.json --emit build.json
+pea build-v2 . --check --write-state --fail-on-dirty
+```
+
+Phase 86 adds a deterministic incremental build planner alongside the existing
+`pea build` command. It derives a stable topological build order and dirty set
+from source digests and import edges, and reports missing imports and dependency
+cycles as sorted issue codes. `BuildProfileV2` validates file limits, test
+inclusion, import checks, and the dirty-failure policy; `build_v2_report()` and
+`build_v2_gate()` provide reproducible CI evidence without host paths or timings.
 
 ### Project queries
 

@@ -6326,6 +6326,78 @@
       "signature": "()"
     },
     {
+      "module": "pealang.build_system_v2",
+      "name": "BuildSystemV2Error",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.build_system_v2",
+      "name": "BuildProfileV2",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.build_system_v2",
+      "name": "build_system_v2_capabilities",
+      "kind": "function",
+      "signature": "()"
+    },
+    {
+      "module": "pealang.build_system_v2",
+      "name": "BuildIssueV2",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.build_system_v2",
+      "name": "BuildNodeV2",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.build_system_v2",
+      "name": "BuildPlanV2",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.build_system_v2",
+      "name": "plan_build_v2",
+      "kind": "function",
+      "signature": "(root,profile=?,state=?)"
+    },
+    {
+      "module": "pealang.build_system_v2",
+      "name": "load_build_state_v2",
+      "kind": "function",
+      "signature": "(path)"
+    },
+    {
+      "module": "pealang.build_system_v2",
+      "name": "write_build_state_v2",
+      "kind": "function",
+      "signature": "(root,plan,path=?)"
+    },
+    {
+      "module": "pealang.build_system_v2",
+      "name": "build_v2_report",
+      "kind": "function",
+      "signature": "(plans,profile=?)"
+    },
+    {
+      "module": "pealang.build_system_v2",
+      "name": "build_v2_gate",
+      "kind": "function",
+      "signature": "(report)"
+    },
+    {
+      "module": "pealang.build_system_v2",
+      "name": "build_build_system_v2_namespace",
+      "kind": "function",
+      "signature": "()"
+    },
+    {
       "module": "pealang.lsp",
       "name": "LSPServer",
       "kind": "class",

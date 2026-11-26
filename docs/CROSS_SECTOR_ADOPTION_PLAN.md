@@ -194,6 +194,13 @@ sorted outcomes, and digests that exclude timings and host paths make runs
 reviewable in editors and reproducible in CI through `pea test-v2 --check` and
 `test_v2_gate()`.
 
+**Phase 86 — Incremental build system v2** continues Wave 3 with deterministic
+build evidence additive to the existing `pea build`. Validated profiles control
+file limits, test inclusion, import checks, and dirty-failure policy. Stable
+topological order, content-digest dirty sets, propagated reasons, and digests
+that exclude host paths make plans reviewable and reproducible in CI through
+`pea build-v2 --check` and `build_v2_gate()`.
+
 ### Wave 4 — Sector packs (Phases 91–98)
 
 One focused pack per row of the table, each with a reference application and

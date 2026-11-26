@@ -12,7 +12,7 @@ def test_pea_version_json():
                                 capture_output=True, text=True, cwd=tmpdir, env=env)
         assert result.returncode == 0
         out = json.loads(result.stdout)
-        assert out['version'] == '3.1.48'
+        assert out['version'] == '3.1.49'
 
 def test_pea_version_default():
     """Phase 42: pea version without args prints version."""
@@ -22,7 +22,7 @@ def test_pea_version_default():
         result = subprocess.run([sys.executable, '-m', 'pealang.cli', 'version'],
                                 capture_output=True, text=True, cwd=tmpdir, env=env)
         assert result.returncode == 0
-        assert 'PeaLang 3.1.48' in result.stdout
+        assert 'PeaLang 3.1.49' in result.stdout
 
 def test_pea_version_project():
     """Phase 42: pea version <path> prints project version from pea.toml."""

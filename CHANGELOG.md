@@ -1,4 +1,15 @@
 # Changelog
+## 3.1.49 - Phase 86: Incremental build system v2 (2026-11-26)
+- Add a deterministic incremental build system v2 layer additive to the existing `pea build` command
+- Add validated profiles for file limits, test inclusion, import checks, and a dirty-failure policy
+- Add stable build order, per-node dirty state, and reasons propagated through the import graph
+- Detect missing imports and dependency cycles as stable, sorted issue codes
+- Persist digest state without absolute host paths through `pea build-v2 --state --write-state`
+- Add `pea build-v2` with capability, check, emit, state, and strict dirty options plus a stable `devx.incremental_build_v2` feature flag
+- Add a normative incremental build system v2 spec section and align current release metadata to 3.1.49
+- Frozen 3.0 digest, earlier component versions, and historical release metadata stay pinned
+- Targeted build system v2, CLI, freeze, version, and conformance tests smoke-tested
+
 ## 3.1.48 - Phase 85: Test framework v2 (2026-11-26)
 - Add a deterministic test framework v2 layer additive to the existing `pea test` runner
 - Add validated profiles for filtering, fail-fast execution, and an allowed failure count

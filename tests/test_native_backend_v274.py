@@ -169,11 +169,11 @@ def test_feature_flag_help_and_analysis_namespace_document_native():
 
 
 def test_release_metadata_is_aligned():
-    assert pealang.__version__ == SPEC_VERSION == '3.1.48'
+    assert pealang.__version__ == SPEC_VERSION == '3.1.49'
     manifest = json.loads((Path(__file__).resolve().parent.parent
                            / 'RELEASE_MANIFEST.json').read_text(encoding='utf-8'))
-    assert manifest['version'] == '3.1.48'
-    assert manifest['previous_version'] == '3.1.47'
+    assert manifest['version'] == '3.1.49'
+    assert manifest['previous_version'] == '3.1.48'
     assert pealang.NATIVE_BACKEND_VERSION == '3.1.41'
     assert pealang.BYTECODE_JIT_VERSION == '3.1.40'
     assert pealang.FAST_INTERPRETER_VERSION == '3.1.39'

@@ -1143,7 +1143,7 @@ def main(argv=None):
             else:
                 from .stdlib import stdlib_manifest
                 sm=stdlib_manifest();mods=sm.get('modules',sm)
-                info={'version':__version__,'stdlib':list(mods.keys()) if isinstance(mods,dict) else mods,'commands':['run','eval','repl','check','lint','lint-v3','fmt','fmt-v3','test','test-v2','compile','vm','dis','init','new','serve-web','doctor','health','diagnose','help','templates','info','project','serve','stdlib','typecheck','typecheck-project','docs','analyze','web-openapi','openapi','openapi-contract','hash','tree','env','quickstart','scaffold','readiness','audit','conformance','conformance-v2','freeze','optimize','fast','jit','native','wasm-backend','parallel','profiler','perf-gate','lsp','dap-v2']}
+                info={'version':__version__,'stdlib':list(mods.keys()) if isinstance(mods,dict) else mods,'commands':['run','eval','repl','check','lint','lint-v3','fmt','fmt-v3','test','test-v2','build','build-v2','compile','vm','dis','init','new','serve-web','doctor','health','diagnose','help','templates','info','project','serve','stdlib','typecheck','typecheck-project','docs','analyze','web-openapi','openapi','openapi-contract','hash','tree','env','quickstart','scaffold','readiness','audit','conformance','conformance-v2','freeze','optimize','fast','jit','native','wasm-backend','parallel','profiler','perf-gate','lsp','dap-v2']}
                 print(json.dumps(info,indent=2));return 0
 
         if c=='project':print(json.dumps(project_info(argv[1] if len(argv)>1 else '.'),indent=2));return 0
@@ -1328,6 +1328,26 @@ def main(argv=None):
             try:results=[run_test_file_v2(f,profile) for f in discover_pea(a.paths)]
             except Exception as e:print(f'Test framework v2 failed: {e}');return 1
             report=test_v2_report(results,profile);decision=test_v2_gate(report);report['decision']=decision
+            if a.emit:Path(a.emit).write_text(json.dumps(report,indent=2,default=str)+'\n',encoding='utf-8')
+            print(json.dumps(report,indent=2,default=str))
+            if a.check:return 0 if decision['gate']=='PASS' else 1
+            return 0
+
+        if c=='build-v2':
+
+            from .build_system_v2 import (BuildProfileV2,build_v2_gate,build_v2_report,build_system_v2_capabilities,load_build_state_v2,plan_build_v2,write_build_state_v2)
+
+            p=argparse.ArgumentParser(prog='pea build-v2');p.add_argument('root',nargs='?',default='.');p.add_argument('--capabilities',action='store_true');p.add_argument('--check',action='store_true');p.add_argument('--emit');p.add_argument('--state');p.add_argument('--write-state',action='store_true');p.add_argument('--max-files',type=int,default=500);p.add_argument('--include-tests',action='store_true');p.add_argument('--fail-on-dirty',action='store_true');a=p.parse_args(argv[1:])
+            if a.capabilities:
+                print(json.dumps(build_system_v2_capabilities(),indent=2));return 0
+            try:profile=BuildProfileV2(max_files=a.max_files,include_tests=a.include_tests,fail_on_dirty=a.fail_on_dirty)
+            except Exception as e:print(f'Build system v2 failed: {e}');return 1
+            state_path=Path(a.state) if a.state else Path(a.root)/'.pea_build_v2.json'
+            try:
+                state=load_build_state_v2(state_path);plan=plan_build_v2(a.root,profile,state)
+                if a.write_state:write_build_state_v2(a.root,plan,state_path)
+            except Exception as e:print(f'Build system v2 failed: {e}');return 1
+            report=build_v2_report([plan],profile);decision=build_v2_gate(report);report['decision']=decision
             if a.emit:Path(a.emit).write_text(json.dumps(report,indent=2,default=str)+'\n',encoding='utf-8')
             print(json.dumps(report,indent=2,default=str))
             if a.check:return 0 if decision['gate']=='PASS' else 1

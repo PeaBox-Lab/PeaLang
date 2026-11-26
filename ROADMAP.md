@@ -1,3 +1,11 @@
+## 3.1.49 - Phase 86: Incremental build system v2 (2026-11-26)
+- Continue Wave 3 with a deterministic incremental build system v2 additive to the existing build command
+- Add validated profiles for file limits, test inclusion, import checks, and dirty-failure policy
+- Add stable topological build order, content-digest dirty sets, and propagated reasons
+- Detect missing imports and dependency cycles as stable issue codes
+- Add `pea build-v2` with check, emit, state, strict dirty, and capability options plus a stable devx feature flag
+- Align current release metadata to 3.1.49 while keeping the frozen 3.0 digest pinned
+
 ## 3.1.48 - Phase 85: Test framework v2 (2026-11-26)
 - Continue Wave 3 with a deterministic test framework v2 additive to the existing test runner
 - Add validated profiles for filtering, fail-fast execution, and an allowed failure count

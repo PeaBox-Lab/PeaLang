@@ -1,6 +1,6 @@
 # PeaLang User Guide
 
-This guide covers the PeaLang 3.1.48 release (unified versioning; supersedes the 1.0.0-experience and 0.99.6 baselines).
+This guide covers the PeaLang 3.1.49 release (unified versioning; supersedes the 1.0.0-experience and 0.99.6 baselines).
 
 ## Installation and Setup
 
@@ -43,6 +43,7 @@ pea doctor
 | `pea dap-v2 <file.pea> [--check] [--breakpoint LINE]` | Run a deterministic DAP v2 session |
 | `pea lint-v3 <path...> [--check] [--fail-on-warning]` | Report deterministic linter v3 findings |
 | `pea test-v2 <path...> [--check] [--fail-fast]` | Run deterministic test framework v2 cases |
+| `pea build-v2 <root> [--check] [--state FILE]` | Plan an incremental build with stable digests |
 | `pea fmt-v3 <path...> [--check] [--write]` | Report or apply formatter v3 changes |
 | `pea analyze <file.json|csv> [--json] [--head N]` | Profile a JSON/CSV dataset (analysis) |
 | `pea web-openapi` / `pea openapi <file.pea> [--title T] [--version V]` | Extract OpenAPI from a file defining `app` |
@@ -338,6 +339,24 @@ deterministically, and error text is normalized so raw host paths do not enter
 the report. `test_v2_report()` summarizes results with a digest that excludes
 elapsed timings, and `test_v2_gate()` recomputes PASS/FAIL from the reported
 failure count and profile.
+
+### Incremental build system v2
+
+```bash
+pea build-v2 --capabilities
+pea build-v2 . --check --state build-state.json --emit build.json
+pea build-v2 . --check --write-state --fail-on-dirty
+```
+
+`plan_build_v2()` is additive to `pea build`. A `BuildProfileV2` validates the
+file limit, test inclusion, import checks, and dirty-failure policy before
+planning. Each `BuildNodeV2` carries a relative path, a content digest, resolved
+import dependencies, a clean/stale state, and reasons; nodes are ordered
+topologically, and stale state propagates to importers. Missing imports and
+dependency cycles become stable issue codes, while `write_build_state_v2()`
+persists digests without absolute host paths. `build_v2_report()` summarizes
+plans with a recomputable digest, and `build_v2_gate()` recomputes PASS/FAIL from
+the reported error count, dirty count, and profile.
 
 ### Optional chaining and null coalescing
 ```pea
