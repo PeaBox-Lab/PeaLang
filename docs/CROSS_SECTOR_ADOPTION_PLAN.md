@@ -430,6 +430,19 @@ missing-resilience-report issues; and digests that exclude host paths make
 resilience evidence reviewable and reproducible in CI through
 `pea chaos-pack --check` and `chaos_pack_gate()`.
 
+**Phase 104 — Capacity and cost reliability governance** extends Wave 6 with a
+deterministic capacity gate over `*.capacity.json` manifests. Validated profiles
+control entry limits, preview inclusion, cost budgets, quotas, headroom,
+autoscale policies, resource limits, forecasts, review gates, the current
+version, and incomplete policy. Stable nodes with digests, names, versions,
+kinds, evidence paths, platform bindings, resolved dependencies, propagated
+incomplete reasons, and topological order; sorted missing-dependency, cycle,
+invalid-manifest, missing-evidence, missing-cost-budget, missing-quota,
+missing-headroom, missing-autoscale-policy, missing-resource-limit,
+missing-forecast, and missing-review-gate issues; and digests that exclude host
+paths make capacity evidence reviewable and reproducible in CI through
+`pea capacity-pack --check` and `capacity_pack_gate()`.
+
 ## Sector packs
 
 | Sector | Current PeaLang evidence | Required additions | Acceptance gate |

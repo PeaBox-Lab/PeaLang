@@ -1,6 +1,6 @@
 # PeaLang User Guide
 
-This guide covers the PeaLang 5.3.0 release (unified versioning; supersedes the 1.0.0-experience and 0.99.6 baselines).
+This guide covers the PeaLang 5.4.0 release (unified versioning; supersedes the 1.0.0-experience and 0.99.6 baselines).
 
 ## Installation and Setup
 
@@ -61,6 +61,7 @@ pea doctor
 | `pea observability-pack <root> [--check] [--state FILE]` | Gate observability and SRE evidence with stable digests |
 | `pea slo-pack <root> [--check] [--state FILE]` | Gate SLO enforcement and incident-response evidence with stable digests |
 | `pea chaos-pack <root> [--check] [--state FILE]` | Gate chaos engineering and resilience evidence with stable digests |
+| `pea capacity-pack <root> [--check] [--state FILE]` | Gate capacity and cost reliability evidence with stable digests |
 | `pea fmt-v3 <path...> [--check] [--write]` | Report or apply formatter v3 changes |
 | `pea analyze <file.json|csv> [--json] [--head N]` | Profile a JSON/CSV dataset (analysis) |
 | `pea web-openapi` / `pea openapi <file.pea> [--title T] [--version V]` | Extract OpenAPI from a file defining `app` |
@@ -768,6 +769,31 @@ conditions, rollback plans, game days, or resilience reports become stable issue
 codes, while `write_chaos_state_v2()` persists digests without absolute host
 paths. `chaos_pack_report()` summarizes plans with a recomputable digest, and
 `chaos_pack_gate()` recomputes PASS/FAIL from the reported error count,
+incomplete count, and profile.
+
+### Capacity and cost reliability governance
+
+```bash
+pea capacity-pack --capabilities
+pea capacity-pack . --check --state capacity-state.json --emit capacity.json
+pea capacity-pack . --check --write-state --fail-on-incomplete
+```
+
+`plan_capacity_pack()` extends Wave 6 as a capacity and cost reliability gate
+and is additive to the chaos, SLO, observability, and certified-package
+surfaces. A `CapacityProfileV2` validates the entry limit, preview inclusion,
+cost-budget/quota/headroom/autoscale-policy/resource-limit/forecast/review-gate
+checks, current version, and incomplete-failure policy before planning. Each
+`CapacityAppV2` carries a relative path, a manifest digest, name, version, kind,
+sorted evidence paths, sorted platform bindings, sorted required names,
+resolved dependencies, a clean/stale state, and reasons; entries are ordered
+topologically, and incomplete state propagates to dependent entries. Missing
+dependencies, dependency cycles, invalid manifests, missing evidence artifacts,
+or capacity demos without cost budgets, quotas, headroom, autoscale policies,
+resource limits, forecasts, or review gates become stable issue codes, while
+`write_capacity_state_v2()` persists digests without absolute host paths.
+`capacity_pack_report()` summarizes plans with a recomputable digest, and
+`capacity_pack_gate()` recomputes PASS/FAIL from the reported error count,
 incomplete count, and profile.
 
 ### Optional chaining and null coalescing

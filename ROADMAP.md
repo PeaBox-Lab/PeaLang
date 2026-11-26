@@ -1,3 +1,11 @@
+## 5.4.0 - Phase 104: Capacity and cost reliability governance (2026-11-26)
+- Continue Wave 6 with a deterministic capacity and cost reliability governance gate
+- Add validated profiles for entry limits, preview inclusion, cost-budget/quota/headroom/autoscale-policy/resource-limit/forecast/review-gate checks, current version, and incomplete policy
+- Add stable capacity nodes with digests, names, versions, kinds, evidence, bindings, resolved dependencies, incomplete reasons, and topological order
+- Detect missing dependencies, cycles, invalid manifests, missing evidence, missing cost budgets, quotas, headroom, autoscale policies, resource limits, forecasts, and review gates as stable issue codes
+- Add `pea capacity-pack` with check, emit, state, strict incomplete, governance toggles, and capability options plus a stable sector feature flag
+- Align current release metadata to 5.4.0 while keeping the frozen 3.0 digest pinned
+
 ## 5.3.0 - Phase 103: Chaos engineering and resilience validation (2026-11-26)
 - Continue Wave 6 with a deterministic chaos engineering and resilience validation gate
 - Add validated profiles for entry limits, preview inclusion, steady-state/hypothesis/blast-radius/abort-condition/rollback-plan/game-day/resilience-report checks, current version, and incomplete policy

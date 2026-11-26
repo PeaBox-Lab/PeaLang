@@ -8,9 +8,9 @@ PeaLang is designed to complement existing ecosystems such as Python, FastAPI, J
 
 ## Release Status
 
-**Version: 5.3.0** — current tagged release across package, SDK, runtime, and specification metadata.
+**Version: 5.4.0** — current tagged release across package, SDK, runtime, and specification metadata.
 
-`5.3.0` is the unified release identifier for the tagged v5.3.0 line. Source version, SDK packages, container image label, runtime health output, registry user agent, release manifest, and language specification now report the same version. Historical release notes are kept in `docs/releases/` for provenance, but they do not define the current version.
+`5.4.0` is the unified release identifier for the tagged v5.4.0 line. Source version, SDK packages, container image label, runtime health output, registry user agent, release manifest, and language specification now report the same version. Historical release notes are kept in `docs/releases/` for provenance, but they do not define the current version.
 
 See `ROADMAP.md` for the forward-looking plan, `CHANGELOG.md` for per-feature history, and `docs/CROSS_SECTOR_ADOPTION_PLAN.md` for the plan to make PeaLang credible across enterprise, data, web, mobile, games, embedded, and cloud sectors.
 
@@ -1341,6 +1341,24 @@ as sorted issue codes. `ChaosProfileV2` validates entry limits, preview
 inclusion, governance checks, current version, and the incomplete-failure
 policy; `chaos_pack_report()` and `chaos_pack_gate()` provide reproducible CI
 evidence without host paths or timings.
+
+### Capacity and cost reliability governance
+
+```bash
+pea capacity-pack --capabilities
+pea capacity-pack . --check --state capacity-state.json --emit capacity.json
+pea capacity-pack . --check --write-state --fail-on-incomplete
+```
+
+Phase 104 at **5.4.0** extends Wave 6 with a deterministic capacity and cost
+reliability gate over `*.capacity.json` manifests. It derives a stable
+topological order and incomplete set, and reports missing dependencies, cycles,
+invalid manifests, missing evidence, and capacity demos without cost budgets,
+quotas, headroom, autoscale policies, resource limits, forecasts, or review
+gates as sorted issue codes. `CapacityProfileV2` validates entry limits,
+preview inclusion, governance checks, current version, and the
+incomplete-failure policy; `capacity_pack_report()` and `capacity_pack_gate()`
+provide reproducible CI evidence without host paths or timings.
 
 ### Project queries
 

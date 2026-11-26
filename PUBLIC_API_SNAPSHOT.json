@@ -7622,6 +7622,78 @@
       "signature": "()"
     },
     {
+      "module": "pealang.capacity_pack",
+      "name": "CapacityPackError",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.capacity_pack",
+      "name": "CapacityProfileV2",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.capacity_pack",
+      "name": "capacity_pack_capabilities",
+      "kind": "function",
+      "signature": "()"
+    },
+    {
+      "module": "pealang.capacity_pack",
+      "name": "CapacityIssueV2",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.capacity_pack",
+      "name": "CapacityAppV2",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.capacity_pack",
+      "name": "CapacityPackPlanV2",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.capacity_pack",
+      "name": "plan_capacity_pack",
+      "kind": "function",
+      "signature": "(root,profile=?,state=?)"
+    },
+    {
+      "module": "pealang.capacity_pack",
+      "name": "load_capacity_state_v2",
+      "kind": "function",
+      "signature": "(path)"
+    },
+    {
+      "module": "pealang.capacity_pack",
+      "name": "write_capacity_state_v2",
+      "kind": "function",
+      "signature": "(root,plan,path=?)"
+    },
+    {
+      "module": "pealang.capacity_pack",
+      "name": "capacity_pack_report",
+      "kind": "function",
+      "signature": "(plans,profile=?)"
+    },
+    {
+      "module": "pealang.capacity_pack",
+      "name": "capacity_pack_gate",
+      "kind": "function",
+      "signature": "(report)"
+    },
+    {
+      "module": "pealang.capacity_pack",
+      "name": "build_capacity_pack_namespace",
+      "kind": "function",
+      "signature": "()"
+    },
+    {
       "module": "pealang.lsp",
       "name": "LSPServer",
       "kind": "class",

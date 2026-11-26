@@ -17,3 +17,10 @@ invalid-manifest, missing-evidence, missing-steady-state,
 missing-hypothesis, missing-blast-radius, missing-abort-condition,
 missing-rollback-plan, missing-game-day, and missing-resilience-report
 detection.
+ Phase 104 extends Wave 6 with capacity and cost reliability
+governance: `pea capacity-pack --check` and `capacity_pack_gate()`
+provide reproducible capacity evidence with missing-dependency,
+cycle, invalid-manifest, missing-evidence, missing-cost-budget,
+missing-quota, missing-headroom, missing-autoscale-policy,
+missing-resource-limit, missing-forecast, and missing-review-gate
+detection.

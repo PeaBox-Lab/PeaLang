@@ -39,7 +39,7 @@ def test_pea_conformance_cli():
 def test_version_surface_consistent():
     """0.40: pealang.__version__ matches the expected release version."""
     # Version is pinned at the current tagged release line.
-    assert __version__ == "5.3.0"
+    assert __version__ == "5.4.0"
 
 
 def test_all_host_sdks_scaffold():
