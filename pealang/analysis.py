@@ -231,6 +231,21 @@ from .wasm_backend import (build_wasm_backend_namespace as _wasm_backend_build_n
     verify_wasm_backend_parity as _wasm_backend_verify,
     benchmark_wasm_backend as _wasm_backend_benchmark,
     wasm_backend_report as _wasm_backend_report)
+from .parallel_runtime import (build_parallel_namespace as _parallel_build_namespace,
+    ParallelRuntime as _parallel_runtime, build_parallel_plan as _parallel_plan,
+    verify_parallel_parity as _parallel_verify,
+    benchmark_parallel as _parallel_benchmark,
+    parallel_report as _parallel_report)
+from .runtime_profiler import (build_runtime_profiler_namespace as _profiler_v3_build_namespace,
+    RuntimeProfiler as _profiler_v3_runtime, profile_module as _profiler_v3_profile,
+    verify_profile_parity as _profiler_v3_verify,
+    benchmark_profiler as _profiler_v3_benchmark,
+    profiler_report as _profiler_v3_report)
+from .performance_gates_v4 import (build_performance_gates_namespace as _perf_gate_v4_build_namespace,
+    GateBudget as _perf_gate_v4_budget,
+    collect_gate_evidence as _perf_gate_v4_collect,
+    performance_gate_report as _perf_gate_v4_report,
+    performance_gate as _perf_gate_v4_gate)
 from .ai_ml import (build_ai_ml_namespace as _ai_ml_build_namespace)
 from .debugger import (build_debugger_namespace as _debugger_build_namespace)
 from .serverless import build_serverless_namespace as _serverless_build_namespace
@@ -3597,6 +3612,23 @@ def build_analysis_namespace() -> dict[str, Any]:
         "BenchmarkWasmBackend": _wasm_backend_benchmark,
         "WasmBackendReport": _wasm_backend_report,
         "WasmBackendNamespace": _wasm_backend_build_namespace,
+        "ParallelRuntime": _parallel_runtime,
+        "BuildParallelPlan": _parallel_plan,
+        "VerifyParallelParity": _parallel_verify,
+        "BenchmarkParallel": _parallel_benchmark,
+        "ParallelReport": _parallel_report,
+        "ParallelNamespace": _parallel_build_namespace,
+        "RuntimeProfiler": _profiler_v3_runtime,
+        "ProfileModule": _profiler_v3_profile,
+        "VerifyProfileParity": _profiler_v3_verify,
+        "BenchmarkProfiler": _profiler_v3_benchmark,
+        "ProfilerReport": _profiler_v3_report,
+        "RuntimeProfilerNamespace": _profiler_v3_build_namespace,
+        "GateBudgetV4": _perf_gate_v4_budget,
+        "CollectGateEvidence": _perf_gate_v4_collect,
+        "PerformanceGateReportV4": _perf_gate_v4_report,
+        "PerformanceGateV4": _perf_gate_v4_gate,
+        "PerformanceGatesNamespaceV4": _perf_gate_v4_build_namespace,
         "AIML": _ai_ml_build_namespace,
         "Debugger": _debugger_build_namespace,
         "Ecosystem": _ecosystem_build_namespace,

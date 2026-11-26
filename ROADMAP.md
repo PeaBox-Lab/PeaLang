@@ -1,3 +1,10 @@
+## 3.1.43 - Phases 76-78: Runtime Performance (2026-11-26)
+- Phase 76: add a bounded parallel runtime for independent bytecode tasks with ordered output, VM fallback, and parity verification
+- Phase 77: add a deterministic runtime profiler with opcode, function, and line counters plus VM parity checks
+- Phase 78: add versioned 4.0 performance gates combining timing budgets with parity, conformance, and frozen-core evidence
+- Add `pea parallel`, `pea profiler`, and `pea perf-gate` with stable runtime feature flags
+- Align current release metadata to 3.1.43 while keeping the frozen 3.0 digest pinned
+
 ## 3.1.42 - Phase 75: WASM Backend (2026-11-26)
 - Lower the supported bytecode subset to typed WASM IR in a custom-section WebAssembly module
 - Add a reviewable `.wat` artifact, an artifact inspector, and VM fallback for unsupported modules

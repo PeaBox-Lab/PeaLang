@@ -1,6 +1,6 @@
 # PeaLang User Guide
 
-This guide covers the PeaLang 3.1.42 release (unified versioning; supersedes the 1.0.0-experience and 0.99.6 baselines).
+This guide covers the PeaLang 3.1.43 release (unified versioning; supersedes the 1.0.0-experience and 0.99.6 baselines).
 
 ## Installation and Setup
 
@@ -36,6 +36,9 @@ pea doctor
 | `pea jit <file.pea> [--verify] [--benchmark]` | Profile and run hot traces with JIT guards |
 | `pea native <file.pea> [--verify] [--emit FILE.c]` | Lower to native IR and verify VM parity |
 | `pea wasm-backend <file.pea> [--verify] [--emit FILE.wasm]` | Lower to WASM IR and verify VM parity |
+| `pea parallel <file.pea> [--verify] [--tasks N] [--workers N]` | Run isolated bytecode tasks in order |
+| `pea profiler <file.pea> [--verify] [--emit FILE.json]` | Capture deterministic execution counters |
+| `pea perf-gate <file.pea> [--iterations N]` | Evaluate 4.0 performance gates |
 | `pea analyze <file.json|csv> [--json] [--head N]` | Profile a JSON/CSV dataset (analysis) |
 | `pea web-openapi` / `pea openapi <file.pea> [--title T] [--version V]` | Extract OpenAPI from a file defining `app` |
 | `pea hash <file> [--algo sha256]` | Compute file hash |
@@ -229,6 +232,24 @@ from a saved artifact. Modules outside the WASM subset run entirely on the
 standard VM. Host programs can use `compile_wasm_backend()`,
 `WasmBackendRuntime`, `verify_wasm_backend_parity()`, and
 `wasm_backend_report()` directly.
+
+### Parallel runtime, profiler, and performance gates
+```bash
+pea parallel app.pea --verify --tasks 4 --workers 2
+pea profiler app.pea --verify --emit profile.json
+pea perf-gate app.pea --iterations 5
+```
+The parallel runtime executes independent bytecode tasks with copied globals and
+a bounded worker pool, then publishes output and results in task order. Async or
+module-importing tasks run sequentially on the standard VM. `build_parallel_plan()`
+produces a deterministic digest, and `verify_parallel_parity()` requires the
+sequential and parallel paths to agree.
+
+The runtime profiler records opcode, function, and source-line counts through VM
+instrumentation. `profile_module()` returns a deterministic report with hot spots
+and a profile digest; `verify_profile_parity()` checks VM output and result
+parity. The 4.0 gate combines timing budgets with parallel/profiler parity,
+conformance, and frozen-core evidence through `performance_gate_report()`.
 
 ### Optional chaining and null coalescing
 ```pea

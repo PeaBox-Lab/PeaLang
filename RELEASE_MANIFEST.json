@@ -1,11 +1,11 @@
 {
-  "version": "3.1.42",
-  "previous_version": "3.1.41",
-  "release_line": "tagged release v3.1.42",
+  "version": "3.1.43",
+  "previous_version": "3.1.42",
+  "release_line": "tagged release v3.1.43",
   "pytest_tests_passed": 436,
   "conformance_cases_passed": 500,
   "fuzz_iterations": 250,
   "tests_failed": 0,
   "status": "PASS",
-  "note": "Phase 75 adds a parity-verified WASM backend; frozen 3.0 digest and component versions stay pinned."
+  "note": "Phases 76-78 add a parity-gated parallel runtime, deterministic profiler, and 4.0 performance gates; frozen 3.0 digest and component versions stay pinned."
 }

@@ -144,6 +144,14 @@ and `pea wasm-backend --verify` requires identical VM and backend output and
 results. Browser and edge hosts can consume the artifact without changing the
 frozen 3.0 language surface or manifest digest.
 
+**Phases 76–78 — Runtime performance** complete Wave 2. The parallel runtime
+executes isolated bytecode tasks in a bounded worker pool and publishes ordered
+output, falling back to the standard VM when a task uses async suspension or
+module imports. The runtime profiler records deterministic opcode, function, and
+line counters with VM parity checks. The 4.0 performance gates combine timing
+budgets with parity, conformance, and frozen-core evidence. Each surface is
+additive and leaves the frozen 3.0 manifest digest unchanged.
+
 ### Wave 3 — Developer experience (Phases 81–90)
 
 LSP v2, DAP debugger, formatter v3, linter v3, test framework v2, incremental

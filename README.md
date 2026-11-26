@@ -8,9 +8,9 @@ PeaLang is designed to complement existing ecosystems such as Python, FastAPI, J
 
 ## Release Status
 
-**Version: 3.1.42** — current tagged release across package, SDK, runtime, and specification metadata.
+**Version: 3.1.43** — current tagged release across package, SDK, runtime, and specification metadata.
 
-`3.1.42` is the unified release identifier for the tagged v3.1.42 line. Source version, SDK packages, container image label, runtime health output, registry user agent, release manifest, and language specification now report the same version. Historical release notes are kept in `docs/releases/` for provenance, but they do not define the current version.
+`3.1.43` is the unified release identifier for the tagged v3.1.43 line. Source version, SDK packages, container image label, runtime health output, registry user agent, release manifest, and language specification now report the same version. Historical release notes are kept in `docs/releases/` for provenance, but they do not define the current version.
 
 See `ROADMAP.md` for the forward-looking plan, `CHANGELOG.md` for per-feature history, and `docs/CROSS_SECTOR_ADOPTION_PLAN.md` for the plan to make PeaLang credible across enterprise, data, web, mobile, games, embedded, and cloud sectors.
 
@@ -926,6 +926,21 @@ custom-section WebAssembly module. `--emit` writes the `.wasm` artifact and
 manifest and IR back from a saved artifact. Unsupported modules stay on the
 standard VM, and `verify_wasm_backend_parity()` requires identical VM and
 backend output and results.
+
+### Parallel runtime and profiling
+
+```bash
+pea parallel app.pea --verify --tasks 4 --workers 2
+pea profiler app.pea --verify --emit profile.json
+pea perf-gate app.pea --iterations 5
+```
+
+Phase 76 runs isolated bytecode tasks in a bounded worker pool while preserving
+task order for output and results; async or module-importing tasks fall back to
+the standard VM. Phase 77 records deterministic opcode, function, and line
+counters with `profile_module()` and `RuntimeProfiler`. Phase 78 combines timing
+budgets with parity, conformance, and frozen-core evidence in a versioned 4.0
+gate. All three surfaces are additive and keep the frozen 3.0 contract intact.
 
 ### Project queries
 

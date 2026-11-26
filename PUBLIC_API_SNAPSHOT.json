@@ -2858,6 +2858,174 @@
       "signature": "()"
     },
     {
+      "module": "pealang.parallel_runtime",
+      "name": "ParallelError",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.parallel_runtime",
+      "name": "ParallelTask",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.parallel_runtime",
+      "name": "ParallelPlan",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.parallel_runtime",
+      "name": "ParallelResult",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.parallel_runtime",
+      "name": "parallel_supported",
+      "kind": "function",
+      "signature": "(tasks)"
+    },
+    {
+      "module": "pealang.parallel_runtime",
+      "name": "build_parallel_plan",
+      "kind": "function",
+      "signature": "(tasks)"
+    },
+    {
+      "module": "pealang.parallel_runtime",
+      "name": "ParallelRuntime",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.parallel_runtime",
+      "name": "verify_parallel_parity",
+      "kind": "function",
+      "signature": "(tasks)"
+    },
+    {
+      "module": "pealang.parallel_runtime",
+      "name": "benchmark_parallel",
+      "kind": "function",
+      "signature": "(tasks)"
+    },
+    {
+      "module": "pealang.parallel_runtime",
+      "name": "parallel_report",
+      "kind": "function",
+      "signature": "(tasks)"
+    },
+    {
+      "module": "pealang.parallel_runtime",
+      "name": "parallel_gate",
+      "kind": "function",
+      "signature": "(report)"
+    },
+    {
+      "module": "pealang.parallel_runtime",
+      "name": "build_parallel_namespace",
+      "kind": "function",
+      "signature": "()"
+    },
+    {
+      "module": "pealang.performance_gates_v4",
+      "name": "PerformanceGateError",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.performance_gates_v4",
+      "name": "GateBudget",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.performance_gates_v4",
+      "name": "GateEvidence",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.performance_gates_v4",
+      "name": "collect_gate_evidence",
+      "kind": "function",
+      "signature": "(module)"
+    },
+    {
+      "module": "pealang.performance_gates_v4",
+      "name": "performance_gate_report",
+      "kind": "function",
+      "signature": "(module)"
+    },
+    {
+      "module": "pealang.performance_gates_v4",
+      "name": "performance_gate",
+      "kind": "function",
+      "signature": "(report)"
+    },
+    {
+      "module": "pealang.performance_gates_v4",
+      "name": "build_performance_gates_namespace",
+      "kind": "function",
+      "signature": "()"
+    },
+    {
+      "module": "pealang.runtime_profiler",
+      "name": "RuntimeProfilerError",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.runtime_profiler",
+      "name": "ProfileRun",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.runtime_profiler",
+      "name": "RuntimeProfiler",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.runtime_profiler",
+      "name": "profile_module",
+      "kind": "function",
+      "signature": "(module)"
+    },
+    {
+      "module": "pealang.runtime_profiler",
+      "name": "verify_profile_parity",
+      "kind": "function",
+      "signature": "(module)"
+    },
+    {
+      "module": "pealang.runtime_profiler",
+      "name": "benchmark_profiler",
+      "kind": "function",
+      "signature": "(module)"
+    },
+    {
+      "module": "pealang.runtime_profiler",
+      "name": "profiler_report",
+      "kind": "function",
+      "signature": "(module)"
+    },
+    {
+      "module": "pealang.runtime_profiler",
+      "name": "profiler_gate",
+      "kind": "function",
+      "signature": "(report)"
+    },
+    {
+      "module": "pealang.runtime_profiler",
+      "name": "build_runtime_profiler_namespace",
+      "kind": "function",
+      "signature": "()"
+    },
+    {
       "module": "pealang.conformance_quality",
       "name": "run_conformance_suite",
       "kind": "function",

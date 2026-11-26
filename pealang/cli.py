@@ -718,6 +718,59 @@ def main(argv=None):
             report=wasm_backend_report(module,verify=a.verify,benchmark=a.benchmark)
             print(json.dumps(report,indent=2,default=str));return 0 if wasm_backend_gate(report)['gate']=='PASS' else 1
 
+        if c=='parallel':
+
+            from .bytecode import BytecodeModule
+
+            from .compiler import compile_source_to_bytecode
+
+            from .parallel_runtime import ParallelTask,parallel_gate,parallel_report
+
+            p=argparse.ArgumentParser(prog='pea parallel');p.add_argument('file');p.add_argument('--verify',action='store_true');p.add_argument('--benchmark',action='store_true');p.add_argument('--optimize',action='store_true');p.add_argument('--tasks',type=int,default=3);p.add_argument('--workers',type=int,default=4);a=p.parse_args(argv[1:]);path=Path(a.file)
+            try:module=BytecodeModule.load(path) if path.suffix=='.peac' else compile_source_to_bytecode(path.read_text(encoding='utf-8'),str(path))
+            except Exception as e:print(f'Parallel run failed: {e}');return 1
+            if a.optimize:
+                from .bytecode_optimizer import optimize_bytecode
+
+                module=optimize_bytecode(module)
+            tasks=tuple(ParallelTask(f'task-{i}',module,{'task_id':i}) for i in range(max(1,a.tasks)))
+            report=parallel_report(tasks,verify=a.verify,benchmark=a.benchmark,workers=max(1,a.workers))
+            print(json.dumps(report,indent=2,default=str));return 0 if parallel_gate(report)['gate']=='PASS' else 1
+
+        if c=='profiler':
+
+            from .bytecode import BytecodeModule
+
+            from .compiler import compile_source_to_bytecode
+
+            from .runtime_profiler import profiler_gate,profiler_report
+
+            p=argparse.ArgumentParser(prog='pea profiler');p.add_argument('file');p.add_argument('--verify',action='store_true');p.add_argument('--benchmark',action='store_true');p.add_argument('--optimize',action='store_true');p.add_argument('--top',type=int,default=10);p.add_argument('--emit');a=p.parse_args(argv[1:]);path=Path(a.file)
+            try:module=BytecodeModule.load(path) if path.suffix=='.peac' else compile_source_to_bytecode(path.read_text(encoding='utf-8'),str(path))
+            except Exception as e:print(f'Profiler run failed: {e}');return 1
+            if a.optimize:
+                from .bytecode_optimizer import optimize_bytecode
+
+                module=optimize_bytecode(module)
+            report=profiler_report(module,verify=a.verify,benchmark=a.benchmark,top=max(1,a.top))
+            if a.emit:Path(a.emit).write_text(json.dumps(report,indent=2,default=str)+'\n',encoding='utf-8')
+            print(json.dumps(report,indent=2,default=str));return 0 if profiler_gate(report)['gate']=='PASS' else 1
+
+        if c=='perf-gate':
+
+            from .bytecode import BytecodeModule
+
+            from .compiler import compile_source_to_bytecode
+
+            from .performance_gates_v4 import performance_gate,performance_gate_report
+
+            p=argparse.ArgumentParser(prog='pea perf-gate');p.add_argument('file');p.add_argument('--iterations',type=int,default=5);p.add_argument('--workers',type=int,default=4);p.add_argument('--emit');a=p.parse_args(argv[1:]);path=Path(a.file)
+            try:module=BytecodeModule.load(path) if path.suffix=='.peac' else compile_source_to_bytecode(path.read_text(encoding='utf-8'),str(path))
+            except Exception as e:print(f'Performance gate failed: {e}');return 1
+            report=performance_gate_report(module,iterations=max(1,a.iterations),workers=max(1,a.workers))
+            if a.emit:Path(a.emit).write_text(json.dumps(report,indent=2,default=str)+'\n',encoding='utf-8')
+            print(json.dumps(report,indent=2,default=str));return 0 if performance_gate(report)['gate']=='PASS' else 1
+
         if c=='semantic':
 
             from .type_system import SemanticAnalyzer
@@ -1048,7 +1101,7 @@ def main(argv=None):
             else:
                 from .stdlib import stdlib_manifest
                 sm=stdlib_manifest();mods=sm.get('modules',sm)
-                info={'version':__version__,'stdlib':list(mods.keys()) if isinstance(mods,dict) else mods,'commands':['run','eval','repl','check','lint','fmt','test','compile','vm','dis','init','new','serve-web','doctor','health','diagnose','help','templates','info','project','serve','stdlib','typecheck','typecheck-project','docs','analyze','web-openapi','openapi','openapi-contract','hash','tree','env','quickstart','scaffold','readiness','audit','conformance','conformance-v2','freeze','optimize','fast','jit','native','wasm-backend']}
+                info={'version':__version__,'stdlib':list(mods.keys()) if isinstance(mods,dict) else mods,'commands':['run','eval','repl','check','lint','fmt','test','compile','vm','dis','init','new','serve-web','doctor','health','diagnose','help','templates','info','project','serve','stdlib','typecheck','typecheck-project','docs','analyze','web-openapi','openapi','openapi-contract','hash','tree','env','quickstart','scaffold','readiness','audit','conformance','conformance-v2','freeze','optimize','fast','jit','native','wasm-backend','parallel','profiler','perf-gate']}
                 print(json.dumps(info,indent=2));return 0
 
         if c=='project':print(json.dumps(project_info(argv[1] if len(argv)>1 else '.'),indent=2));return 0

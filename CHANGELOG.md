@@ -1,4 +1,13 @@
 # Changelog
+## 3.1.43 - Phases 76-78: Runtime Performance (2026-11-26)
+- Add a bounded parallel runtime with isolated tasks, ordered output/results, deterministic plans, VM fallback, parity verification, and benchmarking
+- Add a deterministic runtime profiler that records opcode, function, and source-line counts with profile digests and VM parity checks
+- Add versioned 4.0 performance gates combining timing budgets with parallel/profiler parity, conformance, and frozen-core evidence
+- Add `pea parallel`, `pea profiler`, and `pea perf-gate` CLI commands with help topics and stable runtime feature flags
+- Add normative spec sections for all three phases and align current release metadata to 3.1.43
+- Frozen 3.0 digest, earlier component versions, and historical release metadata stay pinned
+- Targeted parallel, profiler, gate, parity, freeze, version, and conformance tests smoke-tested
+
 ## 3.1.42 - Phase 75: WASM Backend (2026-11-26)
 - Add `WasmBackendModule`, `WasmBackendRuntime`, `compile_wasm_backend()`, and `wasm_backend_supported()` for portable WASM lowering
 - Emit typed WASM IR in a custom-section WebAssembly module plus a reviewable `.wat` text artifact
