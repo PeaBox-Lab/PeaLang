@@ -173,6 +173,13 @@ variable, evaluation, exception, and disconnect commands are reviewable response
 while `pea dap-v2 --check` and `dap_v2_gate()` provide CI-ready evidence without
 changing the frozen 3.0 contract.
 
+**Phase 83 — Formatter v3** continues Wave 3 with a deterministic formatting
+layer additive to the existing formatter. Validated profiles control indentation,
+line length, brace style, and EOF newlines while comments and string contents stay
+intact. Reviewable diffs, long-line reports, idempotence checks, and bytecode
+parity fingerprints make formatting safe for editor and CI automation through
+`pea fmt-v3 --check` and `formatter_v3_gate()`.
+
 ### Wave 4 — Sector packs (Phases 91–98)
 
 One focused pack per row of the table, each with a reference application and

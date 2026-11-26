@@ -1,4 +1,14 @@
 # Changelog
+## 3.1.46 - Phase 83: Formatter v3 (2026-11-26)
+- Add a deterministic formatter v3 layer additive to the existing `pea fmt` surface
+- Add validated formatting profiles for indentation, line length, brace style, and EOF newline
+- Preserve comments and string contents while normalizing whitespace, operators, commas, and braces
+- Add reviewable unified diffs, long-line reports, idempotence checks, and bytecode parity evidence
+- Add `pea fmt-v3` with capability, check, write, profile, and emit options plus a stable `devx.formatter_v3` feature flag
+- Add a normative formatter v3 spec section and align current release metadata to 3.1.46
+- Frozen 3.0 digest, earlier component versions, and historical release metadata stay pinned
+- Targeted formatter v3, parity, CLI, freeze, version, and conformance tests smoke-tested
+
 ## 3.1.45 - Phase 82: DAP debugger v2 (2026-11-26)
 - Add a deterministic DAP v2 session layer additive to the existing DAP servers
 - Add versioned capabilities, reproducible VM launch, breakpoints, and stepping evidence

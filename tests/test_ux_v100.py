@@ -14,7 +14,7 @@ let d = ux.doctor()
 print d["pealang"]
 """
     out = run(src)
-    assert out[0] == "3.1.45"
+    assert out[0] == "3.1.46"
 
 
 def test_project_templates():

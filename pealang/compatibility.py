@@ -30,6 +30,7 @@ FEATURES={
   'runtime.performance_gates_v4':Feature('runtime.performance_gates_v4','3.1.43',Stability.STABLE),
   'editor.lsp_v2':Feature('editor.lsp_v2','3.1.44',Stability.STABLE),
   'debug.dap_v2':Feature('debug.dap_v2','3.1.45',Stability.STABLE),
+  'devx.formatter_v3':Feature('devx.formatter_v3','3.1.46',Stability.STABLE),
  'async.await':Feature('async.await','0.26',Stability.PREVIEW),
  'embedding.python':Feature('embedding.python','0.18',Stability.STABLE),
  'embedding.fastapi':Feature('embedding.fastapi','0.25',Stability.PREVIEW),

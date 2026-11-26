@@ -1,6 +1,6 @@
 # PeaLang User Guide
 
-This guide covers the PeaLang 3.1.45 release (unified versioning; supersedes the 1.0.0-experience and 0.99.6 baselines).
+This guide covers the PeaLang 3.1.46 release (unified versioning; supersedes the 1.0.0-experience and 0.99.6 baselines).
 
 ## Installation and Setup
 
@@ -41,6 +41,7 @@ pea doctor
 | `pea perf-gate <file.pea> [--iterations N]` | Evaluate 4.0 performance gates |
 | `pea lsp <file.pea> [--check] [--symbols] [--hover LINE CHAR]` | Query LSP v2 diagnostics and symbols |
 | `pea dap-v2 <file.pea> [--check] [--breakpoint LINE]` | Run a deterministic DAP v2 session |
+| `pea fmt-v3 <path...> [--check] [--write]` | Report or apply formatter v3 changes |
 | `pea analyze <file.json|csv> [--json] [--head N]` | Profile a JSON/CSV dataset (analysis) |
 | `pea web-openapi` / `pea openapi <file.pea> [--title T] [--version V]` | Extract OpenAPI from a file defining `app` |
 | `pea hash <file> [--algo sha256]` | Compute file hash |
@@ -283,6 +284,23 @@ VM helpers and host-specific paths are excluded from fingerprints and digests.
 Stack traces, scopes, variables, evaluation, exception info, threads, and
 disconnect are available as reviewable responses. `dap_v2_report()` summarizes
 the session and `dap_v2_gate()` recomputes the PASS/FAIL decision for CI checks.
+
+### Formatter v3
+
+```bash
+pea fmt-v3 --capabilities
+pea fmt-v3 app.pea --check --indent 2 --emit fmt.json
+pea fmt-v3 app.pea --write
+```
+
+`format_source_v3()` is additive to `pea fmt` and `PeaFormatter`. A
+`FormatProfile` validates indentation, line length, brace style, and EOF newline
+settings. Formatting preserves comments and string content while normalizing
+whitespace, operators, commas, braces, and blank lines around recomputed brace
+indentation. Each `FormatResult` carries a unified diff, long-line numbers, an
+idempotence check, and a bytecode fingerprint comparison. `pea fmt-v3 --check`
+requires formatted input without applying changes, while `--write` applies them;
+`formatter_v3_gate()` provides the CI-ready decision.
 
 ### Optional chaining and null coalescing
 ```pea

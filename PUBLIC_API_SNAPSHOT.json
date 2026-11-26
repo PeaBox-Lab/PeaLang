@@ -4838,6 +4838,66 @@
       "signature": "()"
     },
     {
+      "module": "pealang.formatter_v3",
+      "name": "FormatterV3Error",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.formatter_v3",
+      "name": "FormatProfile",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.formatter_v3",
+      "name": "formatter_v3_capabilities",
+      "kind": "function",
+      "signature": "()"
+    },
+    {
+      "module": "pealang.formatter_v3",
+      "name": "format_source_v3",
+      "kind": "function",
+      "signature": "(source,profile=?,source_name=?)"
+    },
+    {
+      "module": "pealang.formatter_v3",
+      "name": "format_file_v3",
+      "kind": "function",
+      "signature": "(path,profile=?)"
+    },
+    {
+      "module": "pealang.formatter_v3",
+      "name": "verify_format_parity",
+      "kind": "function",
+      "signature": "(original,formatted)"
+    },
+    {
+      "module": "pealang.formatter_v3",
+      "name": "FormatResult",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.formatter_v3",
+      "name": "formatter_v3_report",
+      "kind": "function",
+      "signature": "(results,profile=?)"
+    },
+    {
+      "module": "pealang.formatter_v3",
+      "name": "formatter_v3_gate",
+      "kind": "function",
+      "signature": "(report)"
+    },
+    {
+      "module": "pealang.formatter_v3",
+      "name": "build_formatter_v3_namespace",
+      "kind": "function",
+      "signature": "()"
+    },
+    {
       "module": "pealang.frameworks",
       "name": "scaffold_backend",
       "kind": "function",

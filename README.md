@@ -8,9 +8,9 @@ PeaLang is designed to complement existing ecosystems such as Python, FastAPI, J
 
 ## Release Status
 
-**Version: 3.1.45** — current tagged release across package, SDK, runtime, and specification metadata.
+**Version: 3.1.46** — current tagged release across package, SDK, runtime, and specification metadata.
 
-`3.1.45` is the unified release identifier for the tagged v3.1.45 line. Source version, SDK packages, container image label, runtime health output, registry user agent, release manifest, and language specification now report the same version. Historical release notes are kept in `docs/releases/` for provenance, but they do not define the current version.
+`3.1.46` is the unified release identifier for the tagged v3.1.46 line. Source version, SDK packages, container image label, runtime health output, registry user agent, release manifest, and language specification now report the same version. Historical release notes are kept in `docs/releases/` for provenance, but they do not define the current version.
 
 See `ROADMAP.md` for the forward-looking plan, `CHANGELOG.md` for per-feature history, and `docs/CROSS_SECTOR_ADOPTION_PLAN.md` for the plan to make PeaLang credible across enterprise, data, web, mobile, games, embedded, and cloud sectors.
 
@@ -969,6 +969,20 @@ conditional and hit-conditional breakpoints, and inspectable stack, scope,
 variable, evaluation, and exception responses. `dap_v2_report()` summarizes the
 session and snapshot fingerprint with a stable digest, and `dap_v2_gate()`
 reduces it to a PASS/FAIL decision for debugger tooling checks.
+
+### Formatter v3
+
+```bash
+pea fmt-v3 --capabilities
+pea fmt-v3 app.pea --check --indent 2 --emit fmt.json
+pea fmt-v3 app.pea --write
+```
+
+Phase 83 adds a deterministic formatter v3 alongside the existing formatter. It
+preserves comments and string contents, validates formatting profiles, and
+reports unified diffs, long lines, idempotence, and bytecode parity evidence.
+`formatter_v3_report()` produces a stable digest over those results, and
+`formatter_v3_gate()` reduces it to a PASS/FAIL decision for editor and CI checks.
 
 ### Project queries
 

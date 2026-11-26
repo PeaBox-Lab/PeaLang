@@ -1,3 +1,11 @@
+## 3.1.46 - Phase 83: Formatter v3 (2026-11-26)
+- Continue Wave 3 with a deterministic formatter v3 additive to the existing formatter
+- Add validated profiles for indentation, line length, brace style, and EOF newline
+- Preserve comments and string contents while producing reviewable diffs and stable digests
+- Add idempotence and bytecode parity checks for safe editor integration
+- Add `pea fmt-v3` with check, write, capability, profile, and emit options plus a stable devx feature flag
+- Align current release metadata to 3.1.46 while keeping the frozen 3.0 digest pinned
+
 ## 3.1.45 - Phase 82: DAP debugger v2 (2026-11-26)
 - Continue Wave 3 with a deterministic DAP v2 layer additive to the existing DAP servers
 - Add reproducible VM launch, full JSON-RPC command dispatch, and stable session events

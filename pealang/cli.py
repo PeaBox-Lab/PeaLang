@@ -1143,7 +1143,7 @@ def main(argv=None):
             else:
                 from .stdlib import stdlib_manifest
                 sm=stdlib_manifest();mods=sm.get('modules',sm)
-                info={'version':__version__,'stdlib':list(mods.keys()) if isinstance(mods,dict) else mods,'commands':['run','eval','repl','check','lint','fmt','test','compile','vm','dis','init','new','serve-web','doctor','health','diagnose','help','templates','info','project','serve','stdlib','typecheck','typecheck-project','docs','analyze','web-openapi','openapi','openapi-contract','hash','tree','env','quickstart','scaffold','readiness','audit','conformance','conformance-v2','freeze','optimize','fast','jit','native','wasm-backend','parallel','profiler','perf-gate','lsp','dap-v2']}
+                info={'version':__version__,'stdlib':list(mods.keys()) if isinstance(mods,dict) else mods,'commands':['run','eval','repl','check','lint','fmt','fmt-v3','test','compile','vm','dis','init','new','serve-web','doctor','health','diagnose','help','templates','info','project','serve','stdlib','typecheck','typecheck-project','docs','analyze','web-openapi','openapi','openapi-contract','hash','tree','env','quickstart','scaffold','readiness','audit','conformance','conformance-v2','freeze','optimize','fast','jit','native','wasm-backend','parallel','profiler','perf-gate','lsp','dap-v2']}
                 print(json.dumps(info,indent=2));return 0
 
         if c=='project':print(json.dumps(project_info(argv[1] if len(argv)>1 else '.'),indent=2));return 0
@@ -1273,6 +1273,29 @@ def main(argv=None):
                 elif not a.check:print(f'formatted {f}')
 
             return 1 if a.check and changed else 0
+
+        if c=='fmt-v3':
+
+            from .formatter_v3 import (FormatProfile,format_file_v3,formatter_v3_capabilities,formatter_v3_gate,formatter_v3_report)
+
+            p=argparse.ArgumentParser(prog='pea fmt-v3');p.add_argument('paths',nargs='*');p.add_argument('--capabilities',action='store_true');p.add_argument('--check',action='store_true');p.add_argument('--write',action='store_true');p.add_argument('--indent',type=int,default=4);p.add_argument('--max-line',type=int,default=100);p.add_argument('--brace-style',choices=['same_line','next_line'],default='same_line');p.add_argument('--emit');a=p.parse_args(argv[1:])
+            if a.capabilities:
+                print(json.dumps(formatter_v3_capabilities(),indent=2));return 0
+            if not a.paths:print('fmt-v3 requires PATH... or --capabilities');return 1
+            try:profile=FormatProfile(indent_size=a.indent,max_line_length=a.max_line,brace_style=a.brace_style)
+            except Exception as e:print(f'Formatter v3 failed: {e}');return 1
+            results=[]
+            try:
+                for f in discover_pea(a.paths):
+                    result=format_file_v3(f,profile)
+                    if a.write and result.changed:Path(f).write_text(result.formatted,encoding='utf-8')
+                    results.append(result)
+            except Exception as e:print(f'Formatter v3 failed: {e}');return 1
+            report=formatter_v3_report(results,profile);decision=formatter_v3_gate(report);report['decision']=decision
+            if a.emit:Path(a.emit).write_text(json.dumps(report,indent=2,default=str)+'\n',encoding='utf-8')
+            print(json.dumps(report,indent=2,default=str))
+            if a.check:return 0 if decision['gate']=='PASS' and report['changed_count']==0 else 1
+            return 0 if decision['gate']=='PASS' else 1
 
         if c in ('check','lint'):
 
