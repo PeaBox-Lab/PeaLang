@@ -207,11 +207,11 @@ def test_feature_flag_help_and_analysis_namespace_document_lsp_v2():
 
 
 def test_release_metadata_is_aligned():
-    assert pealang.__version__ == SPEC_VERSION == '5.13.0'
+    assert pealang.__version__ == SPEC_VERSION == '5.14.0'
     manifest = json.loads((Path(__file__).resolve().parent.parent
                            / 'RELEASE_MANIFEST.json').read_text(encoding='utf-8'))
-    assert manifest['version'] == '5.13.0'
-    assert manifest['previous_version'] == '5.12.0'
+    assert manifest['version'] == '5.14.0'
+    assert manifest['previous_version'] == '5.13.0'
     assert pealang.LSP_V2_VERSION == '3.1.44'
     assert pealang.PARALLEL_RUNTIME_VERSION == '3.1.43'
     assert pealang.RUNTIME_PROFILER_VERSION == '3.1.43'

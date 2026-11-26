@@ -8,9 +8,9 @@ PeaLang is designed to complement existing ecosystems such as Python, FastAPI, J
 
 ## Release Status
 
-**Version: 5.13.0** — current tagged release across package, SDK, runtime, and specification metadata.
+**Version: 5.14.0** — current tagged release across package, SDK, runtime, and specification metadata.
 
-`5.13.0` is the unified release identifier for the tagged v5.13.0 line. Source version, SDK packages, container image label, runtime health output, registry user agent, release manifest, and language specification now report the same version. Historical release notes are kept in `docs/releases/` for provenance, but they do not define the current version.
+`5.14.0` is the unified release identifier for the tagged v5.14.0 line. Source version, SDK packages, container image label, runtime health output, registry user agent, release manifest, and language specification now report the same version. Historical release notes are kept in `docs/releases/` for provenance, but they do not define the current version.
 
 See `ROADMAP.md` for the forward-looking plan, `CHANGELOG.md` for per-feature history, and `docs/CROSS_SECTOR_ADOPTION_PLAN.md` for the plan to make PeaLang credible across enterprise, data, web, mobile, games, embedded, and cloud sectors.
 
@@ -1521,6 +1521,24 @@ candidate build, evidence dossier, signed artifact, RC platform matrix, upgrade 
 `ReleaseCandidateProfileV2` validates entry limits, preview inclusion, governance
 checks, current version, and the incomplete-failure policy; `release_candidate_report()`
 and `release_candidate_gate()` provide reproducible CI evidence without host paths or
+timings.
+
+### CI evidence ingest and matrix verification
+
+```bash
+pea ci-evidence --capabilities
+pea ci-evidence . --check --state ci_evidence-state.json --emit ci_evidence.json
+pea ci-evidence . --check --write-state --fail-on-incomplete
+```
+
+Phase 114 at **5.14.0** extends Wave 8 with a deterministic
+CI evidence gate over `*.ci.json` manifests. It derives a stable
+topological order and incomplete set, and reports missing dependencies, cycles,
+invalid manifests, missing evidence, and CI demos without
+CI run, platform cell, commit binding, pytest report, scanner report, artifact hash, cell coverage as sorted issue codes.
+`CIEvidenceProfileV2` validates entry limits, preview inclusion, governance
+checks, current version, and the incomplete-failure policy; `ci_evidence_report()`
+and `ci_evidence_gate()` provide reproducible CI evidence without host paths or
 timings.
 
 ### Project queries

@@ -8342,6 +8342,78 @@
       "signature": "()"
     },
     {
+      "module": "pealang.ci_evidence",
+      "name": "CIEvidencePackError",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.ci_evidence",
+      "name": "CIEvidenceProfileV2",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.ci_evidence",
+      "name": "ci_evidence_capabilities",
+      "kind": "function",
+      "signature": "()"
+    },
+    {
+      "module": "pealang.ci_evidence",
+      "name": "CIEvidenceIssueV2",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.ci_evidence",
+      "name": "CIEvidenceAppV2",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.ci_evidence",
+      "name": "CIEvidencePackPlanV2",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.ci_evidence",
+      "name": "plan_ci_evidence",
+      "kind": "function",
+      "signature": "(root,profile=?,state=?)"
+    },
+    {
+      "module": "pealang.ci_evidence",
+      "name": "load_ci_evidence_state_v2",
+      "kind": "function",
+      "signature": "(path)"
+    },
+    {
+      "module": "pealang.ci_evidence",
+      "name": "write_ci_evidence_state_v2",
+      "kind": "function",
+      "signature": "(root,plan,path=?)"
+    },
+    {
+      "module": "pealang.ci_evidence",
+      "name": "ci_evidence_report",
+      "kind": "function",
+      "signature": "(plans,profile=?)"
+    },
+    {
+      "module": "pealang.ci_evidence",
+      "name": "ci_evidence_gate",
+      "kind": "function",
+      "signature": "(report)"
+    },
+    {
+      "module": "pealang.ci_evidence",
+      "name": "build_ci_evidence_namespace",
+      "kind": "function",
+      "signature": "()"
+    },
+    {
       "module": "pealang.lsp",
       "name": "LSPServer",
       "kind": "class",

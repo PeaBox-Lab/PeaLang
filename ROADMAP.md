@@ -1,3 +1,11 @@
+## 5.14.0 - Phase 114: CI evidence ingest and matrix verification (2026-11-27)
+- Continue Wave 8 with a deterministic CI evidence ingest and matrix verification gate
+- Add validated profiles for entry limits, preview inclusion, ci-run/platform-cell/commit-binding/pytest-report/scanner-report/artifact-hash/cell-coverage, current version, and incomplete policy
+- Add stable nodes with digests, names, versions, kinds, evidence, bindings, resolved dependencies, incomplete reasons, and topological order
+- Detect missing dependencies, cycles, invalid manifests, missing evidence, and CI demos without CI run, platform cell, commit binding, pytest report, scanner report, artifact hash, cell coverage as stable issue codes
+- Add `pea ci-evidence` with check, emit, state, strict incomplete, governance toggles, and capability options plus a stable sector feature flag
+- Align current release metadata to 5.14.0 while keeping the frozen 3.0 digest pinned
+
 ## 5.13.0 - Phase 113: Release candidate and stable 1.0 evidence gate (2026-11-27)
 - Continue Wave 7 with a deterministic release candidate and stable 1.0 evidence gate
 - Add validated profiles for entry limits, preview inclusion, candidate-build/evidence-dossier/signed-artifact/rc-platform-matrix/upgrade-test/rollback-test/go-decision, current version, and incomplete policy

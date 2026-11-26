@@ -1,6 +1,6 @@
 # PeaLang User Guide
 
-This guide covers the PeaLang 5.13.0 release (unified versioning; supersedes the 1.0.0-experience and 0.99.6 baselines).
+This guide covers the PeaLang 5.14.0 release (unified versioning; supersedes the 1.0.0-experience and 0.99.6 baselines).
 
 ## Installation and Setup
 
@@ -71,6 +71,7 @@ pea doctor
 | `pea embedded-delivery <root> [--check] [--state FILE]` | Gate embedded and IoT delivery evidence evidence with stable digests |
 | `pea maturity-gate <root> [--check] [--state FILE]` | Gate Wave 7 maturity and consolidation evidence with stable digests |
 | `pea release-candidate <root> [--check] [--state FILE]` | Gate release candidate and stable 1.0 evidence evidence with stable digests |
+| `pea ci-evidence <root> [--check] [--state FILE]` | Gate CI evidence ingest and matrix verification evidence with stable digests |
 | `pea fmt-v3 <path...> [--check] [--write]` | Report or apply formatter v3 changes |
 | `pea analyze <file.json|csv> [--json] [--head N]` | Profile a JSON/CSV dataset (analysis) |
 | `pea web-openapi` / `pea openapi <file.pea> [--title T] [--version V]` | Extract OpenAPI from a file defining `app` |
@@ -1021,6 +1022,30 @@ candidate demos without candidate build, evidence dossier, signed artifact, RC p
 become stable issue codes, while `write_release_candidate_state_v2()` persists digests
 without absolute host paths. `release_candidate_report()` summarizes plans with a
 recomputable digest, and `release_candidate_gate()` recomputes PASS/FAIL from the
+reported error count, incomplete count, and profile.
+
+### CI evidence ingest and matrix verification
+
+```bash
+pea ci-evidence --capabilities
+pea ci-evidence . --check --state ci_evidence-state.json --emit ci_evidence.json
+pea ci-evidence . --check --write-state --fail-on-incomplete
+```
+
+`plan_ci_evidence()` extends Wave 8 as a CI evidence ingest and matrix verification gate and is additive to the
+release governance, capacity, chaos, SLO, observability, and certified-package
+surfaces. A `CIEvidenceProfileV2` validates the entry limit, preview inclusion,
+ci-run/platform-cell/commit-binding/pytest-report/scanner-report/artifact-hash/cell-coverage, current version, and
+incomplete-failure policy before planning. Each `CIEvidenceAppV2` carries a
+relative path, a manifest digest, name, version, kind, sorted evidence paths,
+sorted platform bindings, sorted required names, resolved dependencies, a
+clean/stale state, and reasons; entries are ordered topologically, and
+incomplete state propagates to dependent entries. Missing dependencies,
+dependency cycles, invalid manifests, missing evidence artifacts, or
+CI demos without CI run, platform cell, commit binding, pytest report, scanner report, artifact hash, cell coverage
+become stable issue codes, while `write_ci_evidence_state_v2()` persists digests
+without absolute host paths. `ci_evidence_report()` summarizes plans with a
+recomputable digest, and `ci_evidence_gate()` recomputes PASS/FAIL from the
 reported error count, incomplete count, and profile.
 
 ### Optional chaining and null coalescing
