@@ -218,7 +218,7 @@ missing-script, cycle, and limit issues; and digests that exclude host paths
 make migration plans reviewable and reproducible in CI through `pea migrate-v2
 --check` and `migration_v2_gate()`.
 
-**Phase 89 — Project templates v2** completes Wave 3 with deterministic
+**Phase 89 — Project templates v2** continues Wave 3 with deterministic
 project template catalogs additive to the existing scaffold surface. Validated
 profiles control template limits, community inclusion, dependency checks, the
 current version, and drift policy. Stable nodes with digests, names, versions,
@@ -227,6 +227,17 @@ topological order; sorted missing-dependency, cycle, invalid-manifest,
 bad-entrypoint, and limit issues; and digests that exclude host paths make
 template plans reviewable and reproducible in CI through `pea templates-v2
 --check` and `templates_v2_gate()`.
+
+**Phase 90 — Developer experience v2** closes Wave 3 with a deterministic
+evidence gate over the editor, debug, format, lint, test, build, docs, migration,
+and template tooling. Validated profiles control tool limits, experimental
+inclusion, evidence checks, the current version, and incomplete policy. Stable
+nodes with digests, names, versions, formats, evidence paths, checks, resolved
+dependencies, propagated incomplete reasons, and topological order; sorted
+missing-dependency, cycle, invalid-manifest, missing-evidence, and limit issues;
+and digests that exclude host paths make developer-experience evidence
+reviewable and reproducible in CI through `pea devex-v2 --check` and
+`devex_v2_gate()`.
 
 ### Wave 4 — Sector packs (Phases 91–98)
 

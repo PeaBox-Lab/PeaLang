@@ -1,6 +1,6 @@
 # PeaLang User Guide
 
-This guide covers the PeaLang 3.1.52 release (unified versioning; supersedes the 1.0.0-experience and 0.99.6 baselines).
+This guide covers the PeaLang 3.1.53 release (unified versioning; supersedes the 1.0.0-experience and 0.99.6 baselines).
 
 ## Installation and Setup
 
@@ -47,6 +47,7 @@ pea doctor
 | `pea docs-v2 <root> [--check] [--state FILE]` | Inventory versioned documentation with stable digests |
 | `pea migrate-v2 <root> [--check] [--state FILE]` | Plan migration assistants with stable digests |
 | `pea templates-v2 <root> [--check] [--state FILE]` | Inventory project templates with stable digests |
+| `pea devex-v2 <root> [--check] [--state FILE]` | Gate developer-experience evidence with stable digests |
 | `pea fmt-v3 <path...> [--check] [--write]` | Report or apply formatter v3 changes |
 | `pea analyze <file.json|csv> [--json] [--head N]` | Profile a JSON/CSV dataset (analysis) |
 | `pea web-openapi` / `pea openapi <file.pea> [--title T] [--version V]` | Extract OpenAPI from a file defining `app` |
@@ -419,6 +420,28 @@ stable issue codes, while `write_template_state_v2()` persists digests without
 absolute host paths. `templates_v2_report()` summarizes plans with a
 recomputable digest, and `templates_v2_gate()` recomputes PASS/FAIL from the
 reported error count, drift count, and profile.
+
+### Developer experience v2
+
+```bash
+pea devex-v2 --capabilities
+pea devex-v2 . --check --state devex-state.json --emit devex.json
+pea devex-v2 . --check --write-state --fail-on-incomplete
+```
+
+`plan_devex_v2()` is the Wave 3 capstone and is additive to the existing editor,
+debug, format, lint, test, build, docs, migration, and template tools. A
+`DevExProfileV2` validates the tool limit, experimental inclusion, evidence
+checks, current version, and incomplete-failure policy before planning. Each
+`DevExToolV2` carries a relative path, a manifest digest, name, version, format,
+sorted evidence paths, required names, checks, resolved dependencies, a
+clean/stale state, and reasons; tools are ordered topologically, and incomplete
+state propagates to dependent tools. Missing dependencies, dependency cycles,
+invalid manifests, missing evidence artifacts, and limit overruns become stable
+issue codes, while `write_devex_state_v2()` persists digests without absolute
+host paths. `devex_v2_report()` summarizes plans with a recomputable digest, and
+`devex_v2_gate()` recomputes PASS/FAIL from the reported error count, incomplete
+count, and profile.
 
 ### Optional chaining and null coalescing
 ```pea

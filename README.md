@@ -8,9 +8,9 @@ PeaLang is designed to complement existing ecosystems such as Python, FastAPI, J
 
 ## Release Status
 
-**Version: 3.1.52** — current tagged release across package, SDK, runtime, and specification metadata.
+**Version: 3.1.53** — current tagged release across package, SDK, runtime, and specification metadata.
 
-`3.1.52` is the unified release identifier for the tagged v3.1.52 line. Source version, SDK packages, container image label, runtime health output, registry user agent, release manifest, and language specification now report the same version. Historical release notes are kept in `docs/releases/` for provenance, but they do not define the current version.
+`3.1.53` is the unified release identifier for the tagged v3.1.53 line. Source version, SDK packages, container image label, runtime health output, registry user agent, release manifest, and language specification now report the same version. Historical release notes are kept in `docs/releases/` for provenance, but they do not define the current version.
 
 See `ROADMAP.md` for the forward-looking plan, `CHANGELOG.md` for per-feature history, and `docs/CROSS_SECTOR_ADOPTION_PLAN.md` for the plan to make PeaLang credible across enterprise, data, web, mobile, games, embedded, and cloud sectors.
 
@@ -1074,6 +1074,24 @@ and reports missing dependencies, cycles, invalid manifests, bad entrypoints,
 and limit overruns as sorted issue codes. `TemplateProfileV2` validates template
 limits, community inclusion, dependency checks, current version, and the
 drift-failure policy; `templates_v2_report()` and `templates_v2_gate()` provide
+reproducible CI evidence without host paths or timings.
+
+### Developer experience v2
+
+```bash
+pea devex-v2 --capabilities
+pea devex-v2 . --check --state devex-state.json --emit devex.json
+pea devex-v2 . --check --write-state --fail-on-incomplete
+```
+
+Phase 90 closes Wave 3 with a deterministic developer-experience evidence gate
+alongside the existing editor, debug, format, lint, test, build, docs, migration,
+and template tools. It derives a stable topological tool order and incomplete
+set from evidence manifests and tool dependencies, and reports missing
+dependencies, cycles, invalid manifests, missing evidence artifacts, and limit
+overruns as sorted issue codes. `DevExProfileV2` validates tool limits,
+experimental inclusion, evidence checks, current version, and the
+incomplete-failure policy; `devex_v2_report()` and `devex_v2_gate()` provide
 reproducible CI evidence without host paths or timings.
 
 ### Project queries

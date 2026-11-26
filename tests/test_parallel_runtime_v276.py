@@ -144,11 +144,11 @@ def test_feature_flag_help_and_analysis_namespace_document_parallel_runtime():
 
 
 def test_release_metadata_is_aligned():
-    assert pealang.__version__ == SPEC_VERSION == '3.1.52'
+    assert pealang.__version__ == SPEC_VERSION == '3.1.53'
     manifest = json.loads((Path(__file__).resolve().parent.parent
                            / 'RELEASE_MANIFEST.json').read_text(encoding='utf-8'))
-    assert manifest['version'] == '3.1.52'
-    assert manifest['previous_version'] == '3.1.51'
+    assert manifest['version'] == '3.1.53'
+    assert manifest['previous_version'] == '3.1.52'
     assert pealang.PARALLEL_RUNTIME_VERSION == '3.1.43'
     assert pealang.WASM_BACKEND_VERSION == '3.1.42'
     assert pealang.NATIVE_BACKEND_VERSION == '3.1.41'

@@ -1,3 +1,11 @@
+## 3.1.53 - Phase 90: Developer experience v2 (2026-11-26)
+- Close Wave 3 with a deterministic developer-experience evidence gate additive to the existing DevX surface
+- Add validated profiles for tool limits, experimental inclusion, evidence checks, current version, and incomplete policy
+- Add stable tool nodes with digests, names, versions, formats, evidence, checks, resolved dependencies, incomplete reasons, and topological order
+- Detect missing dependencies, cycles, invalid manifests, missing evidence, and limit overruns as stable issue codes
+- Add `pea devex-v2` with check, emit, state, strict incomplete, and capability options plus a stable devx feature flag
+- Align current release metadata to 3.1.53 while keeping the frozen 3.0 digest pinned
+
 ## 3.1.52 - Phase 89: Project templates v2 (2026-11-26)
 - Complete Wave 3 with deterministic project template catalogs additive to the existing scaffold surface
 - Add validated profiles for template limits, community inclusion, dependency checks, current version, and drift policy

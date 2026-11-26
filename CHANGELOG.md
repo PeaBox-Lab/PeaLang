@@ -1,4 +1,15 @@
 # Changelog
+## 3.1.53 - Phase 90: Developer experience v2 (2026-11-26)
+- Add a deterministic developer-experience evidence gate as the Wave 3 capstone, additive to all existing DevX commands
+- Add validated profiles for tool limits, experimental inclusion, evidence checks, current version, and an incomplete-failure policy
+- Add stable tool nodes with manifest digests, names, versions, formats, evidence paths, checks, resolved dependencies, and topological order
+- Detect missing dependencies, dependency cycles, invalid manifests, missing evidence artifacts, and tool-limit overruns as sorted issue codes
+- Track digest drift and propagate incomplete state to dependent tools through `pea devex-v2 --state --write-state`
+- Add `pea devex-v2` with capability, check, emit, state, strict incomplete, and current-version options plus a stable `devx.devex_v2` feature flag
+- Add a normative developer experience v2 spec section and align current release metadata to 3.1.53
+- Frozen 3.0 digest, earlier component versions, and historical release metadata stay pinned
+- Targeted DevEx, CLI, freeze, version, and conformance tests smoke-tested
+
 ## 3.1.52 - Phase 89: Project templates v2 (2026-11-26)
 - Add a deterministic project template catalog layer additive to the existing `pea scaffold` and `pea templates` commands
 - Add validated profiles for template limits, community inclusion, dependency checks, current version, and a drift-failure policy

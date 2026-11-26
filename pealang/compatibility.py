@@ -37,6 +37,7 @@ FEATURES={
   'devx.versioned_docs':Feature('devx.versioned_docs','3.1.50',Stability.STABLE),
   'devx.migration_assistants':Feature('devx.migration_assistants','3.1.51',Stability.STABLE),
   'devx.project_templates_v2':Feature('devx.project_templates_v2','3.1.52',Stability.STABLE),
+  'devx.devex_v2':Feature('devx.devex_v2','3.1.53',Stability.STABLE),
  'async.await':Feature('async.await','0.26',Stability.PREVIEW),
  'embedding.python':Feature('embedding.python','0.18',Stability.STABLE),
  'embedding.fastapi':Feature('embedding.fastapi','0.25',Stability.PREVIEW),

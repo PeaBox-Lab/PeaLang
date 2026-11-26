@@ -6614,6 +6614,78 @@
       "signature": "()"
     },
     {
+      "module": "pealang.devex_v2",
+      "name": "DevExV2Error",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.devex_v2",
+      "name": "DevExProfileV2",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.devex_v2",
+      "name": "devex_v2_capabilities",
+      "kind": "function",
+      "signature": "()"
+    },
+    {
+      "module": "pealang.devex_v2",
+      "name": "DevExIssueV2",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.devex_v2",
+      "name": "DevExToolV2",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.devex_v2",
+      "name": "DevExPlanV2",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.devex_v2",
+      "name": "plan_devex_v2",
+      "kind": "function",
+      "signature": "(root,profile=?,state=?)"
+    },
+    {
+      "module": "pealang.devex_v2",
+      "name": "load_devex_state_v2",
+      "kind": "function",
+      "signature": "(path)"
+    },
+    {
+      "module": "pealang.devex_v2",
+      "name": "write_devex_state_v2",
+      "kind": "function",
+      "signature": "(root,plan,path=?)"
+    },
+    {
+      "module": "pealang.devex_v2",
+      "name": "devex_v2_report",
+      "kind": "function",
+      "signature": "(plans,profile=?)"
+    },
+    {
+      "module": "pealang.devex_v2",
+      "name": "devex_v2_gate",
+      "kind": "function",
+      "signature": "(report)"
+    },
+    {
+      "module": "pealang.devex_v2",
+      "name": "build_devex_v2_namespace",
+      "kind": "function",
+      "signature": "()"
+    },
+    {
       "module": "pealang.lsp",
       "name": "LSPServer",
       "kind": "class",
