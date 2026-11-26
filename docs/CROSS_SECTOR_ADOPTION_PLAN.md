@@ -267,6 +267,17 @@ incomplete reasons, and topological order; sorted missing-dependency, cycle,
 invalid-manifest, missing-evidence, missing-parity-suite, and missing-benchmark
 issues; and digests that exclude host paths make workflow evidence reviewable and
 reproducible in CI through `pea data-pack --check` and `data_pack_gate()`.
+
+**Phase 93 — Frontend Web sector pack** continues Wave 4 with a deterministic
+delivery gate for the third row of the sector table, additive to the browser
+SDK, React SDK, TypeScript SDK, templates, and web ecosystem. Validated profiles
+control app limits, canary inclusion, DSL and interop checks, the current
+version, and incomplete policy. Stable nodes with digests, names, versions,
+kinds, evidence paths, declared bridges, resolved dependencies, propagated
+incomplete reasons, and topological order; sorted missing-dependency, cycle,
+invalid-manifest, missing-evidence, missing-state-model, and missing-interop-bridge
+issues; and digests that exclude host paths make frontend evidence reviewable and
+reproducible in CI through `pea web-pack --check` and `web_pack_gate()`.
 Later rows of the table are built sequentially in following phases.
 
 ### Wave 5 — Ecosystem release (Phases 99–100)

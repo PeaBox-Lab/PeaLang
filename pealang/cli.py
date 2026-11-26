@@ -1473,6 +1473,26 @@ def main(argv=None):
             if a.check:return 0 if decision['gate']=='PASS' else 1
             return 0
 
+        if c=='web-pack':
+
+            from .web_pack import (WebProfileV2,web_pack_capabilities,web_pack_gate,web_pack_report,plan_web_pack,load_web_state_v2,write_web_state_v2)
+
+            p=argparse.ArgumentParser(prog='pea web-pack');p.add_argument('root',nargs='?',default='.');p.add_argument('--capabilities',action='store_true');p.add_argument('--check',action='store_true');p.add_argument('--emit');p.add_argument('--state');p.add_argument('--write-state',action='store_true');p.add_argument('--max-apps',type=int,default=500);p.add_argument('--include-canary',action='store_true');p.add_argument('--no-check-dsl',action='store_true');p.add_argument('--no-check-interop',action='store_true');p.add_argument('--fail-on-incomplete',action='store_true');p.add_argument('--current-version');a=p.parse_args(argv[1:])
+            if a.capabilities:
+                print(json.dumps(web_pack_capabilities(),indent=2));return 0
+            try:profile=WebProfileV2(max_apps=a.max_apps,include_canary=a.include_canary,check_dsl=not a.no_check_dsl,check_interop=not a.no_check_interop,fail_on_incomplete=a.fail_on_incomplete,current_version=a.current_version or '')
+            except Exception as e:print(f'Web pack failed: {e}');return 1
+            state_path=Path(a.state) if a.state else Path(a.root)/'.pea_web_pack.json'
+            try:
+                state=load_web_state_v2(state_path);plan=plan_web_pack(a.root,profile,state)
+                if a.write_state:write_web_state_v2(a.root,plan,state_path)
+            except Exception as e:print(f'Web pack failed: {e}');return 1
+            report=web_pack_report([plan],profile);decision=web_pack_gate(report);report['decision']=decision
+            if a.emit:Path(a.emit).write_text(json.dumps(report,indent=2,default=str)+'\n',encoding='utf-8')
+            print(json.dumps(report,indent=2,default=str))
+            if a.check:return 0 if decision['gate']=='PASS' else 1
+            return 0
+
         if c in ('check','lint'):
 
             p=argparse.ArgumentParser(prog=f'pea {c}');p.add_argument('paths',nargs='+');p.add_argument('--json',action='store_true');a=p.parse_args(argv[1:]);errors=warnings=0;items=[]

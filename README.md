@@ -8,9 +8,9 @@ PeaLang is designed to complement existing ecosystems such as Python, FastAPI, J
 
 ## Release Status
 
-**Version: 3.1.55** — current tagged release across package, SDK, runtime, and specification metadata.
+**Version: 3.1.56** — current tagged release across package, SDK, runtime, and specification metadata.
 
-`3.1.55` is the unified release identifier for the tagged v3.1.55 line. Source version, SDK packages, container image label, runtime health output, registry user agent, release manifest, and language specification now report the same version. Historical release notes are kept in `docs/releases/` for provenance, but they do not define the current version.
+`3.1.56` is the unified release identifier for the tagged v3.1.56 line. Source version, SDK packages, container image label, runtime health output, registry user agent, release manifest, and language specification now report the same version. Historical release notes are kept in `docs/releases/` for provenance, but they do not define the current version.
 
 See `ROADMAP.md` for the forward-looking plan, `CHANGELOG.md` for per-feature history, and `docs/CROSS_SECTOR_ADOPTION_PLAN.md` for the plan to make PeaLang credible across enterprise, data, web, mobile, games, embedded, and cloud sectors.
 
@@ -1129,6 +1129,24 @@ published benchmarks as sorted issue codes. `DataProfileV2` validates workflow
 limits, preview inclusion, parity/benchmark checks, current version, and the
 incomplete-failure policy; `data_pack_report()` and `data_pack_gate()` provide
 reproducible CI evidence without host paths or timings.
+
+### Frontend Web sector pack
+
+```bash
+pea web-pack --capabilities
+pea web-pack . --check --state web-state.json --emit web.json
+pea web-pack . --check --write-state --fail-on-incomplete
+```
+
+Phase 93 continues Wave 4 with a deterministic delivery gate alongside the
+existing browser SDK, React SDK, TypeScript SDK, templates, and web ecosystem.
+It derives a stable topological app order and incomplete set from `*.web.json`
+manifests, and reports missing dependencies, cycles, invalid manifests, missing
+evidence, web apps without state models, and web apps without TypeScript interop
+bridges as sorted issue codes. `WebProfileV2` validates app limits, canary
+inclusion, DSL/interop checks, current version, and the incomplete-failure
+policy; `web_pack_report()` and `web_pack_gate()` provide reproducible CI
+evidence without host paths or timings.
 
 ### Project queries
 

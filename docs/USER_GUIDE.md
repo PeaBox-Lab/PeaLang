@@ -1,6 +1,6 @@
 # PeaLang User Guide
 
-This guide covers the PeaLang 3.1.55 release (unified versioning; supersedes the 1.0.0-experience and 0.99.6 baselines).
+This guide covers the PeaLang 3.1.56 release (unified versioning; supersedes the 1.0.0-experience and 0.99.6 baselines).
 
 ## Installation and Setup
 
@@ -50,6 +50,7 @@ pea doctor
 | `pea devex-v2 <root> [--check] [--state FILE]` | Gate developer-experience evidence with stable digests |
 | `pea finance-pack <root> [--check] [--state FILE]` | Gate finance sector-pack evidence with stable digests |
 | `pea data-pack <root> [--check] [--state FILE]` | Gate data science sector-pack evidence with stable digests |
+| `pea web-pack <root> [--check] [--state FILE]` | Gate frontend web sector-pack evidence with stable digests |
 | `pea fmt-v3 <path...> [--check] [--write]` | Report or apply formatter v3 changes |
 | `pea analyze <file.json|csv> [--json] [--head N]` | Profile a JSON/CSV dataset (analysis) |
 | `pea web-openapi` / `pea openapi <file.pea> [--title T] [--version V]` | Extract OpenAPI from a file defining `app` |
@@ -490,6 +491,29 @@ models without published benchmarks become stable issue codes, while
 `write_data_state_v2()` persists digests without absolute host paths.
 `data_pack_report()` summarizes plans with a recomputable digest, and
 `data_pack_gate()` recomputes PASS/FAIL from the reported error count,
+incomplete count, and profile.
+
+### Frontend Web sector pack
+
+```bash
+pea web-pack --capabilities
+pea web-pack . --check --state web-state.json --emit web.json
+pea web-pack . --check --write-state --fail-on-incomplete
+```
+
+`plan_web_pack()` continues Wave 4 and is additive to the browser SDK, React
+SDK, TypeScript SDK, templates, and web ecosystem. A `WebProfileV2` validates
+the app limit, canary inclusion, DSL and interop checks, current version, and
+incomplete-failure policy before planning. Each `WebAppV2` carries a relative
+path, a manifest digest, name, version, kind, sorted evidence paths, sorted
+declared bridges, sorted required names, resolved dependencies, a clean/stale
+state, and reasons; apps are ordered topologically, and incomplete state
+propagates to dependent apps. Missing dependencies, dependency cycles, invalid
+manifests, missing evidence artifacts, web apps without state models, and web
+apps without TypeScript interop bridges become stable issue codes, while
+`write_web_state_v2()` persists digests without absolute host paths.
+`web_pack_report()` summarizes plans with a recomputable digest, and
+`web_pack_gate()` recomputes PASS/FAIL from the reported error count,
 incomplete count, and profile.
 
 ### Optional chaining and null coalescing

@@ -1,0 +1,61 @@
+# Frontend Web sector pack
+
+Wave 4 continues with a deterministic sector-pack evidence gate for the frontend
+web row of the sector table. It is additive to the browser SDK, React SDK,
+TypeScript SDK, templates, and web ecosystem, and it does not change the frozen
+3.0 language surface.
+
+`web_pack_capabilities()` returns the versioned capability set with the default
+profile, supported options, the `*.web.json` source filter, the sorted app
+kinds, stable ordering, and a recomputed gate. `WEB_PACK_VERSION` records the
+current release and `WEB_PACK_FORMAT` identifies the sector-pack format.
+
+`WebProfileV2` is a frozen, validated profile with a positive `max_apps` limit,
+an `include_canary` switch, a `check_dsl` switch, a `check_interop` switch, a
+`fail_on_incomplete` policy, and a `current_version` string. An empty
+`current_version` resolves to `WEB_PACK_VERSION`. Invalid profiles raise
+`WebPackError` before any planning occurs. `DEFAULT_WEB_PROFILE` is stable and
+serializable.
+
+`plan_web_pack()` discovers apps under a root while skipping build and cache
+directories. Canary, preview, and experimental directories are skipped unless
+`include_canary` is enabled. Each manifest must declare a lowercase `name`, a
+string `version`, a `kind` drawn from `WEB_KINDS`, a non-empty sorted set of
+`evidence` artifacts, string lists for `requires`, and string lists for
+`bridges`; invalid manifests produce a `W204` issue. Every declared evidence
+path must resolve to a file under the root, or a `W205` issue is produced. Each
+`WebAppV2` carries a relative path, a manifest content digest, the name, version,
+kind, sorted evidence paths, sorted declared bridges, sorted required names,
+sorted resolved dependencies, a clean/stale state, and reasons. A dependency is
+resolved through the provider set of a required app name. Wall-clock values and
+absolute host paths never enter the plan.
+
+A required app with no provider produces a `W201` issue; a dependency cycle
+produces a `W202` issue; and exceeding the app limit produces a `W203` issue.
+When `check_dsl` is enabled, a `web-app` with no resolved `state-model`
+dependency produces a `W206` issue. When `check_interop` is enabled, a `web-app`
+with no resolved `interop-bridge` dependency produces a `W207` issue. All issues
+are sorted by code, path, and message. Incomplete state starts from paths whose
+digest is new or changed relative to supplied state, with `new` or `changed`
+reasons, and propagates a `dependency` reason to dependents through a stable
+queue. Apps are emitted in a deterministic topological order.
+
+`load_web_state_v2()` reads versioned digest state, returning empty state for an
+absent file and rejecting invalid version, JSON, or shape.
+`write_web_state_v2()` persists a deterministic digest map keyed by relative
+path, with no absolute host paths.
+
+`web_pack_report()` summarizes plan count, app and incomplete counts, error
+count, per-plan evidence, and a recomputable digest. `web_pack_gate()` verifies
+the version, format, gate shape, report and plan digests, app and issue
+fingerprints, count consistency, and profile, then recomputes PASS/FAIL from the
+reported error count, incomplete count, and incomplete-failure policy. Extra
+fields such as CLI decisions are ignored by digest recomputation.
+
+The `pea web-pack ROOT [--check] [--emit FILE.json] [--state FILE]
+[--write-state] [--max-apps N] [--include-canary] [--no-check-dsl]
+[--no-check-interop] [--fail-on-incomplete] [--current-version V]` command
+reports app evidence without creating or modifying project files. `--check`
+requires a passing gate, `--emit` writes the JSON report, and `--write-state`
+persists the digest state. `pea web-pack --capabilities` prints the versioned
+capability set. The `sector.web_pack` feature flag records availability.

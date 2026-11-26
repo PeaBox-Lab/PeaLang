@@ -1,3 +1,11 @@
+## 3.1.56 - Phase 93: Frontend Web sector pack (2026-11-26)
+- Continue Wave 4 with a deterministic sector-pack evidence gate for frontend web delivery
+- Add validated profiles for app limits, canary inclusion, DSL/interop checks, current version, and incomplete policy
+- Add stable app nodes with digests, names, versions, kinds, evidence, bridges, resolved dependencies, incomplete reasons, and topological order
+- Detect missing dependencies, cycles, invalid manifests, missing evidence, missing state models, and missing TypeScript interop bridges as stable issue codes
+- Add `pea web-pack` with check, emit, state, strict incomplete, and capability options plus a stable sector feature flag
+- Align current release metadata to 3.1.56 while keeping the frozen 3.0 digest pinned
+
 ## 3.1.55 - Phase 92: Data Science / AI / ML sector pack (2026-11-26)
 - Continue Wave 4 with a deterministic sector-pack evidence gate for governed data, analytics, and ML workflows
 - Add validated profiles for workflow limits, preview inclusion, parity/benchmark checks, current version, and incomplete policy

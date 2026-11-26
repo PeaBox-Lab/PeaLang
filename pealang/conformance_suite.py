@@ -35,7 +35,7 @@ from .runtime import execute
 from .type_system import SemanticAnalyzer, analyze_project, check_resource_scopes
 from .vm import VirtualMachine
 
-SUITE_VERSION = '3.1.55'
+SUITE_VERSION = '3.1.56'
 
 
 @dataclass(frozen=True)
