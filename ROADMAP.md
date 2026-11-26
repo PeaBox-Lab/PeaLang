@@ -1,3 +1,11 @@
+## 3.1.51 - Phase 88: Migration assistants (2026-11-26)
+- Continue Wave 3 with deterministic migration evidence additive to the existing migrate command
+- Add validated profiles for migration limits, test inclusion, import checks, current version, and dirty-failure policy
+- Add stable migration nodes with digests, script names, dependencies, dirty reasons, and topological order
+- Detect missing scripts, dependency cycles, and migration-limit overruns as stable issue codes
+- Add `pea migrate-v2` with check, emit, state, strict dirty, and capability options plus a stable devx feature flag
+- Align current release metadata to 3.1.51 while keeping the frozen 3.0 digest pinned
+
 ## 3.1.50 - Phase 87: Versioned docs (2026-11-26)
 - Continue Wave 3 with a deterministic versioned documentation inventory additive to the existing docs command
 - Add validated profiles for file limits, history inclusion, link checks, current version, and drift-failure policy

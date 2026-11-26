@@ -1,4 +1,15 @@
 # Changelog
+## 3.1.51 - Phase 88: Migration assistants (2026-11-26)
+- Add a deterministic migration assistant layer additive to the existing `pea migrate` command
+- Add validated profiles for migration limits, test inclusion, import checks, current version, and a dirty-failure policy
+- Add stable migration nodes with source digests, import declarations, provided script names, resolved dependencies, and build order
+- Detect missing scripts, dependency cycles, and migration-limit overruns as sorted issue codes
+- Track digest drift and propagate dirty state to dependent migrations through `pea migrate-v2 --state --write-state`
+- Add `pea migrate-v2` with capability, check, emit, state, strict dirty, and current-version options plus a stable `devx.migration_assistants` feature flag
+- Add a normative migration assistants spec section and align current release metadata to 3.1.51
+- Frozen 3.0 digest, earlier component versions, and historical release metadata stay pinned
+- Targeted migration assistants, CLI, freeze, version, and conformance tests smoke-tested
+
 ## 3.1.50 - Phase 87: Versioned docs (2026-11-26)
 - Add a deterministic versioned documentation inventory additive to the existing `pea docs` command
 - Add validated profiles for file limits, release-note inclusion, link checks, current version, and a drift-failure policy

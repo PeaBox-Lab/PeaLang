@@ -209,6 +209,15 @@ sorted stale-version and broken-link issues; and digests that exclude host paths
 make documentation reviewable and reproducible in CI through `pea docs-v2 --check`
 and `docs_v2_gate()`.
 
+**Phase 88 — Migration assistants** continues Wave 3 with deterministic
+migration evidence additive to the existing `pea migrate`. Validated profiles
+control migration limits, test-migration inclusion, import checks, the current
+version, and dirty policy. Stable nodes with digests, script names, resolved
+dependencies, propagated dirty reasons, and topological order; sorted
+missing-script, cycle, and limit issues; and digests that exclude host paths
+make migration plans reviewable and reproducible in CI through `pea migrate-v2
+--check` and `migration_v2_gate()`.
+
 ### Wave 4 — Sector packs (Phases 91–98)
 
 One focused pack per row of the table, each with a reference application and

@@ -6470,6 +6470,78 @@
       "signature": "()"
     },
     {
+      "module": "pealang.migration_assistants",
+      "name": "MigrationAssistantError",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.migration_assistants",
+      "name": "MigrationProfileV2",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.migration_assistants",
+      "name": "migration_assistants_capabilities",
+      "kind": "function",
+      "signature": "()"
+    },
+    {
+      "module": "pealang.migration_assistants",
+      "name": "MigrationIssueV2",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.migration_assistants",
+      "name": "MigrationNodeV2",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.migration_assistants",
+      "name": "MigrationPlanV2",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.migration_assistants",
+      "name": "plan_migration_v2",
+      "kind": "function",
+      "signature": "(root,profile=?,state=?)"
+    },
+    {
+      "module": "pealang.migration_assistants",
+      "name": "load_migration_state_v2",
+      "kind": "function",
+      "signature": "(path)"
+    },
+    {
+      "module": "pealang.migration_assistants",
+      "name": "write_migration_state_v2",
+      "kind": "function",
+      "signature": "(root,plan,path=?)"
+    },
+    {
+      "module": "pealang.migration_assistants",
+      "name": "migration_v2_report",
+      "kind": "function",
+      "signature": "(plans,profile=?)"
+    },
+    {
+      "module": "pealang.migration_assistants",
+      "name": "migration_v2_gate",
+      "kind": "function",
+      "signature": "(report)"
+    },
+    {
+      "module": "pealang.migration_assistants",
+      "name": "build_migration_assistants_namespace",
+      "kind": "function",
+      "signature": "()"
+    },
+    {
       "module": "pealang.lsp",
       "name": "LSPServer",
       "kind": "class",

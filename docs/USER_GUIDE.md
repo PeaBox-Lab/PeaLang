@@ -1,6 +1,6 @@
 # PeaLang User Guide
 
-This guide covers the PeaLang 3.1.50 release (unified versioning; supersedes the 1.0.0-experience and 0.99.6 baselines).
+This guide covers the PeaLang 3.1.51 release (unified versioning; supersedes the 1.0.0-experience and 0.99.6 baselines).
 
 ## Installation and Setup
 
@@ -45,6 +45,7 @@ pea doctor
 | `pea test-v2 <path...> [--check] [--fail-fast]` | Run deterministic test framework v2 cases |
 | `pea build-v2 <root> [--check] [--state FILE]` | Plan an incremental build with stable digests |
 | `pea docs-v2 <root> [--check] [--state FILE]` | Inventory versioned documentation with stable digests |
+| `pea migrate-v2 <root> [--check] [--state FILE]` | Plan migration assistants with stable digests |
 | `pea fmt-v3 <path...> [--check] [--write]` | Report or apply formatter v3 changes |
 | `pea analyze <file.json|csv> [--json] [--head N]` | Profile a JSON/CSV dataset (analysis) |
 | `pea web-openapi` / `pea openapi <file.pea> [--title T] [--version V]` | Extract OpenAPI from a file defining `app` |
@@ -376,6 +377,26 @@ become stable issue codes, while `write_docs_state_v2()` persists digests withou
 absolute host paths. `docs_v2_report()` summarizes plans with a recomputable
 digest, and `docs_v2_gate()` recomputes PASS/FAIL from the reported error count,
 drift count, and profile.
+
+### Migration assistants
+
+```bash
+pea migrate-v2 --capabilities
+pea migrate-v2 . --check --state migrate-state.json --emit migrate.json
+pea migrate-v2 . --check --write-state --fail-on-dirty
+```
+
+`plan_migration_v2()` is additive to `pea migrate`. A `MigrationProfileV2`
+validates the migration limit, test-migration inclusion, import checks, current
+version, and dirty-failure policy before planning. Each `MigrationNodeV2`
+carries a relative path, a content digest, imported names, provided script
+names, resolved dependencies, a clean/stale state, and reasons; nodes are
+ordered topologically, and dirty state propagates to importers. Missing scripts,
+dependency cycles, and limit overruns become stable issue codes, while
+`write_migration_state_v2()` persists digests without absolute host paths.
+`migration_v2_report()` summarizes plans with a recomputable digest, and
+`migration_v2_gate()` recomputes PASS/FAIL from the reported error count, dirty
+count, and profile.
 
 ### Optional chaining and null coalescing
 ```pea

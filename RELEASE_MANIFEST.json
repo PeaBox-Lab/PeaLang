@@ -1,11 +1,11 @@
 {
-  "version": "3.1.50",
-  "previous_version": "3.1.49",
-  "release_line": "tagged release v3.1.50",
+  "version": "3.1.51",
+  "previous_version": "3.1.50",
+  "release_line": "tagged release v3.1.51",
   "pytest_tests_passed": 436,
   "conformance_cases_passed": 500,
   "fuzz_iterations": 250,
   "tests_failed": 0,
   "status": "PASS",
-  "note": "Phase 87 adds a deterministic versioned documentation inventory with stable version/link evidence, digest drift tracking, and a recomputable gate; frozen 3.0 digest and component versions stay pinned."
+  "note": "Phase 88 adds a deterministic migration assistant layer additive to the existing `pea migrate` command. It plans migrations from source digests and migration scripts, emits a deterministic migration order and dirty set, and keeps all evidence free of wall-clock values and absolute host paths. It reports a plan; it does not execute or modify project source."
 }
