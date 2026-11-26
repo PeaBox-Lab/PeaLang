@@ -487,6 +487,8 @@ release evidence reviewable and reproducible in CI through
 
 **Phase 120 — Stable 1.0 declaration and GA evidence bundle** extends Wave 8 with a deterministic stable 1.0 declaration and GA evidence bundle gate over `*.declaration.json` manifests. Validated profiles control entry limits, preview inclusion, final gate, pre-1.0 evidence, maturity report, candidate report, attestation report, approval signature, GA declaration, the current version, and incomplete policy. Stable nodes with digests, names, versions, kinds, evidence paths, platform bindings, resolved dependencies, propagated incomplete reasons, and topological order; sorted missing-dependency, cycle, invalid-manifest, missing-evidence, missing-final-gate, missing-pre-1.0-evidence, missing-maturity-report, missing-candidate-report, missing-attestation-report, missing-approval-signature, missing-GA-declaration issues; and digests that exclude host paths make evidence reviewable and reproducible in CI through `pea stable-declaration --check` and `stable_declaration_gate()`.
 
+**Phase 121 — Repository and metadata integrity** continues Wave 9 with repository and metadata integrity and preserves the frozen 3.0 surface, pinned component versions, public API snapshot, and fixed release metrics.
+
 ## Sector packs
 
 | Sector | Current PeaLang evidence | Required additions | Acceptance gate |

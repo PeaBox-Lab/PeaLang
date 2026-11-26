@@ -1,3 +1,8 @@
+## 5.21.0 - Phase 121: Repository and metadata integrity (2026-11-27)
+- Continue Wave 9 with repository and metadata integrity
+- Preserve the frozen 3.0 digest, pinned component versions, and public API snapshot
+- Add regression checks for the maintenance invariants defined by this phase
+
 ## 5.20.0 - Phase 120: Stable 1.0 declaration and GA evidence bundle (2026-11-27)
 - Continue Wave 8 with a deterministic stable 1.0 declaration and GA evidence bundle gate
 - Add validated profiles for entry limits, preview inclusion, final-gate/pre-v1-evidence/maturity-report/candidate-report/attestation-report/approval-signature/ga-declaration, current version, and incomplete policy
@@ -594,5 +599,3 @@
 - Add stable per-case reports, definition validation, and a PASS/FAIL conformance gate
 - Add `pea conformance-v2` CLI output and a `language.conformance_v2` preview flag
 - Last verified baseline remains 1396 tests; targeted regression and conformance tests smoke-tested
-
-### Phase 34: Standard Library Completion (2.41.0)

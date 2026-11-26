@@ -1,11 +1,11 @@
 {
-  "version": "5.20.0",
-  "previous_version": "5.19.0",
-  "release_line": "tagged release v5.20.0",
+  "version": "5.21.0",
+  "previous_version": "5.20.0",
+  "release_line": "tagged release v5.21.0",
   "pytest_tests_passed": 436,
   "conformance_cases_passed": 500,
   "fuzz_iterations": 250,
   "tests_failed": 0,
   "status": "PASS",
-  "note": "Phase 88 adds a deterministic migration assistant layer additive to the existing `pea migrate` command. It plans migrations from source digests and migration scripts, emits a deterministic migration order and dirty set, and keeps all evidence free of wall-clock values and absolute host paths. It reports a plan; it does not execute or modify project source."
+  "note": "Phase 121 repairs repository metadata with deterministic integrity checks and aligned SDK metadata; fixed release metrics remain unchanged."
 }

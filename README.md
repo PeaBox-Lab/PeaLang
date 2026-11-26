@@ -8,9 +8,9 @@ PeaLang is designed to complement existing ecosystems such as Python, FastAPI, J
 
 ## Release Status
 
-**Version: 5.20.0** — current tagged release across package, SDK, runtime, and specification metadata.
+**Version: 5.21.0** - current tagged release across package, SDK, runtime, and specification metadata.
 
-`5.20.0` is the unified release identifier for the tagged v5.20.0 line. Source version, SDK packages, container image label, runtime health output, registry user agent, release manifest, and language specification now report the same version. Historical release notes are kept in `docs/releases/` for provenance, but they do not define the current version.
+`5.21.0` is the unified release identifier for the tagged v5.21.0 line. Source version, SDK packages, container image label, runtime health output, registry user agent, release manifest, and language specification now report the same version. Historical release notes are kept in `docs/releases/` for provenance, but they do not define the current version.
 
 See `ROADMAP.md` for the forward-looking plan, `CHANGELOG.md` for per-feature history, and `docs/CROSS_SECTOR_ADOPTION_PLAN.md` for the plan to make PeaLang credible across enterprise, data, web, mobile, games, embedded, and cloud sectors.
 
@@ -1648,6 +1648,13 @@ final gate, pre-1.0 evidence, maturity report, candidate report, attestation rep
 checks, current version, and the incomplete-failure policy; `stable_declaration_report()`
 and `stable_declaration_gate()` provide reproducible CI evidence without host paths or
 timings.
+
+### Repository and metadata integrity
+
+Phase 121 at **5.21.0** continues Wave 9 with
+repository and metadata integrity. This maintenance release keeps the frozen language core,
+public API snapshot, component pins, and fixed release metrics unchanged while
+adding regression coverage for its invariants.
 
 ### Project queries
 

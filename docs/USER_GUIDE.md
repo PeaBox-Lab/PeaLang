@@ -1198,6 +1198,13 @@ without absolute host paths. `stable_declaration_report()` summarizes plans with
 recomputable digest, and `stable_declaration_gate()` recomputes PASS/FAIL from the
 reported error count, incomplete count, and profile.
 
+### Repository and metadata integrity
+
+Phase 121 at `5.21.0` is a Wave 9 maintenance release. It
+preserves the stable language surface and existing gates while adding checks for
+repository metadata, evidence handoff, or verification stability as described in
+`spec/64-repository-integrity.md`.
+
 ### Optional chaining and null coalescing
 ```pea
 let city = user?.profile?.city ?? "unknown"

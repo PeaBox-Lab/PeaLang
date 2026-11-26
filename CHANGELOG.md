@@ -1,4 +1,10 @@
 # Changelog
+## 5.21.0 - Phase 121: Repository and metadata integrity (2026-11-27)
+- Continue Wave 9 with repository and metadata integrity
+- Keep the frozen 3.0 digest, component pins, public API snapshot, and fixed release metrics unchanged
+- Add a normative maintenance spec and regression checks for the phase invariants
+- Update current release metadata to 5.21.0
+
 ## 5.20.0 - Phase 120: Stable 1.0 declaration and GA evidence bundle (2026-11-27)
 - Continue Wave 8 with a deterministic stable 1.0 declaration and GA evidence bundle gate
 - Add validated profiles for entry limits, preview inclusion, final-gate, pre-v1-evidence, maturity-report, candidate-report, attestation-report, approval-signature, ga-declaration, current version, and an incomplete-failure policy
