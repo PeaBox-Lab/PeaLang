@@ -7838,6 +7838,78 @@
       "signature": "()"
     },
     {
+      "module": "pealang.serving_conformance",
+      "name": "ServingConformancePackError",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.serving_conformance",
+      "name": "ServingConformanceProfileV2",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.serving_conformance",
+      "name": "serving_conformance_capabilities",
+      "kind": "function",
+      "signature": "()"
+    },
+    {
+      "module": "pealang.serving_conformance",
+      "name": "ServingConformanceIssueV2",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.serving_conformance",
+      "name": "ServingConformanceAppV2",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.serving_conformance",
+      "name": "ServingConformancePackPlanV2",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.serving_conformance",
+      "name": "plan_serving_conformance",
+      "kind": "function",
+      "signature": "(root,profile=?,state=?)"
+    },
+    {
+      "module": "pealang.serving_conformance",
+      "name": "load_serving_conformance_state_v2",
+      "kind": "function",
+      "signature": "(path)"
+    },
+    {
+      "module": "pealang.serving_conformance",
+      "name": "write_serving_conformance_state_v2",
+      "kind": "function",
+      "signature": "(root,plan,path=?)"
+    },
+    {
+      "module": "pealang.serving_conformance",
+      "name": "serving_conformance_report",
+      "kind": "function",
+      "signature": "(plans,profile=?)"
+    },
+    {
+      "module": "pealang.serving_conformance",
+      "name": "serving_conformance_gate",
+      "kind": "function",
+      "signature": "(report)"
+    },
+    {
+      "module": "pealang.serving_conformance",
+      "name": "build_serving_conformance_namespace",
+      "kind": "function",
+      "signature": "()"
+    },
+    {
       "module": "pealang.lsp",
       "name": "LSPServer",
       "kind": "class",

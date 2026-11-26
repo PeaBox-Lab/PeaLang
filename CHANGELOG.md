@@ -1,4 +1,15 @@
 # Changelog
+## 5.7.0 - Phase 107: ML and serving conformance (2026-11-27)
+- Continue Wave 7 with a deterministic ML and serving conformance gate
+- Add validated profiles for entry limits, preview inclusion, model-contract, inference-fixture, serving-profile, overload-test, reload-test, rollback-test, benchmark-report, current version, and an incomplete-failure policy
+- Add stable nodes with manifest digests, names, versions, kinds, evidence paths, platform bindings, resolved dependencies, and topological order
+- Detect missing dependencies, cycles, invalid manifests, missing evidence, or serving demos without model contract, inference fixture, serving profile, overload test, reload test, rollback test, benchmark report as sorted issue codes
+- Track digest drift and propagate incomplete state to dependent entries through `pea serving-conformance --state --write-state`
+- Add `pea serving-conformance` with capability, check, emit, state, strict incomplete, governance toggle, and current-version options plus a stable `sector.serving_conformance` feature flag
+- Add a normative serving conformance spec section and align current release metadata to 5.7.0
+- Frozen 3.0 digest, earlier component versions, and historical release metadata stay pinned
+- Full pytest suite and targeted quality gates passed
+
 ## 5.6.0 - Phase 106: Agent safety and tool-use conformance (2026-11-27)
 - Continue Wave 7 with a deterministic agent safety and tool-use conformance gate
 - Add validated profiles for entry limits, preview inclusion, tool-policy, dry-run, approval-gate, replay-guard, budget, audit-log, isolation-policy, current version, and an incomplete-failure policy

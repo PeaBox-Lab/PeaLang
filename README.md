@@ -8,9 +8,9 @@ PeaLang is designed to complement existing ecosystems such as Python, FastAPI, J
 
 ## Release Status
 
-**Version: 5.6.0** — current tagged release across package, SDK, runtime, and specification metadata.
+**Version: 5.7.0** — current tagged release across package, SDK, runtime, and specification metadata.
 
-`5.6.0` is the unified release identifier for the tagged v5.6.0 line. Source version, SDK packages, container image label, runtime health output, registry user agent, release manifest, and language specification now report the same version. Historical release notes are kept in `docs/releases/` for provenance, but they do not define the current version.
+`5.7.0` is the unified release identifier for the tagged v5.7.0 line. Source version, SDK packages, container image label, runtime health output, registry user agent, release manifest, and language specification now report the same version. Historical release notes are kept in `docs/releases/` for provenance, but they do not define the current version.
 
 See `ROADMAP.md` for the forward-looking plan, `CHANGELOG.md` for per-feature history, and `docs/CROSS_SECTOR_ADOPTION_PLAN.md` for the plan to make PeaLang credible across enterprise, data, web, mobile, games, embedded, and cloud sectors.
 
@@ -1395,6 +1395,24 @@ tool policy, dry run, approval gate, replay guard, budget, audit log, isolation 
 `AgentSafetyProfileV2` validates entry limits, preview inclusion, governance
 checks, current version, and the incomplete-failure policy; `agent_safety_report()`
 and `agent_safety_gate()` provide reproducible CI evidence without host paths or
+timings.
+
+### ML and serving conformance
+
+```bash
+pea serving-conformance --capabilities
+pea serving-conformance . --check --state serving_conformance-state.json --emit serving_conformance.json
+pea serving-conformance . --check --write-state --fail-on-incomplete
+```
+
+Phase 107 at **5.7.0** extends Wave 7 with a deterministic
+serving conformance gate over `*.serving.json` manifests. It derives a stable
+topological order and incomplete set, and reports missing dependencies, cycles,
+invalid manifests, missing evidence, and serving demos without
+model contract, inference fixture, serving profile, overload test, reload test, rollback test, benchmark report as sorted issue codes.
+`ServingConformanceProfileV2` validates entry limits, preview inclusion, governance
+checks, current version, and the incomplete-failure policy; `serving_conformance_report()`
+and `serving_conformance_gate()` provide reproducible CI evidence without host paths or
 timings.
 
 ### Project queries

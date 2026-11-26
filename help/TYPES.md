@@ -32,3 +32,4 @@ missing-approval, missing-canary-plan, missing-rollback-plan,
 missing-feature-flag, missing-audit-trail, and
 missing-release-checklist detection.
  Phase 106 extends Wave 7 with agent safety and tool-use conformance: `pea agent-safety --check` and `agent_safety_gate()` provide reproducible evidence with missing-dependency, cycle, invalid-manifest, missing-evidence, and missing-tool-policy, missing-dry-run, missing-approval-gate, missing-replay-guard, missing-budget, missing-audit-log, missing-isolation-policy detection.
+ Phase 107 extends Wave 7 with ML and serving conformance: `pea serving-conformance --check` and `serving_conformance_gate()` provide reproducible evidence with missing-dependency, cycle, invalid-manifest, missing-evidence, and missing-model-contract, missing-inference-fixture, missing-serving-profile, missing-overload-test, missing-reload-test, missing-rollback-test, missing-benchmark-report detection.

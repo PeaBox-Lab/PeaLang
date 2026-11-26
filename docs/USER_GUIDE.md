@@ -1,6 +1,6 @@
 # PeaLang User Guide
 
-This guide covers the PeaLang 5.6.0 release (unified versioning; supersedes the 1.0.0-experience and 0.99.6 baselines).
+This guide covers the PeaLang 5.7.0 release (unified versioning; supersedes the 1.0.0-experience and 0.99.6 baselines).
 
 ## Installation and Setup
 
@@ -64,6 +64,7 @@ pea doctor
 | `pea capacity-pack <root> [--check] [--state FILE]` | Gate capacity and cost reliability evidence with stable digests |
 | `pea release-governance <root> [--check] [--state FILE]` | Gate release governance and change safety evidence with stable digests |
 | `pea agent-safety <root> [--check] [--state FILE]` | Gate agent safety and tool-use conformance evidence with stable digests |
+| `pea serving-conformance <root> [--check] [--state FILE]` | Gate ML and serving conformance evidence with stable digests |
 | `pea fmt-v3 <path...> [--check] [--write]` | Report or apply formatter v3 changes |
 | `pea analyze <file.json|csv> [--json] [--head N]` | Profile a JSON/CSV dataset (analysis) |
 | `pea web-openapi` / `pea openapi <file.pea> [--title T] [--version V]` | Extract OpenAPI from a file defining `app` |
@@ -846,6 +847,30 @@ agent demos without tool policy, dry run, approval gate, replay guard, budget, a
 become stable issue codes, while `write_agent_safety_state_v2()` persists digests
 without absolute host paths. `agent_safety_report()` summarizes plans with a
 recomputable digest, and `agent_safety_gate()` recomputes PASS/FAIL from the
+reported error count, incomplete count, and profile.
+
+### ML and serving conformance
+
+```bash
+pea serving-conformance --capabilities
+pea serving-conformance . --check --state serving_conformance-state.json --emit serving_conformance.json
+pea serving-conformance . --check --write-state --fail-on-incomplete
+```
+
+`plan_serving_conformance()` extends Wave 7 as a ML and serving conformance gate and is additive to the
+release governance, capacity, chaos, SLO, observability, and certified-package
+surfaces. A `ServingConformanceProfileV2` validates the entry limit, preview inclusion,
+model-contract/inference-fixture/serving-profile/overload-test/reload-test/rollback-test/benchmark-report, current version, and
+incomplete-failure policy before planning. Each `ServingConformanceAppV2` carries a
+relative path, a manifest digest, name, version, kind, sorted evidence paths,
+sorted platform bindings, sorted required names, resolved dependencies, a
+clean/stale state, and reasons; entries are ordered topologically, and
+incomplete state propagates to dependent entries. Missing dependencies,
+dependency cycles, invalid manifests, missing evidence artifacts, or
+serving demos without model contract, inference fixture, serving profile, overload test, reload test, rollback test, benchmark report
+become stable issue codes, while `write_serving_conformance_state_v2()` persists digests
+without absolute host paths. `serving_conformance_report()` summarizes plans with a
+recomputable digest, and `serving_conformance_gate()` recomputes PASS/FAIL from the
 reported error count, incomplete count, and profile.
 
 ### Optional chaining and null coalescing
