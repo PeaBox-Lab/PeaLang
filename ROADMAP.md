@@ -1,3 +1,11 @@
+## 3.1.59 - Phase 96: Game Development sector pack (2026-11-26)
+- Continue Wave 4 with a deterministic sector-pack evidence gate for game delivery
+- Add validated profiles for game limits, preview inclusion, runtime/ECS/engine/hot-reload/input/render checks, current version, and incomplete policy
+- Add stable game nodes with digests, names, versions, kinds, evidence, bindings, resolved dependencies, incomplete reasons, and topological order
+- Detect missing dependencies, cycles, invalid manifests, missing evidence, missing runtimes, ECS bindings, engine bridges, hot reload, input APIs, and render APIs as stable issue codes
+- Add `pea game-pack` with check, emit, state, strict incomplete, governance toggles, and capability options plus a stable sector feature flag
+- Align current release metadata to 3.1.59 while keeping the frozen 3.0 digest pinned
+
 ## 3.1.58 - Phase 95: Mobile (iOS) sector pack (2026-11-26)
 - Continue Wave 4 with a deterministic sector-pack evidence gate for iOS delivery
 - Add validated profiles for app limits, preview inclusion, Swift/Objective-C/XCFramework/Xcode checks, current version, and incomplete policy

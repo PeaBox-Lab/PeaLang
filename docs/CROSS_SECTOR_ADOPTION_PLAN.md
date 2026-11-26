@@ -302,7 +302,21 @@ sorted missing-dependency, cycle, invalid-manifest, missing-evidence,
 missing-Swift-bridge, missing-Objective-C-layer, missing-XCFramework, and
 missing-Xcode-template issues; and digests that exclude host paths make iOS
 evidence reviewable and reproducible in CI through `pea ios-pack --check` and
-`ios_pack_gate()`. Later rows of the table are built sequentially in following
+`ios_pack_gate()`.
+
+**Phase 96 — Game Development sector pack** continues Wave 4 with a deterministic
+delivery gate for the sixth row of the sector table, additive to
+`host_bindings.py`, `vm_embedding.py`, and the Java client sidecar. Validated
+profiles control game limits, preview inclusion, native/WASM runtime, ECS,
+Unity/Unreal bridge, hot-reload, input API, and render API checks, the current
+version, and incomplete policy. Stable nodes with digests, names, versions,
+kinds, evidence paths, platform bindings, resolved dependencies, propagated
+incomplete reasons, and topological order; sorted missing-dependency, cycle,
+invalid-manifest, missing-evidence, missing-runtime, missing-ECS-binding,
+missing-engine-bridge, missing-hot-reload, missing-input-API, and
+missing-render-API issues; and digests that exclude host paths make game evidence
+reviewable and reproducible in CI through `pea game-pack --check` and
+`game_pack_gate()`. Later rows of the table are built sequentially in following
 phases.
 
 ### Wave 5 — Ecosystem release (Phases 99–100)

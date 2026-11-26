@@ -8,9 +8,9 @@ PeaLang is designed to complement existing ecosystems such as Python, FastAPI, J
 
 ## Release Status
 
-**Version: 3.1.58** — current tagged release across package, SDK, runtime, and specification metadata.
+**Version: 3.1.59** — current tagged release across package, SDK, runtime, and specification metadata.
 
-`3.1.58` is the unified release identifier for the tagged v3.1.58 line. Source version, SDK packages, container image label, runtime health output, registry user agent, release manifest, and language specification now report the same version. Historical release notes are kept in `docs/releases/` for provenance, but they do not define the current version.
+`3.1.59` is the unified release identifier for the tagged v3.1.59 line. Source version, SDK packages, container image label, runtime health output, registry user agent, release manifest, and language specification now report the same version. Historical release notes are kept in `docs/releases/` for provenance, but they do not define the current version.
 
 See `ROADMAP.md` for the forward-looking plan, `CHANGELOG.md` for per-feature history, and `docs/CROSS_SECTOR_ADOPTION_PLAN.md` for the plan to make PeaLang credible across enterprise, data, web, mobile, games, embedded, and cloud sectors.
 
@@ -1185,6 +1185,25 @@ Xcode templates as sorted issue codes. `IOSProfileV2` validates app limits,
 preview inclusion, Swift/Objective-C/XCFramework/Xcode checks, current version,
 and the incomplete-failure policy; `ios_pack_report()` and `ios_pack_gate()`
 provide reproducible CI evidence without host paths or timings.
+
+### Game Development sector pack
+
+```bash
+pea game-pack --capabilities
+pea game-pack . --check --state game-state.json --emit game.json
+pea game-pack . --check --write-state --fail-on-incomplete
+```
+
+Phase 96 continues Wave 4 with a deterministic delivery gate alongside the
+existing host bindings, Java client sidecar, and VM embedding foundations. It
+derives a stable topological game order and incomplete set from `*.game.json`
+manifests, and reports missing dependencies, cycles, invalid manifests, missing
+evidence, sample games without native/WASM runtimes, ECS bindings, Unity/Unreal
+bridges, hot reload, input APIs, or render APIs as sorted issue codes.
+`GameProfileV2` validates game limits, preview inclusion,
+runtime/ECS/engine/hot-reload/input/render checks, current version, and the
+incomplete-failure policy; `game_pack_report()` and `game_pack_gate()` provide
+reproducible CI evidence without host paths or timings.
 
 ### Project queries
 

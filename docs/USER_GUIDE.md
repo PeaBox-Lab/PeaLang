@@ -1,6 +1,6 @@
 # PeaLang User Guide
 
-This guide covers the PeaLang 3.1.58 release (unified versioning; supersedes the 1.0.0-experience and 0.99.6 baselines).
+This guide covers the PeaLang 3.1.59 release (unified versioning; supersedes the 1.0.0-experience and 0.99.6 baselines).
 
 ## Installation and Setup
 
@@ -53,6 +53,7 @@ pea doctor
 | `pea web-pack <root> [--check] [--state FILE]` | Gate frontend web sector-pack evidence with stable digests |
 | `pea android-pack <root> [--check] [--state FILE]` | Gate Mobile (Android) sector-pack evidence with stable digests |
 | `pea ios-pack <root> [--check] [--state FILE]` | Gate Mobile (iOS) sector-pack evidence with stable digests |
+| `pea game-pack <root> [--check] [--state FILE]` | Gate Game Development sector-pack evidence with stable digests |
 | `pea fmt-v3 <path...> [--check] [--write]` | Report or apply formatter v3 changes |
 | `pea analyze <file.json|csv> [--json] [--head N]` | Profile a JSON/CSV dataset (analysis) |
 | `pea web-openapi` / `pea openapi <file.pea> [--title T] [--version V]` | Extract OpenAPI from a file defining `app` |
@@ -564,6 +565,30 @@ stable issue codes, while `write_ios_state_v2()` persists digests without
 absolute host paths. `ios_pack_report()` summarizes plans with a recomputable
 digest, and `ios_pack_gate()` recomputes PASS/FAIL from the reported error count,
 incomplete count, and profile.
+
+### Game Development sector pack
+
+```bash
+pea game-pack --capabilities
+pea game-pack . --check --state game-state.json --emit game.json
+pea game-pack . --check --write-state --fail-on-incomplete
+```
+
+`plan_game_pack()` continues Wave 4 and is additive to the host bindings,
+Java client sidecar, and VM embedding foundations. A `GameProfileV2` validates
+the game limit, preview inclusion, runtime/ECS/engine/hot-reload/input/render
+checks, current version, and incomplete-failure policy before planning. Each
+`GameAppV2` carries a relative path, a manifest digest, name, version, kind,
+sorted evidence paths, sorted platform bindings, sorted required names, resolved
+dependencies, a clean/stale state, and reasons; games are ordered topologically,
+and incomplete state propagates to dependent games. Missing dependencies,
+dependency cycles, invalid manifests, missing evidence artifacts, sample games
+without native/WASM runtimes, ECS bindings, Unity/Unreal bridges, hot reload,
+input APIs, or render APIs become stable issue codes, while
+`write_game_state_v2()` persists digests without absolute host paths.
+`game_pack_report()` summarizes plans with a recomputable digest, and
+`game_pack_gate()` recomputes PASS/FAIL from the reported error count, incomplete
+count, and profile.
 
 ### Optional chaining and null coalescing
 ```pea
