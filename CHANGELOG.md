@@ -1,4 +1,15 @@
 # Changelog
+## 5.18.0 - Phase 118: Independent security review and soak evidence (2026-11-27)
+- Continue Wave 8 with a deterministic independent security review and soak evidence gate
+- Add validated profiles for entry limits, preview inclusion, security-review, threat-model, fuzz-corpus, remediation-log, soak-run, load-profile, slo-adherence, current version, and an incomplete-failure policy
+- Add stable nodes with manifest digests, names, versions, kinds, evidence paths, platform bindings, resolved dependencies, and topological order
+- Detect missing dependencies, cycles, invalid manifests, missing evidence, or soak demos without security review, threat model, fuzz corpus, remediation log, soak run, load profile, SLO adherence as sorted issue codes
+- Track digest drift and propagate incomplete state to dependent entries through `pea security-soak --state --write-state`
+- Add `pea security-soak` with capability, check, emit, state, strict incomplete, governance toggle, and current-version options plus a stable `sector.security_soak` feature flag
+- Add a normative security and soak spec section and align current release metadata to 5.18.0
+- Frozen 3.0 digest, earlier component versions, and historical release metadata stay pinned
+- Full pytest suite and targeted quality gates passed
+
 ## 5.17.0 - Phase 117: Live service integration evidence (2026-11-27)
 - Continue Wave 8 with a deterministic live service integration evidence gate
 - Add validated profiles for entry limits, preview inclusion, database-connection, cloud-store, sharepoint-binding, sftp-binding, redis-binding, redacted-endpoint, fixture-result, current version, and an incomplete-failure policy

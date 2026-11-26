@@ -8,9 +8,9 @@ PeaLang is designed to complement existing ecosystems such as Python, FastAPI, J
 
 ## Release Status
 
-**Version: 5.17.0** — current tagged release across package, SDK, runtime, and specification metadata.
+**Version: 5.18.0** — current tagged release across package, SDK, runtime, and specification metadata.
 
-`5.17.0` is the unified release identifier for the tagged v5.17.0 line. Source version, SDK packages, container image label, runtime health output, registry user agent, release manifest, and language specification now report the same version. Historical release notes are kept in `docs/releases/` for provenance, but they do not define the current version.
+`5.18.0` is the unified release identifier for the tagged v5.18.0 line. Source version, SDK packages, container image label, runtime health output, registry user agent, release manifest, and language specification now report the same version. Historical release notes are kept in `docs/releases/` for provenance, but they do not define the current version.
 
 See `ROADMAP.md` for the forward-looking plan, `CHANGELOG.md` for per-feature history, and `docs/CROSS_SECTOR_ADOPTION_PLAN.md` for the plan to make PeaLang credible across enterprise, data, web, mobile, games, embedded, and cloud sectors.
 
@@ -1593,6 +1593,24 @@ database connection, cloud store, SharePoint binding, SFTP binding, Redis bindin
 `LiveIntegrationProfileV2` validates entry limits, preview inclusion, governance
 checks, current version, and the incomplete-failure policy; `live_integration_report()`
 and `live_integration_gate()` provide reproducible CI evidence without host paths or
+timings.
+
+### Independent security review and soak evidence
+
+```bash
+pea security-soak --capabilities
+pea security-soak . --check --state security_soak-state.json --emit security_soak.json
+pea security-soak . --check --write-state --fail-on-incomplete
+```
+
+Phase 118 at **5.18.0** extends Wave 8 with a deterministic
+security and soak gate over `*.soak.json` manifests. It derives a stable
+topological order and incomplete set, and reports missing dependencies, cycles,
+invalid manifests, missing evidence, and soak demos without
+security review, threat model, fuzz corpus, remediation log, soak run, load profile, SLO adherence as sorted issue codes.
+`SecuritySoakProfileV2` validates entry limits, preview inclusion, governance
+checks, current version, and the incomplete-failure policy; `security_soak_report()`
+and `security_soak_gate()` provide reproducible CI evidence without host paths or
 timings.
 
 ### Project queries

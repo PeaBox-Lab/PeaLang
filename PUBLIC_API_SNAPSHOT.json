@@ -8630,6 +8630,78 @@
       "signature": "()"
     },
     {
+      "module": "pealang.security_soak",
+      "name": "SecuritySoakPackError",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.security_soak",
+      "name": "SecuritySoakProfileV2",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.security_soak",
+      "name": "security_soak_capabilities",
+      "kind": "function",
+      "signature": "()"
+    },
+    {
+      "module": "pealang.security_soak",
+      "name": "SecuritySoakIssueV2",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.security_soak",
+      "name": "SecuritySoakAppV2",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.security_soak",
+      "name": "SecuritySoakPackPlanV2",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.security_soak",
+      "name": "plan_security_soak",
+      "kind": "function",
+      "signature": "(root,profile=?,state=?)"
+    },
+    {
+      "module": "pealang.security_soak",
+      "name": "load_security_soak_state_v2",
+      "kind": "function",
+      "signature": "(path)"
+    },
+    {
+      "module": "pealang.security_soak",
+      "name": "write_security_soak_state_v2",
+      "kind": "function",
+      "signature": "(root,plan,path=?)"
+    },
+    {
+      "module": "pealang.security_soak",
+      "name": "security_soak_report",
+      "kind": "function",
+      "signature": "(plans,profile=?)"
+    },
+    {
+      "module": "pealang.security_soak",
+      "name": "security_soak_gate",
+      "kind": "function",
+      "signature": "(report)"
+    },
+    {
+      "module": "pealang.security_soak",
+      "name": "build_security_soak_namespace",
+      "kind": "function",
+      "signature": "()"
+    },
+    {
       "module": "pealang.lsp",
       "name": "LSPServer",
       "kind": "class",

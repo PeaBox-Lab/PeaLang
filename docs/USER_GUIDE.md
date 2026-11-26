@@ -1,6 +1,6 @@
 # PeaLang User Guide
 
-This guide covers the PeaLang 5.17.0 release (unified versioning; supersedes the 1.0.0-experience and 0.99.6 baselines).
+This guide covers the PeaLang 5.18.0 release (unified versioning; supersedes the 1.0.0-experience and 0.99.6 baselines).
 
 ## Installation and Setup
 
@@ -75,6 +75,7 @@ pea doctor
 | `pea artifact-attestation <root> [--check] [--state FILE]` | Gate release artifact attestation and provenance evidence with stable digests |
 | `pea license-review <root> [--check] [--state FILE]` | Gate third-party license review closure evidence with stable digests |
 | `pea live-integration <root> [--check] [--state FILE]` | Gate live service integration evidence evidence with stable digests |
+| `pea security-soak <root> [--check] [--state FILE]` | Gate independent security review and soak evidence evidence with stable digests |
 | `pea fmt-v3 <path...> [--check] [--write]` | Report or apply formatter v3 changes |
 | `pea analyze <file.json|csv> [--json] [--head N]` | Profile a JSON/CSV dataset (analysis) |
 | `pea web-openapi` / `pea openapi <file.pea> [--title T] [--version V]` | Extract OpenAPI from a file defining `app` |
@@ -1121,6 +1122,30 @@ integration demos without database connection, cloud store, SharePoint binding, 
 become stable issue codes, while `write_live_integration_state_v2()` persists digests
 without absolute host paths. `live_integration_report()` summarizes plans with a
 recomputable digest, and `live_integration_gate()` recomputes PASS/FAIL from the
+reported error count, incomplete count, and profile.
+
+### Independent security review and soak evidence
+
+```bash
+pea security-soak --capabilities
+pea security-soak . --check --state security_soak-state.json --emit security_soak.json
+pea security-soak . --check --write-state --fail-on-incomplete
+```
+
+`plan_security_soak()` extends Wave 8 as a independent security review and soak evidence gate and is additive to the
+release governance, capacity, chaos, SLO, observability, and certified-package
+surfaces. A `SecuritySoakProfileV2` validates the entry limit, preview inclusion,
+security-review/threat-model/fuzz-corpus/remediation-log/soak-run/load-profile/slo-adherence, current version, and
+incomplete-failure policy before planning. Each `SecuritySoakAppV2` carries a
+relative path, a manifest digest, name, version, kind, sorted evidence paths,
+sorted platform bindings, sorted required names, resolved dependencies, a
+clean/stale state, and reasons; entries are ordered topologically, and
+incomplete state propagates to dependent entries. Missing dependencies,
+dependency cycles, invalid manifests, missing evidence artifacts, or
+soak demos without security review, threat model, fuzz corpus, remediation log, soak run, load profile, SLO adherence
+become stable issue codes, while `write_security_soak_state_v2()` persists digests
+without absolute host paths. `security_soak_report()` summarizes plans with a
+recomputable digest, and `security_soak_gate()` recomputes PASS/FAIL from the
 reported error count, incomplete count, and profile.
 
 ### Optional chaining and null coalescing
