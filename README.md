@@ -8,9 +8,9 @@ PeaLang is designed to complement existing ecosystems such as Python, FastAPI, J
 
 ## Release Status
 
-**Version: 3.1.43** — current tagged release across package, SDK, runtime, and specification metadata.
+**Version: 3.1.44** — current tagged release across package, SDK, runtime, and specification metadata.
 
-`3.1.43` is the unified release identifier for the tagged v3.1.43 line. Source version, SDK packages, container image label, runtime health output, registry user agent, release manifest, and language specification now report the same version. Historical release notes are kept in `docs/releases/` for provenance, but they do not define the current version.
+`3.1.44` is the unified release identifier for the tagged v3.1.44 line. Source version, SDK packages, container image label, runtime health output, registry user agent, release manifest, and language specification now report the same version. Historical release notes are kept in `docs/releases/` for provenance, but they do not define the current version.
 
 See `ROADMAP.md` for the forward-looking plan, `CHANGELOG.md` for per-feature history, and `docs/CROSS_SECTOR_ADOPTION_PLAN.md` for the plan to make PeaLang credible across enterprise, data, web, mobile, games, embedded, and cloud sectors.
 
@@ -941,6 +941,20 @@ the standard VM. Phase 77 records deterministic opcode, function, and line
 counters with `profile_module()` and `RuntimeProfiler`. Phase 78 combines timing
 budgets with parity, conformance, and frozen-core evidence in a versioned 4.0
 gate. All three surfaces are additive and keep the frozen 3.0 contract intact.
+
+### Language server v2
+
+```bash
+pea lsp --capabilities
+pea lsp app.pea --check --symbols --emit lsp.json
+```
+
+Phase 81 adds a deterministic LSP v2 layer alongside the v1 server. It exposes
+versioned capabilities, full and incremental document synchronization, and
+inspectable diagnostics, symbols, hover, completion, references, rename,
+formatting, folding, inlay hints, and semantic tokens. `lsp_v2_report()` produces
+a stable capability/document digest, and `lsp_v2_gate()` reduces it to a
+PASS/FAIL decision for editor tooling checks.
 
 ### Project queries
 

@@ -157,6 +157,14 @@ additive and leaves the frozen 3.0 manifest digest unchanged.
 LSP v2, DAP debugger, formatter v3, linter v3, test framework v2, incremental
 build system, versioned docs, migration assistants, and project templates v2.
 
+**Phase 81 — LSP v2** opens Wave 3 with a deterministic editor layer additive to
+the v1 server. It advertises versioned capabilities, synchronizes full and
+incremental document changes in a digest-stable store, and exposes diagnostics,
+symbols, hover, completion, references, rename, formatting, folding, inlay hints,
+and semantic tokens as reviewable functions. `pea lsp --check` and
+`lsp_v2_gate()` provide CI-ready evidence without changing the frozen 3.0
+language surface or manifest digest.
+
 ### Wave 4 — Sector packs (Phases 91–98)
 
 One focused pack per row of the table, each with a reference application and

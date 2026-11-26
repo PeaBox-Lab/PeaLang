@@ -3026,6 +3026,54 @@
       "signature": "()"
     },
     {
+      "module": "pealang.lsp_v2",
+      "name": "LspV2Error",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.lsp_v2",
+      "name": "TextDocument",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.lsp_v2",
+      "name": "DocumentStore",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.lsp_v2",
+      "name": "lsp_v2_capabilities",
+      "kind": "function",
+      "signature": "()"
+    },
+    {
+      "module": "pealang.lsp_v2",
+      "name": "LspV2Server",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.lsp_v2",
+      "name": "lsp_v2_report",
+      "kind": "function",
+      "signature": "(server)"
+    },
+    {
+      "module": "pealang.lsp_v2",
+      "name": "lsp_v2_gate",
+      "kind": "function",
+      "signature": "(report)"
+    },
+    {
+      "module": "pealang.lsp_v2",
+      "name": "build_lsp_v2_namespace",
+      "kind": "function",
+      "signature": "()"
+    },
+    {
       "module": "pealang.conformance_quality",
       "name": "run_conformance_suite",
       "kind": "function",

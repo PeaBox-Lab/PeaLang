@@ -1,11 +1,11 @@
 {
-  "version": "3.1.43",
-  "previous_version": "3.1.42",
-  "release_line": "tagged release v3.1.43",
+  "version": "3.1.44",
+  "previous_version": "3.1.43",
+  "release_line": "tagged release v3.1.44",
   "pytest_tests_passed": 436,
   "conformance_cases_passed": 500,
   "fuzz_iterations": 250,
   "tests_failed": 0,
   "status": "PASS",
-  "note": "Phases 76-78 add a parity-gated parallel runtime, deterministic profiler, and 4.0 performance gates; frozen 3.0 digest and component versions stay pinned."
+  "note": "Phase 81 adds a deterministic LSP v2 layer with versioned capabilities, incremental document synchronization, and reviewable language features; frozen 3.0 digest and component versions stay pinned."
 }

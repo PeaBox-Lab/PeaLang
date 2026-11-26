@@ -1,4 +1,13 @@
 # Changelog
+## 3.1.44 - Phase 81: LSP v2 (2026-11-26)
+- Add a versioned LSP v2 layer with deterministic capabilities and server metadata
+- Add an incremental document store with full/range synchronization, versioning, and stable digests
+- Add diagnostics, symbols, workspace symbols, hover, completion, definition, references, rename, formatting, folding, inlay hints, and semantic tokens
+- Add `pea lsp` with capability, check, symbol, hover, and emit options plus a stable `editor.lsp_v2` feature flag
+- Add a normative LSP v2 spec section and align current release metadata to 3.1.44
+- Frozen 3.0 digest, earlier component versions, and historical release metadata stay pinned
+- Targeted LSP v2, protocol dispatch, document synchronization, freeze, version, and conformance tests smoke-tested
+
 ## 3.1.43 - Phases 76-78: Runtime Performance (2026-11-26)
 - Add a bounded parallel runtime with isolated tasks, ordered output/results, deterministic plans, VM fallback, parity verification, and benchmarking
 - Add a deterministic runtime profiler that records opcode, function, and source-line counts with profile digests and VM parity checks

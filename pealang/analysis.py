@@ -95,6 +95,10 @@ from .devx import (suggest_fix as _devx_suggest_fix,
     project_check as _devx_project_check)
 from .lsp import (LSPServer as _lsp_server_class,
     build_lsp_namespace as _lsp_build_namespace)
+from .lsp_v2 import (LspV2Server as _lsp_v2_server,
+    DocumentStore as _lsp_v2_store, lsp_v2_capabilities as _lsp_v2_capabilities,
+    lsp_v2_report as _lsp_v2_report, lsp_v2_gate as _lsp_v2_gate,
+    build_lsp_v2_namespace as _lsp_v2_build_namespace)
 from .formatter import (PeaFormatter as _fmt_pea_formatter,
     format_source_ast as _fmt_format_source_ast,
     PeaLinter as _fmt_pea_linter,
@@ -3505,6 +3509,12 @@ def build_analysis_namespace() -> dict[str, Any]:
         "silhouette_score": _cl_silhouette,
         "LSPServer": _lsp_server_class,
         "build_lsp_namespace": _lsp_build_namespace,
+        "LspV2Server": _lsp_v2_server,
+        "DocumentStoreV2": _lsp_v2_store,
+        "LspV2Capabilities": _lsp_v2_capabilities,
+        "LspV2Report": _lsp_v2_report,
+        "LspV2Gate": _lsp_v2_gate,
+        "LspV2Namespace": _lsp_v2_build_namespace,
         "PeaFormatter": _fmt_pea_formatter,
         "format_source_ast": _fmt_format_source_ast,
         "PeaLinter": _fmt_pea_linter,

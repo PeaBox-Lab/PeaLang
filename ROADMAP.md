@@ -1,3 +1,10 @@
+## 3.1.44 - Phase 81: LSP v2 (2026-11-26)
+- Open Wave 3 with a deterministic LSP v2 capability layer and versioned server metadata
+- Add full and incremental document synchronization with stable document-store digests
+- Add diagnostics, symbols, hover, completion, definition, references, rename, formatting, folding, inlay hints, and semantic tokens
+- Add `pea lsp` with check, symbol, hover, capability, and emit options plus a stable editor feature flag
+- Align current release metadata to 3.1.44 while keeping the frozen 3.0 digest pinned
+
 ## 3.1.43 - Phases 76-78: Runtime Performance (2026-11-26)
 - Phase 76: add a bounded parallel runtime for independent bytecode tasks with ordered output, VM fallback, and parity verification
 - Phase 77: add a deterministic runtime profiler with opcode, function, and line counters plus VM parity checks

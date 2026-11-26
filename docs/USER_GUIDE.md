@@ -1,6 +1,6 @@
 # PeaLang User Guide
 
-This guide covers the PeaLang 3.1.43 release (unified versioning; supersedes the 1.0.0-experience and 0.99.6 baselines).
+This guide covers the PeaLang 3.1.44 release (unified versioning; supersedes the 1.0.0-experience and 0.99.6 baselines).
 
 ## Installation and Setup
 
@@ -39,6 +39,7 @@ pea doctor
 | `pea parallel <file.pea> [--verify] [--tasks N] [--workers N]` | Run isolated bytecode tasks in order |
 | `pea profiler <file.pea> [--verify] [--emit FILE.json]` | Capture deterministic execution counters |
 | `pea perf-gate <file.pea> [--iterations N]` | Evaluate 4.0 performance gates |
+| `pea lsp <file.pea> [--check] [--symbols] [--hover LINE CHAR]` | Query LSP v2 diagnostics and symbols |
 | `pea analyze <file.json|csv> [--json] [--head N]` | Profile a JSON/CSV dataset (analysis) |
 | `pea web-openapi` / `pea openapi <file.pea> [--title T] [--version V]` | Extract OpenAPI from a file defining `app` |
 | `pea hash <file> [--algo sha256]` | Compute file hash |
@@ -250,6 +251,21 @@ instrumentation. `profile_module()` returns a deterministic report with hot spot
 and a profile digest; `verify_profile_parity()` checks VM output and result
 parity. The 4.0 gate combines timing budgets with parallel/profiler parity,
 conformance, and frozen-core evidence through `performance_gate_report()`.
+
+### Language server v2
+
+```bash
+pea lsp --capabilities
+pea lsp app.pea --check --symbols --emit lsp.json
+```
+
+`LspV2Server` is additive to the v1 `LSPServer`. It advertises versioned
+capabilities, keeps documents in a deterministic `DocumentStore`, and supports
+full or incremental `didChange` edits. Diagnostics, document and workspace
+symbols, hover, completion, definition, references, rename, formatting, folding
+ranges, inlay hints, and semantic tokens are all pure, inspectable functions.
+`lsp_v2_report()` summarizes the capability set and open documents with a stable
+digest; `lsp_v2_gate()` recomputes the PASS/FAIL decision for CI checks.
 
 ### Optional chaining and null coalescing
 ```pea

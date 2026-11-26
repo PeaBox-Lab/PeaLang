@@ -771,6 +771,26 @@ def main(argv=None):
             if a.emit:Path(a.emit).write_text(json.dumps(report,indent=2,default=str)+'\n',encoding='utf-8')
             print(json.dumps(report,indent=2,default=str));return 0 if performance_gate(report)['gate']=='PASS' else 1
 
+        if c=='lsp':
+
+            from .lsp_v2 import LSP_V2_VERSION,LspV2Server,lsp_v2_capabilities,lsp_v2_gate,lsp_v2_report
+
+            p=argparse.ArgumentParser(prog='pea lsp');p.add_argument('file',nargs='?');p.add_argument('--capabilities',action='store_true');p.add_argument('--check',action='store_true');p.add_argument('--symbols',action='store_true');p.add_argument('--hover',nargs=2,type=int,metavar=('LINE','CHAR'));p.add_argument('--emit');a=p.parse_args(argv[1:])
+            if a.capabilities:
+                print(json.dumps(lsp_v2_capabilities(),indent=2));return 0
+            if not a.file:print('lsp requires FILE.pea or --capabilities');return 1
+            path=Path(a.file)
+            try:text=path.read_text(encoding='utf-8')
+            except Exception as e:print(f'LSP v2 failed: {e}');return 1
+            server=LspV2Server();uri=path.resolve().as_uri();opened=server.handle_did_open({'textDocument':{'uri':uri,'text':text,'version':1}})
+            result={'version':LSP_V2_VERSION,'uri':uri,'diagnostics':opened['diagnostics']}
+            if a.symbols:result['symbols']=server.document_symbols(uri)
+            if a.hover:result['hover']=server.hover(uri,{'line':a.hover[0],'character':a.hover[1]})
+            if a.check:
+                report=lsp_v2_report(server);result['report_digest']=report['digest'];result['gate']=lsp_v2_gate(report)['gate']
+            if a.emit:Path(a.emit).write_text(json.dumps(result,indent=2,default=str)+'\n',encoding='utf-8')
+            print(json.dumps(result,indent=2,default=str));return 0 if not any(item.get('severity')==1 for item in opened['diagnostics']) else 1
+
         if c=='semantic':
 
             from .type_system import SemanticAnalyzer
@@ -1101,7 +1121,7 @@ def main(argv=None):
             else:
                 from .stdlib import stdlib_manifest
                 sm=stdlib_manifest();mods=sm.get('modules',sm)
-                info={'version':__version__,'stdlib':list(mods.keys()) if isinstance(mods,dict) else mods,'commands':['run','eval','repl','check','lint','fmt','test','compile','vm','dis','init','new','serve-web','doctor','health','diagnose','help','templates','info','project','serve','stdlib','typecheck','typecheck-project','docs','analyze','web-openapi','openapi','openapi-contract','hash','tree','env','quickstart','scaffold','readiness','audit','conformance','conformance-v2','freeze','optimize','fast','jit','native','wasm-backend','parallel','profiler','perf-gate']}
+                info={'version':__version__,'stdlib':list(mods.keys()) if isinstance(mods,dict) else mods,'commands':['run','eval','repl','check','lint','fmt','test','compile','vm','dis','init','new','serve-web','doctor','health','diagnose','help','templates','info','project','serve','stdlib','typecheck','typecheck-project','docs','analyze','web-openapi','openapi','openapi-contract','hash','tree','env','quickstart','scaffold','readiness','audit','conformance','conformance-v2','freeze','optimize','fast','jit','native','wasm-backend','parallel','profiler','perf-gate','lsp']}
                 print(json.dumps(info,indent=2));return 0
 
         if c=='project':print(json.dumps(project_info(argv[1] if len(argv)>1 else '.'),indent=2));return 0
