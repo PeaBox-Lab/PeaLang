@@ -1,3 +1,11 @@
+## 3.1.57 - Phase 94: Mobile (Android) sector pack (2026-11-26)
+- Continue Wave 4 with a deterministic sector-pack evidence gate for Android delivery
+- Add validated profiles for app limits, preview inclusion, lifecycle/JVM/Gradle checks, current version, and incomplete policy
+- Add stable app nodes with digests, names, versions, kinds, evidence, bindings, resolved dependencies, incomplete reasons, and topological order
+- Detect missing dependencies, cycles, invalid manifests, missing evidence, missing lifecycle bindings, missing JVM bridges, and missing Gradle plugins as stable issue codes
+- Add `pea android-pack` with check, emit, state, strict incomplete, and capability options plus a stable sector feature flag
+- Align current release metadata to 3.1.57 while keeping the frozen 3.0 digest pinned
+
 ## 3.1.56 - Phase 93: Frontend Web sector pack (2026-11-26)
 - Continue Wave 4 with a deterministic sector-pack evidence gate for frontend web delivery
 - Add validated profiles for app limits, canary inclusion, DSL/interop checks, current version, and incomplete policy

@@ -6902,6 +6902,78 @@
       "signature": "()"
     },
     {
+      "module": "pealang.android_pack",
+      "name": "AndroidPackError",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.android_pack",
+      "name": "AndroidProfileV2",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.android_pack",
+      "name": "android_pack_capabilities",
+      "kind": "function",
+      "signature": "()"
+    },
+    {
+      "module": "pealang.android_pack",
+      "name": "AndroidIssueV2",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.android_pack",
+      "name": "AndroidAppV2",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.android_pack",
+      "name": "AndroidPackPlanV2",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.android_pack",
+      "name": "plan_android_pack",
+      "kind": "function",
+      "signature": "(root,profile=?,state=?)"
+    },
+    {
+      "module": "pealang.android_pack",
+      "name": "load_android_state_v2",
+      "kind": "function",
+      "signature": "(path)"
+    },
+    {
+      "module": "pealang.android_pack",
+      "name": "write_android_state_v2",
+      "kind": "function",
+      "signature": "(root,plan,path=?)"
+    },
+    {
+      "module": "pealang.android_pack",
+      "name": "android_pack_report",
+      "kind": "function",
+      "signature": "(plans,profile=?)"
+    },
+    {
+      "module": "pealang.android_pack",
+      "name": "android_pack_gate",
+      "kind": "function",
+      "signature": "(report)"
+    },
+    {
+      "module": "pealang.android_pack",
+      "name": "build_android_pack_namespace",
+      "kind": "function",
+      "signature": "()"
+    },
+    {
       "module": "pealang.lsp",
       "name": "LSPServer",
       "kind": "class",

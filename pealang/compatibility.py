@@ -41,6 +41,7 @@ FEATURES={
   'sector.finance_pack':Feature('sector.finance_pack','3.1.54',Stability.STABLE),
   'sector.data_science_pack':Feature('sector.data_science_pack','3.1.55',Stability.STABLE),
   'sector.web_pack':Feature('sector.web_pack','3.1.56',Stability.STABLE),
+  'sector.android_pack':Feature('sector.android_pack','3.1.57',Stability.STABLE),
  'async.await':Feature('async.await','0.26',Stability.PREVIEW),
  'embedding.python':Feature('embedding.python','0.18',Stability.STABLE),
  'embedding.fastapi':Feature('embedding.fastapi','0.25',Stability.PREVIEW),
