@@ -1,4 +1,15 @@
 # Changelog
+## 5.0.0 - Phase 100: Certified packages and ecosystem release (2026-11-26)
+- Close Wave 5 with the 5.0 ecosystem release and a deterministic certified-package gate
+- Add validated profiles for entry limits, preview inclusion, signature, provenance, conformance, reproducible-build, lockfile, registry, and migration checks, current version, and an incomplete-failure policy
+- Add stable certification nodes with manifest digests, names, versions, kinds, evidence paths, platform bindings, resolved dependencies, and topological order
+- Detect missing dependencies, cycles, invalid manifests, missing evidence, or certification demos without publisher signatures, provenance attestations, conformance reports, reproducible builds, lockfiles, registry packages, or migration guides as sorted issue codes
+- Track digest drift and propagate incomplete state to dependent packages through `pea certified-pack --state --write-state`
+- Add `pea certified-pack` with capability, check, emit, state, strict incomplete, governance toggle, and current-version options plus a stable `sector.certified_pack` feature flag
+- Add a normative certified-package spec section and align current release metadata to 5.0.0
+- Frozen 3.0 digest, earlier component versions, and historical release metadata stay pinned
+- Targeted certification, CLI, freeze, version, and conformance tests smoke-tested
+
 ## 3.1.62 - Phase 99: Ecosystem registry and migration guides (2026-11-26)
 - Open Wave 5 with a deterministic ecosystem registry and migration-guide evidence gate
 - Add validated profiles for entry limits, preview inclusion, Python/JavaScript/Java/Go/Rust/SQL/registration/metadata/signature/lockfile checks, current version, and an incomplete-failure policy

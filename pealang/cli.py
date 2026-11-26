@@ -1613,6 +1613,26 @@ def main(argv=None):
             if a.check:return 0 if decision['gate']=='PASS' else 1
             return 0
 
+        if c=='certified-pack':
+
+            from .certified_pack import (CertifiedProfileV2,certified_pack_capabilities,certified_pack_gate,certified_pack_report,plan_certified_pack,load_certified_state_v2,write_certified_state_v2)
+
+            p=argparse.ArgumentParser(prog='pea certified-pack');p.add_argument('root',nargs='?',default='.');p.add_argument('--capabilities',action='store_true');p.add_argument('--check',action='store_true');p.add_argument('--emit');p.add_argument('--state');p.add_argument('--write-state',action='store_true');p.add_argument('--max-entries',type=int,default=500);p.add_argument('--include-preview',action='store_true');p.add_argument('--no-check-signature',action='store_true');p.add_argument('--no-check-provenance',action='store_true');p.add_argument('--no-check-conformance',action='store_true');p.add_argument('--no-check-reproducible',action='store_true');p.add_argument('--no-check-lockfile',action='store_true');p.add_argument('--no-check-registry',action='store_true');p.add_argument('--no-check-migration',action='store_true');p.add_argument('--fail-on-incomplete',action='store_true');p.add_argument('--current-version');a=p.parse_args(argv[1:])
+            if a.capabilities:
+                print(json.dumps(certified_pack_capabilities(),indent=2));return 0
+            try:profile=CertifiedProfileV2(max_entries=a.max_entries,include_preview=a.include_preview,check_signature=not a.no_check_signature,check_provenance=not a.no_check_provenance,check_conformance=not a.no_check_conformance,check_reproducible=not a.no_check_reproducible,check_lockfile=not a.no_check_lockfile,check_registry=not a.no_check_registry,check_migration=not a.no_check_migration,fail_on_incomplete=a.fail_on_incomplete,current_version=a.current_version or '')
+            except Exception as e:print(f'Certified pack failed: {e}');return 1
+            state_path=Path(a.state) if a.state else Path(a.root)/'.pea_certified_pack.json'
+            try:
+                state=load_certified_state_v2(state_path);plan=plan_certified_pack(a.root,profile,state)
+                if a.write_state:write_certified_state_v2(a.root,plan,state_path)
+            except Exception as e:print(f'Certified pack failed: {e}');return 1
+            report=certified_pack_report([plan],profile);decision=certified_pack_gate(report);report['decision']=decision
+            if a.emit:Path(a.emit).write_text(json.dumps(report,indent=2,default=str)+'\n',encoding='utf-8')
+            print(json.dumps(report,indent=2,default=str))
+            if a.check:return 0 if decision['gate']=='PASS' else 1
+            return 0
+
         if c in ('check','lint'):
 
             p=argparse.ArgumentParser(prog=f'pea {c}');p.add_argument('paths',nargs='+');p.add_argument('--json',action='store_true');a=p.parse_args(argv[1:]);errors=warnings=0;items=[]

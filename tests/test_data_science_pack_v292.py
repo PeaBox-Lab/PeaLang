@@ -330,11 +330,11 @@ def test_feature_flag_help_and_analysis_namespace_document_data():
 
 
 def test_release_metadata_is_aligned_and_component_pins_hold():
-    assert pealang.__version__ == SPEC_VERSION == '3.1.62'
+    assert pealang.__version__ == SPEC_VERSION == '5.0.0'
     manifest = json.loads((Path(__file__).resolve().parent.parent
                            / 'RELEASE_MANIFEST.json').read_text(encoding='utf-8'))
-    assert manifest['version'] == '3.1.62'
-    assert manifest['previous_version'] == '3.1.61'
+    assert manifest['version'] == '5.0.0'
+    assert manifest['previous_version'] == '3.1.62'
     assert pealang.DATA_PACK_VERSION == '3.1.55'
     assert pealang.FINANCE_PACK_VERSION == '3.1.54'
     assert pealang.DEVEX_V2_VERSION == '3.1.53'

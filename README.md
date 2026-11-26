@@ -8,9 +8,9 @@ PeaLang is designed to complement existing ecosystems such as Python, FastAPI, J
 
 ## Release Status
 
-**Version: 3.1.62** — current tagged release across package, SDK, runtime, and specification metadata.
+**Version: 5.0.0** — current tagged release across package, SDK, runtime, and specification metadata.
 
-`3.1.62` is the unified release identifier for the tagged v3.1.62 line. Source version, SDK packages, container image label, runtime health output, registry user agent, release manifest, and language specification now report the same version. Historical release notes are kept in `docs/releases/` for provenance, but they do not define the current version.
+`5.0.0` is the unified release identifier for the tagged v5.0.0 line. Source version, SDK packages, container image label, runtime health output, registry user agent, release manifest, and language specification now report the same version. Historical release notes are kept in `docs/releases/` for provenance, but they do not define the current version.
 
 See `ROADMAP.md` for the forward-looking plan, `CHANGELOG.md` for per-feature history, and `docs/CROSS_SECTOR_ADOPTION_PLAN.md` for the plan to make PeaLang credible across enterprise, data, web, mobile, games, embedded, and cloud sectors.
 
@@ -1266,6 +1266,27 @@ registration, metadata, signature, and lockfile checks, current version, and the
 incomplete-failure policy; `ecosystem_pack_report()` and
 `ecosystem_pack_gate()` provide reproducible CI evidence without host paths or
 timings.
+
+### Certified packages and the 5.0 ecosystem release
+
+```bash
+pea certified-pack --capabilities
+pea certified-pack . --check --state certified-state.json --emit certified.json
+pea certified-pack . --check --write-state --fail-on-incomplete
+```
+
+**Version: 5.0.0** is the current tagged release across package, SDK, runtime,
+and specification metadata. Phase 100 closes Wave 5 with a deterministic release
+gate over `*.certified.json` manifests. It derives a stable topological package
+order and incomplete set, and reports missing dependencies, cycles, invalid
+manifests, missing evidence, packages without publisher signatures, provenance
+attestations, conformance reports, reproducible builds, lockfiles, registry
+packages, or migration guides as sorted issue codes. `CertifiedProfileV2`
+validates entry limits, preview inclusion, signature/provenance/conformance/
+reproducible/lockfile/registry/migration checks, current version, and the
+incomplete-failure policy; `certified_pack_report()` and
+`certified_pack_gate()` provide reproducible release evidence without host paths
+or timings.
 
 ### Project queries
 

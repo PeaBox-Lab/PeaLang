@@ -1,6 +1,6 @@
 # PeaLang User Guide
 
-This guide covers the PeaLang 3.1.62 release (unified versioning; supersedes the 1.0.0-experience and 0.99.6 baselines).
+This guide covers the PeaLang 5.0.0 release (unified versioning; supersedes the 1.0.0-experience and 0.99.6 baselines).
 
 ## Installation and Setup
 
@@ -57,6 +57,7 @@ pea doctor
 | `pea embedded-pack <root> [--check] [--state FILE]` | Gate Embedded / IoT / OS sector-pack evidence with stable digests |
 | `pea cloud-pack <root> [--check] [--state FILE]` | Gate Cloud Infrastructure / DevOps sector-pack evidence with stable digests |
 | `pea ecosystem-pack <root> [--check] [--state FILE]` | Gate ecosystem registry and migration-guide evidence with stable digests |
+| `pea certified-pack <root> [--check] [--state FILE]` | Gate certified-package and 5.0 release evidence with stable digests |
 | `pea fmt-v3 <path...> [--check] [--write]` | Report or apply formatter v3 changes |
 | `pea analyze <file.json|csv> [--json] [--head N]` | Profile a JSON/CSV dataset (analysis) |
 | `pea web-openapi` / `pea openapi <file.pea> [--title T] [--version V]` | Extract OpenAPI from a file defining `app` |
@@ -666,6 +667,32 @@ become stable issue codes, while `write_ecosystem_state_v2()` persists digests
 without absolute host paths. `ecosystem_pack_report()` summarizes plans with a
 recomputable digest, and `ecosystem_pack_gate()` recomputes PASS/FAIL from the
 reported error count, incomplete count, and profile.
+
+### Certified packages and the 5.0 ecosystem release
+
+```bash
+pea certified-pack --capabilities
+pea certified-pack . --check --state certified-state.json --emit certified.json
+pea certified-pack . --check --write-state --fail-on-incomplete
+```
+
+`plan_certified_pack()` closes Wave 5 as the 5.0 ecosystem release gate and is
+additive to the registry, signing, publishing, and migration-assistant surfaces.
+A `CertifiedProfileV2` validates the entry limit, preview inclusion,
+signature/provenance/conformance/reproducible/lockfile/registry/migration checks,
+current version, and incomplete-failure policy before planning. Each
+`CertifiedAppV2` carries a relative path, a manifest digest, name, version, kind,
+sorted evidence paths, sorted platform bindings, sorted required names, resolved
+dependencies, a clean/stale state, and reasons; packages are ordered
+topologically, and incomplete state propagates to dependent packages. Missing
+dependencies, dependency cycles, invalid manifests, missing evidence artifacts,
+or certification demos without publisher signatures, provenance attestations,
+conformance reports, reproducible builds, lockfiles, registry packages, or
+migration guides become stable issue codes, while
+`write_certified_state_v2()` persists digests without absolute host paths.
+`certified_pack_report()` summarizes plans with a recomputable digest, and
+`certified_pack_gate()` recomputes PASS/FAIL from the reported error count,
+incomplete count, and profile.
 
 ### Optional chaining and null coalescing
 ```pea

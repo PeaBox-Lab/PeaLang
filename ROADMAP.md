@@ -1,3 +1,11 @@
+## 5.0.0 - Phase 100: Certified packages and ecosystem release (2026-11-26)
+- Close Wave 5 with the 5.0 ecosystem release and a deterministic certified-package gate
+- Add validated profiles for entry limits, preview inclusion, signature, provenance, conformance, reproducible-build, lockfile, registry, and migration checks, current version, and incomplete policy
+- Add stable certification nodes with digests, names, versions, kinds, evidence, bindings, resolved dependencies, incomplete reasons, and topological order
+- Detect missing dependencies, cycles, invalid manifests, missing evidence, missing signatures, provenance, conformance reports, reproducible builds, lockfiles, registry packages, and migration guides as stable issue codes
+- Add `pea certified-pack` with check, emit, state, strict incomplete, governance toggles, and capability options plus a stable sector feature flag
+- Align current release metadata to 5.0.0 while keeping the frozen 3.0 digest pinned
+
 ## 3.1.62 - Phase 99: Ecosystem registry and migration guides (2026-11-26)
 - Open Wave 5 with a deterministic ecosystem registry and migration-guide evidence gate
 - Add validated profiles for entry limits, preview inclusion, migration-guide/registration/metadata/signature/lockfile checks, current version, and incomplete policy

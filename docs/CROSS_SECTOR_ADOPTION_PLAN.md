@@ -367,9 +367,25 @@ missing-lockfile issues; and digests that exclude host paths make ecosystem
 evidence reviewable and reproducible in CI through `pea ecosystem-pack --check`
 and `ecosystem_pack_gate()`.
 
-Public registry growth, migration guides from Python/JS/Java/Go/Rust/SQL,
-certified packages, and the 5.0 ecosystem release remain the remaining Wave 5
-scope, with certified packages and the 5.0 release planned for Phase 100.
+**Phase 100 — Certified packages and 5.0 ecosystem release** closes Wave 5 with
+a deterministic delivery gate for certified packages, additive to the registry
+resolution, signing, publishing, and migration-assistant surfaces. Validated
+profiles control entry limits, preview inclusion, publisher signatures,
+provenance attestations, conformance reports, reproducible builds, lockfiles,
+registry packages, migration guides, the current version, and incomplete policy.
+Stable nodes with digests, names, versions, kinds, evidence paths, platform
+bindings, resolved dependencies, propagated incomplete reasons, and topological
+order; sorted missing-dependency, cycle, invalid-manifest, missing-evidence,
+missing-signature, missing-provenance, missing-conformance-report,
+missing-reproducible-build, missing-lockfile, missing-registry-package, and
+missing-migration-guide issues; and digests that exclude host paths make release
+evidence reviewable and reproducible in CI through `pea certified-pack --check`
+and `certified_pack_gate()`.
+
+All five waves and all 100 phases are now delivered. Public registry growth and
+migration guides from Python/JS/Java/Go/Rust/SQL shipped in Phase 99; certified
+packages and the 5.0 ecosystem release ship here. The frozen 3.0 core, earlier
+component versions, and all historical release metadata remain pinned.
 
 ## Sector packs
 
