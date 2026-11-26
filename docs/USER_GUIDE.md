@@ -1,6 +1,6 @@
 # PeaLang User Guide
 
-This guide covers the PeaLang 5.12.0 release (unified versioning; supersedes the 1.0.0-experience and 0.99.6 baselines).
+This guide covers the PeaLang 5.13.0 release (unified versioning; supersedes the 1.0.0-experience and 0.99.6 baselines).
 
 ## Installation and Setup
 
@@ -70,6 +70,7 @@ pea doctor
 | `pea game-delivery <root> [--check] [--state FILE]` | Gate game delivery evidence evidence with stable digests |
 | `pea embedded-delivery <root> [--check] [--state FILE]` | Gate embedded and IoT delivery evidence evidence with stable digests |
 | `pea maturity-gate <root> [--check] [--state FILE]` | Gate Wave 7 maturity and consolidation evidence with stable digests |
+| `pea release-candidate <root> [--check] [--state FILE]` | Gate release candidate and stable 1.0 evidence evidence with stable digests |
 | `pea fmt-v3 <path...> [--check] [--write]` | Report or apply formatter v3 changes |
 | `pea analyze <file.json|csv> [--json] [--head N]` | Profile a JSON/CSV dataset (analysis) |
 | `pea web-openapi` / `pea openapi <file.pea> [--title T] [--version V]` | Extract OpenAPI from a file defining `app` |
@@ -996,6 +997,30 @@ maturity demos without trust gate, safety gate, conformance gate, sector gate, p
 become stable issue codes, while `write_maturity_gate_state_v2()` persists digests
 without absolute host paths. `maturity_gate_report()` summarizes plans with a
 recomputable digest, and `maturity_gate_gate()` recomputes PASS/FAIL from the
+reported error count, incomplete count, and profile.
+
+### Release candidate and stable 1.0 evidence gate
+
+```bash
+pea release-candidate --capabilities
+pea release-candidate . --check --state release_candidate-state.json --emit release_candidate.json
+pea release-candidate . --check --write-state --fail-on-incomplete
+```
+
+`plan_release_candidate()` extends Wave 7 as a release candidate and stable 1.0 evidence gate and is additive to the
+release governance, capacity, chaos, SLO, observability, and certified-package
+surfaces. A `ReleaseCandidateProfileV2` validates the entry limit, preview inclusion,
+candidate-build/evidence-dossier/signed-artifact/rc-platform-matrix/upgrade-test/rollback-test/go-decision, current version, and
+incomplete-failure policy before planning. Each `ReleaseCandidateAppV2` carries a
+relative path, a manifest digest, name, version, kind, sorted evidence paths,
+sorted platform bindings, sorted required names, resolved dependencies, a
+clean/stale state, and reasons; entries are ordered topologically, and
+incomplete state propagates to dependent entries. Missing dependencies,
+dependency cycles, invalid manifests, missing evidence artifacts, or
+candidate demos without candidate build, evidence dossier, signed artifact, RC platform matrix, upgrade test, rollback test, GO decision
+become stable issue codes, while `write_release_candidate_state_v2()` persists digests
+without absolute host paths. `release_candidate_report()` summarizes plans with a
+recomputable digest, and `release_candidate_gate()` recomputes PASS/FAIL from the
 reported error count, incomplete count, and profile.
 
 ### Optional chaining and null coalescing

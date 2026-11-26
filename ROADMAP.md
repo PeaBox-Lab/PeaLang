@@ -1,3 +1,11 @@
+## 5.13.0 - Phase 113: Release candidate and stable 1.0 evidence gate (2026-11-27)
+- Continue Wave 7 with a deterministic release candidate and stable 1.0 evidence gate
+- Add validated profiles for entry limits, preview inclusion, candidate-build/evidence-dossier/signed-artifact/rc-platform-matrix/upgrade-test/rollback-test/go-decision, current version, and incomplete policy
+- Add stable nodes with digests, names, versions, kinds, evidence, bindings, resolved dependencies, incomplete reasons, and topological order
+- Detect missing dependencies, cycles, invalid manifests, missing evidence, and candidate demos without candidate build, evidence dossier, signed artifact, RC platform matrix, upgrade test, rollback test, GO decision as stable issue codes
+- Add `pea release-candidate` with check, emit, state, strict incomplete, governance toggles, and capability options plus a stable sector feature flag
+- Align current release metadata to 5.13.0 while keeping the frozen 3.0 digest pinned
+
 ## 5.12.0 - Phase 112: Wave 7 maturity and consolidation gate (2026-11-27)
 - Continue Wave 7 with a deterministic Wave 7 maturity and consolidation gate
 - Add validated profiles for entry limits, preview inclusion, trust-gate/safety-gate/conformance-gate/sector-gate/pilot-gate/security-review/version-freeze, current version, and incomplete policy

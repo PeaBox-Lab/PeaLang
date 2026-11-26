@@ -8,9 +8,9 @@ PeaLang is designed to complement existing ecosystems such as Python, FastAPI, J
 
 ## Release Status
 
-**Version: 5.12.0** — current tagged release across package, SDK, runtime, and specification metadata.
+**Version: 5.13.0** — current tagged release across package, SDK, runtime, and specification metadata.
 
-`5.12.0` is the unified release identifier for the tagged v5.12.0 line. Source version, SDK packages, container image label, runtime health output, registry user agent, release manifest, and language specification now report the same version. Historical release notes are kept in `docs/releases/` for provenance, but they do not define the current version.
+`5.13.0` is the unified release identifier for the tagged v5.13.0 line. Source version, SDK packages, container image label, runtime health output, registry user agent, release manifest, and language specification now report the same version. Historical release notes are kept in `docs/releases/` for provenance, but they do not define the current version.
 
 See `ROADMAP.md` for the forward-looking plan, `CHANGELOG.md` for per-feature history, and `docs/CROSS_SECTOR_ADOPTION_PLAN.md` for the plan to make PeaLang credible across enterprise, data, web, mobile, games, embedded, and cloud sectors.
 
@@ -1503,6 +1503,24 @@ trust gate, safety gate, conformance gate, sector gate, pilot gate, security rev
 `MaturityGateProfileV2` validates entry limits, preview inclusion, governance
 checks, current version, and the incomplete-failure policy; `maturity_gate_report()`
 and `maturity_gate_gate()` provide reproducible CI evidence without host paths or
+timings.
+
+### Release candidate and stable 1.0 evidence gate
+
+```bash
+pea release-candidate --capabilities
+pea release-candidate . --check --state release_candidate-state.json --emit release_candidate.json
+pea release-candidate . --check --write-state --fail-on-incomplete
+```
+
+Phase 113 at **5.13.0** extends Wave 7 with a deterministic
+release candidate gate over `*.candidate.json` manifests. It derives a stable
+topological order and incomplete set, and reports missing dependencies, cycles,
+invalid manifests, missing evidence, and candidate demos without
+candidate build, evidence dossier, signed artifact, RC platform matrix, upgrade test, rollback test, GO decision as sorted issue codes.
+`ReleaseCandidateProfileV2` validates entry limits, preview inclusion, governance
+checks, current version, and the incomplete-failure policy; `release_candidate_report()`
+and `release_candidate_gate()` provide reproducible CI evidence without host paths or
 timings.
 
 ### Project queries

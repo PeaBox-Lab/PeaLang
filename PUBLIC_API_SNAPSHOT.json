@@ -8270,6 +8270,78 @@
       "signature": "()"
     },
     {
+      "module": "pealang.release_candidate",
+      "name": "ReleaseCandidatePackError",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.release_candidate",
+      "name": "ReleaseCandidateProfileV2",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.release_candidate",
+      "name": "release_candidate_capabilities",
+      "kind": "function",
+      "signature": "()"
+    },
+    {
+      "module": "pealang.release_candidate",
+      "name": "ReleaseCandidateIssueV2",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.release_candidate",
+      "name": "ReleaseCandidateAppV2",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.release_candidate",
+      "name": "ReleaseCandidatePackPlanV2",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.release_candidate",
+      "name": "plan_release_candidate",
+      "kind": "function",
+      "signature": "(root,profile=?,state=?)"
+    },
+    {
+      "module": "pealang.release_candidate",
+      "name": "load_release_candidate_state_v2",
+      "kind": "function",
+      "signature": "(path)"
+    },
+    {
+      "module": "pealang.release_candidate",
+      "name": "write_release_candidate_state_v2",
+      "kind": "function",
+      "signature": "(root,plan,path=?)"
+    },
+    {
+      "module": "pealang.release_candidate",
+      "name": "release_candidate_report",
+      "kind": "function",
+      "signature": "(plans,profile=?)"
+    },
+    {
+      "module": "pealang.release_candidate",
+      "name": "release_candidate_gate",
+      "kind": "function",
+      "signature": "(report)"
+    },
+    {
+      "module": "pealang.release_candidate",
+      "name": "build_release_candidate_namespace",
+      "kind": "function",
+      "signature": "()"
+    },
+    {
       "module": "pealang.lsp",
       "name": "LSPServer",
       "kind": "class",
