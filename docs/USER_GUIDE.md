@@ -1,6 +1,6 @@
 # PeaLang User Guide
 
-This guide covers the PeaLang 3.1.41 release (unified versioning; supersedes the 1.0.0-experience and 0.99.6 baselines).
+This guide covers the PeaLang 3.1.42 release (unified versioning; supersedes the 1.0.0-experience and 0.99.6 baselines).
 
 ## Installation and Setup
 
@@ -35,6 +35,7 @@ pea doctor
 | `pea fast <file.pea> [--verify] [--benchmark]` | Run via the direct-handler fast interpreter |
 | `pea jit <file.pea> [--verify] [--benchmark]` | Profile and run hot traces with JIT guards |
 | `pea native <file.pea> [--verify] [--emit FILE.c]` | Lower to native IR and verify VM parity |
+| `pea wasm-backend <file.pea> [--verify] [--emit FILE.wasm]` | Lower to WASM IR and verify VM parity |
 | `pea analyze <file.json|csv> [--json] [--head N]` | Profile a JSON/CSV dataset (analysis) |
 | `pea web-openapi` / `pea openapi <file.pea> [--title T] [--version V]` | Extract OpenAPI from a file defining `app` |
 | `pea hash <file> [--algo sha256]` | Compute file hash |
@@ -214,6 +215,20 @@ instruction count, source byte count, execution mode, output, result, and
 optional parity and benchmark data. Modules outside the native subset run
 entirely on the standard VM. Host programs can use `compile_native()`,
 `NativeRuntime`, `verify_native_parity()`, and `native_report()` directly.
+
+### WASM backend
+```bash
+pea wasm-backend app.pea --verify
+pea wasm-backend app.pea --benchmark --optimize --emit app.wasm --wat app.wat
+```
+Lower the supported bytecode subset to typed WASM IR wrapped in a custom-section
+WebAssembly module. The report shows the artifact format, digest, instruction
+count, module and WAT byte counts, execution mode, output, result, and optional
+parity and benchmark data. `inspect_wasm_backend()` reads the manifest and IR
+from a saved artifact. Modules outside the WASM subset run entirely on the
+standard VM. Host programs can use `compile_wasm_backend()`,
+`WasmBackendRuntime`, `verify_wasm_backend_parity()`, and
+`wasm_backend_report()` directly.
 
 ### Optional chaining and null coalescing
 ```pea

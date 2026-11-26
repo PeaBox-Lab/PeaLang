@@ -8,9 +8,9 @@ PeaLang is designed to complement existing ecosystems such as Python, FastAPI, J
 
 ## Release Status
 
-**Version: 3.1.41** — current tagged release across package, SDK, runtime, and specification metadata.
+**Version: 3.1.42** — current tagged release across package, SDK, runtime, and specification metadata.
 
-`3.1.41` is the unified release identifier for the tagged v3.1.41 line. Source version, SDK packages, container image label, runtime health output, registry user agent, release manifest, and language specification now report the same version. Historical release notes are kept in `docs/releases/` for provenance, but they do not define the current version.
+`3.1.42` is the unified release identifier for the tagged v3.1.42 line. Source version, SDK packages, container image label, runtime health output, registry user agent, release manifest, and language specification now report the same version. Historical release notes are kept in `docs/releases/` for provenance, but they do not define the current version.
 
 See `ROADMAP.md` for the forward-looking plan, `CHANGELOG.md` for per-feature history, and `docs/CROSS_SECTOR_ADOPTION_PLAN.md` for the plan to make PeaLang credible across enterprise, data, web, mobile, games, embedded, and cloud sectors.
 
@@ -913,6 +913,19 @@ emits a self-contained C source artifact for host compilation. Modules outside
 that subset stay on the standard VM, so adding the backend never changes program
 meaning. `verify_native_parity()` requires identical VM and native output and
 results; `--optimize` runs the Phase 71 optimizer first.
+
+### WASM backend
+
+```bash
+pea wasm-backend app.pea --verify --benchmark --emit app.wasm --wat app.wat
+```
+
+Phase 75 lowers the supported bytecode subset to typed WASM IR wrapped in a
+custom-section WebAssembly module. `--emit` writes the `.wasm` artifact and
+`--wat` writes a reviewable text form; `inspect_wasm_backend()` reads the
+manifest and IR back from a saved artifact. Unsupported modules stay on the
+standard VM, and `verify_wasm_backend_parity()` requires identical VM and
+backend output and results.
 
 ### Project queries
 

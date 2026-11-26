@@ -1,11 +1,11 @@
 {
-  "version": "3.1.41",
-  "previous_version": "3.1.40",
-  "release_line": "tagged release v3.1.41",
+  "version": "3.1.42",
+  "previous_version": "3.1.41",
+  "release_line": "tagged release v3.1.42",
   "pytest_tests_passed": 436,
   "conformance_cases_passed": 500,
   "fuzz_iterations": 250,
   "tests_failed": 0,
   "status": "PASS",
-  "note": "Phase 74 adds a parity-verified native backend; frozen 3.0 digest and component versions stay pinned."
+  "note": "Phase 75 adds a parity-verified WASM backend; frozen 3.0 digest and component versions stay pinned."
 }

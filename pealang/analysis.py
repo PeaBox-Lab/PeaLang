@@ -224,6 +224,13 @@ from .native_backend import (build_native_namespace as _native_build_namespace,
     NativeRuntime as _native_runtime, compile_native as _native_compile,
     verify_native_parity as _native_verify, benchmark_native as _native_benchmark,
     native_report as _native_report)
+from .wasm_backend import (build_wasm_backend_namespace as _wasm_backend_build_namespace,
+    WasmBackendRuntime as _wasm_backend_runtime,
+    compile_wasm_backend as _wasm_backend_compile,
+    inspect_wasm_backend as _wasm_backend_inspect,
+    verify_wasm_backend_parity as _wasm_backend_verify,
+    benchmark_wasm_backend as _wasm_backend_benchmark,
+    wasm_backend_report as _wasm_backend_report)
 from .ai_ml import (build_ai_ml_namespace as _ai_ml_build_namespace)
 from .debugger import (build_debugger_namespace as _debugger_build_namespace)
 from .serverless import build_serverless_namespace as _serverless_build_namespace
@@ -3583,6 +3590,13 @@ def build_analysis_namespace() -> dict[str, Any]:
         "BenchmarkNative": _native_benchmark,
         "NativeReport": _native_report,
         "NativeNamespace": _native_build_namespace,
+        "WasmBackendRuntime": _wasm_backend_runtime,
+        "CompileWasmBackend": _wasm_backend_compile,
+        "InspectWasmBackend": _wasm_backend_inspect,
+        "VerifyWasmBackendParity": _wasm_backend_verify,
+        "BenchmarkWasmBackend": _wasm_backend_benchmark,
+        "WasmBackendReport": _wasm_backend_report,
+        "WasmBackendNamespace": _wasm_backend_build_namespace,
         "AIML": _ai_ml_build_namespace,
         "Debugger": _debugger_build_namespace,
         "Ecosystem": _ecosystem_build_namespace,

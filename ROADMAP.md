@@ -1,3 +1,9 @@
+## 3.1.42 - Phase 75: WASM Backend (2026-11-26)
+- Lower the supported bytecode subset to typed WASM IR in a custom-section WebAssembly module
+- Add a reviewable `.wat` artifact, an artifact inspector, and VM fallback for unsupported modules
+- Add `pea wasm-backend` with parity, benchmark, optimizer, emit, and wat options plus a stable runtime feature flag
+- Align current release metadata to 3.1.42 while keeping the frozen 3.0 digest pinned
+
 ## 3.1.41 - Phase 74: Native Backend (2026-11-26)
 - Lower the supported bytecode subset to deterministic native IR with a self-contained C source artifact
 - Execute native IR with VM fallback for unsupported modules and guard parity with the standard VM

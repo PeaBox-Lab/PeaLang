@@ -2786,6 +2786,78 @@
       "signature": "()"
     },
     {
+      "module": "pealang.wasm_backend",
+      "name": "WasmBackendError",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.wasm_backend",
+      "name": "WasmBackendInstruction",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.wasm_backend",
+      "name": "WasmBackendModule",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.wasm_backend",
+      "name": "wasm_backend_supported",
+      "kind": "function",
+      "signature": "(module)"
+    },
+    {
+      "module": "pealang.wasm_backend",
+      "name": "compile_wasm_backend",
+      "kind": "function",
+      "signature": "(module)"
+    },
+    {
+      "module": "pealang.wasm_backend",
+      "name": "inspect_wasm_backend",
+      "kind": "function",
+      "signature": "(value)"
+    },
+    {
+      "module": "pealang.wasm_backend",
+      "name": "WasmBackendRuntime",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.wasm_backend",
+      "name": "verify_wasm_backend_parity",
+      "kind": "function",
+      "signature": "(module)"
+    },
+    {
+      "module": "pealang.wasm_backend",
+      "name": "benchmark_wasm_backend",
+      "kind": "function",
+      "signature": "(module,iterations=?)"
+    },
+    {
+      "module": "pealang.wasm_backend",
+      "name": "wasm_backend_report",
+      "kind": "function",
+      "signature": "(module)"
+    },
+    {
+      "module": "pealang.wasm_backend",
+      "name": "wasm_backend_gate",
+      "kind": "function",
+      "signature": "(report)"
+    },
+    {
+      "module": "pealang.wasm_backend",
+      "name": "build_wasm_backend_namespace",
+      "kind": "function",
+      "signature": "()"
+    },
+    {
       "module": "pealang.conformance_quality",
       "name": "run_conformance_suite",
       "kind": "function",

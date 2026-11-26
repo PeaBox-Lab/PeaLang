@@ -137,6 +137,13 @@ the supported instruction or constant set remain on the standard VM, and
 can compile the emitted artifact for deployment without changing the frozen 3.0
 language surface or manifest digest.
 
+**Phase 75 — WASM backend** lowers the same portable bytecode subset to typed
+WASM IR in a custom-section WebAssembly module, with a reviewable `.wat` text
+form and an artifact inspector. Unsupported modules remain on the standard VM,
+and `pea wasm-backend --verify` requires identical VM and backend output and
+results. Browser and edge hosts can consume the artifact without changing the
+frozen 3.0 language surface or manifest digest.
+
 ### Wave 3 — Developer experience (Phases 81–90)
 
 LSP v2, DAP debugger, formatter v3, linter v3, test framework v2, incremental

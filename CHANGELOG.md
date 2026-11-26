@@ -1,4 +1,13 @@
 # Changelog
+## 3.1.42 - Phase 75: WASM Backend (2026-11-26)
+- Add `WasmBackendModule`, `WasmBackendRuntime`, `compile_wasm_backend()`, and `wasm_backend_supported()` for portable WASM lowering
+- Emit typed WASM IR in a custom-section WebAssembly module plus a reviewable `.wat` text artifact
+- Add `inspect_wasm_backend()`, `verify_wasm_backend_parity()`, `benchmark_wasm_backend()`, `wasm_backend_report()`, and `wasm_backend_gate()`
+- Add a `pea wasm-backend` CLI command with `--verify`, `--benchmark`, `--optimize`, `--emit`, and `--wat` options, plus a `wasm-backend` help topic
+- Add a stable `runtime.wasm_backend_v3` feature flag and a normative spec section
+- Align current release metadata to 3.1.42; frozen 3.0 digest and component versions stay pinned
+- Targeted WASM, parity, native, freeze, version, and conformance tests smoke-tested
+
 ## 3.1.41 - Phase 74: Native Backend (2026-11-26)
 - Add `NativeModule`, `NativeRuntime`, `compile_native()`, and `native_supported()` for portable native lowering
 - Lower the fast-interpreter bytecode subset to deterministic native IR and emit a self-contained C source artifact
