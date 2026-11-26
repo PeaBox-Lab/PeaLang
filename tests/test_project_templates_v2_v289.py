@@ -286,11 +286,11 @@ def test_feature_flag_help_and_analysis_namespace_document_templates():
 
 
 def test_release_metadata_is_aligned_and_component_pins_hold():
-    assert pealang.__version__ == SPEC_VERSION == '3.1.61'
+    assert pealang.__version__ == SPEC_VERSION == '3.1.62'
     manifest = json.loads((Path(__file__).resolve().parent.parent
                            / 'RELEASE_MANIFEST.json').read_text(encoding='utf-8'))
-    assert manifest['version'] == '3.1.61'
-    assert manifest['previous_version'] == '3.1.60'
+    assert manifest['version'] == '3.1.62'
+    assert manifest['previous_version'] == '3.1.61'
     assert pealang.PROJECT_TEMPLATES_V2_VERSION == '3.1.52'
     assert pealang.MIGRATION_ASSISTANTS_VERSION == '3.1.51'
     assert pealang.VERSIONED_DOCS_VERSION == '3.1.50'

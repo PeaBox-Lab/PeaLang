@@ -1,6 +1,6 @@
 # PeaLang User Guide
 
-This guide covers the PeaLang 3.1.61 release (unified versioning; supersedes the 1.0.0-experience and 0.99.6 baselines).
+This guide covers the PeaLang 3.1.62 release (unified versioning; supersedes the 1.0.0-experience and 0.99.6 baselines).
 
 ## Installation and Setup
 
@@ -56,6 +56,7 @@ pea doctor
 | `pea game-pack <root> [--check] [--state FILE]` | Gate Game Development sector-pack evidence with stable digests |
 | `pea embedded-pack <root> [--check] [--state FILE]` | Gate Embedded / IoT / OS sector-pack evidence with stable digests |
 | `pea cloud-pack <root> [--check] [--state FILE]` | Gate Cloud Infrastructure / DevOps sector-pack evidence with stable digests |
+| `pea ecosystem-pack <root> [--check] [--state FILE]` | Gate ecosystem registry and migration-guide evidence with stable digests |
 | `pea fmt-v3 <path...> [--check] [--write]` | Report or apply formatter v3 changes |
 | `pea analyze <file.json|csv> [--json] [--head N]` | Profile a JSON/CSV dataset (analysis) |
 | `pea web-openapi` / `pea openapi <file.pea> [--title T] [--version V]` | Extract OpenAPI from a file defining `app` |
@@ -640,6 +641,30 @@ Go/Python/Bash/CDK/Terraform source bridges, lockfiles, signed packages, or drif
 checks become stable issue codes, while `write_cloud_state_v2()` persists digests
 without absolute host paths. `cloud_pack_report()` summarizes plans with a
 recomputable digest, and `cloud_pack_gate()` recomputes PASS/FAIL from the
+reported error count, incomplete count, and profile.
+
+### Ecosystem registry and migration guides
+
+```bash
+pea ecosystem-pack --capabilities
+pea ecosystem-pack . --check --state ecosystem-state.json --emit ecosystem.json
+pea ecosystem-pack . --check --write-state --fail-on-incomplete
+```
+
+`plan_ecosystem_pack()` opens Wave 5 and is additive to the registry, signing,
+and publishing surfaces. An `EcosystemProfileV2` validates the entry limit,
+preview inclusion, Python/JavaScript/Java/Go/Rust/SQL/registration/metadata/
+signature/lockfile checks, current version, and incomplete-failure policy before
+planning. Each `EcosystemAppV2` carries a relative path, a manifest digest, name,
+version, kind, sorted evidence paths, sorted platform bindings, sorted required
+names, resolved dependencies, a clean/stale state, and reasons; entries are
+ordered topologically, and incomplete state propagates to dependent entries.
+Missing dependencies, dependency cycles, invalid manifests, missing evidence
+artifacts, or ecosystem demos without Python/JavaScript/Java/Go/Rust/SQL
+migration guides, registry packages, registry metadata, signatures, or lockfiles
+become stable issue codes, while `write_ecosystem_state_v2()` persists digests
+without absolute host paths. `ecosystem_pack_report()` summarizes plans with a
+recomputable digest, and `ecosystem_pack_gate()` recomputes PASS/FAIL from the
 reported error count, incomplete count, and profile.
 
 ### Optional chaining and null coalescing

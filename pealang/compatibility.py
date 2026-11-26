@@ -46,6 +46,7 @@ FEATURES={
   'sector.game_pack':Feature('sector.game_pack','3.1.59',Stability.STABLE),
   'sector.embedded_pack':Feature('sector.embedded_pack','3.1.60',Stability.STABLE),
   'sector.cloud_pack':Feature('sector.cloud_pack','3.1.61',Stability.STABLE),
+  'sector.ecosystem_pack':Feature('sector.ecosystem_pack','3.1.62',Stability.STABLE),
  'async.await':Feature('async.await','0.26',Stability.PREVIEW),
  'embedding.python':Feature('embedding.python','0.18',Stability.STABLE),
  'embedding.fastapi':Feature('embedding.fastapi','0.25',Stability.PREVIEW),

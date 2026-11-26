@@ -353,8 +353,23 @@ packs with reference evidence and stable gates.
 
 ### Wave 5 — Ecosystem release (Phases 99–100)
 
+**Phase 99 — Ecosystem registry and migration guides** opens Wave 5 with a
+deterministic delivery gate for the first half of the ecosystem release, additive
+to the registry resolution, signing, publishing, and migration-assistant
+surfaces. Validated profiles control entry limits, preview inclusion,
+Python/JavaScript/Java/Go/Rust/SQL migration guides, registry packages, registry
+metadata, signatures, lockfiles, the current version, and incomplete policy.
+Stable nodes with digests, names, versions, kinds, evidence paths, platform
+bindings, resolved dependencies, propagated incomplete reasons, and topological
+order; sorted missing-dependency, cycle, invalid-manifest, missing-evidence,
+missing-guide, missing-registry-package, missing-metadata, missing-signature, and
+missing-lockfile issues; and digests that exclude host paths make ecosystem
+evidence reviewable and reproducible in CI through `pea ecosystem-pack --check`
+and `ecosystem_pack_gate()`.
+
 Public registry growth, migration guides from Python/JS/Java/Go/Rust/SQL,
-certified packages, and the 5.0 ecosystem release.
+certified packages, and the 5.0 ecosystem release remain the remaining Wave 5
+scope, with certified packages and the 5.0 release planned for Phase 100.
 
 ## Sector packs
 

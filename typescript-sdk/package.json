@@ -1,6 +1,6 @@
 {
   "name": "@pealang/client",
-  "version": "3.1.61",
+  "version": "3.1.62",
   "type": "module",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",

@@ -8,9 +8,9 @@ PeaLang is designed to complement existing ecosystems such as Python, FastAPI, J
 
 ## Release Status
 
-**Version: 3.1.61** — current tagged release across package, SDK, runtime, and specification metadata.
+**Version: 3.1.62** — current tagged release across package, SDK, runtime, and specification metadata.
 
-`3.1.61` is the unified release identifier for the tagged v3.1.61 line. Source version, SDK packages, container image label, runtime health output, registry user agent, release manifest, and language specification now report the same version. Historical release notes are kept in `docs/releases/` for provenance, but they do not define the current version.
+`3.1.62` is the unified release identifier for the tagged v3.1.62 line. Source version, SDK packages, container image label, runtime health output, registry user agent, release manifest, and language specification now report the same version. Historical release notes are kept in `docs/releases/` for provenance, but they do not define the current version.
 
 See `ROADMAP.md` for the forward-looking plan, `CHANGELOG.md` for per-feature history, and `docs/CROSS_SECTOR_ADOPTION_PLAN.md` for the plan to make PeaLang credible across enterprise, data, web, mobile, games, embedded, and cloud sectors.
 
@@ -1246,6 +1246,26 @@ container/orchestration/pipeline/observability/IAM/source/lockfile/signature/
 drift checks, current version, and the incomplete-failure policy;
 `cloud_pack_report()` and `cloud_pack_gate()` provide reproducible CI evidence
 without host paths or timings.
+
+### Ecosystem registry and migration guides
+
+```bash
+pea ecosystem-pack --capabilities
+pea ecosystem-pack . --check --state ecosystem-state.json --emit ecosystem.json
+pea ecosystem-pack . --check --write-state --fail-on-incomplete
+```
+
+Phase 99 opens Wave 5 with a deterministic delivery gate for public registry
+growth and migration guides from Python, JavaScript, Java, Go, Rust, and SQL. It
+derives a stable topological entry order and incomplete set from
+`*.ecosystem.json` manifests, and reports missing dependencies, cycles, invalid
+manifests, missing evidence, ecosystem demos without migration guides, registry
+packages, metadata, signatures, or lockfiles as sorted issue codes.
+`EcosystemProfileV2` validates entry limits, preview inclusion, guide,
+registration, metadata, signature, and lockfile checks, current version, and the
+incomplete-failure policy; `ecosystem_pack_report()` and
+`ecosystem_pack_gate()` provide reproducible CI evidence without host paths or
+timings.
 
 ### Project queries
 

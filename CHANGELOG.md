@@ -1,4 +1,15 @@
 # Changelog
+## 3.1.62 - Phase 99: Ecosystem registry and migration guides (2026-11-26)
+- Open Wave 5 with a deterministic ecosystem registry and migration-guide evidence gate
+- Add validated profiles for entry limits, preview inclusion, Python/JavaScript/Java/Go/Rust/SQL/registration/metadata/signature/lockfile checks, current version, and an incomplete-failure policy
+- Add stable ecosystem nodes with manifest digests, names, versions, kinds, evidence paths, platform bindings, resolved dependencies, and topological order
+- Detect missing dependencies, cycles, invalid manifests, missing evidence, or ecosystem demos without migration guides, registry packages, metadata, signatures, or lockfiles as sorted issue codes
+- Track digest drift and propagate incomplete state to dependent entries through `pea ecosystem-pack --state --write-state`
+- Add `pea ecosystem-pack` with capability, check, emit, state, strict incomplete, governance toggle, and current-version options plus a stable `sector.ecosystem_pack` feature flag
+- Add a normative ecosystem registry spec section and align current release metadata to 3.1.62
+- Frozen 3.0 digest, earlier component versions, and historical release metadata stay pinned
+- Targeted ecosystem-pack, CLI, freeze, version, and conformance tests smoke-tested
+
 ## 3.1.61 - Phase 98: Cloud Infrastructure / DevOps sector pack (2026-11-26)
 - Complete Wave 4 with a deterministic sector-pack evidence gate for cloud stacks and deployment pipelines
 - Add validated profiles for deployment limits, preview inclusion, container/orchestration/pipeline/observability/IAM/source/lockfile/signature/drift checks, current version, and an incomplete-failure policy
