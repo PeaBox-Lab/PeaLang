@@ -1,3 +1,11 @@
+## 3.1.47 - Phase 84: Linter v3 (2026-11-26)
+- Continue Wave 3 with a deterministic linter v3 additive to the existing linter
+- Add validated profiles for line length, complexity, rule toggles, and warning policy
+- Add stable rule codes, fix hints, deterministic ordering, and recomputable digests
+- Add a strict warning option for editor and CI automation
+- Add `pea lint-v3` with check, threshold, capability, and emit options plus a stable devx feature flag
+- Align current release metadata to 3.1.47 while keeping the frozen 3.0 digest pinned
+
 ## 3.1.46 - Phase 83: Formatter v3 (2026-11-26)
 - Continue Wave 3 with a deterministic formatter v3 additive to the existing formatter
 - Add validated profiles for indentation, line length, brace style, and EOF newline

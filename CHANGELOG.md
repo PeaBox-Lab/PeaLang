@@ -1,4 +1,14 @@
 # Changelog
+## 3.1.47 - Phase 84: Linter v3 (2026-11-26)
+- Add a deterministic linter v3 layer additive to the existing `pea lint` surface
+- Add validated profiles for line length, complexity, rule toggles, and warning policy
+- Add stable rule codes for line length, trailing whitespace, TODO markers, naming, debug prints, complexity, unreachable code, and parse errors
+- Add fix hints, deterministic diagnostic ordering, and host-path-independent digests
+- Add `pea lint-v3` with capability, check, threshold, strict-warning, and emit options plus a stable `devx.linter_v3` feature flag
+- Add a normative linter v3 spec section and align current release metadata to 3.1.47
+- Frozen 3.0 digest, earlier component versions, and historical release metadata stay pinned
+- Targeted linter v3, CLI, freeze, version, and conformance tests smoke-tested
+
 ## 3.1.46 - Phase 83: Formatter v3 (2026-11-26)
 - Add a deterministic formatter v3 layer additive to the existing `pea fmt` surface
 - Add validated formatting profiles for indentation, line length, brace style, and EOF newline

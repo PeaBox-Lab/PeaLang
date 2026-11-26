@@ -8,9 +8,9 @@ PeaLang is designed to complement existing ecosystems such as Python, FastAPI, J
 
 ## Release Status
 
-**Version: 3.1.46** — current tagged release across package, SDK, runtime, and specification metadata.
+**Version: 3.1.47** — current tagged release across package, SDK, runtime, and specification metadata.
 
-`3.1.46` is the unified release identifier for the tagged v3.1.46 line. Source version, SDK packages, container image label, runtime health output, registry user agent, release manifest, and language specification now report the same version. Historical release notes are kept in `docs/releases/` for provenance, but they do not define the current version.
+`3.1.47` is the unified release identifier for the tagged v3.1.47 line. Source version, SDK packages, container image label, runtime health output, registry user agent, release manifest, and language specification now report the same version. Historical release notes are kept in `docs/releases/` for provenance, but they do not define the current version.
 
 See `ROADMAP.md` for the forward-looking plan, `CHANGELOG.md` for per-feature history, and `docs/CROSS_SECTOR_ADOPTION_PLAN.md` for the plan to make PeaLang credible across enterprise, data, web, mobile, games, embedded, and cloud sectors.
 
@@ -983,6 +983,20 @@ preserves comments and string contents, validates formatting profiles, and
 reports unified diffs, long lines, idempotence, and bytecode parity evidence.
 `formatter_v3_report()` produces a stable digest over those results, and
 `formatter_v3_gate()` reduces it to a PASS/FAIL decision for editor and CI checks.
+
+### Linter v3
+
+```bash
+pea lint-v3 --capabilities
+pea lint-v3 app.pea --check --max-complexity 8 --emit lint.json
+pea lint-v3 app.pea --check --fail-on-warning
+```
+
+Phase 84 adds a deterministic linter v3 alongside the existing linter. It emits
+stable rule codes with fix hints, deterministic ordering, and digests that ignore
+host paths. `lint_v3_report()` summarizes the findings with a recomputable
+digest, and `lint_v3_gate()` supplies a CI-ready PASS/FAIL decision with optional
+strict warning handling.
 
 ### Project queries
 

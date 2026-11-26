@@ -1143,7 +1143,7 @@ def main(argv=None):
             else:
                 from .stdlib import stdlib_manifest
                 sm=stdlib_manifest();mods=sm.get('modules',sm)
-                info={'version':__version__,'stdlib':list(mods.keys()) if isinstance(mods,dict) else mods,'commands':['run','eval','repl','check','lint','fmt','fmt-v3','test','compile','vm','dis','init','new','serve-web','doctor','health','diagnose','help','templates','info','project','serve','stdlib','typecheck','typecheck-project','docs','analyze','web-openapi','openapi','openapi-contract','hash','tree','env','quickstart','scaffold','readiness','audit','conformance','conformance-v2','freeze','optimize','fast','jit','native','wasm-backend','parallel','profiler','perf-gate','lsp','dap-v2']}
+                info={'version':__version__,'stdlib':list(mods.keys()) if isinstance(mods,dict) else mods,'commands':['run','eval','repl','check','lint','lint-v3','fmt','fmt-v3','test','compile','vm','dis','init','new','serve-web','doctor','health','diagnose','help','templates','info','project','serve','stdlib','typecheck','typecheck-project','docs','analyze','web-openapi','openapi','openapi-contract','hash','tree','env','quickstart','scaffold','readiness','audit','conformance','conformance-v2','freeze','optimize','fast','jit','native','wasm-backend','parallel','profiler','perf-gate','lsp','dap-v2']}
                 print(json.dumps(info,indent=2));return 0
 
         if c=='project':print(json.dumps(project_info(argv[1] if len(argv)>1 else '.'),indent=2));return 0
@@ -1296,6 +1296,24 @@ def main(argv=None):
             print(json.dumps(report,indent=2,default=str))
             if a.check:return 0 if decision['gate']=='PASS' and report['changed_count']==0 else 1
             return 0 if decision['gate']=='PASS' else 1
+
+        if c=='lint-v3':
+
+            from .linter_v3 import (LintProfileV3,lint_file_v3,linter_v3_capabilities,lint_v3_gate,lint_v3_report)
+
+            p=argparse.ArgumentParser(prog='pea lint-v3');p.add_argument('paths',nargs='*');p.add_argument('--capabilities',action='store_true');p.add_argument('--check',action='store_true');p.add_argument('--emit');p.add_argument('--max-line',type=int,default=100);p.add_argument('--max-complexity',type=int,default=10);p.add_argument('--fail-on-warning',action='store_true');a=p.parse_args(argv[1:])
+            if a.capabilities:
+                print(json.dumps(linter_v3_capabilities(),indent=2));return 0
+            if not a.paths:print('lint-v3 requires PATH... or --capabilities');return 1
+            try:profile=LintProfileV3(max_line_length=a.max_line,max_complexity=a.max_complexity,fail_on_warning=a.fail_on_warning)
+            except Exception as e:print(f'Linter v3 failed: {e}');return 1
+            try:results=[lint_file_v3(f,profile) for f in discover_pea(a.paths)]
+            except Exception as e:print(f'Linter v3 failed: {e}');return 1
+            report=lint_v3_report(results,profile);decision=lint_v3_gate(report);report['decision']=decision
+            if a.emit:Path(a.emit).write_text(json.dumps(report,indent=2,default=str)+'\n',encoding='utf-8')
+            print(json.dumps(report,indent=2,default=str))
+            if a.check:return 0 if decision['gate']=='PASS' else 1
+            return 0
 
         if c in ('check','lint'):
 

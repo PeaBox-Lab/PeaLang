@@ -1,6 +1,6 @@
 # PeaLang User Guide
 
-This guide covers the PeaLang 3.1.46 release (unified versioning; supersedes the 1.0.0-experience and 0.99.6 baselines).
+This guide covers the PeaLang 3.1.47 release (unified versioning; supersedes the 1.0.0-experience and 0.99.6 baselines).
 
 ## Installation and Setup
 
@@ -41,6 +41,7 @@ pea doctor
 | `pea perf-gate <file.pea> [--iterations N]` | Evaluate 4.0 performance gates |
 | `pea lsp <file.pea> [--check] [--symbols] [--hover LINE CHAR]` | Query LSP v2 diagnostics and symbols |
 | `pea dap-v2 <file.pea> [--check] [--breakpoint LINE]` | Run a deterministic DAP v2 session |
+| `pea lint-v3 <path...> [--check] [--fail-on-warning]` | Report deterministic linter v3 findings |
 | `pea fmt-v3 <path...> [--check] [--write]` | Report or apply formatter v3 changes |
 | `pea analyze <file.json|csv> [--json] [--head N]` | Profile a JSON/CSV dataset (analysis) |
 | `pea web-openapi` / `pea openapi <file.pea> [--title T] [--version V]` | Extract OpenAPI from a file defining `app` |
@@ -301,6 +302,24 @@ indentation. Each `FormatResult` carries a unified diff, long-line numbers, an
 idempotence check, and a bytecode fingerprint comparison. `pea fmt-v3 --check`
 requires formatted input without applying changes, while `--write` applies them;
 `formatter_v3_gate()` provides the CI-ready decision.
+
+### Linter v3
+
+```bash
+pea lint-v3 --capabilities
+pea lint-v3 app.pea --check --max-complexity 8 --emit lint.json
+pea lint-v3 app.pea --check --fail-on-warning
+```
+
+`lint_source_v3()` is additive to `pea lint` and `PeaLinter`. A `LintProfileV3`
+validates thresholds, rule toggles, and strict warning policy before analysis.
+Each `LintDiagnosticV3` carries a stable rule code, severity, position, message,
+and optional fix hint; diagnostics are sorted by position and rule. Line rules
+cover long lines, trailing whitespace, and TODO/FIXME markers outside strings,
+while AST rules cover naming, debug prints, cyclomatic complexity, unreachable
+statements, and parse errors. `lint_v3_report()` produces a recomputable digest
+that excludes source names, and `lint_v3_gate()` recomputes PASS/FAIL with
+optional failure on warnings.
 
 ### Optional chaining and null coalescing
 ```pea

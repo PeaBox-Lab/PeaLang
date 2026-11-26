@@ -180,6 +180,13 @@ intact. Reviewable diffs, long-line reports, idempotence checks, and bytecode
 parity fingerprints make formatting safe for editor and CI automation through
 `pea fmt-v3 --check` and `formatter_v3_gate()`.
 
+**Phase 84 — Linter v3** continues Wave 3 with a deterministic diagnostics layer
+additive to the existing linter. Validated profiles control line length,
+complexity, rule toggles, and strict warning policy. Stable rule codes, fix
+hints, sorted findings, and host-path-independent digests make results reviewable
+in editors and reproducible in CI through `pea lint-v3 --check` and
+`lint_v3_gate()`.
+
 ### Wave 4 — Sector packs (Phases 91–98)
 
 One focused pack per row of the table, each with a reference application and

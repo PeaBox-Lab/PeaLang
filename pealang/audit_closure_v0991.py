@@ -91,7 +91,7 @@ def audit_repository(root):
             failures.append(f"missing:{rel}")
     for rel in SDK_FILES:
         p = root / rel
-        if p.is_file() and json.loads(p.read_text(encoding="utf-8")).get("version") != "3.1.46":
+        if p.is_file() and json.loads(p.read_text(encoding="utf-8")).get("version") != "3.1.47":
             failures.append(f"version:{rel}")
     c = (root / "CHANGELOG.md").read_text(encoding="utf-8")
     if c.count("# Changelog") != 1:

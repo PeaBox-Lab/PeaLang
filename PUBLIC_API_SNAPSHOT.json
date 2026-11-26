@@ -6206,6 +6206,66 @@
       "signature": ""
     },
     {
+      "module": "pealang.linter_v3",
+      "name": "LinterV3Error",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.linter_v3",
+      "name": "LintProfileV3",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.linter_v3",
+      "name": "linter_v3_capabilities",
+      "kind": "function",
+      "signature": "()"
+    },
+    {
+      "module": "pealang.linter_v3",
+      "name": "LintDiagnosticV3",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.linter_v3",
+      "name": "lint_source_v3",
+      "kind": "function",
+      "signature": "(source,profile=?,source_name=?)"
+    },
+    {
+      "module": "pealang.linter_v3",
+      "name": "lint_file_v3",
+      "kind": "function",
+      "signature": "(path,profile=?)"
+    },
+    {
+      "module": "pealang.linter_v3",
+      "name": "LintResultV3",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.linter_v3",
+      "name": "lint_v3_report",
+      "kind": "function",
+      "signature": "(results,profile=?)"
+    },
+    {
+      "module": "pealang.linter_v3",
+      "name": "lint_v3_gate",
+      "kind": "function",
+      "signature": "(report)"
+    },
+    {
+      "module": "pealang.linter_v3",
+      "name": "build_linter_v3_namespace",
+      "kind": "function",
+      "signature": "()"
+    },
+    {
       "module": "pealang.lsp",
       "name": "LSPServer",
       "kind": "class",
