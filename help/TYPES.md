@@ -31,3 +31,4 @@ invalid-manifest, missing-evidence, missing-change-record,
 missing-approval, missing-canary-plan, missing-rollback-plan,
 missing-feature-flag, missing-audit-trail, and
 missing-release-checklist detection.
+ Phase 106 extends Wave 7 with agent safety and tool-use conformance: `pea agent-safety --check` and `agent_safety_gate()` provide reproducible evidence with missing-dependency, cycle, invalid-manifest, missing-evidence, and missing-tool-policy, missing-dry-run, missing-approval-gate, missing-replay-guard, missing-budget, missing-audit-log, missing-isolation-policy detection.

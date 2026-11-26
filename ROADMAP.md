@@ -1,3 +1,11 @@
+## 5.6.0 - Phase 106: Agent safety and tool-use conformance (2026-11-27)
+- Continue Wave 7 with a deterministic agent safety and tool-use conformance gate
+- Add validated profiles for entry limits, preview inclusion, tool-policy/dry-run/approval-gate/replay-guard/budget/audit-log/isolation-policy, current version, and incomplete policy
+- Add stable nodes with digests, names, versions, kinds, evidence, bindings, resolved dependencies, incomplete reasons, and topological order
+- Detect missing dependencies, cycles, invalid manifests, missing evidence, and agent demos without tool policy, dry run, approval gate, replay guard, budget, audit log, isolation policy as stable issue codes
+- Add `pea agent-safety` with check, emit, state, strict incomplete, governance toggles, and capability options plus a stable sector feature flag
+- Align current release metadata to 5.6.0 while keeping the frozen 3.0 digest pinned
+
 ## 5.5.0 - Phase 105: Release governance and change safety (2026-11-26)
 - Continue Wave 6 with a deterministic release governance and change safety gate
 - Add validated profiles for entry limits, preview inclusion, change-record/approval/canary-plan/rollback-plan/feature-flag/audit-trail/release-checklist checks, current version, and incomplete policy

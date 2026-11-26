@@ -457,6 +457,8 @@ missing-release-checklist issues; and digests that exclude host paths make
 release evidence reviewable and reproducible in CI through
 `pea release-governance --check` and `release_governance_gate()`.
 
+**Phase 106 — Agent safety and tool-use conformance** extends Wave 7 with a deterministic agent safety and tool-use conformance gate over `*.agent.json` manifests. Validated profiles control entry limits, preview inclusion, tool policy, dry run, approval gate, replay guard, budget, audit log, isolation policy, the current version, and incomplete policy. Stable nodes with digests, names, versions, kinds, evidence paths, platform bindings, resolved dependencies, propagated incomplete reasons, and topological order; sorted missing-dependency, cycle, invalid-manifest, missing-evidence, missing-tool-policy, missing-dry-run, missing-approval-gate, missing-replay-guard, missing-budget, missing-audit-log, missing-isolation-policy issues; and digests that exclude host paths make evidence reviewable and reproducible in CI through `pea agent-safety --check` and `agent_safety_gate()`.
+
 ## Sector packs
 
 | Sector | Current PeaLang evidence | Required additions | Acceptance gate |

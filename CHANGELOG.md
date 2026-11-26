@@ -1,4 +1,15 @@
 # Changelog
+## 5.6.0 - Phase 106: Agent safety and tool-use conformance (2026-11-27)
+- Continue Wave 7 with a deterministic agent safety and tool-use conformance gate
+- Add validated profiles for entry limits, preview inclusion, tool-policy, dry-run, approval-gate, replay-guard, budget, audit-log, isolation-policy, current version, and an incomplete-failure policy
+- Add stable nodes with manifest digests, names, versions, kinds, evidence paths, platform bindings, resolved dependencies, and topological order
+- Detect missing dependencies, cycles, invalid manifests, missing evidence, or agent demos without tool policy, dry run, approval gate, replay guard, budget, audit log, isolation policy as sorted issue codes
+- Track digest drift and propagate incomplete state to dependent entries through `pea agent-safety --state --write-state`
+- Add `pea agent-safety` with capability, check, emit, state, strict incomplete, governance toggle, and current-version options plus a stable `sector.agent_safety` feature flag
+- Add a normative agent safety spec section and align current release metadata to 5.6.0
+- Frozen 3.0 digest, earlier component versions, and historical release metadata stay pinned
+- Full pytest suite and targeted quality gates passed
+
 ## 5.5.0 - Phase 105: Release governance and change safety (2026-11-26)
 - Continue Wave 6 with a deterministic release governance and change safety gate
 - Add validated profiles for entry limits, preview inclusion, change-record, approval, canary-plan, rollback-plan, feature-flag, audit-trail, and release-checklist checks, current version, and an incomplete-failure policy

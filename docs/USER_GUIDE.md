@@ -1,6 +1,6 @@
 # PeaLang User Guide
 
-This guide covers the PeaLang 5.5.0 release (unified versioning; supersedes the 1.0.0-experience and 0.99.6 baselines).
+This guide covers the PeaLang 5.6.0 release (unified versioning; supersedes the 1.0.0-experience and 0.99.6 baselines).
 
 ## Installation and Setup
 
@@ -63,6 +63,7 @@ pea doctor
 | `pea chaos-pack <root> [--check] [--state FILE]` | Gate chaos engineering and resilience evidence with stable digests |
 | `pea capacity-pack <root> [--check] [--state FILE]` | Gate capacity and cost reliability evidence with stable digests |
 | `pea release-governance <root> [--check] [--state FILE]` | Gate release governance and change safety evidence with stable digests |
+| `pea agent-safety <root> [--check] [--state FILE]` | Gate agent safety and tool-use conformance evidence with stable digests |
 | `pea fmt-v3 <path...> [--check] [--write]` | Report or apply formatter v3 changes |
 | `pea analyze <file.json|csv> [--json] [--head N]` | Profile a JSON/CSV dataset (analysis) |
 | `pea web-openapi` / `pea openapi <file.pea> [--title T] [--version V]` | Extract OpenAPI from a file defining `app` |
@@ -822,6 +823,30 @@ issue codes, while `write_release_governance_state_v2()` persists digests
 without absolute host paths. `release_governance_report()` summarizes plans with
 a recomputable digest, and `release_governance_gate()` recomputes PASS/FAIL from
 the reported error count, incomplete count, and profile.
+
+### Agent safety and tool-use conformance
+
+```bash
+pea agent-safety --capabilities
+pea agent-safety . --check --state agent_safety-state.json --emit agent_safety.json
+pea agent-safety . --check --write-state --fail-on-incomplete
+```
+
+`plan_agent_safety()` extends Wave 7 as a agent safety and tool-use conformance gate and is additive to the
+release governance, capacity, chaos, SLO, observability, and certified-package
+surfaces. A `AgentSafetyProfileV2` validates the entry limit, preview inclusion,
+tool-policy/dry-run/approval-gate/replay-guard/budget/audit-log/isolation-policy, current version, and
+incomplete-failure policy before planning. Each `AgentSafetyAppV2` carries a
+relative path, a manifest digest, name, version, kind, sorted evidence paths,
+sorted platform bindings, sorted required names, resolved dependencies, a
+clean/stale state, and reasons; entries are ordered topologically, and
+incomplete state propagates to dependent entries. Missing dependencies,
+dependency cycles, invalid manifests, missing evidence artifacts, or
+agent demos without tool policy, dry run, approval gate, replay guard, budget, audit log, isolation policy
+become stable issue codes, while `write_agent_safety_state_v2()` persists digests
+without absolute host paths. `agent_safety_report()` summarizes plans with a
+recomputable digest, and `agent_safety_gate()` recomputes PASS/FAIL from the
+reported error count, incomplete count, and profile.
 
 ### Optional chaining and null coalescing
 ```pea

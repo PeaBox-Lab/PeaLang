@@ -7766,6 +7766,78 @@
       "signature": "()"
     },
     {
+      "module": "pealang.agent_safety",
+      "name": "AgentSafetyPackError",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.agent_safety",
+      "name": "AgentSafetyProfileV2",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.agent_safety",
+      "name": "agent_safety_capabilities",
+      "kind": "function",
+      "signature": "()"
+    },
+    {
+      "module": "pealang.agent_safety",
+      "name": "AgentSafetyIssueV2",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.agent_safety",
+      "name": "AgentSafetyAppV2",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.agent_safety",
+      "name": "AgentSafetyPackPlanV2",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.agent_safety",
+      "name": "plan_agent_safety",
+      "kind": "function",
+      "signature": "(root,profile=?,state=?)"
+    },
+    {
+      "module": "pealang.agent_safety",
+      "name": "load_agent_safety_state_v2",
+      "kind": "function",
+      "signature": "(path)"
+    },
+    {
+      "module": "pealang.agent_safety",
+      "name": "write_agent_safety_state_v2",
+      "kind": "function",
+      "signature": "(root,plan,path=?)"
+    },
+    {
+      "module": "pealang.agent_safety",
+      "name": "agent_safety_report",
+      "kind": "function",
+      "signature": "(plans,profile=?)"
+    },
+    {
+      "module": "pealang.agent_safety",
+      "name": "agent_safety_gate",
+      "kind": "function",
+      "signature": "(report)"
+    },
+    {
+      "module": "pealang.agent_safety",
+      "name": "build_agent_safety_namespace",
+      "kind": "function",
+      "signature": "()"
+    },
+    {
       "module": "pealang.lsp",
       "name": "LSPServer",
       "kind": "class",
