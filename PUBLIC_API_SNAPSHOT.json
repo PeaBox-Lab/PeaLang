@@ -7406,6 +7406,78 @@
       "signature": "()"
     },
     {
+      "module": "pealang.observability_pack",
+      "name": "ObservabilityPackError",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.observability_pack",
+      "name": "ObservabilityProfileV2",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.observability_pack",
+      "name": "observability_pack_capabilities",
+      "kind": "function",
+      "signature": "()"
+    },
+    {
+      "module": "pealang.observability_pack",
+      "name": "ObservabilityIssueV2",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.observability_pack",
+      "name": "ObservabilityAppV2",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.observability_pack",
+      "name": "ObservabilityPackPlanV2",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.observability_pack",
+      "name": "plan_observability_pack",
+      "kind": "function",
+      "signature": "(root,profile=?,state=?)"
+    },
+    {
+      "module": "pealang.observability_pack",
+      "name": "load_observability_state_v2",
+      "kind": "function",
+      "signature": "(path)"
+    },
+    {
+      "module": "pealang.observability_pack",
+      "name": "write_observability_state_v2",
+      "kind": "function",
+      "signature": "(root,plan,path=?)"
+    },
+    {
+      "module": "pealang.observability_pack",
+      "name": "observability_pack_report",
+      "kind": "function",
+      "signature": "(plans,profile=?)"
+    },
+    {
+      "module": "pealang.observability_pack",
+      "name": "observability_pack_gate",
+      "kind": "function",
+      "signature": "(report)"
+    },
+    {
+      "module": "pealang.observability_pack",
+      "name": "build_observability_pack_namespace",
+      "kind": "function",
+      "signature": "()"
+    },
+    {
       "module": "pealang.lsp",
       "name": "LSPServer",
       "kind": "class",

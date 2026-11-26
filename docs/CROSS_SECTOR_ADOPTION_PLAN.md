@@ -382,10 +382,26 @@ missing-migration-guide issues; and digests that exclude host paths make release
 evidence reviewable and reproducible in CI through `pea certified-pack --check`
 and `certified_pack_gate()`.
 
-All five waves and all 100 phases are now delivered. Public registry growth and
+Wave 5 and all 100 planned phases are delivered. Public registry growth and
 migration guides from Python/JS/Java/Go/Rust/SQL shipped in Phase 99; certified
-packages and the 5.0 ecosystem release ship here. The frozen 3.0 core, earlier
-component versions, and all historical release metadata remain pinned.
+packages and the 5.0 ecosystem release shipped in Phase 100. Wave 6 opens here
+with Phase 101, a deterministic observability and SRE sector pack at 5.1.0,
+additive to the runtime profiler and performance-gate foundations. The frozen
+3.0 core, earlier component versions, and all historical release metadata remain
+pinned.
+
+**Phase 101 — Observability and SRE sector pack** adds a deterministic production
+reliability gate over `*.observability.json` manifests. Validated profiles
+control entry limits, preview inclusion, traces, metrics, logs, SLOs, alert
+policies, incident runbooks, dashboards, the current version, and incomplete
+policy. Stable nodes with digests, names, versions, kinds, evidence paths,
+platform bindings, resolved dependencies, propagated incomplete reasons, and
+topological order; sorted missing-dependency, cycle, invalid-manifest,
+missing-evidence, missing-trace, missing-metric, missing-log, missing-SLO,
+missing-alert-policy, missing-incident-runbook, and missing-dashboard issues; and
+digests that exclude host paths make reliability evidence reviewable and
+reproducible in CI through `pea observability-pack --check` and
+`observability_pack_gate()`.
 
 ## Sector packs
 

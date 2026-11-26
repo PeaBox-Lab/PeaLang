@@ -1,4 +1,15 @@
 # Changelog
+## 5.1.0 - Phase 101: Observability and SRE sector pack (2026-11-26)
+- Open Wave 6 with a deterministic observability and production-reliability gate
+- Add validated profiles for entry limits, preview inclusion, trace, metric, log, SLO, alert-policy, incident-runbook, and dashboard checks, current version, and an incomplete-failure policy
+- Add stable reliability nodes with manifest digests, names, versions, kinds, evidence paths, platform bindings, resolved dependencies, and topological order
+- Detect missing dependencies, cycles, invalid manifests, missing evidence, or reliability demos without traces, metrics, logs, SLOs, alert policies, incident runbooks, or dashboards as sorted issue codes
+- Track digest drift and propagate incomplete state to dependent entries through `pea observability-pack --state --write-state`
+- Add `pea observability-pack` with capability, check, emit, state, strict incomplete, governance toggle, and current-version options plus a stable `sector.observability_pack` feature flag
+- Add a normative observability spec section and align current release metadata to 5.1.0
+- Frozen 3.0 digest, earlier component versions, and historical release metadata stay pinned
+- Targeted observability, CLI, freeze, version, and conformance tests smoke-tested
+
 ## 5.0.0 - Phase 100: Certified packages and ecosystem release (2026-11-26)
 - Close Wave 5 with the 5.0 ecosystem release and a deterministic certified-package gate
 - Add validated profiles for entry limits, preview inclusion, signature, provenance, conformance, reproducible-build, lockfile, registry, and migration checks, current version, and an incomplete-failure policy

@@ -1,6 +1,6 @@
 # PeaLang User Guide
 
-This guide covers the PeaLang 5.0.0 release (unified versioning; supersedes the 1.0.0-experience and 0.99.6 baselines).
+This guide covers the PeaLang 5.1.0 release (unified versioning; supersedes the 1.0.0-experience and 0.99.6 baselines).
 
 ## Installation and Setup
 
@@ -58,6 +58,7 @@ pea doctor
 | `pea cloud-pack <root> [--check] [--state FILE]` | Gate Cloud Infrastructure / DevOps sector-pack evidence with stable digests |
 | `pea ecosystem-pack <root> [--check] [--state FILE]` | Gate ecosystem registry and migration-guide evidence with stable digests |
 | `pea certified-pack <root> [--check] [--state FILE]` | Gate certified-package and 5.0 release evidence with stable digests |
+| `pea observability-pack <root> [--check] [--state FILE]` | Gate observability and SRE evidence with stable digests |
 | `pea fmt-v3 <path...> [--check] [--write]` | Report or apply formatter v3 changes |
 | `pea analyze <file.json|csv> [--json] [--head N]` | Profile a JSON/CSV dataset (analysis) |
 | `pea web-openapi` / `pea openapi <file.pea> [--title T] [--version V]` | Extract OpenAPI from a file defining `app` |
@@ -693,6 +694,30 @@ migration guides become stable issue codes, while
 `certified_pack_report()` summarizes plans with a recomputable digest, and
 `certified_pack_gate()` recomputes PASS/FAIL from the reported error count,
 incomplete count, and profile.
+
+### Observability and SRE sector pack
+
+```bash
+pea observability-pack --capabilities
+pea observability-pack . --check --state reliability-state.json --emit reliability.json
+pea observability-pack . --check --write-state --fail-on-incomplete
+```
+
+`plan_observability_pack()` opens Wave 6 as a production-reliability gate and is
+additive to the runtime profiler and performance-gate surfaces. An
+`ObservabilityProfileV2` validates the entry limit, preview inclusion,
+trace/metric/log/SLO/alert/runbook/dashboard checks, current version, and
+incomplete-failure policy before planning. Each `ObservabilityAppV2` carries a
+relative path, a manifest digest, name, version, kind, sorted evidence paths,
+sorted platform bindings, sorted required names, resolved dependencies, a
+clean/stale state, and reasons; entries are ordered topologically, and incomplete
+state propagates to dependent entries. Missing dependencies, dependency cycles,
+invalid manifests, missing evidence artifacts, or reliability demos without
+traces, metrics, logs, SLOs, alert policies, incident runbooks, or dashboards
+become stable issue codes, while `write_observability_state_v2()` persists digests
+without absolute host paths. `observability_pack_report()` summarizes plans with
+a recomputable digest, and `observability_pack_gate()` recomputes PASS/FAIL from
+the reported error count, incomplete count, and profile.
 
 ### Optional chaining and null coalescing
 ```pea

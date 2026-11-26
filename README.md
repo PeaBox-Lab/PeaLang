@@ -8,9 +8,9 @@ PeaLang is designed to complement existing ecosystems such as Python, FastAPI, J
 
 ## Release Status
 
-**Version: 5.0.0** — current tagged release across package, SDK, runtime, and specification metadata.
+**Version: 5.1.0** — current tagged release across package, SDK, runtime, and specification metadata.
 
-`5.0.0` is the unified release identifier for the tagged v5.0.0 line. Source version, SDK packages, container image label, runtime health output, registry user agent, release manifest, and language specification now report the same version. Historical release notes are kept in `docs/releases/` for provenance, but they do not define the current version.
+`5.1.0` is the unified release identifier for the tagged v5.1.0 line. Source version, SDK packages, container image label, runtime health output, registry user agent, release manifest, and language specification now report the same version. Historical release notes are kept in `docs/releases/` for provenance, but they do not define the current version.
 
 See `ROADMAP.md` for the forward-looking plan, `CHANGELOG.md` for per-feature history, and `docs/CROSS_SECTOR_ADOPTION_PLAN.md` for the plan to make PeaLang credible across enterprise, data, web, mobile, games, embedded, and cloud sectors.
 
@@ -1275,7 +1275,7 @@ pea certified-pack . --check --state certified-state.json --emit certified.json
 pea certified-pack . --check --write-state --fail-on-incomplete
 ```
 
-**Version: 5.0.0** is the current tagged release across package, SDK, runtime,
+**Version: 5.1.0** is the current tagged release across package, SDK, runtime,
 and specification metadata. Phase 100 closes Wave 5 with a deterministic release
 gate over `*.certified.json` manifests. It derives a stable topological package
 order and incomplete set, and reports missing dependencies, cycles, invalid
@@ -1287,6 +1287,24 @@ reproducible/lockfile/registry/migration checks, current version, and the
 incomplete-failure policy; `certified_pack_report()` and
 `certified_pack_gate()` provide reproducible release evidence without host paths
 or timings.
+
+### Observability and SRE sector pack
+
+```bash
+pea observability-pack --capabilities
+pea observability-pack . --check --state reliability-state.json --emit reliability.json
+pea observability-pack . --check --write-state --fail-on-incomplete
+```
+
+Wave 6 opens with Phase 101 at **5.1.0**, adding a deterministic reliability gate
+over `*.observability.json` manifests. It derives a stable topological order and
+incomplete set, and reports missing dependencies, cycles, invalid manifests,
+missing evidence, and reliability demos without traces, metrics, logs, SLOs,
+alert policies, incident runbooks, or dashboards as sorted issue codes.
+`ObservabilityProfileV2` validates entry limits, preview inclusion,
+governance checks, current version, and the incomplete-failure policy;
+`observability_pack_report()` and `observability_pack_gate()` provide reproducible
+CI evidence without host paths or timings.
 
 ### Project queries
 
