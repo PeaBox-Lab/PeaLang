@@ -1,11 +1,11 @@
 {
-  "version": "3.1.47",
-  "previous_version": "3.1.46",
-  "release_line": "tagged release v3.1.47",
+  "version": "3.1.48",
+  "previous_version": "3.1.47",
+  "release_line": "tagged release v3.1.48",
   "pytest_tests_passed": 436,
   "conformance_cases_passed": 500,
   "fuzz_iterations": 250,
   "tests_failed": 0,
   "status": "PASS",
-  "note": "Phase 84 adds a deterministic linter v3 with stable rule codes, fix hints, recomputable digests, and an optional strict warning gate; frozen 3.0 digest and component versions stay pinned."
+  "note": "Phase 85 adds a deterministic test framework v2 with stable case IDs, filtered and fail-fast runs, host-path-independent digests, and a recomputable failure gate; frozen 3.0 digest and component versions stay pinned."
 }

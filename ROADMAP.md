@@ -1,3 +1,10 @@
+## 3.1.48 - Phase 85: Test framework v2 (2026-11-26)
+- Continue Wave 3 with a deterministic test framework v2 additive to the existing test runner
+- Add validated profiles for filtering, fail-fast execution, and an allowed failure count
+- Add stable case IDs, deterministic ordering, and recomputable digests without timings or host paths
+- Add `pea test-v2` with check, filter, fail-fast, threshold, capability, and emit options plus a stable devx feature flag
+- Align current release metadata to 3.1.48 while keeping the frozen 3.0 digest pinned
+
 ## 3.1.47 - Phase 84: Linter v3 (2026-11-26)
 - Continue Wave 3 with a deterministic linter v3 additive to the existing linter
 - Add validated profiles for line length, complexity, rule toggles, and warning policy

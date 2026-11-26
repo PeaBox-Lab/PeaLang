@@ -1,6 +1,6 @@
 # PeaLang User Guide
 
-This guide covers the PeaLang 3.1.47 release (unified versioning; supersedes the 1.0.0-experience and 0.99.6 baselines).
+This guide covers the PeaLang 3.1.48 release (unified versioning; supersedes the 1.0.0-experience and 0.99.6 baselines).
 
 ## Installation and Setup
 
@@ -42,6 +42,7 @@ pea doctor
 | `pea lsp <file.pea> [--check] [--symbols] [--hover LINE CHAR]` | Query LSP v2 diagnostics and symbols |
 | `pea dap-v2 <file.pea> [--check] [--breakpoint LINE]` | Run a deterministic DAP v2 session |
 | `pea lint-v3 <path...> [--check] [--fail-on-warning]` | Report deterministic linter v3 findings |
+| `pea test-v2 <path...> [--check] [--fail-fast]` | Run deterministic test framework v2 cases |
 | `pea fmt-v3 <path...> [--check] [--write]` | Report or apply formatter v3 changes |
 | `pea analyze <file.json|csv> [--json] [--head N]` | Profile a JSON/CSV dataset (analysis) |
 | `pea web-openapi` / `pea openapi <file.pea> [--title T] [--version V]` | Extract OpenAPI from a file defining `app` |
@@ -320,6 +321,23 @@ while AST rules cover naming, debug prints, cyclomatic complexity, unreachable
 statements, and parse errors. `lint_v3_report()` produces a recomputable digest
 that excludes source names, and `lint_v3_gate()` recomputes PASS/FAIL with
 optional failure on warnings.
+
+### Test framework v2
+
+```bash
+pea test-v2 --capabilities
+pea test-v2 tests --check --filter auth --emit tests.json
+pea test-v2 tests --check --fail-fast --max-failures 0
+```
+
+`run_test_source_v2()` is additive to `pea test` and the native testing helpers.
+A `TestProfileV2` validates the text filter, fail-fast policy, and allowed
+failure count before execution. Each `TestCaseV2` carries a stable ID derived
+from the describe block, test name, and source line; cases are sorted
+deterministically, and error text is normalized so raw host paths do not enter
+the report. `test_v2_report()` summarizes results with a digest that excludes
+elapsed timings, and `test_v2_gate()` recomputes PASS/FAIL from the reported
+failure count and profile.
 
 ### Optional chaining and null coalescing
 ```pea

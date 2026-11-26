@@ -1143,7 +1143,7 @@ def main(argv=None):
             else:
                 from .stdlib import stdlib_manifest
                 sm=stdlib_manifest();mods=sm.get('modules',sm)
-                info={'version':__version__,'stdlib':list(mods.keys()) if isinstance(mods,dict) else mods,'commands':['run','eval','repl','check','lint','lint-v3','fmt','fmt-v3','test','compile','vm','dis','init','new','serve-web','doctor','health','diagnose','help','templates','info','project','serve','stdlib','typecheck','typecheck-project','docs','analyze','web-openapi','openapi','openapi-contract','hash','tree','env','quickstart','scaffold','readiness','audit','conformance','conformance-v2','freeze','optimize','fast','jit','native','wasm-backend','parallel','profiler','perf-gate','lsp','dap-v2']}
+                info={'version':__version__,'stdlib':list(mods.keys()) if isinstance(mods,dict) else mods,'commands':['run','eval','repl','check','lint','lint-v3','fmt','fmt-v3','test','test-v2','compile','vm','dis','init','new','serve-web','doctor','health','diagnose','help','templates','info','project','serve','stdlib','typecheck','typecheck-project','docs','analyze','web-openapi','openapi','openapi-contract','hash','tree','env','quickstart','scaffold','readiness','audit','conformance','conformance-v2','freeze','optimize','fast','jit','native','wasm-backend','parallel','profiler','perf-gate','lsp','dap-v2']}
                 print(json.dumps(info,indent=2));return 0
 
         if c=='project':print(json.dumps(project_info(argv[1] if len(argv)>1 else '.'),indent=2));return 0
@@ -1310,6 +1310,24 @@ def main(argv=None):
             try:results=[lint_file_v3(f,profile) for f in discover_pea(a.paths)]
             except Exception as e:print(f'Linter v3 failed: {e}');return 1
             report=lint_v3_report(results,profile);decision=lint_v3_gate(report);report['decision']=decision
+            if a.emit:Path(a.emit).write_text(json.dumps(report,indent=2,default=str)+'\n',encoding='utf-8')
+            print(json.dumps(report,indent=2,default=str))
+            if a.check:return 0 if decision['gate']=='PASS' else 1
+            return 0
+
+        if c=='test-v2':
+
+            from .test_framework_v2 import (TestProfileV2,run_test_file_v2,test_framework_v2_capabilities,test_v2_gate,test_v2_report)
+
+            p=argparse.ArgumentParser(prog='pea test-v2');p.add_argument('paths',nargs='*');p.add_argument('--capabilities',action='store_true');p.add_argument('--check',action='store_true');p.add_argument('--emit');p.add_argument('--filter');p.add_argument('--fail-fast',action='store_true');p.add_argument('--max-failures',type=int,default=0);a=p.parse_args(argv[1:])
+            if a.capabilities:
+                print(json.dumps(test_framework_v2_capabilities(),indent=2));return 0
+            if not a.paths:print('test-v2 requires PATH... or --capabilities');return 1
+            try:profile=TestProfileV2(filter_text=a.filter or '',fail_fast=a.fail_fast,max_failures=a.max_failures)
+            except Exception as e:print(f'Test framework v2 failed: {e}');return 1
+            try:results=[run_test_file_v2(f,profile) for f in discover_pea(a.paths)]
+            except Exception as e:print(f'Test framework v2 failed: {e}');return 1
+            report=test_v2_report(results,profile);decision=test_v2_gate(report);report['decision']=decision
             if a.emit:Path(a.emit).write_text(json.dumps(report,indent=2,default=str)+'\n',encoding='utf-8')
             print(json.dumps(report,indent=2,default=str))
             if a.check:return 0 if decision['gate']=='PASS' else 1

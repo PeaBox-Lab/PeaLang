@@ -187,6 +187,13 @@ hints, sorted findings, and host-path-independent digests make results reviewabl
 in editors and reproducible in CI through `pea lint-v3 --check` and
 `lint_v3_gate()`.
 
+**Phase 85 — Test framework v2** continues Wave 3 with deterministic test
+evidence additive to the native test runner. Validated profiles control name
+filtering, fail-fast execution, and an allowed failure count. Stable case IDs,
+sorted outcomes, and digests that exclude timings and host paths make runs
+reviewable in editors and reproducible in CI through `pea test-v2 --check` and
+`test_v2_gate()`.
+
 ### Wave 4 — Sector packs (Phases 91–98)
 
 One focused pack per row of the table, each with a reference application and

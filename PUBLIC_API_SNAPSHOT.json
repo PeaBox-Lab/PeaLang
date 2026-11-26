@@ -6266,6 +6266,66 @@
       "signature": "()"
     },
     {
+      "module": "pealang.test_framework_v2",
+      "name": "TestFrameworkV2Error",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.test_framework_v2",
+      "name": "TestProfileV2",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.test_framework_v2",
+      "name": "test_framework_v2_capabilities",
+      "kind": "function",
+      "signature": "()"
+    },
+    {
+      "module": "pealang.test_framework_v2",
+      "name": "TestCaseV2",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.test_framework_v2",
+      "name": "run_test_source_v2",
+      "kind": "function",
+      "signature": "(source,profile=?,source_name=?)"
+    },
+    {
+      "module": "pealang.test_framework_v2",
+      "name": "run_test_file_v2",
+      "kind": "function",
+      "signature": "(path,profile=?)"
+    },
+    {
+      "module": "pealang.test_framework_v2",
+      "name": "TestResultV2",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.test_framework_v2",
+      "name": "test_v2_report",
+      "kind": "function",
+      "signature": "(results,profile=?)"
+    },
+    {
+      "module": "pealang.test_framework_v2",
+      "name": "test_v2_gate",
+      "kind": "function",
+      "signature": "(report)"
+    },
+    {
+      "module": "pealang.test_framework_v2",
+      "name": "build_test_framework_v2_namespace",
+      "kind": "function",
+      "signature": "()"
+    },
+    {
       "module": "pealang.lsp",
       "name": "LSPServer",
       "kind": "class",

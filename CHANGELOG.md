@@ -1,4 +1,14 @@
 # Changelog
+## 3.1.48 - Phase 85: Test framework v2 (2026-11-26)
+- Add a deterministic test framework v2 layer additive to the existing `pea test` runner
+- Add validated profiles for filtering, fail-fast execution, and an allowed failure count
+- Add stable case IDs, deterministic ordering, and host-path-independent digests
+- Exclude elapsed timings and raw paths from reported evidence and digests
+- Add `pea test-v2` with capability, check, filter, fail-fast, threshold, and emit options plus a stable `devx.test_framework_v2` feature flag
+- Add a normative test framework v2 spec section and align current release metadata to 3.1.48
+- Frozen 3.0 digest, earlier component versions, and historical release metadata stay pinned
+- Targeted test framework v2, CLI, freeze, version, and conformance tests smoke-tested
+
 ## 3.1.47 - Phase 84: Linter v3 (2026-11-26)
 - Add a deterministic linter v3 layer additive to the existing `pea lint` surface
 - Add validated profiles for line length, complexity, rule toggles, and warning policy
