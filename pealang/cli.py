@@ -659,6 +659,24 @@ def main(argv=None):
             report=fast_interpreter_report(module,verify=a.verify,benchmark=a.benchmark)
             print(json.dumps(report,indent=2,default=str));return 0 if fast_interpreter_gate(report)['gate']=='PASS' else 1
 
+        if c=='jit':
+
+            from .bytecode import BytecodeModule
+
+            from .bytecode_jit import bytecode_jit_gate,bytecode_jit_report
+
+            from .compiler import compile_source_to_bytecode
+
+            p=argparse.ArgumentParser(prog='pea jit');p.add_argument('file');p.add_argument('--verify',action='store_true');p.add_argument('--benchmark',action='store_true');p.add_argument('--optimize',action='store_true');p.add_argument('--threshold',type=int,default=2);a=p.parse_args(argv[1:]);path=Path(a.file)
+            try:module=BytecodeModule.load(path) if path.suffix=='.peac' else compile_source_to_bytecode(path.read_text(encoding='utf-8'),str(path))
+            except Exception as e:print(f'JIT run failed: {e}');return 1
+            if a.optimize:
+                from .bytecode_optimizer import optimize_bytecode
+
+                module=optimize_bytecode(module)
+            report=bytecode_jit_report(module,threshold=a.threshold,verify=a.verify,benchmark=a.benchmark)
+            print(json.dumps(report,indent=2,default=str));return 0 if bytecode_jit_gate(report)['gate']=='PASS' else 1
+
         if c=='semantic':
 
             from .type_system import SemanticAnalyzer
@@ -989,7 +1007,7 @@ def main(argv=None):
             else:
                 from .stdlib import stdlib_manifest
                 sm=stdlib_manifest();mods=sm.get('modules',sm)
-                info={'version':__version__,'stdlib':list(mods.keys()) if isinstance(mods,dict) else mods,'commands':['run','eval','repl','check','lint','fmt','test','compile','vm','dis','init','new','serve-web','doctor','health','diagnose','help','templates','info','project','serve','stdlib','typecheck','typecheck-project','docs','analyze','web-openapi','openapi','openapi-contract','hash','tree','env','quickstart','scaffold','readiness','audit','conformance','conformance-v2','freeze','optimize','fast']}
+                info={'version':__version__,'stdlib':list(mods.keys()) if isinstance(mods,dict) else mods,'commands':['run','eval','repl','check','lint','fmt','test','compile','vm','dis','init','new','serve-web','doctor','health','diagnose','help','templates','info','project','serve','stdlib','typecheck','typecheck-project','docs','analyze','web-openapi','openapi','openapi-contract','hash','tree','env','quickstart','scaffold','readiness','audit','conformance','conformance-v2','freeze','optimize','fast','jit']}
                 print(json.dumps(info,indent=2));return 0
 
         if c=='project':print(json.dumps(project_info(argv[1] if len(argv)>1 else '.'),indent=2));return 0

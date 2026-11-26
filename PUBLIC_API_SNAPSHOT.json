@@ -2642,6 +2642,84 @@
       "signature": "()"
     },
     {
+      "module": "pealang.bytecode_jit",
+      "name": "JITDeopt",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.bytecode_jit",
+      "name": "JITProfile",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.bytecode_jit",
+      "name": "HotTrace",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.bytecode_jit",
+      "name": "CompiledTrace",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.bytecode_jit",
+      "name": "profile_execution",
+      "kind": "function",
+      "signature": "(module)"
+    },
+    {
+      "module": "pealang.bytecode_jit",
+      "name": "select_traces",
+      "kind": "function",
+      "signature": "(module,profile)"
+    },
+    {
+      "module": "pealang.bytecode_jit",
+      "name": "compile_trace",
+      "kind": "function",
+      "signature": "(module,trace,output=?)"
+    },
+    {
+      "module": "pealang.bytecode_jit",
+      "name": "JITRuntime",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.bytecode_jit",
+      "name": "verify_jit_parity",
+      "kind": "function",
+      "signature": "(module)"
+    },
+    {
+      "module": "pealang.bytecode_jit",
+      "name": "benchmark_jit",
+      "kind": "function",
+      "signature": "(module,iterations=?)"
+    },
+    {
+      "module": "pealang.bytecode_jit",
+      "name": "bytecode_jit_report",
+      "kind": "function",
+      "signature": "(module)"
+    },
+    {
+      "module": "pealang.bytecode_jit",
+      "name": "bytecode_jit_gate",
+      "kind": "function",
+      "signature": "(report)"
+    },
+    {
+      "module": "pealang.bytecode_jit",
+      "name": "build_bytecode_jit_namespace",
+      "kind": "function",
+      "signature": "()"
+    },
+    {
       "module": "pealang.conformance_quality",
       "name": "run_conformance_suite",
       "kind": "function",

@@ -1,3 +1,9 @@
+## 3.1.40 - Phase 73: Bytecode JIT (2026-11-26)
+- Add a profile-guided trace JIT built on the bytecode optimizer and fast interpreter
+- Compile hot loop back-edges with guarded integer specialization and deoptimization to the standard VM
+- Add `pea jit` with parity, benchmark, optimizer, and threshold options plus a stable runtime feature flag
+- Align current release metadata to 3.1.40 while keeping the frozen 3.0 digest pinned
+
 ## 3.1.39 - Phase 72: Fast Interpreter (2026-11-26)
 - Add a direct-handler bytecode interpreter that pre-binds instructions instead of walking a dispatch chain
 - Keep a parity-verified fallback to the standard VM for unsupported instructions

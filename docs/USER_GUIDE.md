@@ -1,6 +1,6 @@
 # PeaLang User Guide
 
-This guide covers the PeaLang 3.1.39 release (unified versioning; supersedes the 1.0.0-experience and 0.99.6 baselines).
+This guide covers the PeaLang 3.1.40 release (unified versioning; supersedes the 1.0.0-experience and 0.99.6 baselines).
 
 ## Installation and Setup
 
@@ -31,6 +31,9 @@ pea doctor
 | `pea compile <file.pea>` | Compile to `.peac` bytecode |
 | `pea dis <file.peac>` | Disassemble bytecode |
 | `pea vm <file.pea|.peac>` | Run via bytecode VM |
+| `pea optimize <file.pea> [--verify]` | Optimize bytecode and report parity |
+| `pea fast <file.pea> [--verify] [--benchmark]` | Run via the direct-handler fast interpreter |
+| `pea jit <file.pea> [--verify] [--benchmark]` | Profile and run hot traces with JIT guards |
 | `pea analyze <file.json|csv> [--json] [--head N]` | Profile a JSON/CSV dataset (analysis) |
 | `pea web-openapi` / `pea openapi <file.pea> [--title T] [--version V]` | Extract OpenAPI from a file defining `app` |
 | `pea hash <file> [--algo sha256]` | Compute file hash |
@@ -184,6 +187,20 @@ report includes the selected mode, eligibility, output, and module digest.
 `--benchmark` reports median execution times. Host programs can use
 `FastInterpreter`, `fast_path_supported()`, `verify_fast_parity()`, and
 `fast_interpreter_report()` directly.
+
+### Bytecode JIT
+```bash
+pea jit app.pea --verify
+pea jit app.pea --benchmark --optimize --threshold 2
+```
+Profile the module, compile hot loop back-edges into bounded traces, and
+specialize integer arithmetic behind type guards. The report shows the profile
+totals, selected traces, guarded operations, deoptimizations, output, and a
+module digest. `--verify` requires identical VM and JIT output and results.
+Guard failures fall back to the standard VM, so unsupported value types and
+modules cannot change program meaning. Host programs can use `JITRuntime`,
+`profile_execution()`, `select_traces()`, `verify_jit_parity()`, and
+`bytecode_jit_report()` directly.
 
 ### Optional chaining and null coalescing
 ```pea

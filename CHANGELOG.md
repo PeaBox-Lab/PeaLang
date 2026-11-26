@@ -1,4 +1,14 @@
 # Changelog
+## 3.1.40 - Phase 73: Bytecode JIT (2026-11-26)
+- Add `JITRuntime`, `JITProfile`, `HotTrace`, `CompiledTrace`, and `compile_trace()` for profile-guided trace compilation
+- Count instructions in a non-emitting profiling run and compile hot loop back-edges from the fast-interpreter instruction set
+- Specialize integer `ADD`/`SUB`/`MUL` behind type guards; guard failures deoptimize to the standard VM handler
+- Add `verify_jit_parity()`, `benchmark_jit()`, `bytecode_jit_report()`, and `bytecode_jit_gate()`
+- Add a `pea jit` CLI command with `--verify`, `--benchmark`, `--optimize`, and `--threshold` options, plus a `jit` help topic
+- Add a stable `runtime.bytecode_jit_v3` feature flag and a normative spec section
+- Align current release metadata to 3.1.40; frozen 3.0 digest and component versions stay pinned
+- Targeted JIT, parity, optimizer, freeze, version, and conformance tests smoke-tested
+
 ## 3.1.39 - Phase 72: Fast Interpreter (2026-11-26)
 - Add `FastInterpreter`, `FastProgram`, `FastFrame`, and `compile_fast_program()` for direct-handler bytecode dispatch
 - Pre-bind supported instructions to closures and run them in a tight loop with an explicit program counter

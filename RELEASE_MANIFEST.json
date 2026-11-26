@@ -1,11 +1,11 @@
 {
-  "version": "3.1.39",
-  "previous_version": "3.1.38",
-  "release_line": "tagged release v3.1.39",
+  "version": "3.1.40",
+  "previous_version": "3.1.39",
+  "release_line": "tagged release v3.1.40",
   "pytest_tests_passed": 436,
   "conformance_cases_passed": 500,
   "fuzz_iterations": 250,
   "tests_failed": 0,
   "status": "PASS",
-  "note": "Tagged release metadata aligned with source version and language specification."
+  "note": "Phase 73 adds a parity-verified bytecode JIT; frozen 3.0 digest and component versions stay pinned."
 }

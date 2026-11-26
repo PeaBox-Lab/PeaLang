@@ -123,6 +123,13 @@ automatically fall back to the standard VM. `pea fast --verify` proves output
 and result parity, so hot scripts and small loops can adopt the fast path
 without changing the frozen language surface.
 
+**Phase 73 — Bytecode JIT** adds a profile-guided trace JIT on the same portable
+bytecode. A non-emitting profiling pass records instruction counts, hot loop
+back-edges become bounded compiled traces, and integer arithmetic is specialized
+behind type guards. Guard failures deoptimize to the standard VM, and
+`pea jit --verify` requires identical VM and JIT output and results. The frozen
+3.0 language surface and manifest digest remain unchanged.
+
 ### Wave 3 — Developer experience (Phases 81–90)
 
 LSP v2, DAP debugger, formatter v3, linter v3, test framework v2, incremental
