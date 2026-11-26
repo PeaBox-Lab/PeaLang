@@ -6542,6 +6542,78 @@
       "signature": "()"
     },
     {
+      "module": "pealang.project_templates_v2",
+      "name": "ProjectTemplatesV2Error",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.project_templates_v2",
+      "name": "TemplateProfileV2",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.project_templates_v2",
+      "name": "project_templates_v2_capabilities",
+      "kind": "function",
+      "signature": "()"
+    },
+    {
+      "module": "pealang.project_templates_v2",
+      "name": "TemplateIssueV2",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.project_templates_v2",
+      "name": "TemplateNodeV2",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.project_templates_v2",
+      "name": "TemplatePlanV2",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.project_templates_v2",
+      "name": "plan_project_templates_v2",
+      "kind": "function",
+      "signature": "(root,profile=?,state=?)"
+    },
+    {
+      "module": "pealang.project_templates_v2",
+      "name": "load_template_state_v2",
+      "kind": "function",
+      "signature": "(path)"
+    },
+    {
+      "module": "pealang.project_templates_v2",
+      "name": "write_template_state_v2",
+      "kind": "function",
+      "signature": "(root,plan,path=?)"
+    },
+    {
+      "module": "pealang.project_templates_v2",
+      "name": "templates_v2_report",
+      "kind": "function",
+      "signature": "(plans,profile=?)"
+    },
+    {
+      "module": "pealang.project_templates_v2",
+      "name": "templates_v2_gate",
+      "kind": "function",
+      "signature": "(report)"
+    },
+    {
+      "module": "pealang.project_templates_v2",
+      "name": "build_project_templates_v2_namespace",
+      "kind": "function",
+      "signature": "()"
+    },
+    {
       "module": "pealang.lsp",
       "name": "LSPServer",
       "kind": "class",

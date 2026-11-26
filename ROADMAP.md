@@ -1,3 +1,11 @@
+## 3.1.52 - Phase 89: Project templates v2 (2026-11-26)
+- Complete Wave 3 with deterministic project template catalogs additive to the existing scaffold surface
+- Add validated profiles for template limits, community inclusion, dependency checks, current version, and drift policy
+- Add stable template nodes with digests, names, versions, files, entrypoints, resolved dependencies, drift reasons, and topological order
+- Detect missing dependencies, cycles, invalid manifests, bad entrypoints, and limit overruns as stable issue codes
+- Add `pea templates-v2` with check, emit, state, strict drift, and capability options plus a stable devx feature flag
+- Align current release metadata to 3.1.52 while keeping the frozen 3.0 digest pinned
+
 ## 3.1.51 - Phase 88: Migration assistants (2026-11-26)
 - Continue Wave 3 with deterministic migration evidence additive to the existing migrate command
 - Add validated profiles for migration limits, test inclusion, import checks, current version, and dirty-failure policy

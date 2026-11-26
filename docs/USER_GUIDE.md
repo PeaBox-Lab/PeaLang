@@ -1,6 +1,6 @@
 # PeaLang User Guide
 
-This guide covers the PeaLang 3.1.51 release (unified versioning; supersedes the 1.0.0-experience and 0.99.6 baselines).
+This guide covers the PeaLang 3.1.52 release (unified versioning; supersedes the 1.0.0-experience and 0.99.6 baselines).
 
 ## Installation and Setup
 
@@ -46,6 +46,7 @@ pea doctor
 | `pea build-v2 <root> [--check] [--state FILE]` | Plan an incremental build with stable digests |
 | `pea docs-v2 <root> [--check] [--state FILE]` | Inventory versioned documentation with stable digests |
 | `pea migrate-v2 <root> [--check] [--state FILE]` | Plan migration assistants with stable digests |
+| `pea templates-v2 <root> [--check] [--state FILE]` | Inventory project templates with stable digests |
 | `pea fmt-v3 <path...> [--check] [--write]` | Report or apply formatter v3 changes |
 | `pea analyze <file.json|csv> [--json] [--head N]` | Profile a JSON/CSV dataset (analysis) |
 | `pea web-openapi` / `pea openapi <file.pea> [--title T] [--version V]` | Extract OpenAPI from a file defining `app` |
@@ -397,6 +398,27 @@ dependency cycles, and limit overruns become stable issue codes, while
 `migration_v2_report()` summarizes plans with a recomputable digest, and
 `migration_v2_gate()` recomputes PASS/FAIL from the reported error count, dirty
 count, and profile.
+
+### Project templates v2
+
+```bash
+pea templates-v2 --capabilities
+pea templates-v2 . --check --state template-state.json --emit templates.json
+pea templates-v2 . --check --write-state --fail-on-drift
+```
+
+`plan_project_templates_v2()` is additive to `pea scaffold` and `pea templates`.
+A `TemplateProfileV2` validates the template limit, community inclusion,
+dependency checks, current version, and drift-failure policy before planning.
+Each `TemplateNodeV2` carries a relative path, a manifest digest, name, version,
+sorted file set, required names, entrypoints, resolved dependencies, a
+clean/stale state, and reasons; nodes are ordered topologically, and drift
+propagates to dependent templates. Missing dependencies, dependency cycles,
+invalid manifests, entrypoints missing from files, and limit overruns become
+stable issue codes, while `write_template_state_v2()` persists digests without
+absolute host paths. `templates_v2_report()` summarizes plans with a
+recomputable digest, and `templates_v2_gate()` recomputes PASS/FAIL from the
+reported error count, drift count, and profile.
 
 ### Optional chaining and null coalescing
 ```pea

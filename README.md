@@ -8,9 +8,9 @@ PeaLang is designed to complement existing ecosystems such as Python, FastAPI, J
 
 ## Release Status
 
-**Version: 3.1.51** — current tagged release across package, SDK, runtime, and specification metadata.
+**Version: 3.1.52** — current tagged release across package, SDK, runtime, and specification metadata.
 
-`3.1.51` is the unified release identifier for the tagged v3.1.51 line. Source version, SDK packages, container image label, runtime health output, registry user agent, release manifest, and language specification now report the same version. Historical release notes are kept in `docs/releases/` for provenance, but they do not define the current version.
+`3.1.52` is the unified release identifier for the tagged v3.1.52 line. Source version, SDK packages, container image label, runtime health output, registry user agent, release manifest, and language specification now report the same version. Historical release notes are kept in `docs/releases/` for provenance, but they do not define the current version.
 
 See `ROADMAP.md` for the forward-looking plan, `CHANGELOG.md` for per-feature history, and `docs/CROSS_SECTOR_ADOPTION_PLAN.md` for the plan to make PeaLang credible across enterprise, data, web, mobile, games, embedded, and cloud sectors.
 
@@ -1058,6 +1058,23 @@ scripts, dependency cycles, and limit overruns as sorted issue codes.
 current version, and the dirty-failure policy; `migration_v2_report()` and
 `migration_v2_gate()` provide reproducible CI evidence without host paths or
 timings.
+
+### Project templates v2
+
+```bash
+pea templates-v2 --capabilities
+pea templates-v2 . --check --state template-state.json --emit templates.json
+pea templates-v2 . --check --write-state --fail-on-drift
+```
+
+Phase 89 adds a deterministic project template catalog alongside the existing
+`pea scaffold` and `pea templates` commands. It derives a stable topological
+template order and drift set from manifest digests and template dependencies,
+and reports missing dependencies, cycles, invalid manifests, bad entrypoints,
+and limit overruns as sorted issue codes. `TemplateProfileV2` validates template
+limits, community inclusion, dependency checks, current version, and the
+drift-failure policy; `templates_v2_report()` and `templates_v2_gate()` provide
+reproducible CI evidence without host paths or timings.
 
 ### Project queries
 

@@ -1,4 +1,15 @@
 # Changelog
+## 3.1.52 - Phase 89: Project templates v2 (2026-11-26)
+- Add a deterministic project template catalog layer additive to the existing `pea scaffold` and `pea templates` commands
+- Add validated profiles for template limits, community inclusion, dependency checks, current version, and a drift-failure policy
+- Add stable template nodes with manifest digests, names, versions, file sets, entrypoints, resolved dependencies, and topological order
+- Detect missing dependencies, dependency cycles, invalid manifests, entrypoints missing from files, and template-limit overruns as sorted issue codes
+- Track digest drift and propagate drift state to dependent templates through `pea templates-v2 --state --write-state`
+- Add `pea templates-v2` with capability, check, emit, state, strict drift, and current-version options plus a stable `devx.project_templates_v2` feature flag
+- Add a normative project templates v2 spec section and align current release metadata to 3.1.52
+- Frozen 3.0 digest, earlier component versions, and historical release metadata stay pinned
+- Targeted template, CLI, freeze, version, and conformance tests smoke-tested
+
 ## 3.1.51 - Phase 88: Migration assistants (2026-11-26)
 - Add a deterministic migration assistant layer additive to the existing `pea migrate` command
 - Add validated profiles for migration limits, test inclusion, import checks, current version, and a dirty-failure policy

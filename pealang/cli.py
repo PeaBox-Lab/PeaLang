@@ -1393,6 +1393,26 @@ def main(argv=None):
             if a.check:return 0 if decision['gate']=='PASS' else 1
             return 0
 
+        if c=='templates-v2':
+
+            from .project_templates_v2 import (TemplateProfileV2,project_templates_v2_capabilities,templates_v2_gate,templates_v2_report,plan_project_templates_v2,load_template_state_v2,write_template_state_v2)
+
+            p=argparse.ArgumentParser(prog='pea templates-v2');p.add_argument('root',nargs='?',default='.');p.add_argument('--capabilities',action='store_true');p.add_argument('--check',action='store_true');p.add_argument('--emit');p.add_argument('--state');p.add_argument('--write-state',action='store_true');p.add_argument('--max-templates',type=int,default=500);p.add_argument('--include-community',action='store_true');p.add_argument('--no-check-dependencies',action='store_true');p.add_argument('--fail-on-drift',action='store_true');p.add_argument('--current-version');a=p.parse_args(argv[1:])
+            if a.capabilities:
+                print(json.dumps(project_templates_v2_capabilities(),indent=2));return 0
+            try:profile=TemplateProfileV2(max_templates=a.max_templates,include_community=a.include_community,check_dependencies=not a.no_check_dependencies,fail_on_drift=a.fail_on_drift,current_version=a.current_version or '')
+            except Exception as e:print(f'Project templates failed: {e}');return 1
+            state_path=Path(a.state) if a.state else Path(a.root)/'.pea_templates_v2.json'
+            try:
+                state=load_template_state_v2(state_path);plan=plan_project_templates_v2(a.root,profile,state)
+                if a.write_state:write_template_state_v2(a.root,plan,state_path)
+            except Exception as e:print(f'Project templates failed: {e}');return 1
+            report=templates_v2_report([plan],profile);decision=templates_v2_gate(report);report['decision']=decision
+            if a.emit:Path(a.emit).write_text(json.dumps(report,indent=2,default=str)+'\n',encoding='utf-8')
+            print(json.dumps(report,indent=2,default=str))
+            if a.check:return 0 if decision['gate']=='PASS' else 1
+            return 0
+
         if c in ('check','lint'):
 
             p=argparse.ArgumentParser(prog=f'pea {c}');p.add_argument('paths',nargs='+');p.add_argument('--json',action='store_true');a=p.parse_args(argv[1:]);errors=warnings=0;items=[]

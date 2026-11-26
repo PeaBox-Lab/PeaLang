@@ -180,11 +180,11 @@ def test_feature_flag_help_and_analysis_namespace_document_test_framework_v2():
 
 
 def test_release_metadata_is_aligned_and_component_pins_hold():
-    assert pealang.__version__ == SPEC_VERSION == '3.1.51'
+    assert pealang.__version__ == SPEC_VERSION == '3.1.52'
     manifest = json.loads((Path(__file__).resolve().parent.parent
                            / 'RELEASE_MANIFEST.json').read_text(encoding='utf-8'))
-    assert manifest['version'] == '3.1.51'
-    assert manifest['previous_version'] == '3.1.50'
+    assert manifest['version'] == '3.1.52'
+    assert manifest['previous_version'] == '3.1.51'
     assert pealang.TEST_FRAMEWORK_V2_VERSION == '3.1.48'
     assert pealang.LINTER_V3_VERSION == '3.1.47'
     assert pealang.FORMATTER_V3_VERSION == '3.1.46'
