@@ -1,3 +1,11 @@
+## 5.8.0 - Phase 108: Cross-platform CI and production pilot evidence (2026-11-27)
+- Continue Wave 7 with a deterministic cross-platform CI and production pilot evidence gate
+- Add validated profiles for entry limits, preview inclusion, platform-matrix/ci-run/coverage-report/security-review/pilot-app/host-integration/performance-baseline, current version, and incomplete policy
+- Add stable nodes with digests, names, versions, kinds, evidence, bindings, resolved dependencies, incomplete reasons, and topological order
+- Detect missing dependencies, cycles, invalid manifests, missing evidence, and pilot demos without platform matrix, CI run, coverage report, security review, pilot app, host integration, performance baseline as stable issue codes
+- Add `pea pilot-evidence` with check, emit, state, strict incomplete, governance toggles, and capability options plus a stable sector feature flag
+- Align current release metadata to 5.8.0 while keeping the frozen 3.0 digest pinned
+
 ## 5.7.0 - Phase 107: ML and serving conformance (2026-11-27)
 - Continue Wave 7 with a deterministic ML and serving conformance gate
 - Add validated profiles for entry limits, preview inclusion, model-contract/inference-fixture/serving-profile/overload-test/reload-test/rollback-test/benchmark-report, current version, and incomplete policy

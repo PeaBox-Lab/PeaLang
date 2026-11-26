@@ -1,6 +1,6 @@
 # PeaLang User Guide
 
-This guide covers the PeaLang 5.7.0 release (unified versioning; supersedes the 1.0.0-experience and 0.99.6 baselines).
+This guide covers the PeaLang 5.8.0 release (unified versioning; supersedes the 1.0.0-experience and 0.99.6 baselines).
 
 ## Installation and Setup
 
@@ -65,6 +65,7 @@ pea doctor
 | `pea release-governance <root> [--check] [--state FILE]` | Gate release governance and change safety evidence with stable digests |
 | `pea agent-safety <root> [--check] [--state FILE]` | Gate agent safety and tool-use conformance evidence with stable digests |
 | `pea serving-conformance <root> [--check] [--state FILE]` | Gate ML and serving conformance evidence with stable digests |
+| `pea pilot-evidence <root> [--check] [--state FILE]` | Gate cross-platform CI and production pilot evidence evidence with stable digests |
 | `pea fmt-v3 <path...> [--check] [--write]` | Report or apply formatter v3 changes |
 | `pea analyze <file.json|csv> [--json] [--head N]` | Profile a JSON/CSV dataset (analysis) |
 | `pea web-openapi` / `pea openapi <file.pea> [--title T] [--version V]` | Extract OpenAPI from a file defining `app` |
@@ -871,6 +872,30 @@ serving demos without model contract, inference fixture, serving profile, overlo
 become stable issue codes, while `write_serving_conformance_state_v2()` persists digests
 without absolute host paths. `serving_conformance_report()` summarizes plans with a
 recomputable digest, and `serving_conformance_gate()` recomputes PASS/FAIL from the
+reported error count, incomplete count, and profile.
+
+### Cross-platform CI and production pilot evidence
+
+```bash
+pea pilot-evidence --capabilities
+pea pilot-evidence . --check --state pilot_evidence-state.json --emit pilot_evidence.json
+pea pilot-evidence . --check --write-state --fail-on-incomplete
+```
+
+`plan_pilot_evidence()` extends Wave 7 as a cross-platform CI and production pilot evidence gate and is additive to the
+release governance, capacity, chaos, SLO, observability, and certified-package
+surfaces. A `PilotEvidenceProfileV2` validates the entry limit, preview inclusion,
+platform-matrix/ci-run/coverage-report/security-review/pilot-app/host-integration/performance-baseline, current version, and
+incomplete-failure policy before planning. Each `PilotEvidenceAppV2` carries a
+relative path, a manifest digest, name, version, kind, sorted evidence paths,
+sorted platform bindings, sorted required names, resolved dependencies, a
+clean/stale state, and reasons; entries are ordered topologically, and
+incomplete state propagates to dependent entries. Missing dependencies,
+dependency cycles, invalid manifests, missing evidence artifacts, or
+pilot demos without platform matrix, CI run, coverage report, security review, pilot app, host integration, performance baseline
+become stable issue codes, while `write_pilot_evidence_state_v2()` persists digests
+without absolute host paths. `pilot_evidence_report()` summarizes plans with a
+recomputable digest, and `pilot_evidence_gate()` recomputes PASS/FAIL from the
 reported error count, incomplete count, and profile.
 
 ### Optional chaining and null coalescing

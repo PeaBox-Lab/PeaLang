@@ -7910,6 +7910,78 @@
       "signature": "()"
     },
     {
+      "module": "pealang.pilot_evidence",
+      "name": "PilotEvidencePackError",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.pilot_evidence",
+      "name": "PilotEvidenceProfileV2",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.pilot_evidence",
+      "name": "pilot_evidence_capabilities",
+      "kind": "function",
+      "signature": "()"
+    },
+    {
+      "module": "pealang.pilot_evidence",
+      "name": "PilotEvidenceIssueV2",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.pilot_evidence",
+      "name": "PilotEvidenceAppV2",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.pilot_evidence",
+      "name": "PilotEvidencePackPlanV2",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.pilot_evidence",
+      "name": "plan_pilot_evidence",
+      "kind": "function",
+      "signature": "(root,profile=?,state=?)"
+    },
+    {
+      "module": "pealang.pilot_evidence",
+      "name": "load_pilot_evidence_state_v2",
+      "kind": "function",
+      "signature": "(path)"
+    },
+    {
+      "module": "pealang.pilot_evidence",
+      "name": "write_pilot_evidence_state_v2",
+      "kind": "function",
+      "signature": "(root,plan,path=?)"
+    },
+    {
+      "module": "pealang.pilot_evidence",
+      "name": "pilot_evidence_report",
+      "kind": "function",
+      "signature": "(plans,profile=?)"
+    },
+    {
+      "module": "pealang.pilot_evidence",
+      "name": "pilot_evidence_gate",
+      "kind": "function",
+      "signature": "(report)"
+    },
+    {
+      "module": "pealang.pilot_evidence",
+      "name": "build_pilot_evidence_namespace",
+      "kind": "function",
+      "signature": "()"
+    },
+    {
       "module": "pealang.lsp",
       "name": "LSPServer",
       "kind": "class",
