@@ -1,4 +1,13 @@
 # Changelog
+## 3.1.41 - Phase 74: Native Backend (2026-11-26)
+- Add `NativeModule`, `NativeRuntime`, `compile_native()`, and `native_supported()` for portable native lowering
+- Lower the fast-interpreter bytecode subset to deterministic native IR and emit a self-contained C source artifact
+- Add `verify_native_parity()`, `benchmark_native()`, `native_report()`, and `native_gate()`
+- Add a `pea native` CLI command with `--verify`, `--benchmark`, `--optimize`, and `--emit` options, plus a `native` help topic
+- Add a stable `runtime.native_backend_v3` feature flag and a normative spec section
+- Align current release metadata to 3.1.41; frozen 3.0 digest and component versions stay pinned
+- Targeted native, parity, JIT, freeze, version, and conformance tests smoke-tested
+
 ## 3.1.40 - Phase 73: Bytecode JIT (2026-11-26)
 - Add `JITRuntime`, `JITProfile`, `HotTrace`, `CompiledTrace`, and `compile_trace()` for profile-guided trace compilation
 - Count instructions in a non-emitting profiling run and compile hot loop back-edges from the fast-interpreter instruction set

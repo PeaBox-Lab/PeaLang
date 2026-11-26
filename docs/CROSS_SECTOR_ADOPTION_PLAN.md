@@ -130,6 +130,13 @@ behind type guards. Guard failures deoptimize to the standard VM, and
 `pea jit --verify` requires identical VM and JIT output and results. The frozen
 3.0 language surface and manifest digest remain unchanged.
 
+**Phase 74 — Native backend** lowers the same portable bytecode subset to a
+deterministic native IR and a self-contained C source artifact. Modules outside
+the supported instruction or constant set remain on the standard VM, and
+`pea native --verify` requires identical VM and native output and results. Hosts
+can compile the emitted artifact for deployment without changing the frozen 3.0
+language surface or manifest digest.
+
 ### Wave 3 — Developer experience (Phases 81–90)
 
 LSP v2, DAP debugger, formatter v3, linter v3, test framework v2, incremental

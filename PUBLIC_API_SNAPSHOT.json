@@ -2720,6 +2720,72 @@
       "signature": "()"
     },
     {
+      "module": "pealang.native_backend",
+      "name": "NativeError",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.native_backend",
+      "name": "NativeInstruction",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.native_backend",
+      "name": "NativeModule",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.native_backend",
+      "name": "native_supported",
+      "kind": "function",
+      "signature": "(module)"
+    },
+    {
+      "module": "pealang.native_backend",
+      "name": "compile_native",
+      "kind": "function",
+      "signature": "(module)"
+    },
+    {
+      "module": "pealang.native_backend",
+      "name": "NativeRuntime",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.native_backend",
+      "name": "verify_native_parity",
+      "kind": "function",
+      "signature": "(module)"
+    },
+    {
+      "module": "pealang.native_backend",
+      "name": "benchmark_native",
+      "kind": "function",
+      "signature": "(module,iterations=?)"
+    },
+    {
+      "module": "pealang.native_backend",
+      "name": "native_report",
+      "kind": "function",
+      "signature": "(module)"
+    },
+    {
+      "module": "pealang.native_backend",
+      "name": "native_gate",
+      "kind": "function",
+      "signature": "(report)"
+    },
+    {
+      "module": "pealang.native_backend",
+      "name": "build_native_namespace",
+      "kind": "function",
+      "signature": "()"
+    },
+    {
       "module": "pealang.conformance_quality",
       "name": "run_conformance_suite",
       "kind": "function",

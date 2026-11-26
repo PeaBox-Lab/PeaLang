@@ -192,10 +192,10 @@ def test_feature_flag_and_help_document_optimizer():
 
 
 def test_release_metadata_is_aligned():
-    assert pealang.__version__ == SPEC_VERSION == '3.1.40'
+    assert pealang.__version__ == SPEC_VERSION == '3.1.41'
     manifest = json.loads((Path(__file__).resolve().parent.parent
                            / 'RELEASE_MANIFEST.json').read_text(encoding='utf-8'))
-    assert manifest['version'] == '3.1.40'
-    assert manifest['previous_version'] == '3.1.39'
+    assert manifest['version'] == '3.1.41'
+    assert manifest['previous_version'] == '3.1.40'
     assert pealang.OPTIMIZER_VERSION == '3.1.38'
     assert pealang.CORE_RELEASE_FROZEN_AT == '3.1.37'

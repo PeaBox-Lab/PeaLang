@@ -1,6 +1,6 @@
 # PeaLang User Guide
 
-This guide covers the PeaLang 3.1.40 release (unified versioning; supersedes the 1.0.0-experience and 0.99.6 baselines).
+This guide covers the PeaLang 3.1.41 release (unified versioning; supersedes the 1.0.0-experience and 0.99.6 baselines).
 
 ## Installation and Setup
 
@@ -34,6 +34,7 @@ pea doctor
 | `pea optimize <file.pea> [--verify]` | Optimize bytecode and report parity |
 | `pea fast <file.pea> [--verify] [--benchmark]` | Run via the direct-handler fast interpreter |
 | `pea jit <file.pea> [--verify] [--benchmark]` | Profile and run hot traces with JIT guards |
+| `pea native <file.pea> [--verify] [--emit FILE.c]` | Lower to native IR and verify VM parity |
 | `pea analyze <file.json|csv> [--json] [--head N]` | Profile a JSON/CSV dataset (analysis) |
 | `pea web-openapi` / `pea openapi <file.pea> [--title T] [--version V]` | Extract OpenAPI from a file defining `app` |
 | `pea hash <file> [--algo sha256]` | Compute file hash |
@@ -201,6 +202,18 @@ Guard failures fall back to the standard VM, so unsupported value types and
 modules cannot change program meaning. Host programs can use `JITRuntime`,
 `profile_execution()`, `select_traces()`, `verify_jit_parity()`, and
 `bytecode_jit_report()` directly.
+
+### Native backend
+```bash
+pea native app.pea --verify
+pea native app.pea --benchmark --optimize --emit app.c
+```
+Lower the supported bytecode subset to deterministic native IR and emit a
+self-contained C source artifact. The report shows the artifact format, digest,
+instruction count, source byte count, execution mode, output, result, and
+optional parity and benchmark data. Modules outside the native subset run
+entirely on the standard VM. Host programs can use `compile_native()`,
+`NativeRuntime`, `verify_native_parity()`, and `native_report()` directly.
 
 ### Optional chaining and null coalescing
 ```pea

@@ -220,6 +220,10 @@ from .bytecode_jit import (build_bytecode_jit_namespace as _bytecode_jit_build_n
     JITRuntime as _bytecode_jit_runtime, verify_jit_parity as _bytecode_jit_verify,
     benchmark_jit as _bytecode_jit_benchmark,
     bytecode_jit_report as _bytecode_jit_report)
+from .native_backend import (build_native_namespace as _native_build_namespace,
+    NativeRuntime as _native_runtime, compile_native as _native_compile,
+    verify_native_parity as _native_verify, benchmark_native as _native_benchmark,
+    native_report as _native_report)
 from .ai_ml import (build_ai_ml_namespace as _ai_ml_build_namespace)
 from .debugger import (build_debugger_namespace as _debugger_build_namespace)
 from .serverless import build_serverless_namespace as _serverless_build_namespace
@@ -3573,6 +3577,12 @@ def build_analysis_namespace() -> dict[str, Any]:
         "BenchmarkJIT": _bytecode_jit_benchmark,
         "JITReport": _bytecode_jit_report,
         "JITNamespace": _bytecode_jit_build_namespace,
+        "NativeRuntime": _native_runtime,
+        "CompileNative": _native_compile,
+        "VerifyNativeParity": _native_verify,
+        "BenchmarkNative": _native_benchmark,
+        "NativeReport": _native_report,
+        "NativeNamespace": _native_build_namespace,
         "AIML": _ai_ml_build_namespace,
         "Debugger": _debugger_build_namespace,
         "Ecosystem": _ecosystem_build_namespace,

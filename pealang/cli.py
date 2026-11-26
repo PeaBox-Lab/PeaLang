@@ -677,6 +677,25 @@ def main(argv=None):
             report=bytecode_jit_report(module,threshold=a.threshold,verify=a.verify,benchmark=a.benchmark)
             print(json.dumps(report,indent=2,default=str));return 0 if bytecode_jit_gate(report)['gate']=='PASS' else 1
 
+        if c=='native':
+
+            from .bytecode import BytecodeModule
+
+            from .compiler import compile_source_to_bytecode
+
+            from .native_backend import compile_native,native_gate,native_report
+
+            p=argparse.ArgumentParser(prog='pea native');p.add_argument('file');p.add_argument('--verify',action='store_true');p.add_argument('--benchmark',action='store_true');p.add_argument('--optimize',action='store_true');p.add_argument('--emit');a=p.parse_args(argv[1:]);path=Path(a.file)
+            try:module=BytecodeModule.load(path) if path.suffix=='.peac' else compile_source_to_bytecode(path.read_text(encoding='utf-8'),str(path))
+            except Exception as e:print(f'Native run failed: {e}');return 1
+            if a.optimize:
+                from .bytecode_optimizer import optimize_bytecode
+
+                module=optimize_bytecode(module)
+            if a.emit:compile_native(module).save(a.emit)
+            report=native_report(module,verify=a.verify,benchmark=a.benchmark)
+            print(json.dumps(report,indent=2,default=str));return 0 if native_gate(report)['gate']=='PASS' else 1
+
         if c=='semantic':
 
             from .type_system import SemanticAnalyzer
@@ -1007,7 +1026,7 @@ def main(argv=None):
             else:
                 from .stdlib import stdlib_manifest
                 sm=stdlib_manifest();mods=sm.get('modules',sm)
-                info={'version':__version__,'stdlib':list(mods.keys()) if isinstance(mods,dict) else mods,'commands':['run','eval','repl','check','lint','fmt','test','compile','vm','dis','init','new','serve-web','doctor','health','diagnose','help','templates','info','project','serve','stdlib','typecheck','typecheck-project','docs','analyze','web-openapi','openapi','openapi-contract','hash','tree','env','quickstart','scaffold','readiness','audit','conformance','conformance-v2','freeze','optimize','fast','jit']}
+                info={'version':__version__,'stdlib':list(mods.keys()) if isinstance(mods,dict) else mods,'commands':['run','eval','repl','check','lint','fmt','test','compile','vm','dis','init','new','serve-web','doctor','health','diagnose','help','templates','info','project','serve','stdlib','typecheck','typecheck-project','docs','analyze','web-openapi','openapi','openapi-contract','hash','tree','env','quickstart','scaffold','readiness','audit','conformance','conformance-v2','freeze','optimize','fast','jit','native']}
                 print(json.dumps(info,indent=2));return 0
 
         if c=='project':print(json.dumps(project_info(argv[1] if len(argv)>1 else '.'),indent=2));return 0
