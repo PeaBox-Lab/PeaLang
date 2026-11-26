@@ -7982,6 +7982,78 @@
       "signature": "()"
     },
     {
+      "module": "pealang.mobile_delivery",
+      "name": "MobileDeliveryPackError",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.mobile_delivery",
+      "name": "MobileDeliveryProfileV2",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.mobile_delivery",
+      "name": "mobile_delivery_capabilities",
+      "kind": "function",
+      "signature": "()"
+    },
+    {
+      "module": "pealang.mobile_delivery",
+      "name": "MobileDeliveryIssueV2",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.mobile_delivery",
+      "name": "MobileDeliveryAppV2",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.mobile_delivery",
+      "name": "MobileDeliveryPackPlanV2",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.mobile_delivery",
+      "name": "plan_mobile_delivery",
+      "kind": "function",
+      "signature": "(root,profile=?,state=?)"
+    },
+    {
+      "module": "pealang.mobile_delivery",
+      "name": "load_mobile_delivery_state_v2",
+      "kind": "function",
+      "signature": "(path)"
+    },
+    {
+      "module": "pealang.mobile_delivery",
+      "name": "write_mobile_delivery_state_v2",
+      "kind": "function",
+      "signature": "(root,plan,path=?)"
+    },
+    {
+      "module": "pealang.mobile_delivery",
+      "name": "mobile_delivery_report",
+      "kind": "function",
+      "signature": "(plans,profile=?)"
+    },
+    {
+      "module": "pealang.mobile_delivery",
+      "name": "mobile_delivery_gate",
+      "kind": "function",
+      "signature": "(report)"
+    },
+    {
+      "module": "pealang.mobile_delivery",
+      "name": "build_mobile_delivery_namespace",
+      "kind": "function",
+      "signature": "()"
+    },
+    {
       "module": "pealang.lsp",
       "name": "LSPServer",
       "kind": "class",

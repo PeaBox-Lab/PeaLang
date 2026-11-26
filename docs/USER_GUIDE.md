@@ -1,6 +1,6 @@
 # PeaLang User Guide
 
-This guide covers the PeaLang 5.8.0 release (unified versioning; supersedes the 1.0.0-experience and 0.99.6 baselines).
+This guide covers the PeaLang 5.9.0 release (unified versioning; supersedes the 1.0.0-experience and 0.99.6 baselines).
 
 ## Installation and Setup
 
@@ -66,6 +66,7 @@ pea doctor
 | `pea agent-safety <root> [--check] [--state FILE]` | Gate agent safety and tool-use conformance evidence with stable digests |
 | `pea serving-conformance <root> [--check] [--state FILE]` | Gate ML and serving conformance evidence with stable digests |
 | `pea pilot-evidence <root> [--check] [--state FILE]` | Gate cross-platform CI and production pilot evidence evidence with stable digests |
+| `pea mobile-delivery <root> [--check] [--state FILE]` | Gate mobile delivery evidence evidence with stable digests |
 | `pea fmt-v3 <path...> [--check] [--write]` | Report or apply formatter v3 changes |
 | `pea analyze <file.json|csv> [--json] [--head N]` | Profile a JSON/CSV dataset (analysis) |
 | `pea web-openapi` / `pea openapi <file.pea> [--title T] [--version V]` | Extract OpenAPI from a file defining `app` |
@@ -896,6 +897,30 @@ pilot demos without platform matrix, CI run, coverage report, security review, p
 become stable issue codes, while `write_pilot_evidence_state_v2()` persists digests
 without absolute host paths. `pilot_evidence_report()` summarizes plans with a
 recomputable digest, and `pilot_evidence_gate()` recomputes PASS/FAIL from the
+reported error count, incomplete count, and profile.
+
+### Mobile delivery evidence
+
+```bash
+pea mobile-delivery --capabilities
+pea mobile-delivery . --check --state mobile_delivery-state.json --emit mobile_delivery.json
+pea mobile-delivery . --check --write-state --fail-on-incomplete
+```
+
+`plan_mobile_delivery()` extends Wave 7 as a mobile delivery evidence gate and is additive to the
+release governance, capacity, chaos, SLO, observability, and certified-package
+surfaces. A `MobileDeliveryProfileV2` validates the entry limit, preview inclusion,
+android-bridge/ios-bridge/lifecycle-binding/sdk-bundle/sample-app/build-pipeline/device-matrix, current version, and
+incomplete-failure policy before planning. Each `MobileDeliveryAppV2` carries a
+relative path, a manifest digest, name, version, kind, sorted evidence paths,
+sorted platform bindings, sorted required names, resolved dependencies, a
+clean/stale state, and reasons; entries are ordered topologically, and
+incomplete state propagates to dependent entries. Missing dependencies,
+dependency cycles, invalid manifests, missing evidence artifacts, or
+mobile demos without Android bridge, iOS bridge, lifecycle binding, SDK bundle, sample app, build pipeline, device matrix
+become stable issue codes, while `write_mobile_delivery_state_v2()` persists digests
+without absolute host paths. `mobile_delivery_report()` summarizes plans with a
+recomputable digest, and `mobile_delivery_gate()` recomputes PASS/FAIL from the
 reported error count, incomplete count, and profile.
 
 ### Optional chaining and null coalescing

@@ -1,3 +1,11 @@
+## 5.9.0 - Phase 109: Mobile delivery evidence (2026-11-27)
+- Continue Wave 7 with a deterministic mobile delivery evidence gate
+- Add validated profiles for entry limits, preview inclusion, android-bridge/ios-bridge/lifecycle-binding/sdk-bundle/sample-app/build-pipeline/device-matrix, current version, and incomplete policy
+- Add stable nodes with digests, names, versions, kinds, evidence, bindings, resolved dependencies, incomplete reasons, and topological order
+- Detect missing dependencies, cycles, invalid manifests, missing evidence, and mobile demos without Android bridge, iOS bridge, lifecycle binding, SDK bundle, sample app, build pipeline, device matrix as stable issue codes
+- Add `pea mobile-delivery` with check, emit, state, strict incomplete, governance toggles, and capability options plus a stable sector feature flag
+- Align current release metadata to 5.9.0 while keeping the frozen 3.0 digest pinned
+
 ## 5.8.0 - Phase 108: Cross-platform CI and production pilot evidence (2026-11-27)
 - Continue Wave 7 with a deterministic cross-platform CI and production pilot evidence gate
 - Add validated profiles for entry limits, preview inclusion, platform-matrix/ci-run/coverage-report/security-review/pilot-app/host-integration/performance-baseline, current version, and incomplete policy

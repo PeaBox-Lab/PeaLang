@@ -56,6 +56,7 @@ FEATURES={
   'sector.agent_safety':Feature('sector.agent_safety','5.6.0',Stability.STABLE),
   'sector.serving_conformance':Feature('sector.serving_conformance','5.7.0',Stability.STABLE),
   'sector.pilot_evidence':Feature('sector.pilot_evidence','5.8.0',Stability.STABLE),
+  'sector.mobile_delivery':Feature('sector.mobile_delivery','5.9.0',Stability.STABLE),
  'async.await':Feature('async.await','0.26',Stability.PREVIEW),
  'embedding.python':Feature('embedding.python','0.18',Stability.STABLE),
  'embedding.fastapi':Feature('embedding.fastapi','0.25',Stability.PREVIEW),
