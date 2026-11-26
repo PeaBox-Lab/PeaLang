@@ -1,4 +1,15 @@
 # Changelog
+## 5.17.0 - Phase 117: Live service integration evidence (2026-11-27)
+- Continue Wave 8 with a deterministic live service integration evidence gate
+- Add validated profiles for entry limits, preview inclusion, database-connection, cloud-store, sharepoint-binding, sftp-binding, redis-binding, redacted-endpoint, fixture-result, current version, and an incomplete-failure policy
+- Add stable nodes with manifest digests, names, versions, kinds, evidence paths, platform bindings, resolved dependencies, and topological order
+- Detect missing dependencies, cycles, invalid manifests, missing evidence, or integration demos without database connection, cloud store, SharePoint binding, SFTP binding, Redis binding, redacted endpoint, fixture result as sorted issue codes
+- Track digest drift and propagate incomplete state to dependent entries through `pea live-integration --state --write-state`
+- Add `pea live-integration` with capability, check, emit, state, strict incomplete, governance toggle, and current-version options plus a stable `sector.live_integration` feature flag
+- Add a normative live integration spec section and align current release metadata to 5.17.0
+- Frozen 3.0 digest, earlier component versions, and historical release metadata stay pinned
+- Full pytest suite and targeted quality gates passed
+
 ## 5.16.0 - Phase 116: Third-party license review closure (2026-11-27)
 - Continue Wave 8 with a deterministic third-party license review closure gate
 - Add validated profiles for entry limits, preview inclusion, license-inventory, license-policy, reviewer-decision, approved-license, unknown-license, exception-record, review-evidence, current version, and an incomplete-failure policy

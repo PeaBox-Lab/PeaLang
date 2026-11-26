@@ -8558,6 +8558,78 @@
       "signature": "()"
     },
     {
+      "module": "pealang.live_integration",
+      "name": "LiveIntegrationPackError",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.live_integration",
+      "name": "LiveIntegrationProfileV2",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.live_integration",
+      "name": "live_integration_capabilities",
+      "kind": "function",
+      "signature": "()"
+    },
+    {
+      "module": "pealang.live_integration",
+      "name": "LiveIntegrationIssueV2",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.live_integration",
+      "name": "LiveIntegrationAppV2",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.live_integration",
+      "name": "LiveIntegrationPackPlanV2",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.live_integration",
+      "name": "plan_live_integration",
+      "kind": "function",
+      "signature": "(root,profile=?,state=?)"
+    },
+    {
+      "module": "pealang.live_integration",
+      "name": "load_live_integration_state_v2",
+      "kind": "function",
+      "signature": "(path)"
+    },
+    {
+      "module": "pealang.live_integration",
+      "name": "write_live_integration_state_v2",
+      "kind": "function",
+      "signature": "(root,plan,path=?)"
+    },
+    {
+      "module": "pealang.live_integration",
+      "name": "live_integration_report",
+      "kind": "function",
+      "signature": "(plans,profile=?)"
+    },
+    {
+      "module": "pealang.live_integration",
+      "name": "live_integration_gate",
+      "kind": "function",
+      "signature": "(report)"
+    },
+    {
+      "module": "pealang.live_integration",
+      "name": "build_live_integration_namespace",
+      "kind": "function",
+      "signature": "()"
+    },
+    {
       "module": "pealang.lsp",
       "name": "LSPServer",
       "kind": "class",

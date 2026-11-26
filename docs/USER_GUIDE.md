@@ -1,6 +1,6 @@
 # PeaLang User Guide
 
-This guide covers the PeaLang 5.16.0 release (unified versioning; supersedes the 1.0.0-experience and 0.99.6 baselines).
+This guide covers the PeaLang 5.17.0 release (unified versioning; supersedes the 1.0.0-experience and 0.99.6 baselines).
 
 ## Installation and Setup
 
@@ -74,6 +74,7 @@ pea doctor
 | `pea ci-evidence <root> [--check] [--state FILE]` | Gate CI evidence ingest and matrix verification evidence with stable digests |
 | `pea artifact-attestation <root> [--check] [--state FILE]` | Gate release artifact attestation and provenance evidence with stable digests |
 | `pea license-review <root> [--check] [--state FILE]` | Gate third-party license review closure evidence with stable digests |
+| `pea live-integration <root> [--check] [--state FILE]` | Gate live service integration evidence evidence with stable digests |
 | `pea fmt-v3 <path...> [--check] [--write]` | Report or apply formatter v3 changes |
 | `pea analyze <file.json|csv> [--json] [--head N]` | Profile a JSON/CSV dataset (analysis) |
 | `pea web-openapi` / `pea openapi <file.pea> [--title T] [--version V]` | Extract OpenAPI from a file defining `app` |
@@ -1096,6 +1097,30 @@ license demos without license inventory, license policy, reviewer decision, appr
 become stable issue codes, while `write_license_review_state_v2()` persists digests
 without absolute host paths. `license_review_report()` summarizes plans with a
 recomputable digest, and `license_review_gate()` recomputes PASS/FAIL from the
+reported error count, incomplete count, and profile.
+
+### Live service integration evidence
+
+```bash
+pea live-integration --capabilities
+pea live-integration . --check --state live_integration-state.json --emit live_integration.json
+pea live-integration . --check --write-state --fail-on-incomplete
+```
+
+`plan_live_integration()` extends Wave 8 as a live service integration evidence gate and is additive to the
+release governance, capacity, chaos, SLO, observability, and certified-package
+surfaces. A `LiveIntegrationProfileV2` validates the entry limit, preview inclusion,
+database-connection/cloud-store/sharepoint-binding/sftp-binding/redis-binding/redacted-endpoint/fixture-result, current version, and
+incomplete-failure policy before planning. Each `LiveIntegrationAppV2` carries a
+relative path, a manifest digest, name, version, kind, sorted evidence paths,
+sorted platform bindings, sorted required names, resolved dependencies, a
+clean/stale state, and reasons; entries are ordered topologically, and
+incomplete state propagates to dependent entries. Missing dependencies,
+dependency cycles, invalid manifests, missing evidence artifacts, or
+integration demos without database connection, cloud store, SharePoint binding, SFTP binding, Redis binding, redacted endpoint, fixture result
+become stable issue codes, while `write_live_integration_state_v2()` persists digests
+without absolute host paths. `live_integration_report()` summarizes plans with a
+recomputable digest, and `live_integration_gate()` recomputes PASS/FAIL from the
 reported error count, incomplete count, and profile.
 
 ### Optional chaining and null coalescing

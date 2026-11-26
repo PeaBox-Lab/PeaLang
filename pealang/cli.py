@@ -1964,6 +1964,27 @@ def main(argv=None):
             if a.check:return 0 if decision['gate']=='PASS' else 1
             return 0
 
+        if c=='live-integration':
+
+            from .live_integration import (LiveIntegrationProfileV2,live_integration_capabilities,live_integration_gate,live_integration_report,plan_live_integration,load_live_integration_state_v2,write_live_integration_state_v2)
+
+            p=argparse.ArgumentParser(prog='pea live-integration');p.add_argument('root',nargs='?',default='.');p.add_argument('--capabilities',action='store_true');p.add_argument('--check',action='store_true');p.add_argument('--emit');p.add_argument('--state');p.add_argument('--write-state',action='store_true');p.add_argument('--max-entries',type=int,default=500);p.add_argument('--include-preview',action='store_true');p.add_argument('--no-check-database',action='store_true');p.add_argument('--no-check-cloud',action='store_true');p.add_argument('--no-check-sharepoint',action='store_true');p.add_argument('--no-check-sftp',action='store_true');p.add_argument('--no-check-redis',action='store_true');p.add_argument('--no-check-redaction',action='store_true');p.add_argument('--no-check-fixture',action='store_true');p.add_argument('--fail-on-incomplete',action='store_true');p.add_argument('--current-version');a=p.parse_args(argv[1:])
+            if a.capabilities:
+                print(json.dumps(live_integration_capabilities(),indent=2));return 0
+            try:profile=LiveIntegrationProfileV2(max_entries=a.max_entries,include_preview=a.include_preview,check_database=not a.no_check_database,check_cloud=not a.no_check_cloud,check_sharepoint=not a.no_check_sharepoint,check_sftp=not a.no_check_sftp,check_redis=not a.no_check_redis,check_redaction=not a.no_check_redaction,check_fixture=not a.no_check_fixture,fail_on_incomplete=a.fail_on_incomplete,current_version=a.current_version or '')
+            except Exception as e:print(f'Live integration pack failed: {e}');return 1
+            state_path=Path(a.state) if a.state else Path(a.root)/'.pea_live_integration.json'
+            try:
+                state=load_live_integration_state_v2(state_path);plan=plan_live_integration(a.root,profile,state)
+                if a.write_state:write_live_integration_state_v2(a.root,plan,state_path)
+            except Exception as e:
+                print(f'Live integration pack failed: {e}');return 1
+            report=live_integration_report([plan],profile);decision=live_integration_gate(report);report['decision']=decision
+            if a.emit:Path(a.emit).write_text(json.dumps(report,indent=2,default=str)+'\n',encoding='utf-8')
+            print(json.dumps(report,indent=2,default=str))
+            if a.check:return 0 if decision['gate']=='PASS' else 1
+            return 0
+
         if c in ('check','lint'):
 
             p=argparse.ArgumentParser(prog=f'pea {c}');p.add_argument('paths',nargs='+');p.add_argument('--json',action='store_true');a=p.parse_args(argv[1:]);errors=warnings=0;items=[]

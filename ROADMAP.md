@@ -1,3 +1,11 @@
+## 5.17.0 - Phase 117: Live service integration evidence (2026-11-27)
+- Continue Wave 8 with a deterministic live service integration evidence gate
+- Add validated profiles for entry limits, preview inclusion, database-connection/cloud-store/sharepoint-binding/sftp-binding/redis-binding/redacted-endpoint/fixture-result, current version, and incomplete policy
+- Add stable nodes with digests, names, versions, kinds, evidence, bindings, resolved dependencies, incomplete reasons, and topological order
+- Detect missing dependencies, cycles, invalid manifests, missing evidence, and integration demos without database connection, cloud store, SharePoint binding, SFTP binding, Redis binding, redacted endpoint, fixture result as stable issue codes
+- Add `pea live-integration` with check, emit, state, strict incomplete, governance toggles, and capability options plus a stable sector feature flag
+- Align current release metadata to 5.17.0 while keeping the frozen 3.0 digest pinned
+
 ## 5.16.0 - Phase 116: Third-party license review closure (2026-11-27)
 - Continue Wave 8 with a deterministic third-party license review closure gate
 - Add validated profiles for entry limits, preview inclusion, license-inventory/license-policy/reviewer-decision/approved-license/unknown-license/exception-record/review-evidence, current version, and incomplete policy
