@@ -1,7 +1,7 @@
 {
-  "version": "3.1.57",
-  "previous_version": "3.1.56",
-  "release_line": "tagged release v3.1.57",
+  "version": "3.1.58",
+  "previous_version": "3.1.57",
+  "release_line": "tagged release v3.1.58",
   "pytest_tests_passed": 436,
   "conformance_cases_passed": 500,
   "fuzz_iterations": 250,

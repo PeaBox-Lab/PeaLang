@@ -6974,6 +6974,78 @@
       "signature": "()"
     },
     {
+      "module": "pealang.ios_pack",
+      "name": "IOSPackError",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.ios_pack",
+      "name": "IOSProfileV2",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.ios_pack",
+      "name": "ios_pack_capabilities",
+      "kind": "function",
+      "signature": "()"
+    },
+    {
+      "module": "pealang.ios_pack",
+      "name": "IOSIssueV2",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.ios_pack",
+      "name": "IOSAppV2",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.ios_pack",
+      "name": "IOSPackPlanV2",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.ios_pack",
+      "name": "plan_ios_pack",
+      "kind": "function",
+      "signature": "(root,profile=?,state=?)"
+    },
+    {
+      "module": "pealang.ios_pack",
+      "name": "load_ios_state_v2",
+      "kind": "function",
+      "signature": "(path)"
+    },
+    {
+      "module": "pealang.ios_pack",
+      "name": "write_ios_state_v2",
+      "kind": "function",
+      "signature": "(root,plan,path=?)"
+    },
+    {
+      "module": "pealang.ios_pack",
+      "name": "ios_pack_report",
+      "kind": "function",
+      "signature": "(plans,profile=?)"
+    },
+    {
+      "module": "pealang.ios_pack",
+      "name": "ios_pack_gate",
+      "kind": "function",
+      "signature": "(report)"
+    },
+    {
+      "module": "pealang.ios_pack",
+      "name": "build_ios_pack_namespace",
+      "kind": "function",
+      "signature": "()"
+    },
+    {
       "module": "pealang.lsp",
       "name": "LSPServer",
       "kind": "class",

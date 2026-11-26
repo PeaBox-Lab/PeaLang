@@ -1,6 +1,6 @@
 # PeaLang User Guide
 
-This guide covers the PeaLang 3.1.57 release (unified versioning; supersedes the 1.0.0-experience and 0.99.6 baselines).
+This guide covers the PeaLang 3.1.58 release (unified versioning; supersedes the 1.0.0-experience and 0.99.6 baselines).
 
 ## Installation and Setup
 
@@ -52,6 +52,7 @@ pea doctor
 | `pea data-pack <root> [--check] [--state FILE]` | Gate data science sector-pack evidence with stable digests |
 | `pea web-pack <root> [--check] [--state FILE]` | Gate frontend web sector-pack evidence with stable digests |
 | `pea android-pack <root> [--check] [--state FILE]` | Gate Mobile (Android) sector-pack evidence with stable digests |
+| `pea ios-pack <root> [--check] [--state FILE]` | Gate Mobile (iOS) sector-pack evidence with stable digests |
 | `pea fmt-v3 <path...> [--check] [--write]` | Report or apply formatter v3 changes |
 | `pea analyze <file.json|csv> [--json] [--head N]` | Profile a JSON/CSV dataset (analysis) |
 | `pea web-openapi` / `pea openapi <file.pea> [--title T] [--version V]` | Extract OpenAPI from a file defining `app` |
@@ -539,6 +540,30 @@ plugins become stable issue codes, while `write_android_state_v2()` persists
 digests without absolute host paths. `android_pack_report()` summarizes plans
 with a recomputable digest, and `android_pack_gate()` recomputes PASS/FAIL from
 the reported error count, incomplete count, and profile.
+
+### Mobile (iOS) sector pack
+
+```bash
+pea ios-pack --capabilities
+pea ios-pack . --check --state ios-state.json --emit ios.json
+pea ios-pack . --check --write-state --fail-on-incomplete
+```
+
+`plan_ios_pack()` continues Wave 4 and is additive to the host bindings,
+Java client sidecar, and VM embedding foundations. An `IOSProfileV2` validates
+the app limit, preview inclusion, Swift/Objective-C/XCFramework/Xcode checks,
+current version, and incomplete-failure policy before planning. Each
+`IOSAppV2` carries a relative path, a manifest digest, name, version, kind,
+sorted evidence paths, sorted platform bindings, sorted required names, resolved
+dependencies, a clean/stale state, and reasons; apps are ordered topologically,
+and incomplete state propagates to dependent apps. Missing dependencies,
+dependency cycles, invalid manifests, missing evidence artifacts, sample apps
+without Swift bridges, sample apps without Objective-C compatibility layers,
+sample apps without XCFrameworks, and sample apps without Xcode templates become
+stable issue codes, while `write_ios_state_v2()` persists digests without
+absolute host paths. `ios_pack_report()` summarizes plans with a recomputable
+digest, and `ios_pack_gate()` recomputes PASS/FAIL from the reported error count,
+incomplete count, and profile.
 
 ### Optional chaining and null coalescing
 ```pea

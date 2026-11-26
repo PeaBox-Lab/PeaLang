@@ -289,8 +289,21 @@ propagated incomplete reasons, and topological order; sorted missing-dependency,
 cycle, invalid-manifest, missing-evidence, missing-lifecycle-binding,
 missing-JVM-bridge, and missing-gradle-plugin issues; and digests that exclude
 host paths make Android evidence reviewable and reproducible in CI through
-`pea android-pack --check` and `android_pack_gate()`. Later rows of the table
-are built sequentially in following phases.
+`pea android-pack --check` and `android_pack_gate()`.
+
+**Phase 95 — Mobile (iOS) sector pack** continues Wave 4 with a deterministic
+delivery gate for the fifth row of the sector table, additive to
+`host_bindings.py`, `vm_embedding.py`, and the Java client sidecar. Validated
+profiles control app limits, preview inclusion, Swift/Objective-C/XCFramework/
+Xcode template checks, the current version, and incomplete policy. Stable nodes
+with digests, names, versions, kinds, evidence paths, platform bindings,
+resolved dependencies, propagated incomplete reasons, and topological order;
+sorted missing-dependency, cycle, invalid-manifest, missing-evidence,
+missing-Swift-bridge, missing-Objective-C-layer, missing-XCFramework, and
+missing-Xcode-template issues; and digests that exclude host paths make iOS
+evidence reviewable and reproducible in CI through `pea ios-pack --check` and
+`ios_pack_gate()`. Later rows of the table are built sequentially in following
+phases.
 
 ### Wave 5 — Ecosystem release (Phases 99–100)
 

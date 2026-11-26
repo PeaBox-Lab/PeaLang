@@ -1,4 +1,15 @@
 # Changelog
+## 3.1.58 - Phase 95: Mobile (iOS) sector pack (2026-11-26)
+- Continue Wave 4 with a deterministic sector-pack evidence gate for iOS delivery
+- Add validated profiles for app limits, preview inclusion, Swift/Objective-C/XCFramework/Xcode template checks, current version, and an incomplete-failure policy
+- Add stable app nodes with manifest digests, names, versions, kinds, evidence paths, platform bindings, resolved dependencies, and topological order
+- Detect missing dependencies, cycles, invalid manifests, missing evidence, sample apps without Swift bridges, sample apps without Objective-C compatibility layers, sample apps without XCFrameworks, and sample apps without Xcode templates as sorted issue codes
+- Track digest drift and propagate incomplete state to dependent apps through `pea ios-pack --state --write-state`
+- Add `pea ios-pack` with capability, check, emit, state, strict incomplete, toggled governance, and current-version options plus a stable `sector.ios_pack` feature flag
+- Add a normative Mobile (iOS) sector-pack spec section and align current release metadata to 3.1.58
+- Frozen 3.0 digest, earlier component versions, and historical release metadata stay pinned
+- Targeted sector-pack, CLI, freeze, version, and conformance tests smoke-tested
+
 ## 3.1.57 - Phase 94: Mobile (Android) sector pack (2026-11-26)
 - Continue Wave 4 with a deterministic sector-pack evidence gate for Android delivery
 - Add validated profiles for app limits, preview inclusion, lifecycle/JVM/Gradle checks, current version, and an incomplete-failure policy
