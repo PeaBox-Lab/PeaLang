@@ -1,3 +1,11 @@
+## 5.11.0 - Phase 111: Embedded and IoT delivery evidence (2026-11-27)
+- Continue Wave 7 with a deterministic embedded and IoT delivery evidence gate
+- Add validated profiles for entry limits, preview inclusion, no-gc-profile/c-abi/rtos-binding/static-binary/gpio-api/signed-update/safety-audit, current version, and incomplete policy
+- Add stable nodes with digests, names, versions, kinds, evidence, bindings, resolved dependencies, incomplete reasons, and topological order
+- Detect missing dependencies, cycles, invalid manifests, missing evidence, and firmware demos without no-GC profile, C ABI, RTOS binding, static binary, GPIO API, signed update, safety audit as stable issue codes
+- Add `pea embedded-delivery` with check, emit, state, strict incomplete, governance toggles, and capability options plus a stable sector feature flag
+- Align current release metadata to 5.11.0 while keeping the frozen 3.0 digest pinned
+
 ## 5.10.0 - Phase 110: Game delivery evidence (2026-11-27)
 - Continue Wave 7 with a deterministic game delivery evidence gate
 - Add validated profiles for entry limits, preview inclusion, runtime-binding/ecs-binding/engine-bridge/input-api/render-api/hot-reload/playable-build, current version, and incomplete policy

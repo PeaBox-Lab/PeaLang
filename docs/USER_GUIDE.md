@@ -1,6 +1,6 @@
 # PeaLang User Guide
 
-This guide covers the PeaLang 5.10.0 release (unified versioning; supersedes the 1.0.0-experience and 0.99.6 baselines).
+This guide covers the PeaLang 5.11.0 release (unified versioning; supersedes the 1.0.0-experience and 0.99.6 baselines).
 
 ## Installation and Setup
 
@@ -68,6 +68,7 @@ pea doctor
 | `pea pilot-evidence <root> [--check] [--state FILE]` | Gate cross-platform CI and production pilot evidence evidence with stable digests |
 | `pea mobile-delivery <root> [--check] [--state FILE]` | Gate mobile delivery evidence evidence with stable digests |
 | `pea game-delivery <root> [--check] [--state FILE]` | Gate game delivery evidence evidence with stable digests |
+| `pea embedded-delivery <root> [--check] [--state FILE]` | Gate embedded and IoT delivery evidence evidence with stable digests |
 | `pea fmt-v3 <path...> [--check] [--write]` | Report or apply formatter v3 changes |
 | `pea analyze <file.json|csv> [--json] [--head N]` | Profile a JSON/CSV dataset (analysis) |
 | `pea web-openapi` / `pea openapi <file.pea> [--title T] [--version V]` | Extract OpenAPI from a file defining `app` |
@@ -946,6 +947,30 @@ game demos without runtime binding, ECS binding, engine bridge, input API, rende
 become stable issue codes, while `write_game_delivery_state_v2()` persists digests
 without absolute host paths. `game_delivery_report()` summarizes plans with a
 recomputable digest, and `game_delivery_gate()` recomputes PASS/FAIL from the
+reported error count, incomplete count, and profile.
+
+### Embedded and IoT delivery evidence
+
+```bash
+pea embedded-delivery --capabilities
+pea embedded-delivery . --check --state embedded_delivery-state.json --emit embedded_delivery.json
+pea embedded-delivery . --check --write-state --fail-on-incomplete
+```
+
+`plan_embedded_delivery()` extends Wave 7 as a embedded and IoT delivery evidence gate and is additive to the
+release governance, capacity, chaos, SLO, observability, and certified-package
+surfaces. A `EmbeddedDeliveryProfileV2` validates the entry limit, preview inclusion,
+no-gc-profile/c-abi/rtos-binding/static-binary/gpio-api/signed-update/safety-audit, current version, and
+incomplete-failure policy before planning. Each `EmbeddedDeliveryAppV2` carries a
+relative path, a manifest digest, name, version, kind, sorted evidence paths,
+sorted platform bindings, sorted required names, resolved dependencies, a
+clean/stale state, and reasons; entries are ordered topologically, and
+incomplete state propagates to dependent entries. Missing dependencies,
+dependency cycles, invalid manifests, missing evidence artifacts, or
+firmware demos without no-GC profile, C ABI, RTOS binding, static binary, GPIO API, signed update, safety audit
+become stable issue codes, while `write_embedded_delivery_state_v2()` persists digests
+without absolute host paths. `embedded_delivery_report()` summarizes plans with a
+recomputable digest, and `embedded_delivery_gate()` recomputes PASS/FAIL from the
 reported error count, incomplete count, and profile.
 
 ### Optional chaining and null coalescing

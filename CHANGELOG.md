@@ -1,4 +1,15 @@
 # Changelog
+## 5.11.0 - Phase 111: Embedded and IoT delivery evidence (2026-11-27)
+- Continue Wave 7 with a deterministic embedded and IoT delivery evidence gate
+- Add validated profiles for entry limits, preview inclusion, no-gc-profile, c-abi, rtos-binding, static-binary, gpio-api, signed-update, safety-audit, current version, and an incomplete-failure policy
+- Add stable nodes with manifest digests, names, versions, kinds, evidence paths, platform bindings, resolved dependencies, and topological order
+- Detect missing dependencies, cycles, invalid manifests, missing evidence, or firmware demos without no-GC profile, C ABI, RTOS binding, static binary, GPIO API, signed update, safety audit as sorted issue codes
+- Track digest drift and propagate incomplete state to dependent entries through `pea embedded-delivery --state --write-state`
+- Add `pea embedded-delivery` with capability, check, emit, state, strict incomplete, governance toggle, and current-version options plus a stable `sector.embedded_delivery` feature flag
+- Add a normative embedded delivery spec section and align current release metadata to 5.11.0
+- Frozen 3.0 digest, earlier component versions, and historical release metadata stay pinned
+- Full pytest suite and targeted quality gates passed
+
 ## 5.10.0 - Phase 110: Game delivery evidence (2026-11-27)
 - Continue Wave 7 with a deterministic game delivery evidence gate
 - Add validated profiles for entry limits, preview inclusion, runtime-binding, ecs-binding, engine-bridge, input-api, render-api, hot-reload, playable-build, current version, and an incomplete-failure policy

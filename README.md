@@ -8,9 +8,9 @@ PeaLang is designed to complement existing ecosystems such as Python, FastAPI, J
 
 ## Release Status
 
-**Version: 5.10.0** — current tagged release across package, SDK, runtime, and specification metadata.
+**Version: 5.11.0** — current tagged release across package, SDK, runtime, and specification metadata.
 
-`5.10.0` is the unified release identifier for the tagged v5.10.0 line. Source version, SDK packages, container image label, runtime health output, registry user agent, release manifest, and language specification now report the same version. Historical release notes are kept in `docs/releases/` for provenance, but they do not define the current version.
+`5.11.0` is the unified release identifier for the tagged v5.11.0 line. Source version, SDK packages, container image label, runtime health output, registry user agent, release manifest, and language specification now report the same version. Historical release notes are kept in `docs/releases/` for provenance, but they do not define the current version.
 
 See `ROADMAP.md` for the forward-looking plan, `CHANGELOG.md` for per-feature history, and `docs/CROSS_SECTOR_ADOPTION_PLAN.md` for the plan to make PeaLang credible across enterprise, data, web, mobile, games, embedded, and cloud sectors.
 
@@ -1467,6 +1467,24 @@ runtime binding, ECS binding, engine bridge, input API, render API, hot reload, 
 `GameDeliveryProfileV2` validates entry limits, preview inclusion, governance
 checks, current version, and the incomplete-failure policy; `game_delivery_report()`
 and `game_delivery_gate()` provide reproducible CI evidence without host paths or
+timings.
+
+### Embedded and IoT delivery evidence
+
+```bash
+pea embedded-delivery --capabilities
+pea embedded-delivery . --check --state embedded_delivery-state.json --emit embedded_delivery.json
+pea embedded-delivery . --check --write-state --fail-on-incomplete
+```
+
+Phase 111 at **5.11.0** extends Wave 7 with a deterministic
+embedded delivery gate over `*.embedded.json` manifests. It derives a stable
+topological order and incomplete set, and reports missing dependencies, cycles,
+invalid manifests, missing evidence, and firmware demos without
+no-GC profile, C ABI, RTOS binding, static binary, GPIO API, signed update, safety audit as sorted issue codes.
+`EmbeddedDeliveryProfileV2` validates entry limits, preview inclusion, governance
+checks, current version, and the incomplete-failure policy; `embedded_delivery_report()`
+and `embedded_delivery_gate()` provide reproducible CI evidence without host paths or
 timings.
 
 ### Project queries

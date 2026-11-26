@@ -1838,6 +1838,27 @@ def main(argv=None):
             if a.check:return 0 if decision['gate']=='PASS' else 1
             return 0
 
+        if c=='embedded-delivery':
+
+            from .embedded_delivery import (EmbeddedDeliveryProfileV2,embedded_delivery_capabilities,embedded_delivery_gate,embedded_delivery_report,plan_embedded_delivery,load_embedded_delivery_state_v2,write_embedded_delivery_state_v2)
+
+            p=argparse.ArgumentParser(prog='pea embedded-delivery');p.add_argument('root',nargs='?',default='.');p.add_argument('--capabilities',action='store_true');p.add_argument('--check',action='store_true');p.add_argument('--emit');p.add_argument('--state');p.add_argument('--write-state',action='store_true');p.add_argument('--max-entries',type=int,default=500);p.add_argument('--include-preview',action='store_true');p.add_argument('--no-check-nogc',action='store_true');p.add_argument('--no-check-abi',action='store_true');p.add_argument('--no-check-rtos',action='store_true');p.add_argument('--no-check-binary',action='store_true');p.add_argument('--no-check-gpio',action='store_true');p.add_argument('--no-check-update',action='store_true');p.add_argument('--no-check-safety',action='store_true');p.add_argument('--fail-on-incomplete',action='store_true');p.add_argument('--current-version');a=p.parse_args(argv[1:])
+            if a.capabilities:
+                print(json.dumps(embedded_delivery_capabilities(),indent=2));return 0
+            try:profile=EmbeddedDeliveryProfileV2(max_entries=a.max_entries,include_preview=a.include_preview,check_nogc=not a.no_check_nogc,check_abi=not a.no_check_abi,check_rtos=not a.no_check_rtos,check_binary=not a.no_check_binary,check_gpio=not a.no_check_gpio,check_update=not a.no_check_update,check_safety=not a.no_check_safety,fail_on_incomplete=a.fail_on_incomplete,current_version=a.current_version or '')
+            except Exception as e:print(f'Embedded delivery pack failed: {e}');return 1
+            state_path=Path(a.state) if a.state else Path(a.root)/'.pea_embedded_delivery.json'
+            try:
+                state=load_embedded_delivery_state_v2(state_path);plan=plan_embedded_delivery(a.root,profile,state)
+                if a.write_state:write_embedded_delivery_state_v2(a.root,plan,state_path)
+            except Exception as e:
+                print(f'Embedded delivery pack failed: {e}');return 1
+            report=embedded_delivery_report([plan],profile);decision=embedded_delivery_gate(report);report['decision']=decision
+            if a.emit:Path(a.emit).write_text(json.dumps(report,indent=2,default=str)+'\n',encoding='utf-8')
+            print(json.dumps(report,indent=2,default=str))
+            if a.check:return 0 if decision['gate']=='PASS' else 1
+            return 0
+
         if c in ('check','lint'):
 
             p=argparse.ArgumentParser(prog=f'pea {c}');p.add_argument('paths',nargs='+');p.add_argument('--json',action='store_true');a=p.parse_args(argv[1:]);errors=warnings=0;items=[]
