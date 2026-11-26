@@ -6686,6 +6686,78 @@
       "signature": "()"
     },
     {
+      "module": "pealang.finance_pack",
+      "name": "FinancePackError",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.finance_pack",
+      "name": "FinanceProfileV2",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.finance_pack",
+      "name": "finance_pack_capabilities",
+      "kind": "function",
+      "signature": "()"
+    },
+    {
+      "module": "pealang.finance_pack",
+      "name": "FinanceIssueV2",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.finance_pack",
+      "name": "FinanceArtifactV2",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.finance_pack",
+      "name": "FinancePackPlanV2",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.finance_pack",
+      "name": "plan_finance_pack",
+      "kind": "function",
+      "signature": "(root,profile=?,state=?)"
+    },
+    {
+      "module": "pealang.finance_pack",
+      "name": "load_finance_state_v2",
+      "kind": "function",
+      "signature": "(path)"
+    },
+    {
+      "module": "pealang.finance_pack",
+      "name": "write_finance_state_v2",
+      "kind": "function",
+      "signature": "(root,plan,path=?)"
+    },
+    {
+      "module": "pealang.finance_pack",
+      "name": "finance_pack_report",
+      "kind": "function",
+      "signature": "(plans,profile=?)"
+    },
+    {
+      "module": "pealang.finance_pack",
+      "name": "finance_pack_gate",
+      "kind": "function",
+      "signature": "(report)"
+    },
+    {
+      "module": "pealang.finance_pack",
+      "name": "build_finance_pack_namespace",
+      "kind": "function",
+      "signature": "()"
+    },
+    {
       "module": "pealang.lsp",
       "name": "LSPServer",
       "kind": "class",

@@ -1,6 +1,6 @@
 # PeaLang User Guide
 
-This guide covers the PeaLang 3.1.53 release (unified versioning; supersedes the 1.0.0-experience and 0.99.6 baselines).
+This guide covers the PeaLang 3.1.54 release (unified versioning; supersedes the 1.0.0-experience and 0.99.6 baselines).
 
 ## Installation and Setup
 
@@ -48,6 +48,7 @@ pea doctor
 | `pea migrate-v2 <root> [--check] [--state FILE]` | Plan migration assistants with stable digests |
 | `pea templates-v2 <root> [--check] [--state FILE]` | Inventory project templates with stable digests |
 | `pea devex-v2 <root> [--check] [--state FILE]` | Gate developer-experience evidence with stable digests |
+| `pea finance-pack <root> [--check] [--state FILE]` | Gate finance sector-pack evidence with stable digests |
 | `pea fmt-v3 <path...> [--check] [--write]` | Report or apply formatter v3 changes |
 | `pea analyze <file.json|csv> [--json] [--head N]` | Profile a JSON/CSV dataset (analysis) |
 | `pea web-openapi` / `pea openapi <file.pea> [--title T] [--version V]` | Extract OpenAPI from a file defining `app` |
@@ -442,6 +443,29 @@ issue codes, while `write_devex_state_v2()` persists digests without absolute
 host paths. `devex_v2_report()` summarizes plans with a recomputable digest, and
 `devex_v2_gate()` recomputes PASS/FAIL from the reported error count, incomplete
 count, and profile.
+
+### Enterprise/Finance/Banking sector pack
+
+```bash
+pea finance-pack --capabilities
+pea finance-pack . --check --state finance-state.json --emit finance.json
+pea finance-pack . --check --write-state --fail-on-incomplete
+```
+
+`plan_finance_pack()` opens Wave 4 and is additive to the existing SQL,
+connector, capability, and audit layers. A `FinanceProfileV2` validates the
+artifact limit, sandbox inclusion, interop/audit contract checks, current
+version, and incomplete-failure policy before planning. Each
+`FinanceArtifactV2` carries a relative path, a manifest digest, name, version,
+kind, sorted evidence paths, sorted required names, sorted contracts, resolved
+dependencies, a clean/stale state, and reasons; artifacts are ordered
+topologically, and incomplete state propagates to dependent artifacts. Missing
+dependencies, dependency cycles, invalid manifests, missing evidence artifacts,
+interop bindings without contracts, and reference apps without audit rules
+become stable issue codes, while `write_finance_state_v2()` persists digests
+without absolute host paths. `finance_pack_report()` summarizes plans with a
+recomputable digest, and `finance_pack_gate()` recomputes PASS/FAIL from the
+reported error count, incomplete count, and profile.
 
 ### Optional chaining and null coalescing
 ```pea

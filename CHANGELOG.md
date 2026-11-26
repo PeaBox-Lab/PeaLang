@@ -1,4 +1,15 @@
 # Changelog
+## 3.1.54 - Phase 91: Enterprise/Finance/Banking sector pack (2026-11-26)
+- Open Wave 4 with a deterministic sector-pack evidence gate for enterprise, finance, and banking delivery
+- Add validated profiles for artifact limits, sandbox inclusion, interop/audit contract checks, current version, and an incomplete-failure policy
+- Add stable artifact nodes with manifest digests, names, versions, kinds, evidence paths, contracts, resolved dependencies, and topological order
+- Detect missing dependencies, cycles, invalid manifests, missing evidence, interop bindings without contracts, and reference apps without audit rules as sorted issue codes
+- Track digest drift and propagate incomplete state to dependent artifacts through `pea finance-pack --state --write-state`
+- Add `pea finance-pack` with capability, check, emit, state, strict incomplete, and current-version options plus a stable `sector.finance_pack` feature flag
+- Add a normative finance sector-pack spec section and align current release metadata to 3.1.54
+- Frozen 3.0 digest, earlier component versions, and historical release metadata stay pinned
+- Targeted sector-pack, CLI, freeze, version, and conformance tests smoke-tested
+
 ## 3.1.53 - Phase 90: Developer experience v2 (2026-11-26)
 - Add a deterministic developer-experience evidence gate as the Wave 3 capstone, additive to all existing DevX commands
 - Add validated profiles for tool limits, experimental inclusion, evidence checks, current version, and an incomplete-failure policy

@@ -8,9 +8,9 @@ PeaLang is designed to complement existing ecosystems such as Python, FastAPI, J
 
 ## Release Status
 
-**Version: 3.1.53** — current tagged release across package, SDK, runtime, and specification metadata.
+**Version: 3.1.54** — current tagged release across package, SDK, runtime, and specification metadata.
 
-`3.1.53` is the unified release identifier for the tagged v3.1.53 line. Source version, SDK packages, container image label, runtime health output, registry user agent, release manifest, and language specification now report the same version. Historical release notes are kept in `docs/releases/` for provenance, but they do not define the current version.
+`3.1.54` is the unified release identifier for the tagged v3.1.54 line. Source version, SDK packages, container image label, runtime health output, registry user agent, release manifest, and language specification now report the same version. Historical release notes are kept in `docs/releases/` for provenance, but they do not define the current version.
 
 See `ROADMAP.md` for the forward-looking plan, `CHANGELOG.md` for per-feature history, and `docs/CROSS_SECTOR_ADOPTION_PLAN.md` for the plan to make PeaLang credible across enterprise, data, web, mobile, games, embedded, and cloud sectors.
 
@@ -1093,6 +1093,24 @@ overruns as sorted issue codes. `DevExProfileV2` validates tool limits,
 experimental inclusion, evidence checks, current version, and the
 incomplete-failure policy; `devex_v2_report()` and `devex_v2_gate()` provide
 reproducible CI evidence without host paths or timings.
+
+### Enterprise/Finance/Banking sector pack
+
+```bash
+pea finance-pack --capabilities
+pea finance-pack . --check --state finance-state.json --emit finance.json
+pea finance-pack . --check --write-state --fail-on-incomplete
+```
+
+Phase 91 opens Wave 4 with a deterministic sector-pack gate alongside the
+existing SQL, connector, capability, and audit layers. It derives a stable
+topological artifact order and incomplete set from `*.finance.json` manifests,
+and reports missing dependencies, cycles, invalid manifests, missing evidence,
+interop bindings without contracts, and reference apps without audit rules as
+sorted issue codes. `FinanceProfileV2` validates artifact limits, sandbox
+inclusion, interop/audit checks, current version, and the incomplete-failure
+policy; `finance_pack_report()` and `finance_pack_gate()` provide reproducible
+CI evidence without host paths or timings.
 
 ### Project queries
 

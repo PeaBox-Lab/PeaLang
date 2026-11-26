@@ -1,3 +1,11 @@
+## 3.1.54 - Phase 91: Enterprise/Finance/Banking sector pack (2026-11-26)
+- Open Wave 4 with a deterministic sector-pack evidence gate for enterprise, finance, and banking delivery
+- Add validated profiles for artifact limits, sandbox inclusion, interop/audit checks, current version, and incomplete policy
+- Add stable artifact nodes with digests, names, versions, kinds, evidence, contracts, resolved dependencies, incomplete reasons, and topological order
+- Detect missing dependencies, cycles, invalid manifests, missing evidence, missing interop contracts, and missing audit rules as stable issue codes
+- Add `pea finance-pack` with check, emit, state, strict incomplete, and capability options plus a stable sector feature flag
+- Align current release metadata to 3.1.54 while keeping the frozen 3.0 digest pinned
+
 ## 3.1.53 - Phase 90: Developer experience v2 (2026-11-26)
 - Close Wave 3 with a deterministic developer-experience evidence gate additive to the existing DevX surface
 - Add validated profiles for tool limits, experimental inclusion, evidence checks, current version, and incomplete policy
