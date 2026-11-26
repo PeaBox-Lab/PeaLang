@@ -8414,6 +8414,78 @@
       "signature": "()"
     },
     {
+      "module": "pealang.artifact_attestation",
+      "name": "ArtifactAttestationPackError",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.artifact_attestation",
+      "name": "ArtifactAttestationProfileV2",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.artifact_attestation",
+      "name": "artifact_attestation_capabilities",
+      "kind": "function",
+      "signature": "()"
+    },
+    {
+      "module": "pealang.artifact_attestation",
+      "name": "ArtifactAttestationIssueV2",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.artifact_attestation",
+      "name": "ArtifactAttestationAppV2",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.artifact_attestation",
+      "name": "ArtifactAttestationPackPlanV2",
+      "kind": "class",
+      "signature": ""
+    },
+    {
+      "module": "pealang.artifact_attestation",
+      "name": "plan_artifact_attestation",
+      "kind": "function",
+      "signature": "(root,profile=?,state=?)"
+    },
+    {
+      "module": "pealang.artifact_attestation",
+      "name": "load_artifact_attestation_state_v2",
+      "kind": "function",
+      "signature": "(path)"
+    },
+    {
+      "module": "pealang.artifact_attestation",
+      "name": "write_artifact_attestation_state_v2",
+      "kind": "function",
+      "signature": "(root,plan,path=?)"
+    },
+    {
+      "module": "pealang.artifact_attestation",
+      "name": "artifact_attestation_report",
+      "kind": "function",
+      "signature": "(plans,profile=?)"
+    },
+    {
+      "module": "pealang.artifact_attestation",
+      "name": "artifact_attestation_gate",
+      "kind": "function",
+      "signature": "(report)"
+    },
+    {
+      "module": "pealang.artifact_attestation",
+      "name": "build_artifact_attestation_namespace",
+      "kind": "function",
+      "signature": "()"
+    },
+    {
       "module": "pealang.lsp",
       "name": "LSPServer",
       "kind": "class",

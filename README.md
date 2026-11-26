@@ -8,9 +8,9 @@ PeaLang is designed to complement existing ecosystems such as Python, FastAPI, J
 
 ## Release Status
 
-**Version: 5.14.0** — current tagged release across package, SDK, runtime, and specification metadata.
+**Version: 5.15.0** — current tagged release across package, SDK, runtime, and specification metadata.
 
-`5.14.0` is the unified release identifier for the tagged v5.14.0 line. Source version, SDK packages, container image label, runtime health output, registry user agent, release manifest, and language specification now report the same version. Historical release notes are kept in `docs/releases/` for provenance, but they do not define the current version.
+`5.15.0` is the unified release identifier for the tagged v5.15.0 line. Source version, SDK packages, container image label, runtime health output, registry user agent, release manifest, and language specification now report the same version. Historical release notes are kept in `docs/releases/` for provenance, but they do not define the current version.
 
 See `ROADMAP.md` for the forward-looking plan, `CHANGELOG.md` for per-feature history, and `docs/CROSS_SECTOR_ADOPTION_PLAN.md` for the plan to make PeaLang credible across enterprise, data, web, mobile, games, embedded, and cloud sectors.
 
@@ -1539,6 +1539,24 @@ CI run, platform cell, commit binding, pytest report, scanner report, artifact h
 `CIEvidenceProfileV2` validates entry limits, preview inclusion, governance
 checks, current version, and the incomplete-failure policy; `ci_evidence_report()`
 and `ci_evidence_gate()` provide reproducible CI evidence without host paths or
+timings.
+
+### Release artifact attestation and provenance
+
+```bash
+pea artifact-attestation --capabilities
+pea artifact-attestation . --check --state artifact_attestation-state.json --emit artifact_attestation.json
+pea artifact-attestation . --check --write-state --fail-on-incomplete
+```
+
+Phase 115 at **5.15.0** extends Wave 8 with a deterministic
+artifact attestation gate over `*.attestation.json` manifests. It derives a stable
+topological order and incomplete set, and reports missing dependencies, cycles,
+invalid manifests, missing evidence, and artifact demos without
+wheel digest, sdist digest, container manifest, SBOM, provenance, signature, reproducibility as sorted issue codes.
+`ArtifactAttestationProfileV2` validates entry limits, preview inclusion, governance
+checks, current version, and the incomplete-failure policy; `artifact_attestation_report()`
+and `artifact_attestation_gate()` provide reproducible CI evidence without host paths or
 timings.
 
 ### Project queries

@@ -1,6 +1,6 @@
 # PeaLang User Guide
 
-This guide covers the PeaLang 5.14.0 release (unified versioning; supersedes the 1.0.0-experience and 0.99.6 baselines).
+This guide covers the PeaLang 5.15.0 release (unified versioning; supersedes the 1.0.0-experience and 0.99.6 baselines).
 
 ## Installation and Setup
 
@@ -72,6 +72,7 @@ pea doctor
 | `pea maturity-gate <root> [--check] [--state FILE]` | Gate Wave 7 maturity and consolidation evidence with stable digests |
 | `pea release-candidate <root> [--check] [--state FILE]` | Gate release candidate and stable 1.0 evidence evidence with stable digests |
 | `pea ci-evidence <root> [--check] [--state FILE]` | Gate CI evidence ingest and matrix verification evidence with stable digests |
+| `pea artifact-attestation <root> [--check] [--state FILE]` | Gate release artifact attestation and provenance evidence with stable digests |
 | `pea fmt-v3 <path...> [--check] [--write]` | Report or apply formatter v3 changes |
 | `pea analyze <file.json|csv> [--json] [--head N]` | Profile a JSON/CSV dataset (analysis) |
 | `pea web-openapi` / `pea openapi <file.pea> [--title T] [--version V]` | Extract OpenAPI from a file defining `app` |
@@ -1046,6 +1047,30 @@ CI demos without CI run, platform cell, commit binding, pytest report, scanner r
 become stable issue codes, while `write_ci_evidence_state_v2()` persists digests
 without absolute host paths. `ci_evidence_report()` summarizes plans with a
 recomputable digest, and `ci_evidence_gate()` recomputes PASS/FAIL from the
+reported error count, incomplete count, and profile.
+
+### Release artifact attestation and provenance
+
+```bash
+pea artifact-attestation --capabilities
+pea artifact-attestation . --check --state artifact_attestation-state.json --emit artifact_attestation.json
+pea artifact-attestation . --check --write-state --fail-on-incomplete
+```
+
+`plan_artifact_attestation()` extends Wave 8 as a release artifact attestation and provenance gate and is additive to the
+release governance, capacity, chaos, SLO, observability, and certified-package
+surfaces. A `ArtifactAttestationProfileV2` validates the entry limit, preview inclusion,
+wheel-digest/sdist-digest/container-manifest/sbom/provenance/signature/reproducibility, current version, and
+incomplete-failure policy before planning. Each `ArtifactAttestationAppV2` carries a
+relative path, a manifest digest, name, version, kind, sorted evidence paths,
+sorted platform bindings, sorted required names, resolved dependencies, a
+clean/stale state, and reasons; entries are ordered topologically, and
+incomplete state propagates to dependent entries. Missing dependencies,
+dependency cycles, invalid manifests, missing evidence artifacts, or
+artifact demos without wheel digest, sdist digest, container manifest, SBOM, provenance, signature, reproducibility
+become stable issue codes, while `write_artifact_attestation_state_v2()` persists digests
+without absolute host paths. `artifact_attestation_report()` summarizes plans with a
+recomputable digest, and `artifact_attestation_gate()` recomputes PASS/FAIL from the
 reported error count, incomplete count, and profile.
 
 ### Optional chaining and null coalescing

@@ -1,4 +1,15 @@
 # Changelog
+## 5.15.0 - Phase 115: Release artifact attestation and provenance (2026-11-27)
+- Continue Wave 8 with a deterministic release artifact attestation and provenance gate
+- Add validated profiles for entry limits, preview inclusion, wheel-digest, sdist-digest, container-manifest, sbom, provenance, signature, reproducibility, current version, and an incomplete-failure policy
+- Add stable nodes with manifest digests, names, versions, kinds, evidence paths, platform bindings, resolved dependencies, and topological order
+- Detect missing dependencies, cycles, invalid manifests, missing evidence, or artifact demos without wheel digest, sdist digest, container manifest, SBOM, provenance, signature, reproducibility as sorted issue codes
+- Track digest drift and propagate incomplete state to dependent entries through `pea artifact-attestation --state --write-state`
+- Add `pea artifact-attestation` with capability, check, emit, state, strict incomplete, governance toggle, and current-version options plus a stable `sector.artifact_attestation` feature flag
+- Add a normative artifact attestation spec section and align current release metadata to 5.15.0
+- Frozen 3.0 digest, earlier component versions, and historical release metadata stay pinned
+- Full pytest suite and targeted quality gates passed
+
 ## 5.14.0 - Phase 114: CI evidence ingest and matrix verification (2026-11-27)
 - Continue Wave 8 with a deterministic CI evidence ingest and matrix verification gate
 - Add validated profiles for entry limits, preview inclusion, ci-run, platform-cell, commit-binding, pytest-report, scanner-report, artifact-hash, cell-coverage, current version, and an incomplete-failure policy
