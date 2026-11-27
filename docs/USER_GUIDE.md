@@ -1,6 +1,6 @@
 # PeaLang User Guide
 
-This guide covers the PeaLang 5.20.0 release (unified versioning; supersedes the 1.0.0-experience and 0.99.6 baselines).
+This guide covers the PeaLang 5.26.0 release (unified versioning; historical phase notes remain below).
 
 ## Installation and Setup
 
@@ -1232,6 +1232,13 @@ Phase 125 at `5.25.0` is a Wave 10 maintenance release. It
 preserves the stable language surface and existing gates while adding checks for
 evidence retention, SDK contracts, or metadata hygiene as described in
 `spec/68-sdk-contract-reconciliation.md`.
+
+### Verification stability and release metadata hygiene
+
+Phase 126 at `5.26.0` is a Wave 10 maintenance release. It
+preserves the stable language surface and existing gates while adding checks for
+evidence retention, SDK contracts, or metadata hygiene as described in
+`spec/69-release-metadata-hygiene.md`.
 
 ### Optional chaining and null coalescing
 ```pea

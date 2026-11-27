@@ -1,4 +1,4 @@
-# PeaLang React SDK (5.25.0)
+# PeaLang React SDK (5.26.0)
 
 The shipped `@pealang/react` package provides a client provider, hooks, and a
 small UI renderer. Historical source-generator notes are not part of this
@@ -13,4 +13,4 @@ package contract.
 - `PeaUi` — renders `text`, `button`, and `stack` nodes with an `onAction`
   callback.
 
-Version: 5.25.0.
+Version: 5.26.0.

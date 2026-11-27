@@ -497,6 +497,8 @@ release evidence reviewable and reproducible in CI through
 
 **Phase 125 — SDK contract and documentation reconciliation** continues Wave 10 with sdk contract and documentation reconciliation and preserves the frozen 3.0 surface, pinned component versions, public API snapshot, and fixed release metrics.
 
+**Phase 126 — Verification stability and release metadata hygiene** continues Wave 10 with verification stability and release metadata hygiene and preserves the frozen 3.0 surface, pinned component versions, public API snapshot, and fixed release metrics.
+
 ## Sector packs
 
 | Sector | Current PeaLang evidence | Required additions | Acceptance gate |

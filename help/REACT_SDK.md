@@ -1,4 +1,4 @@
-# PeaLang React SDK (5.25.0)
+# PeaLang React SDK (5.26.0)
 
 ## Shipped exports
 
@@ -7,4 +7,4 @@
 - `usePeaFunction(module, fn)` — invoke with array args and observe state.
 - `PeaUi` — render text, button, and stack nodes.
 
-See `docs/REACT_SDK.md` for the full contract. Version: 5.25.0.
+See `docs/REACT_SDK.md` for the full contract. Version: 5.26.0.

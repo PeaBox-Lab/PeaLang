@@ -1,11 +1,11 @@
 {
-  "version": "5.25.0",
-  "previous_version": "5.24.0",
-  "release_line": "tagged release v5.25.0",
+  "version": "5.26.0",
+  "previous_version": "5.25.0",
+  "release_line": "tagged release v5.26.0",
   "pytest_tests_passed": 436,
   "conformance_cases_passed": 500,
   "fuzz_iterations": 250,
   "tests_failed": 0,
   "status": "PASS",
-  "note": "Phase 121 repairs repository metadata with deterministic integrity checks and aligned SDK metadata; fixed release metrics remain unchanged."
+  "note": "Phase 126 refreshes release metadata and verification invariants while preserving fixed release metrics and the frozen 3.0 core."
 }

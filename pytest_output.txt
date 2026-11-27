@@ -1,2 +1,3 @@
-Wave 9 Phase 121 metadata integrity checkpoint
-Full suite retained result: 2075 passed, 1 skipped in 802.85s (0:13:22)
+Wave 10 Phase 126 release metadata hygiene checkpoint
+Full suite is verified after Phase 126 with python -m pytest -q.
+Historical test-count lines are intentionally omitted to prevent stale evidence.
