@@ -31,3 +31,11 @@ python -m pealang.pre_v1_evidence_v0992
 
 Status remains **NO-GO** until genuine evidence is retained. Do not create
 synthetic PASS records; synthetic fixtures in tests validate gate logic only.
+
+## Retained CI report contract
+
+Wave 10 Phase 124 workflows retain `pytest-report.xml`, `perf_report.json`,
+`conformance_report.json`, Java `surefire-reports`, `typescript-report.txt`,
+`react-report.txt`, `bandit.json`, `pip-audit.json`, `semgrep.sarif`,
+`trivy.sarif`, and `secrets.json`. These are genuine CI artifacts, never
+synthetic PASS records. Manual evidence and named approvals are still required.

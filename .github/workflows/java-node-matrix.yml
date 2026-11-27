@@ -2,7 +2,7 @@ name: Java and Node Matrix
 
 on:
   push:
-  pull_request:
+    pull_request:
 
 permissions:
   contents: read
@@ -21,6 +21,13 @@ jobs:
           distribution: temurin
           java-version: ${{ matrix.java }}
       - run: mvn -f java-sdk/pom.xml test
+      - name: Upload Java report
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: java-report-${{ matrix.java }}
+          path: java-sdk/target/surefire-reports/**
+
   node:
     name: node (${{ matrix.node }})
     runs-on: ubuntu-latest
@@ -32,11 +39,33 @@ jobs:
       - uses: actions/setup-node@v7
         with:
           node-version: ${{ matrix.node }}
-      - run: npm install
+      - name: Install TypeScript SDK dependencies
+        run: npm install
         working-directory: typescript-sdk
       - run: npm run build --if-present
         working-directory: typescript-sdk
-      - run: npm install
+      - name: Typecheck TypeScript SDK
+        run: npm run typecheck --if-present > typescript-report.txt 2>&1
+        working-directory: typescript-sdk
+      - name: Upload TypeScript report
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: typescript-report-${{ matrix.node }}
+          path: typescript-sdk/typescript-report.txt
+      - name: Install React SDK dependencies
+        run: npm install
         working-directory: react-sdk
       - run: npm run build --if-present
         working-directory: react-sdk
+      - name: Typecheck React SDK
+        run: npm run typecheck --if-present > react-report.txt 2>&1
+        working-directory: react-sdk
+      - name: Upload React report
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: react-report-${{ matrix.node }}
+          path: react-sdk/react-report.txt
+      - name: Check browser SDK module
+        run: node --input-type=module -e "import('./browser-sdk/pealang-wasm.js').then(m => { if (typeof m.loadPeaWasm !== 'function') process.exit(1) })"

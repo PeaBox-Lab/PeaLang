@@ -1219,6 +1219,13 @@ preserves the stable language surface and existing gates while adding checks for
 repository metadata, evidence handoff, or verification stability as described in
 `spec/66-verification-stability.md`.
 
+### CI evidence retention and performance gate repair
+
+Phase 124 at `5.24.0` is a Wave 10 maintenance release. It
+preserves the stable language surface and existing gates while adding checks for
+evidence retention, SDK contracts, or metadata hygiene as described in
+`spec/67-ci-evidence-retention.md`.
+
 ### Optional chaining and null coalescing
 ```pea
 let city = user?.profile?.city ?? "unknown"

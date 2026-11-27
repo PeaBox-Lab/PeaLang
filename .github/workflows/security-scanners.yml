@@ -10,9 +10,8 @@ permissions:
   security-events: write
 jobs:
   # CodeQL runs through GitHub's default setup for this repository. An
-  # advanced-setup job (github/codeql-action/init + analyze) cannot upload
-  # SARIF while default setup is enabled, so the workflow here only covers
-  # the supply-chain audit. See security/CODEQL.md.
+  # advanced-setup job cannot upload SARIF while default setup is enabled, so
+  # this workflow retains the supply-chain and static-analysis reports only.
   dependency-audit:
     runs-on: ubuntu-latest
     steps:
@@ -22,4 +21,82 @@ jobs:
           python-version: '3.12'
       - run: python -m pip install --upgrade pip pip-audit
       - run: python -m pip install -e .
-      - run: pip-audit
+      - name: Save pip-audit report
+        run: pip-audit --format json > pip-audit.json
+      - name: Upload pip-audit report
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: pip-audit-report
+          path: pip-audit.json
+
+  bandit:
+    name: Bandit
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: '3.12'
+      - run: python -m pip install bandit
+      - name: Save Bandit report
+        run: bandit -r pealang -f json -o bandit.json
+      - name: Upload Bandit report
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: bandit-report
+          path: bandit.json
+
+  semgrep:
+    name: Semgrep
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: '3.12'
+      - run: python -m pip install semgrep
+      - name: Save Semgrep report
+        run: semgrep scan --config p/default --sarif --output semgrep.sarif .
+      - name: Upload Semgrep report
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: semgrep-report
+          path: semgrep.sarif
+
+  trivy:
+    name: Trivy
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: aquasecurity/trivy-action@master
+        with:
+          scan-type: fs
+          format: sarif
+          output: trivy.sarif
+      - name: Upload Trivy report
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: trivy-report
+          path: trivy.sarif
+
+  secret-scan:
+    name: Secret scan
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: '3.12'
+      - run: python -m pip install detect-secrets
+      - name: Save secret-scan report
+        run: detect-secrets scan --all-files > secrets.json
+      - name: Upload secret-scan report
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: secret-scan-report
+          path: secrets.json

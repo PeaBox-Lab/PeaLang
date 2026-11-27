@@ -1,4 +1,10 @@
 # Changelog
+## 5.24.0 - Phase 124: CI evidence retention and performance gate repair (2026-11-27)
+- Continue Wave 10 with ci evidence retention and performance gate repair
+- Keep the frozen 3.0 digest, component pins, public API snapshot, and fixed release metrics unchanged
+- Add a normative maintenance spec and regression checks for the phase invariants
+- Update current release metadata to 5.24.0
+
 ## 5.23.0 - Phase 123: Verification stability and SDK contract hardening (2026-11-27)
 - Continue Wave 9 with verification stability and sdk contract hardening
 - Keep the frozen 3.0 digest, component pins, public API snapshot, and fixed release metrics unchanged
