@@ -1,3 +1,8 @@
+## 5.22.0 - Phase 122: GA evidence ingest and handoff (2026-11-27)
+- Continue Wave 9 with ga evidence ingest and handoff
+- Preserve the frozen 3.0 digest, pinned component versions, and public API snapshot
+- Add regression checks for the maintenance invariants defined by this phase
+
 ## 5.21.0 - Phase 121: Repository and metadata integrity (2026-11-27)
 - Continue Wave 9 with repository and metadata integrity
 - Preserve the frozen 3.0 digest, pinned component versions, and public API snapshot

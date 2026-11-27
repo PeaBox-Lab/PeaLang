@@ -1205,6 +1205,13 @@ preserves the stable language surface and existing gates while adding checks for
 repository metadata, evidence handoff, or verification stability as described in
 `spec/64-repository-integrity.md`.
 
+### GA evidence ingest and handoff
+
+Phase 122 at `5.22.0` is a Wave 9 maintenance release. It
+preserves the stable language surface and existing gates while adding checks for
+repository metadata, evidence handoff, or verification stability as described in
+`spec/65-ga-evidence-handoff.md`.
+
 ### Optional chaining and null coalescing
 ```pea
 let city = user?.profile?.city ?? "unknown"

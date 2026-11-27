@@ -17,7 +17,7 @@ def test_api_snapshot_sidecar_matches_json():
 def test_release_manifest_note_and_fixed_metrics_are_current():
     manifest = json.loads((ROOT / 'RELEASE_MANIFEST.json').read_text(encoding='utf-8'))
     assert manifest['version'] == pealang.__version__
-    assert manifest['previous_version'] == '5.20.0'
+    assert manifest['previous_version'] == '5.21.0'
     assert 'Phase 88' not in manifest['note']
     assert 'Phase 121' in manifest['note']
     assert manifest['pytest_tests_passed'] == 436

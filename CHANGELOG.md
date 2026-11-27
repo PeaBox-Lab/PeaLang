@@ -1,4 +1,10 @@
 # Changelog
+## 5.22.0 - Phase 122: GA evidence ingest and handoff (2026-11-27)
+- Continue Wave 9 with ga evidence ingest and handoff
+- Keep the frozen 3.0 digest, component pins, public API snapshot, and fixed release metrics unchanged
+- Add a normative maintenance spec and regression checks for the phase invariants
+- Update current release metadata to 5.22.0
+
 ## 5.21.0 - Phase 121: Repository and metadata integrity (2026-11-27)
 - Continue Wave 9 with repository and metadata integrity
 - Keep the frozen 3.0 digest, component pins, public API snapshot, and fixed release metrics unchanged
