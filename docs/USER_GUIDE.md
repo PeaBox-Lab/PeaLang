@@ -1226,6 +1226,13 @@ preserves the stable language surface and existing gates while adding checks for
 evidence retention, SDK contracts, or metadata hygiene as described in
 `spec/67-ci-evidence-retention.md`.
 
+### SDK contract and documentation reconciliation
+
+Phase 125 at `5.25.0` is a Wave 10 maintenance release. It
+preserves the stable language surface and existing gates while adding checks for
+evidence retention, SDK contracts, or metadata hygiene as described in
+`spec/68-sdk-contract-reconciliation.md`.
+
 ### Optional chaining and null coalescing
 ```pea
 let city = user?.profile?.city ?? "unknown"

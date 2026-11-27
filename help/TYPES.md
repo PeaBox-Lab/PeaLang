@@ -50,3 +50,4 @@ missing-release-checklist detection.
  Phase 122 continues Wave 9 with ga evidence ingest and handoff while preserving the frozen core surface.
  Phase 123 continues Wave 9 with verification stability and sdk contract hardening while preserving the frozen core surface.
  Phase 124 continues Wave 10 with ci evidence retention and performance gate repair while preserving the frozen core surface.
+ Phase 125 continues Wave 10 with sdk contract and documentation reconciliation while preserving the frozen core surface.

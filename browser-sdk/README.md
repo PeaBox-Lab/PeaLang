@@ -1,3 +1,3 @@
-# PeaLang Browser SDK 5.24.0
+# PeaLang Browser SDK 5.25.0
 
 Loads PeaLang WebAssembly container artifacts. PEAC-to-native-WASM execution remains **Preview** and is outside the stable 1.0 compatibility surface.

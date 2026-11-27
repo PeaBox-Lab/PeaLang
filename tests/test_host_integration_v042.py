@@ -190,7 +190,7 @@ def test_scaffold_java_sdk(tmp_path):
     out = scaffold_java_sdk(str(tmp_path / "java-sdk"))
     assert "error" not in out
     expected_files = {
-        "src/main/java/com/pealang/SdkClient.java",
+        "src/main/java/io/pealang/client/SdkClient.java",
         "pom.xml",
         "src/main/resources/application.yml",
         "README.md",

@@ -306,32 +306,26 @@ def scaffold_java_sdk(target_dir: str = "java-sdk") -> dict[str, Any]:
     Generates a Maven starter project with a PeaLang runtime connector,
     main class, health endpoint, and build configuration.
     """
+    from . import __version__ as _version
+
     root = Path(target_dir)
     root.mkdir(parents=True, exist_ok=True)
     (root / "src" / "main" / "java").mkdir(parents=True, exist_ok=True)
-    (root / "src" / "main" / "java" / "com" / "pealang").mkdir(parents=True, exist_ok=True)
+    (root / "src" / "main" / "java" / "io" / "pealang" / "client").mkdir(parents=True, exist_ok=True)
     (root / "src" / "main" / "resources").mkdir(parents=True, exist_ok=True)
-    (root / "pom.xml").write_text('''<?xml version="1.0" encoding="UTF-8"?>
+    pom_path = root / "pom.xml"
+    pom_path.write_text('''<?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.pealang</groupId>
-    <artifactId>pealang-java-sdk</artifactId>
-    <version>1.0.0</version>
+    <groupId>io.pealang</groupId>
+    <artifactId>pealang-java-client</artifactId>
+    <version>__PEALANG_VERSION__</version>
     <properties>
         <java.version>17</java.version>
-        <pealang.sdk.version>2.22.0</pealang.sdk.version>
     </properties>
-
-    <dependencies>
-        <dependency>
-            <groupId>com.pealang</groupId>
-            <artifactId>pealang-runtime</artifactId>
-            <version>${pealang.sdk.version}</version>
-        </dependency>
-    </dependencies>
 
     <build>
         <plugins>
@@ -347,45 +341,76 @@ def scaffold_java_sdk(target_dir: str = "java-sdk") -> dict[str, Any]:
     </build>
 </project>
 ''', encoding="utf-8")
-    (root / "src" / "main" / "java" / "com" / "pealang" / "SdkClient.java").write_text(r'''package com.pealang;
+    pom = pom_path.read_text(encoding="utf-8").replace("__PEALANG_VERSION__", _version)
+    pom_path.write_text(pom, encoding="utf-8")
+    (root / "src" / "main" / "java" / "io" / "pealang" / "client" / "SdkClient.java").write_text(r'''package io.pealang.client;
 
-import com.pealang.runtime.PeaClient;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.time.Duration;
+import java.util.List;
 
-public class SdkClient {
-    private final PeaClient client;
+public final class SdkClient {
+    private final URI base;
     private final HttpClient http;
 
     public SdkClient(String baseUrl) {
-        this.client = new PeaClient(baseUrl);
-        this.http = HttpClient.newHttpClient();
+        base = URI.create(baseUrl);
+        http = HttpClient.newBuilder().connectTimeout(Duration.ofSeconds(5)).build();
     }
 
-    public String invoke(String module, String function, String... args) throws Exception {
-        String payload = "{\"module\":\"" + module + "\",\"function\":\"" + function + "\",\"args\":\"" + String.join(",", args) + "\"}";
-        HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create(client.getBaseUrl() + "/v1/invoke"))
-                .header("Content-Type", "application/json")
-                .POST(HttpRequest.BodyPublishers.ofString(payload))
-                .build();
-        HttpResponse<String> response = http.send(request, HttpResponse.BodyHandlers.ofString());
-        if (response.statusCode() != 200) {
-            throw new RuntimeException("Invocation failed: " + response.body());
+    public String health() throws Exception { return get("/health"); }
+    public String ready() throws Exception { return get("/ready"); }
+    public String compile(String json) throws Exception { return post("/v1/compile", json); }
+    public String loadModule(String json) throws Exception { return post("/v1/modules/load", json); }
+    public String invoke(String json) throws Exception { return post("/v1/invoke", json); }
+
+    public String invoke(String module, String function, List<?> args) throws Exception {
+        StringBuilder payload = new StringBuilder();
+        payload.append("{\"module\":").append(quote(module));
+        payload.append(",\"function\":").append(quote(function));
+        payload.append(",\"args\":[");
+        for (int i = 0; i < args.size(); i++) {
+            if (i > 0) payload.append(',');
+            payload.append(quote(String.valueOf(args.get(i))));
         }
-        return response.body();
+        payload.append("]}");
+        return invoke(payload.toString());
     }
 
-    public String health() throws Exception {
+    private static String quote(String value) {
+        StringBuilder out = new StringBuilder("\"");
+        for (int i = 0; i < value.length(); i++) {
+            char ch = value.charAt(i);
+            if (ch == '"' || ch == '\\') out.append('\\');
+            if (ch == '\n') out.append("\\n");
+            else if (ch == '\r') out.append("\\r");
+            else if (ch == '\t') out.append("\\t");
+            else out.append(ch);
+        }
+        return out.append('"').toString();
+    }
+
+    private String get(String path) throws Exception {
+        HttpRequest request = HttpRequest.newBuilder().uri(base.resolve(path)).GET().build();
+        return send(request);
+    }
+
+    private String post(String path, String json) throws Exception {
         HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create(client.getBaseUrl() + "/health"))
-                .GET()
+                .uri(base.resolve(path))
+                .header("Content-Type", "application/json")
+                .POST(HttpRequest.BodyPublishers.ofString(json))
                 .build();
+        return send(request);
+    }
+
+    private String send(HttpRequest request) throws Exception {
         HttpResponse<String> response = http.send(request, HttpResponse.BodyHandlers.ofString());
-        if (response.statusCode() != 200) {
-            throw new RuntimeException("Health check failed: " + response.body());
+        if (response.statusCode() / 100 != 2) {
+            throw new RuntimeException("PeaLang request failed: " + response.body());
         }
         return response.body();
     }
@@ -402,7 +427,7 @@ public class SdkClient {
     return {
         "root": str(root),
         "files": [
-            "src/main/java/com/pealang/SdkClient.java",
+            "src/main/java/io/pealang/client/SdkClient.java",
             "pom.xml",
             "src/main/resources/application.yml",
             "README.md",
@@ -881,6 +906,8 @@ def generate_sdk_from_source(source: str, language: str, target_dir: str | None 
     ``target_dir`` (or ``<language>-sdk/`` if not given) and a dict with
     ``root`` and ``files`` is returned.
     """
+    from . import __version__ as _version
+
     functions = extract_functions(source)
     module_name = "PeaModule"
     base_url = "http://localhost:8080"
@@ -1055,9 +1082,9 @@ def generate_sdk_from_source(source: str, language: str, target_dir: str | None 
         files = ["pealang/client.py", "pyproject.toml", "README.md"]
 
     elif language == "java":
-        (root / "src" / "main" / "java" / "com" / "pealang").mkdir(parents=True, exist_ok=True)
+        (root / "src" / "main" / "java" / "io" / "pealang" / "client").mkdir(parents=True, exist_ok=True)
         lines = [
-            "package com.pealang;",
+            "package io.pealang.client;",
             "",
             "import java.net.URI;",
             "import java.net.http.HttpClient;",
@@ -1105,15 +1132,15 @@ def generate_sdk_from_source(source: str, language: str, target_dir: str | None 
             lines.append("")
         lines.append("}")
         client_content = "\n".join(lines) + "\n"
-        (root / "src" / "main" / "java" / "com" / "pealang" / "SdkClient.java").write_text(
+        (root / "src" / "main" / "java" / "io" / "pealang" / "client" / "SdkClient.java").write_text(
             client_content, encoding="utf-8"
         )
         (root / "pom.xml").write_text(
             f'''<project xmlns="http://maven.apache.org/POM/4.0.0">
     <modelVersion>4.0.0</modelVersion>
-    <groupId>com.pealang</groupId>
+    <groupId>io.pealang</groupId>
     <artifactId>pealang-{language}-sdk</artifactId>
-    <version>1.0.0</version>
+    <version>{_version}</version>
 </project>''',
             encoding="utf-8",
         )
@@ -1121,7 +1148,7 @@ def generate_sdk_from_source(source: str, language: str, target_dir: str | None 
             f"# PeaLang Java SDK\n\nGenerated from .pea source.\n", encoding="utf-8"
         )
         files = [
-            "src/main/java/com/pealang/SdkClient.java",
+            "src/main/java/io/pealang/client/SdkClient.java",
             "pom.xml",
             "README.md",
         ]

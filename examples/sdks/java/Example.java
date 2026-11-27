@@ -7,28 +7,21 @@
 //   cd ./sdk && mvn package
 //
 // Run:
-//   java -cp target/pealang-java-sdk-1.0.0.jar:... com.pealang.SdkClientExample
+//   java -cp 'target/pealang-java-sdk-*.jar:target/classes' io.pealang.client.SdkClientExample
 
-import com.pealang.SdkClient;
+import io.pealang.client.SdkClient;
 
 public class SdkClientExample {
     public static void main(String[] args) throws Exception {
         SdkClient client = new SdkClient("http://localhost:8080");
 
-        // Health check
         String health = client.health();
         System.out.println("Health: " + health);
 
-        // Invoke add function from math_utils module
-        String result1 = client.invoke("math_utils", "add", "3", "7");
-        System.out.println("3 + 7 = " + result1);
+        String added = client.invoke("math_utils", "add", java.util.List.of("3", "7"));
+        System.out.println("3 + 7 = " + added);
 
-        // Invoke multiply function
-        String result2 = client.invoke("math_utils", "multiply", "4", "5");
-        System.out.println("4 * 5 = " + result2);
-
-        // Invoke greet function
-        String result3 = client.invoke("math_utils", "greet", "World");
-        System.out.println(result3);
+        String greeted = client.invoke("math_utils", "greet", java.util.List.of("World"));
+        System.out.println(greeted);
     }
 }

@@ -1,3 +1,8 @@
+## 5.25.0 - Phase 125: SDK contract and documentation reconciliation (2026-11-27)
+- Continue Wave 10 with sdk contract and documentation reconciliation
+- Preserve the frozen 3.0 digest, pinned component versions, and public API snapshot
+- Add regression checks for the maintenance invariants defined by this phase
+
 ## 5.24.0 - Phase 124: CI evidence retention and performance gate repair (2026-11-27)
 - Continue Wave 10 with ci evidence retention and performance gate repair
 - Preserve the frozen 3.0 digest, pinned component versions, and public API snapshot

@@ -1,12 +1,7 @@
-# Full-stack web server and auto-typed SDK generator (v1.5.0)
+# PeaLang Browser SDK (5.25.0)
 
-PeaLang provides enhanced web server features and TypeScript client generation.
+## Shipped export
 
-## Key functions
+- `loadPeaWasm(url, imports)` — fetch and instantiate a WebAssembly module.
 
-- `analysis.generate_typescript_client(routes, base_url, module_name)` — TypeScript client
-- `analysis.sse_endpoint_source()` — SSE endpoint
-- `analysis.websocket_handler_source()` — WebSocket handler
-- `analysis.jwt_middleware_source()` — JWT middleware
-- `analysis.rate_limiter_source()` — rate limiter
-- `analysis.api_versioning_source()` — API versioning
+See `docs/WEB_SDK.md` for the full contract. Version: 5.25.0.

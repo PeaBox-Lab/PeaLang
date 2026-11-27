@@ -1,9 +1,10 @@
-# Reactive React SDK (v1.4.0)
+# PeaLang React SDK (5.25.0)
 
-PeaLang provides code generation for React hooks and components.
+## Shipped exports
 
-## Key functions
+- `PeaLangProvider` — client provider backed by `@pealang/client`.
+- `usePeaLang` — access the configured client.
+- `usePeaFunction(module, fn)` — invoke with array args and observe state.
+- `PeaUi` — render text, button, and stack nodes.
 
-- `analysis.generate_react_hooks()` — React hooks (usePeaRuntime, usePeaScript, usePeaDataFrame, usePeaQuery, usePeaValidation)
-- `analysis.generate_data_grid_adapter()` — data grid adapter (ag-Grid, TanStack Table)
-- `analysis.generate_chart_adapter()` — chart adapter (Vega-Lite, Chart.js)
+See `docs/REACT_SDK.md` for the full contract. Version: 5.25.0.

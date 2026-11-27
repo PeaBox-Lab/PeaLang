@@ -33,7 +33,7 @@ EXPECTED_SDK_FILES = {
     "python": {"pealang/client.py", "pyproject.toml", "README.md"},
     "browser": {"src/browserClient.ts", "src/browserLoader.ts", "package.json", "README.md"},
     "java": {
-        "src/main/java/com/pealang/SdkClient.java",
+        "src/main/java/io/pealang/client/SdkClient.java",
         "pom.xml",
         "src/main/resources/application.yml",
         "README.md",
