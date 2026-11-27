@@ -1,4 +1,10 @@
 # Changelog
+## 5.23.0 - Phase 123: Verification stability and SDK contract hardening (2026-11-27)
+- Continue Wave 9 with verification stability and sdk contract hardening
+- Keep the frozen 3.0 digest, component pins, public API snapshot, and fixed release metrics unchanged
+- Add a normative maintenance spec and regression checks for the phase invariants
+- Update current release metadata to 5.23.0
+
 ## 5.22.0 - Phase 122: GA evidence ingest and handoff (2026-11-27)
 - Continue Wave 9 with ga evidence ingest and handoff
 - Keep the frozen 3.0 digest, component pins, public API snapshot, and fixed release metrics unchanged

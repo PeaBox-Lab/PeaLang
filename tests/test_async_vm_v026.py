@@ -17,8 +17,8 @@ def test_permission_allowed():
  run(case())
 def test_timeout():
  async def case():
-  async def slow():await asyncio.sleep(.1);return 1
-  r=AsyncVMRuntime(RuntimeOptions(max_execution_ms=5)).register_async_function('api.slow',slow);m=await r.load_async('async function work(){return await api.slow()}\nexport work')
+  async def slow():await asyncio.Event().wait()
+  r=AsyncVMRuntime(RuntimeOptions(max_execution_ms=50)).register_async_function('api.slow',slow);m=await r.load_async('async function work(){return await api.slow()}\nexport work')
   with pytest.raises(asyncio.TimeoutError):await m.call_async('work')
  run(case())
 def test_async_syntax_compiles():

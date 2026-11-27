@@ -491,6 +491,8 @@ release evidence reviewable and reproducible in CI through
 
 **Phase 122 — GA evidence ingest and handoff** continues Wave 9 with ga evidence ingest and handoff and preserves the frozen 3.0 surface, pinned component versions, public API snapshot, and fixed release metrics.
 
+**Phase 123 — Verification stability and SDK contract hardening** continues Wave 9 with verification stability and sdk contract hardening and preserves the frozen 3.0 surface, pinned component versions, public API snapshot, and fixed release metrics.
+
 ## Sector packs
 
 | Sector | Current PeaLang evidence | Required additions | Acceptance gate |

@@ -29,6 +29,10 @@ async def slow():
     return 1
 
 
+async def pending():
+    await asyncio.Event().wait()
+
+
 def run(coro):
     return asyncio.run(coro)
 
@@ -50,9 +54,10 @@ def test_async_vm_gather_and_spawn_helpers():
 
 def test_async_vm_timeout_helper():
     async def case():
-        runtime = AsyncVMRuntime(RuntimeOptions(max_execution_ms=500)).register_async_function('api.slow', slow)
+        runtime = (AsyncVMRuntime(RuntimeOptions(max_execution_ms=500))
+              .register_async_function('api.pending', pending))
         module = await runtime.load_async(
-            'async function work() { return await concurrency.timeout(0.005, api.slow()) }\nexport work'
+            'async function work() { return await concurrency.timeout(0.05, api.pending()) }\nexport work'
         )
         with pytest.raises(asyncio.TimeoutError):
             await module.call_async('work')

@@ -48,3 +48,4 @@ missing-release-checklist detection.
  Phase 120 extends Wave 8 with stable 1.0 declaration and GA evidence bundle: `pea stable-declaration --check` and `stable_declaration_gate()` provide reproducible evidence with missing-dependency, cycle, invalid-manifest, missing-evidence, and missing-final-gate, missing-pre-1.0-evidence, missing-maturity-report, missing-candidate-report, missing-attestation-report, missing-approval-signature, missing-GA-declaration detection.
  Phase 121 continues Wave 9 with repository and metadata integrity while preserving the frozen core surface.
  Phase 122 continues Wave 9 with ga evidence ingest and handoff while preserving the frozen core surface.
+ Phase 123 continues Wave 9 with verification stability and sdk contract hardening while preserving the frozen core surface.

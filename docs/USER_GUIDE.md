@@ -1212,6 +1212,13 @@ preserves the stable language surface and existing gates while adding checks for
 repository metadata, evidence handoff, or verification stability as described in
 `spec/65-ga-evidence-handoff.md`.
 
+### Verification stability and SDK contract hardening
+
+Phase 123 at `5.23.0` is a Wave 9 maintenance release. It
+preserves the stable language surface and existing gates while adding checks for
+repository metadata, evidence handoff, or verification stability as described in
+`spec/66-verification-stability.md`.
+
 ### Optional chaining and null coalescing
 ```pea
 let city = user?.profile?.city ?? "unknown"

@@ -169,11 +169,11 @@ def test_feature_flag_help_and_analysis_namespace_document_formatter_v3():
 
 
 def test_release_metadata_is_aligned_and_component_pins_hold():
-    assert pealang.__version__ == SPEC_VERSION == '5.22.0'
+    assert pealang.__version__ == SPEC_VERSION == '5.23.0'
     manifest = json.loads((Path(__file__).resolve().parent.parent
                            / 'RELEASE_MANIFEST.json').read_text(encoding='utf-8'))
-    assert manifest['version'] == '5.22.0'
-    assert manifest['previous_version'] == '5.21.0'
+    assert manifest['version'] == '5.23.0'
+    assert manifest['previous_version'] == '5.22.0'
     assert pealang.FORMATTER_V3_VERSION == '3.1.46'
     assert pealang.DAP_V2_VERSION == '3.1.45'
     assert pealang.LSP_V2_VERSION == '3.1.44'

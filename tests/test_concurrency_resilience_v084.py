@@ -7,8 +7,8 @@ def test_parent_cancellation_propagates():
  asyncio.run(case())
 def test_deadline_cancels_token():
  async def case():
-  token=CancellationToken()
-  with pytest.raises(asyncio.TimeoutError):await run_with_deadline(asyncio.sleep(.05),Deadline.after(.001),token)
+  token=CancellationToken();gate=asyncio.Event()
+  with pytest.raises(asyncio.TimeoutError):await run_with_deadline(gate.wait(),Deadline.after(.05),token)
   assert token.cancelled and token.reason is CancellationReason.TIMEOUT
  asyncio.run(case())
 def test_structured_group_fail_fast():
